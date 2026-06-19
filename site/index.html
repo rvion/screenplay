@@ -51,8 +51,10 @@
           <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur (début → fin)</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="note">Toutes les valeurs sont calculées depuis <code>params.json</code> par
-        <code>scripts/generate.py</code>. Modifiez les paramètres, relancez, tout se met à jour.</p>
+        <p class="note">Les 5 faces ci-dessus sont les <b>murs</b> ; la <b>toiture (face T)</b>, en
+        panneau sandwich finition toit, est détaillée dans la section Débit. Toutes les valeurs sont
+        calculées depuis <code>params.json</code> par <code>scripts/generate.py</code> : modifiez les
+        paramètres, relancez, tout se met à jour.</p>
       </div>
     </section>
 
@@ -80,11 +82,13 @@
       <div class="card">
         <p id="debit-resume"></p>
         <table id="debit">
-          <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur panneau</th><th>Nb panneaux</th><th>Aire brute</th></tr></thead>
+          <thead><tr><th>Face</th><th>Finition</th><th>Dimensions</th><th>Nb panneaux</th><th>Aire brute</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="note">Panneaux muraux posés <b>verticaux</b> (largeur utile
-        <span id="cover"></span>). Les faces en « biais » reçoivent une coupe d'arase en tête
+        <p class="note">Deux <b>finitions</b> de panneau, même épaisseur (60 mm) : <b>mur</b> (parement
+        lisse/micro-nervuré) pour les faces A·D·C·B·G, et <b>toit</b> (profil nervuré qui évacue
+        l'eau) pour la face <b>T</b>. Panneaux muraux posés <b>verticaux</b> (largeur utile
+        <span id="cover"></span>) ; les faces à <b>tête en biais</b> reçoivent une coupe d'arase
         (le toit descend). Débit indicatif à recouper avec le fournisseur.</p>
       </div>
     </section>

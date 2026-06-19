@@ -13,11 +13,17 @@ Sommets dérivés des 4 mesures de `emprise_cm` :
 - Face **C** = segment `Dfin→Bfin` (longueur **calculée**, non saisie).
 - Aire par formule du lacet ; pente du toit = `pente_chute_cm / G`.
 
-## Toiture
+## Toiture — face **T**
 - **Mono-pente**, plan unique incliné, hauteur décroissante avec `y`
   (avant haut → arrière bas). `h(y) = hauteur_avant − chute · y / G`.
 - Évacuation vers l'arrière ; point bas = coin **arrière-droit** (`Bfin`).
 - Panneaux dans le sens de la pente, débords paramétrables, recouvrements vers le bas.
+- La toiture est nommée **face T** dans le débit ; comptée séparément des murs.
+
+## Deux finitions de panneau (même épaisseur 60 mm)
+- **Finition mur** (parement lisse / micro-nervuré) : faces **A, D, C, B, G**.
+- **Finition toit** (profil à nervures hautes, évacue l'eau) : face **T**.
+- Ce sont des **produits différents** chez le fabricant : à commander séparément.
 
 ## Murs
 - Panneaux sandwich **verticaux**, largeur utile paramétrable.

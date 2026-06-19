@@ -152,6 +152,7 @@ def takeoff(p: dict, g: dict) -> dict:
         net += n_area
         rows.append({
             "face": f["cle"], "libelle": f["libelle"],
+            "finition": "mur",
             "longueur_cm": L, "hauteur_cm": hmax,
             "nb_panneaux": n,
             "aire_brute_m2": round(g_area, 2),
@@ -177,6 +178,9 @@ def takeoff(p: dict, g: dict) -> dict:
             "total_panneaux": sum(r["nb_panneaux"] for r in rows),
         },
         "toit": {
+            "face": "T",
+            "libelle": "Toiture",
+            "finition": "toit",
             "nb_panneaux": n_roof,
             "longueur_panneau_cm": round(run_len, 1),
             "aire_brute_m2": round(roof_gross, 2),
@@ -196,10 +200,10 @@ def shopping(p: dict, g: dict, t: dict) -> list:
     anchors = math.ceil(perim / 0.5)
     screws = math.ceil((t["murs"]["aire_brute_m2"] + t["toit"]["aire_brute_m2"]) * 6)
     return [
-        {"poste": "Panneaux sandwich 60 mm (murs)", "qte": f"{t['murs']['aire_brute_m2']} m2 brut (net ~{t['murs']['aire_nette_m2']} m2)",
-         "note": "Ame PIR. Commander a longueur. Parement laque 2 faces."},
-        {"poste": "Panneaux sandwich 60 mm (toiture)", "qte": f"{t['toit']['nb_panneaux']} panneaux de ~{t['toit']['longueur_panneau_cm']/100:.2f} m ({t['toit']['aire_brute_m2']} m2 brut)",
-         "note": "Profil toiture (nervures) pose dans le sens de la pente, joints longitudinaux a recouvrement."},
+        {"poste": "Panneaux sandwich 60 mm - finition MUR (faces A,D,C,B,G)", "qte": f"{t['murs']['aire_brute_m2']} m2 brut (net ~{t['murs']['aire_nette_m2']} m2)",
+         "note": "Ame PIR. Parement mural lisse/micro-nervure, laque 2 faces. Commander a longueur."},
+        {"poste": "Panneaux sandwich 60 mm - finition TOIT (face T)", "qte": f"{t['toit']['nb_panneaux']} panneaux de ~{t['toit']['longueur_panneau_cm']/100:.2f} m ({t['toit']['aire_brute_m2']} m2 brut)",
+         "note": "Profil de TOITURE (nervures hautes) pose dans le sens de la pente, recouvrements lateraux vers le bas. Different des panneaux de mur."},
         {"poste": "Rail / lambourde de pied", "qte": f"~{math.ceil(perim)+1} m",
          "note": "U galvanise OU bois traite classe 4, sur bande EPDM. Sureleve les panneaux de la dalle."},
         {"poste": "Profils d'angle exterieurs", "qte": f"{n_corners} angles x {corner_h:.1f} m = ~{math.ceil(n_corners*corner_h)} m",
@@ -367,10 +371,13 @@ def model3d(p, g):
     # en metres, y = profondeur, z = hauteur
     verts_m = [[v[0] / 100.0, v[1] / 100.0] for v in g["verts"]]
     heights_m = [h / 100.0 for h in g["vert_heights_cm"]]
+    deb = p["toit"]["debord_cm"]
+    overhang_m = (sum(deb.values()) / len(deb)) / 100.0
     return {
         "footprint": verts_m,
         "heights": heights_m,
         "thickness_m": p["panneau"]["epaisseur_mm"] / 1000.0,
+        "roof_overhang_m": round(overhang_m, 3),
         "door": {
             "face_index": 0,  # face A = arete verts[0]-verts[1]
             "width_m": p["porte"]["largeur_cm"] / 100.0,

@@ -50,13 +50,25 @@ function fillDebit() {
     const tr = el("tr");
     tr.innerHTML =
       `<td><b>${r.face}</b> · ${r.libelle}</td>` +
-      `<td>${r.longueur_cm} cm</td>` +
-      `<td>${r.hauteur_cm} cm</td>` +
+      `<td><span class="tag">mur</span></td>` +
+      `<td>${r.longueur_cm} × ${r.hauteur_cm} cm` +
+      (r.rake ? ' <span class="tag rake">tête en biais</span>' : "") +
+      `</td>` +
       `<td>${r.nb_panneaux}</td>` +
       `<td>${r.aire_brute_m2} m²</td>`;
     tb.appendChild(tr);
   });
   const t = S.debit;
+  // Face T : la toiture, en panneau finition toit
+  const tr = el("tr");
+  tr.style.background = "#eef2e8";
+  tr.innerHTML =
+    `<td><b>${t.toit.face}</b> · ${t.toit.libelle}</td>` +
+    `<td><span class="tag toit">toit</span></td>` +
+    `<td>${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m (sens de la pente) · couvre ${t.toit.aire_couverte_m2} m²</td>` +
+    `<td>${t.toit.nb_panneaux}</td>` +
+    `<td>${t.toit.aire_brute_m2} m²</td>`;
+  tb.appendChild(tr);
   document.getElementById("debit-resume").innerHTML =
     `Murs : <b>${t.murs.total_panneaux} panneaux</b> (~${t.murs.aire_brute_m2} m² brut, ${t.murs.aire_nette_m2} m² net). ` +
     `Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. ` +
@@ -144,19 +156,8 @@ function build3D() {
     }
   }
 
-  // --- Toiture (eventail) ---
-  const roofGeo = new THREE.BufferGeometry();
-  const pts = [];
-  for (let i = 1; i < n - 1; i++) {
-    pts.push(V(fp[0][0], fp[0][1], hs[0]));
-    pts.push(V(fp[i][0], fp[i][1], hs[i]));
-    pts.push(V(fp[i + 1][0], fp[i + 1][1], hs[i + 1]));
-  }
-  roofGeo.setFromPoints(pts);
-  roofGeo.computeVertexNormals();
-  const roof = new THREE.Mesh(roofGeo, roofMat);
-  roof.castShadow = true;
-  scene.add(roof);
+  // --- Toiture : vrai panneau (epaisseur + debord) ---
+  addRoofSlab(scene, V, fp, hs, m.thickness_m, m.roof_overhang_m || 0.15, roofMat);
 
   function onResize() {
     camera.aspect = container.clientWidth / container.clientHeight;
@@ -170,6 +171,37 @@ function build3D() {
     controls.update();
     renderer.render(scene, camera);
   })();
+}
+
+function addRoofSlab(scene, V, fp, hs, thk, overhang, mat) {
+  // Dalle de toit : polygone dilate (debord radial) + epaisseur, posee sur la tete des murs.
+  const n = fp.length;
+  const gx = fp.reduce((s, p) => s + p[0], 0) / n;
+  const gy = fp.reduce((s, p) => s + p[1], 0) / n;
+  const outer = fp.map((p) => {
+    const dx = p[0] - gx, dy = p[1] - gy, d = Math.hypot(dx, dy) || 1;
+    return [p[0] + (dx / d) * overhang, p[1] + (dy / d) * overhang];
+  });
+  const top = outer.map((p, i) => V(p[0], p[1], hs[i] + thk));
+  const bot = outer.map((p, i) => V(p[0], p[1], hs[i]));
+  const pts = [];
+  for (let i = 1; i < n - 1; i++) {            // dessus
+    pts.push(top[0], top[i], top[i + 1]);
+  }
+  for (let i = 1; i < n - 1; i++) {            // dessous
+    pts.push(bot[0], bot[i + 1], bot[i]);
+  }
+  for (let i = 0; i < n; i++) {                // chants
+    const j = (i + 1) % n;
+    pts.push(top[i], bot[i], bot[j]);
+    pts.push(top[i], bot[j], top[j]);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setFromPoints(pts);
+  g.computeVertexNormals();
+  const mesh = new THREE.Mesh(g, mat);
+  mesh.castShadow = true;
+  scene.add(mesh);
 }
 
 function addWallWithDoor(scene, V, a, b, ha, hb, door, mat) {

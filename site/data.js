@@ -113,6 +113,7 @@ window.SHED = {
         {
           "face": "A",
           "libelle": "Avant",
+          "finition": "mur",
           "longueur_cm": 230.0,
           "hauteur_cm": 240.0,
           "nb_panneaux": 3,
@@ -122,6 +123,7 @@ window.SHED = {
         {
           "face": "D",
           "libelle": "Droite",
+          "finition": "mur",
           "longueur_cm": 160.0,
           "hauteur_cm": 240.0,
           "nb_panneaux": 2,
@@ -131,6 +133,7 @@ window.SHED = {
         {
           "face": "C",
           "libelle": "Coupe",
+          "finition": "mur",
           "longueur_cm": 124.5,
           "hauteur_cm": 223.7,
           "nb_panneaux": 2,
@@ -140,6 +143,7 @@ window.SHED = {
         {
           "face": "B",
           "libelle": "Arriere",
+          "finition": "mur",
           "longueur_cm": 140.0,
           "hauteur_cm": 215.0,
           "nb_panneaux": 2,
@@ -149,6 +153,7 @@ window.SHED = {
         {
           "face": "G",
           "libelle": "Gauche",
+          "finition": "mur",
           "longueur_cm": 246.0,
           "hauteur_cm": 240.0,
           "nb_panneaux": 3,
@@ -162,6 +167,9 @@ window.SHED = {
       "total_panneaux": 12
     },
     "toit": {
+      "face": "T",
+      "libelle": "Toiture",
+      "finition": "toit",
       "nb_panneaux": 3,
       "longueur_panneau_cm": 281.0,
       "aire_brute_m2": 8.43,
@@ -172,14 +180,14 @@ window.SHED = {
   },
   "achats": [
     {
-      "poste": "Panneaux sandwich 60 mm (murs)",
+      "poste": "Panneaux sandwich 60 mm - finition MUR (faces A,D,C,B,G)",
       "qte": "27.97 m2 brut (net ~18.68 m2)",
-      "note": "Ame PIR. Commander a longueur. Parement laque 2 faces."
+      "note": "Ame PIR. Parement mural lisse/micro-nervure, laque 2 faces. Commander a longueur."
     },
     {
-      "poste": "Panneaux sandwich 60 mm (toiture)",
+      "poste": "Panneaux sandwich 60 mm - finition TOIT (face T)",
       "qte": "3 panneaux de ~2.81 m (8.43 m2 brut)",
-      "note": "Profil toiture (nervures) pose dans le sens de la pente, joints longitudinaux a recouvrement."
+      "note": "Profil de TOITURE (nervures hautes) pose dans le sens de la pente, recouvrements lateraux vers le bas. Different des panneaux de mur."
     },
     {
       "poste": "Rail / lambourde de pied",
@@ -301,6 +309,7 @@ window.SHED = {
       2.15
     ],
     "thickness_m": 0.06,
+    "roof_overhang_m": 0.16,
     "door": {
       "face_index": 0,
       "width_m": 0.9,

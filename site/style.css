@@ -71,3 +71,4 @@ code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size
 .tag { display: inline-block; font-size: .72rem; padding: .1rem .45rem; border-radius: 6px;
   background: #eef2f6; color: var(--accent); margin-left: .3rem; }
 .tag.rake { background: #fdf6e3; color: #a07400; }
+.tag.toit { background: #e8eee2; color: #50701d; }
