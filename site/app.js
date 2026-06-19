@@ -42,6 +42,15 @@ function fillFaces() {
       `</td>`;
     tb.appendChild(tr);
   });
+  // Face T : la toiture, listee comme les murs
+  const g = S.geometrie, t = S.debit.toit;
+  const tr = el("tr");
+  tr.style.background = "#eef2e8";
+  tr.innerHTML =
+    `<td><b>${t.face}</b> · ${t.libelle} <span class="tag toit">toit</span></td>` +
+    `<td>${(t.longueur_panneau_cm / 100).toFixed(2)} m <span class="note">(rampant)</span></td>` +
+    `<td>${g.hauteur_avant_cm} → ${g.hauteur_arriere_cm} cm · pente ${g.pente.pourcent}%</td>`;
+  tb.appendChild(tr);
 }
 
 function fillDebit() {

@@ -54,10 +54,11 @@ th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(-
 th { background: #f3f5f1; font-weight: 600; }
 tbody tr:hover { background: #fafbf6; }
 .note { color: var(--muted); font-size: .86rem; }
-figure { margin: 1rem 0; text-align: center; }
-figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-figure figcaption { font-size: .85rem; color: var(--muted); margin-top: .4rem; }
-.plans { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+figure { margin: 1rem 0; text-align: center; min-width: 0; }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+figure figcaption { font-size: .85rem; color: var(--muted); margin-top: .4rem; overflow-wrap: anywhere; }
+.plans { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.plans figure { min-width: 0; }
 .warn { border-left: 4px solid var(--warn); background: #fdf3f2; }
 .warn h3 { color: var(--warn); margin-top: 0; }
 ol.steps { padding-left: 1.2rem; }
