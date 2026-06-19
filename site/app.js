@@ -84,7 +84,9 @@ function build3D() {
   // centre pour recentrer la scene
   const cx = fp.reduce((s, p) => s + p[0], 0) / n;
   const cy = fp.reduce((s, p) => s + p[1], 0) / n;
-  const V = (x, y, z) => new THREE.Vector3(x - cx, z, y - cy); // world: X=x, Y=haut, Z=y
+  // world: X=x (est), Y=z (haut), Z=-(y) (profondeur negee) -> repere droitier, pas d'effet miroir.
+  // L'avant (y=0) se retrouve du cote Z+ (face a la camera par defaut).
+  const V = (x, y, z) => new THREE.Vector3(x - cx, z, cy - y);
 
   const container = document.getElementById("viewer");
   const scene = new THREE.Scene();
@@ -113,7 +115,7 @@ function build3D() {
 
   // --- Dalle beton ---
   const slabShape = new THREE.Shape();
-  fp.forEach((p, i) => (i ? slabShape.lineTo(p[0] - cx, p[1] - cy) : slabShape.moveTo(p[0] - cx, p[1] - cy)));
+  fp.forEach((p, i) => (i ? slabShape.lineTo(p[0] - cx, cy - p[1]) : slabShape.moveTo(p[0] - cx, cy - p[1])));
   const slabGeo = new THREE.ExtrudeGeometry(slabShape, { depth: 0.12, bevelEnabled: false });
   slabGeo.rotateX(Math.PI / 2);
   const slab = new THREE.Mesh(slabGeo, new THREE.MeshStandardMaterial({ color: 0xb8b8b0, roughness: 0.95 }));
