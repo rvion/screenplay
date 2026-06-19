@@ -37,9 +37,9 @@
     "vert_heights_cm": [
       240.0,
       240.0,
-      233.5,
-      230.0,
-      230.0
+      223.7,
+      215.0,
+      215.0
     ],
     "cotes": {
       "G": 246.0,
@@ -51,13 +51,13 @@
     "aire_m2": 5.27,
     "perimetre_cm": 900.5,
     "pente": {
-      "chute_cm": 10.0,
+      "chute_cm": 25.0,
       "run_cm": 246.0,
-      "pourcent": 4.1,
-      "degres": 2.33
+      "pourcent": 10.2,
+      "degres": 5.8
     },
     "hauteur_avant_cm": 240.0,
-    "hauteur_arriere_cm": 230.0,
+    "hauteur_arriere_cm": 215.0,
     "faces": [
       {
         "cle": "A",
@@ -73,7 +73,7 @@
         "libelle": "Droite",
         "longueur_cm": 160.0,
         "hauteur_debut_cm": 240.0,
-        "hauteur_fin_cm": 233.5,
+        "hauteur_fin_cm": 223.7,
         "hauteur_max_cm": 240.0,
         "rake": true
       },
@@ -81,25 +81,25 @@
         "cle": "C",
         "libelle": "Coupe",
         "longueur_cm": 124.5,
-        "hauteur_debut_cm": 233.5,
-        "hauteur_fin_cm": 230.0,
-        "hauteur_max_cm": 233.5,
+        "hauteur_debut_cm": 223.7,
+        "hauteur_fin_cm": 215.0,
+        "hauteur_max_cm": 223.7,
         "rake": true
       },
       {
         "cle": "B",
         "libelle": "Arriere",
         "longueur_cm": 140.0,
-        "hauteur_debut_cm": 230.0,
-        "hauteur_fin_cm": 230.0,
-        "hauteur_max_cm": 230.0,
+        "hauteur_debut_cm": 215.0,
+        "hauteur_fin_cm": 215.0,
+        "hauteur_max_cm": 215.0,
         "rake": false
       },
       {
         "cle": "G",
         "libelle": "Gauche",
         "longueur_cm": 246.0,
-        "hauteur_debut_cm": 230.0,
+        "hauteur_debut_cm": 215.0,
         "hauteur_fin_cm": 240.0,
         "hauteur_max_cm": 240.0,
         "rake": true
@@ -131,18 +131,18 @@
           "face": "C",
           "libelle": "Coupe",
           "longueur_cm": 124.5,
-          "hauteur_cm": 233.5,
+          "hauteur_cm": 223.7,
           "nb_panneaux": 2,
-          "aire_brute_m2": 4.67,
+          "aire_brute_m2": 4.47,
           "rake": true
         },
         {
           "face": "B",
           "libelle": "Arriere",
           "longueur_cm": 140.0,
-          "hauteur_cm": 230.0,
+          "hauteur_cm": 215.0,
           "nb_panneaux": 2,
-          "aire_brute_m2": 4.6,
+          "aire_brute_m2": 4.3,
           "rake": false
         },
         {
@@ -155,8 +155,8 @@
           "rake": true
         }
       ],
-      "aire_brute_m2": 28.47,
-      "aire_nette_m2": 19.3,
+      "aire_brute_m2": 27.97,
+      "aire_nette_m2": 18.68,
       "porte_deduite_m2": 1.89,
       "total_panneaux": 12
     },
@@ -166,13 +166,13 @@
       "aire_brute_m2": 8.43,
       "aire_couverte_m2": 6.71
     },
-    "commande_panneaux_m2": 40.6,
+    "commande_panneaux_m2": 40.0,
     "facteur_chute_pct": 10
   },
   "achats": [
     {
       "poste": "Panneaux sandwich 60 mm (murs)",
-      "qte": "28.47 m2 brut (net ~19.3 m2)",
+      "qte": "27.97 m2 brut (net ~18.68 m2)",
       "note": "Ame PIR. Commander a longueur. Parement laque 2 faces."
     },
     {
@@ -212,7 +212,7 @@
     },
     {
       "poste": "Vis autoperceuses tete EPDM",
-      "qte": "~222 (boite de 300)",
+      "qte": "~219 (boite de 300)",
       "note": "Longueur = epaisseur panneau + structure. Rondelle d'etancheite obligatoire."
     },
     {
@@ -293,9 +293,9 @@
     "heights": [
       2.4,
       2.4,
-      2.335,
-      2.3,
-      2.3
+      2.237,
+      2.15,
+      2.15
     ],
     "thickness_m": 0.06,
     "door": {

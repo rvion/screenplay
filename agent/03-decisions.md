@@ -24,10 +24,12 @@ sur Pages. `derived.json` reste produit pour les outils.
 et le calcul du nombre de panneaux. *Écarté :* pose horizontale (panneaux longs, abouts en
 biais plus délicats sur une si petite emprise).
 
-## D6 — Pente conservée à 10 cm dans les paramètres, mais signalée
-L'utilisateur a demandé ~10 cm (≈ 4 %). On respecte la consigne **mais** on affiche un
-**point de vigilance** fort (sous le mini usuel des panneaux toiture) avec recommandation
-22–30 cm. *Pourquoi :* respecter le brief sans masquer un risque réel.
+## D6 — Pente relevée de 10 → 25 cm (≈ 10 %) après confirmation
+Le brief demandait ~10 cm (≈ 4 %), **sous le minimum usuel** des panneaux de toiture.
+Après signalement du risque, l'utilisateur a validé de corriger : `pente_chute_cm = 25`
+(≈ 10,2 %, 5,8°), dans la plage admise. Hauteur arrière ramenée à 215 cm (headroom OK).
+*Pourquoi :* éviter stagnation / infiltration aux joints. *À vérifier :* mini exact du
+fabricant de panneaux. Paramètre unique `toit.pente_chute_cm` si nouvel ajustement.
 
 ## D7 — Âme PIR, 60 mm, usage chauffé ⇒ insister sur ventilation
 *Pourquoi :* parements acier = pare-vapeur ; le risque se déplace vers la condensation aux

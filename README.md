@@ -20,7 +20,7 @@ paramètres unique** et publié sur un petit **site web**.
 | **Surface au sol** | ≈ **5,27 m²** |
 | **Faces** | **A** avant (porte) · **D** droite · **C** coin coupé · **B** arrière · **G** gauche |
 | **Panneaux** | sandwich **60 mm**, âme PIR, pose murale verticale |
-| **Toit** | **mono-pente vers l'arrière**, chute 10 cm (**≈ 4 %**, ⚠️ voir vigilance) |
+| **Toit** | **mono-pente vers l'arrière**, chute 25 cm (**≈ 10 %**, dans la plage admise) |
 | **Porte** | **vitrée, ouvrant vers l'extérieur**, source principale de lumière |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année |
 
@@ -86,8 +86,8 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 ## ⚠️ Points de vigilance (résumé)
 
-- **Pente du toit** : 10 cm ≈ **4 %**, **sous le minimum habituel** des panneaux de toiture
-  (souvent ≥ 5°/8,75 %). **Recommandé : 22–30 cm** (≈ 9–12 %). Paramètre `toit.pente_chute_cm`.
+- **Pente du toit** : réglée à 25 cm ≈ **10 %** (5,8°), dans la plage admise par la plupart des
+  panneaux de toiture. **Vérifier la pente mini exacte du fabricant.** Paramètre `toit.pente_chute_cm`.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
   thermiques. **Ventilation (VMC/aérateurs) indispensable**.
 - **Drainage** : eau vers le coin arrière-droit → gouttière sur B + C + descente au point bas,

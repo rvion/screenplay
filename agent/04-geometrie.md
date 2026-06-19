@@ -31,20 +31,20 @@ Pentagone antihoraire : `FL → FR → Dfin → Bfin → BL`.
 
 ## Toiture mono-pente
 - Profondeur de référence (run) = `G = 246 cm`.
-- Chute = `pente_chute_cm = 10 cm`.
-- `h(y) = hauteur_avant − chute · y / G = 240 − 10 · y/246`.
-- Hauteurs par sommet : avant **240**, `Dfin` ≈ **233,5**, `Bfin`/`BL` **230**.
-- Pente = `10 / 246 ≈ 4,1 %` soit **2,33°**. ⚠️ voir vigilance (sous le mini usuel).
+- Chute = `pente_chute_cm = 25 cm` (relevée de 10 → 25 cm après confirmation, cf. D6).
+- `h(y) = hauteur_avant − chute · y / G = 240 − 25 · y/246`.
+- Hauteurs par sommet : avant **240**, `Dfin` ≈ **223,7**, `Bfin`/`BL` **215**.
+- Pente = `25 / 246 ≈ 10,2 %` soit **5,8°**. ✅ dans la plage admise (vérifier mini fabricant).
 - Sens d'écoulement : `+y` (vers l'arrière) ; **point bas = coin arrière-droit `Bfin`**.
 
 ## Têtes de murs
 | Face | début → fin (cm) | biais ? |
 |---|---|---|
 | A (avant) | 240 → 240 | non |
-| D (droite) | 240 → 233,5 | oui |
-| C (coupe) | 233,5 → 230 | oui |
-| B (arrière) | 230 → 230 | non |
-| G (gauche) | 240 → 230 | oui |
+| D (droite) | 240 → 223,7 | oui |
+| C (coupe) | 223,7 → 215 | oui |
+| B (arrière) | 215 → 215 | non |
+| G (gauche) | 240 → 215 | oui |
 
 ## Vérification
 `python3 scripts/generate.py` affiche aire, périmètre, C, pente et débit ; ces valeurs

@@ -24,10 +24,10 @@
     "_comment": "Hauteur au point le plus haut (egout avant). Le toit descend ensuite vers l'arriere."
   },
   "toit": {
-    "pente_chute_cm": 10,
+    "pente_chute_cm": 25,
     "draine_vers": "arriere_B",
     "debord_cm": { "avant": 15, "arriere": 20, "gauche": 15, "droite": 15, "coupe": 15 },
-    "_comment": "pente_chute = denivele total de l'avant vers l'arriere. ATTENTION : 10 cm sur ~2,46 m = ~4% : c'est sous le minimum habituel des panneaux de toiture (voir points de vigilance). Augmentez cette valeur a 22-30 cm si possible."
+    "_comment": "pente_chute = denivele total de l'avant vers l'arriere. Porte a 25 cm sur ~2,46 m = ~10% (~5,8 deg) : dans la plage admise par la plupart des panneaux de toiture. Le brief initial demandait ~10 cm (~4%) mais c'etait sous le minimum usuel ; valeur relevee apres confirmation. Verifier la mini exacte du fabricant."
   },
   "porte": {
     "face": "A",

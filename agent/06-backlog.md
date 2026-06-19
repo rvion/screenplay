@@ -1,8 +1,9 @@
 # Backlog & questions ouvertes
 
 ## À confirmer avec l'utilisateur
-- [ ] **Pente** : passer de 10 cm à 22–30 cm (≈ 9–12 %) ? (cf. vigilance toiture)
-- [ ] **Hauteur d'égout avant** réelle souhaitée (hypothèse 240 cm).
+- [x] **Pente** : relevée de 10 → **25 cm** (≈ 10 %) après confirmation. Reste à vérifier la
+      mini exacte du fabricant de panneaux toiture.
+- [ ] **Hauteur d'égout avant** réelle souhaitée (hypothèse 240 cm ; arrière en découle = 215 cm).
 - [ ] **Porte** : dimensions (90×210 ?), position exacte sur A, sens de charnière.
 - [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm) → recalcule le débit.
 - [ ] **Âme** : PIR vs laine de roche (feu/acoustique vs poids/prix).

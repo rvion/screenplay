@@ -127,12 +127,13 @@
       <h2>Points de vigilance</h2>
       <div class="card warn">
         <h3>⚠️ Pente du toit</h3>
-        <p>La consigne de 10 cm de chute donne une pente d'environ <b>4 %</b>, <b>sous le minimum
-        habituellement admis</b> pour des panneaux de toiture sandwich (souvent ≥ 5° ≈ 8,75 %, parfois
-        7 % selon fabricant et longueur de rampant). Risque de stagnation, d'infiltration aux joints et
-        de salissures. <b>Recommandation :</b> porter la chute à <b>22–30 cm</b> (≈ 9–12 %) si la
-        hauteur le permet, et vérifier la valeur mini du fabricant. Paramètre :
-        <code>toit.pente_chute_cm</code>.</p>
+        <p>Pente réglée à <b><span id="v-chute"></span> cm</b> de chute, soit
+        <b><span id="v-pente"></span></b> (<span id="v-pente-deg"></span>) sur ~2,46 m de profondeur.
+        C'est dans la plage admise par la plupart des panneaux de toiture sandwich (le mini usuel se
+        situe souvent autour de 5°/8,75 %). <b>Reste à confirmer la pente minimale exacte du
+        fabricant</b> retenu, surtout sur cette longueur de rampant. Le brief initial visait ~10 cm
+        (~4 %), trop faible : valeur relevée après vérification. Tout se règle via le paramètre
+        unique <code>toit.pente_chute_cm</code>.</p>
       </div>
       <div class="card warn">
         <h3>💧 Condensation (usage chauffé)</h3>
@@ -169,8 +170,14 @@
   <script type="module" src="app.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      if (!window.SHED) return;
       var c = document.getElementById("cover");
-      if (c && window.SHED) c.textContent = window.SHED.panneau.largeur_utile_cm + " cm";
+      if (c) c.textContent = window.SHED.panneau.largeur_utile_cm + " cm";
+      var pente = window.SHED.geometrie.pente;
+      var set = function (id, val) { var e = document.getElementById(id); if (e) e.textContent = val; };
+      set("v-chute", pente.chute_cm);
+      set("v-pente", pente.pourcent + " %");
+      set("v-pente-deg", pente.degres + "°");
     });
   </script>
 </body>

@@ -6,6 +6,6 @@
 <polygon points="103,78 98,87 108,87" fill="#2b7"/>
 <line x1="135.5" y1="179.6" x2="135.5" y2="78.4" stroke="#2b7" stroke-width="2"/>
 <polygon points="136,78 131,87 141,87" fill="#2b7"/>
-<text x="124.6" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de toiture - pente 4.1% (2.33 deg) vers l'arriere</text>
+<text x="124.6" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de toiture - pente 10.2% (5.8 deg) vers l'arriere</text>
 <text x="124.6" y="242.0" text-anchor="middle" fill="#2b7" font-size="12" font-weight="normal">ecoulement de l'eau -></text>
 </svg>
