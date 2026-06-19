@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 195 260" font-family="system-ui,sans-serif" font-size="13">
+<rect width="195" height="260" fill="#fbfbf8"/>
+<polygon points="60.0,200.1 134.7,200.1 134.7,62.1 60.0,60.0" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>
+<text x="97.3" y="226.1" text-anchor="middle" fill="#222" font-size="13" font-weight="bold">124 cm</text>
+<text x="52.0" y="60.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="normal">234</text>
+<text x="142.7" y="62.1" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="normal">230</text>
+<text x="97.3" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face C - Coupe</text>
+</svg>

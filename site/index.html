@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Abri de jardin · panneaux sandwich</title>
+  <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>🏡 Abri de jardin · panneaux sandwich</h1>
+    <p>Carré à coin coupé (5 faces) · toit mono-pente · porte vitrée · sur dalle béton existante</p>
+    <div class="badges">
+      <span class="badge">Spec-first</span>
+      <span class="badge">Paramétrique</span>
+      <span class="badge">Panneaux 60 mm</span>
+      <span class="badge">~5 m²</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#apercu">Aperçu</a>
+    <a href="#modele">Modèle 3D</a>
+    <a href="#plans">Plans</a>
+    <a href="#debit">Débit panneaux</a>
+    <a href="#achats">Liste d'achats</a>
+    <a href="#montage">Montage</a>
+    <a href="#vigilance">Points de vigilance</a>
+  </nav>
+
+  <main>
+    <section id="apercu">
+      <h2>Aperçu</h2>
+      <div class="grid" id="kpis"></div>
+      <div class="card">
+        <p>Abri à <b>5 faces</b> : <b>A</b> avant (porte), <b>D</b> droite, <b>C</b> coin coupé,
+        <b>B</b> arrière, <b>G</b> gauche. Le toit en panneau sandwich est en <b>mono-pente vers
+        l'arrière</b> pour évacuer l'eau loin de l'entrée. La <b>porte vitrée</b> de la face A
+        s'ouvre <b>vers l'extérieur</b> (zéro emprise intérieure) et fait office de source
+        principale de lumière naturelle.</p>
+        <table id="faces">
+          <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur (début → fin)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">Toutes les valeurs sont calculées depuis <code>params.json</code> par
+        <code>scripts/generate.py</code>. Modifiez les paramètres, relancez, tout se met à jour.</p>
+      </div>
+    </section>
+
+    <section id="modele">
+      <h2>Modèle 3D</h2>
+      <div id="viewer"></div>
+      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer.</p>
+    </section>
+
+    <section id="plans">
+      <h2>Plans</h2>
+      <div class="plans">
+        <figure><img src="assets/plan-sol.svg" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
+        <figure><img src="assets/plan-toit.svg" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
+        <figure><img src="assets/facade-A.svg" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
+        <figure><img src="assets/facade-D.svg" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
+        <figure><img src="assets/facade-C.svg" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
+        <figure><img src="assets/facade-B.svg" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
+        <figure><img src="assets/facade-G.svg" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="debit">
+      <h2>Débit panneaux</h2>
+      <div class="card">
+        <p id="debit-resume"></p>
+        <table id="debit">
+          <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur panneau</th><th>Nb panneaux</th><th>Aire brute</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">Panneaux muraux posés <b>verticaux</b> (largeur utile
+        <span id="cover"></span>). Les faces en « biais » reçoivent une coupe d'arase en tête
+        (le toit descend). Débit indicatif à recouper avec le fournisseur.</p>
+      </div>
+    </section>
+
+    <section id="achats">
+      <h2>Liste d'achats</h2>
+      <div class="card">
+        <table id="achats">
+          <thead><tr><th>Poste</th><th>Quantité</th><th>Remarque</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">Quantités estimées à partir des paramètres — à confirmer avec le
+        fournisseur de panneaux (accessoires propriétaires selon la marque).</p>
+      </div>
+    </section>
+
+    <section id="montage">
+      <h2>Cahier de montage</h2>
+      <div class="card">
+        <ol class="steps">
+          <li><b>Préparer la dalle.</b> Vérifier planéité et niveau, tracer l'emprise du pentagone
+            (A, D, C, B, G) à la craie, repérer le point bas de drainage (coin arrière-droit).</li>
+          <li><b>Étanchéité de pied.</b> Coller une bande EPDM/bitume sur tout le périmètre, puis
+            fixer le rail de pied (U galvanisé ou bois traité classe 4) avec chevilles/scellement
+            tous les ~50 cm. Le rail surélève les panneaux : jamais de panneau directement dans l'eau.</li>
+          <li><b>Monter les angles.</b> Démarrer par un angle de référence ; poser les panneaux
+            muraux verticaux face par face, joint à joint, bande butyle dans les recouvrements.
+            Soigner l'angle <b>C</b> (non orthogonal).</li>
+          <li><b>Réserver la porte (face A).</b> Encadrer l'ouverture, poser le dormant alu, vérifier
+            l'aplomb et le débattement <b>extérieur</b> du vantail.</li>
+          <li><b>Araser en tête.</b> Recouper les panneaux des faces en biais (G, D, C) selon la pente,
+            de façon à recevoir le toit à plat sur un seul plan incliné.</li>
+          <li><b>Poser la toiture.</b> Panneaux de toiture dans le sens de la pente (avant→arrière),
+            recouvrements de nervure vers le bas, débords selon plan, vis tête EPDM en sommet de
+            nervure.</li>
+          <li><b>Finitions eau.</b> Bavette d'égout haut (avant), bavettes de rive (G, D, C),
+            gouttière en bas de pente (B + C) avec descente au point bas.</li>
+          <li><b>Étanchéité &amp; ventilation.</b> Mastiquer tous les points singuliers, protéger les
+            chants coupés (primaire anticorrosion), poser la VMC/aérateurs (indispensable en usage
+            chauffé).</li>
+          <li><b>Pose porte &amp; réglages.</b> Poser le vantail vitré, régler les paumelles, joint de
+            seuil, test d'ouverture/fermeture et d'étanchéité.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="vigilance">
+      <h2>Points de vigilance</h2>
+      <div class="card warn">
+        <h3>⚠️ Pente du toit</h3>
+        <p>La consigne de 10 cm de chute donne une pente d'environ <b>4 %</b>, <b>sous le minimum
+        habituellement admis</b> pour des panneaux de toiture sandwich (souvent ≥ 5° ≈ 8,75 %, parfois
+        7 % selon fabricant et longueur de rampant). Risque de stagnation, d'infiltration aux joints et
+        de salissures. <b>Recommandation :</b> porter la chute à <b>22–30 cm</b> (≈ 9–12 %) si la
+        hauteur le permet, et vérifier la valeur mini du fabricant. Paramètre :
+        <code>toit.pente_chute_cm</code>.</p>
+      </div>
+      <div class="card warn">
+        <h3>💧 Condensation (usage chauffé)</h3>
+        <p>Les panneaux à parement acier sont étanches à la vapeur côté intérieur : le risque se
+        déplace vers les <b>ponts thermiques</b> (joints, angles, pied, pourtour de porte) où la
+        condensation peut apparaître. <b>Ventilation obligatoire</b> (VMC simple flux ou aérateurs
+        hygro), traitement soigné des jonctions, pas de pont thermique au rail de pied.</p>
+      </div>
+      <div class="card warn">
+        <h3>🌧️ Drainage &amp; pied de mur</h3>
+        <p>L'eau converge vers le coin arrière-droit : prévoir gouttière sur B + C et une descente à
+        ce point bas, évacuée loin de la dalle. Bande d'étanchéité au pied indispensable (remontées
+        capillaires).</p>
+      </div>
+      <div class="card warn">
+        <h3>📐 Angle C non orthogonal</h3>
+        <p>L'angle du coin coupé n'est pas à 90°. Profils d'angle pliables ou sur-mesure ;
+        attention aux coupes d'about des panneaux et de la toiture sur cette face.</p>
+      </div>
+      <div class="card warn">
+        <h3>🚪 Porte ouvrant vers l'extérieur</h3>
+        <p>Vérifier le débattement extérieur (aucun obstacle, terrasse), la tenue au vent (arrêt de
+        porte), et l'étanchéité du seuil. Double vitrage recommandé pour un usage bureau.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Généré depuis <code>params.json</code> · projet open source · voir le dépôt pour le détail
+    technique et la spécification (<code>agent/</code>).</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script type="module" src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var c = document.getElementById("cover");
+      if (c && window.SHED) c.textContent = window.SHED.panneau.largeur_utile_cm + " cm";
+    });
+  </script>
+</body>
+</html>

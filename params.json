@@ -1,0 +1,45 @@
+{
+  "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Modifiez ces valeurs puis relancez `python3 scripts/generate.py` pour regenerer plans, debit et liste d'achats.",
+  "projet": {
+    "nom": "Abri de jardin - panneaux sandwich",
+    "description": "Petit abri/bureau de jardin a 5 faces (carre avec un coin coupe) sur dalle beton existante.",
+    "auteur": "Remi Vion"
+  },
+  "emprise_cm": {
+    "_comment": "Pentagone : faces A (avant), G (gauche), D (droite), B (arriere), C (coin coupe entre arriere et droite). Mesures relevees sur la dalle existante.",
+    "gauche_G": 246,
+    "avant_A": 230,
+    "droite_D_jusqu_coupe": 160,
+    "arriere_B_jusqu_coupe": 140
+  },
+  "panneau": {
+    "epaisseur_mm": 60,
+    "ame": "PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable",
+    "largeur_utile_cm": 100,
+    "orientation_murs": "verticale",
+    "_comment": "largeur_utile = largeur couverte par panneau apres recouvrement de nervure (souvent 1000 ou 1150 mm selon fabricant)."
+  },
+  "murs": {
+    "hauteur_avant_cm": 240,
+    "_comment": "Hauteur au point le plus haut (egout avant). Le toit descend ensuite vers l'arriere."
+  },
+  "toit": {
+    "pente_chute_cm": 10,
+    "draine_vers": "arriere_B",
+    "debord_cm": { "avant": 15, "arriere": 20, "gauche": 15, "droite": 15, "coupe": 15 },
+    "_comment": "pente_chute = denivele total de l'avant vers l'arriere. ATTENTION : 10 cm sur ~2,46 m = ~4% : c'est sous le minimum habituel des panneaux de toiture (voir points de vigilance). Augmentez cette valeur a 22-30 cm si possible."
+  },
+  "porte": {
+    "face": "A",
+    "largeur_cm": 90,
+    "hauteur_cm": 210,
+    "type": "porte vitree aluminium double vitrage",
+    "ouverture": "vers l'exterieur",
+    "role": "acces principal + source principale de lumiere naturelle",
+    "_comment": "Position : a preciser le long de la face A (par defaut centree)."
+  },
+  "divers": {
+    "facteur_chute_pct": 10,
+    "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
+  }
+}
