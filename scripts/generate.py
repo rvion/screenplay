@@ -249,15 +249,23 @@ def _text(x, y, s, anchor="middle", fill="#222", size=13, weight="normal"):
             f'font-size="{size}" font-weight="{weight}">{s}</text>\n')
 
 
+def _tw(s, size):
+    """Largeur approximative d'un texte (pour dimensionner le SVG et eviter le rognage)."""
+    return len(s) * size * 0.58
+
+
 def plan_sol_svg(p, g):
     pad, scale = 70, 0.42  # px par cm
     xs = [v[0] for v in g["verts"]]
     ys = [v[1] for v in g["verts"]]
-    W = (max(xs) - min(xs)) * scale + 2 * pad
+    base_W = (max(xs) - min(xs)) * scale + 2 * pad
     H = (max(ys) - min(ys)) * scale + 2 * pad
+    title = f"Plan de sol · {g['aire_m2']} m²"
+    W = max(base_W, _tw(title, 15) + 24)
+    xoff = (W - base_W) / 2
 
     def P(v):  # cm -> px, y vers le bas (avant en bas)
-        return (pad + (v[0] - min(xs)) * scale, H - pad - (v[1] - min(ys)) * scale)
+        return (pad + xoff + (v[0] - min(xs)) * scale, H - pad - (v[1] - min(ys)) * scale)
 
     svg = _svg_header(round(W), round(H))
     pts = " ".join(f"{P(v)[0]:.1f},{P(v)[1]:.1f}" for v in g["verts"])
@@ -288,7 +296,8 @@ def plan_sol_svg(p, g):
     svg += f'<path d="M {free[0]:.1f} {free[1]:.1f} A {dw:.1f} {dw:.1f} 0 0 1 {open_end[0]:.1f} {open_end[1]:.1f}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n'
     svg += _text((hinge[0] + free[0]) / 2, hinge[1] + 22, f"Porte {Wd} cm (ouvre dehors)", fill="#c0392b", size=12)
 
-    svg += _text(W / 2, 28, f"Plan de sol - aire {g['aire_m2']} m2 - pente vers l'arriere (B)", size=15, weight="bold")
+    svg += _text(W / 2, 28, title, size=15, weight="bold")
+    svg += _text(W / 2, 44, "pente vers l'arrière (face B)", size=11, fill="#888")
     svg += _text(W / 2, H - 16, "AVANT (face A)", size=12, fill="#666")
     svg += "</svg>\n"
     return svg
@@ -301,11 +310,14 @@ def plan_toit_svg(p, g):
     ys = [v[1] for v in g["verts"]]
     minx, maxx = min(xs) - deb["gauche"], max(xs) + deb["droite"]
     miny, maxy = min(ys) - deb["avant"], max(ys) + deb["arriere"]
-    W = (maxx - minx) * scale + 2 * pad
+    base_W = (maxx - minx) * scale + 2 * pad
     H = (maxy - miny) * scale + 2 * pad
+    title = f"Plan de toiture · pente {g['pente']['pourcent']} %"
+    W = max(base_W, _tw(title, 15) + 24)
+    xoff = (W - base_W) / 2
 
     def P(x, y):
-        return (pad + (x - minx) * scale, H - pad - (y - miny) * scale)
+        return (pad + xoff + (x - minx) * scale, H - pad - (y - miny) * scale)
 
     svg = _svg_header(round(W), round(H))
     # contour toit = emprise dilatee (approx : bbox dilatee + coupe)
@@ -326,8 +338,9 @@ def plan_toit_svg(p, g):
         y0 = P(x, miny + 20); y1 = P(x, maxy - 20)
         svg += _line(y0[0], y0[1], y1[0], y1[1], stroke="#2b7", w=2)
         svg += f'<polygon points="{y1[0]:.0f},{y1[1]:.0f} {y1[0]-5:.0f},{y1[1]+9:.0f} {y1[0]+5:.0f},{y1[1]+9:.0f}" fill="#2b7"/>\n'
-    svg += _text(W / 2, 28, f"Plan de toiture - pente {g['pente']['pourcent']}% ({g['pente']['degres']} deg) vers l'arriere", size=15, weight="bold")
-    svg += _text(W / 2, H - 16, "ecoulement de l'eau ->", size=12, fill="#2b7")
+    svg += _text(W / 2, 28, title, size=15, weight="bold")
+    svg += _text(W / 2, 44, f"{g['pente']['degres']}° · écoulement vers l'arrière", size=11, fill="#888")
+    svg += _text(W / 2, H - 16, "écoulement de l'eau →", size=12, fill="#2b7")
     svg += "</svg>\n"
     return svg
 
@@ -336,8 +349,10 @@ def facade_svg(p, g, face):
     pad, scale = 60, 0.6
     L = face["longueur_cm"]
     h1, h2 = face["hauteur_debut_cm"], face["hauteur_fin_cm"]
-    W = L * scale + 2 * pad
+    base_W = L * scale + 2 * pad
     H = max(h1, h2) * scale + 2 * pad
+    title = f"Face {face['cle']} — {face['libelle']}"
+    W = max(base_W, _tw(title, 15) + 24)
 
     def P(x, h):  # x le long du mur, h hauteur
         return (pad + x * scale, H - pad - h * scale)
@@ -361,7 +376,7 @@ def facade_svg(p, g, face):
     svg += _text(pad + L * scale / 2, H - pad + 26, f"{L:.0f} cm", size=13, weight="bold")
     svg += _text(pad - 8, P(0, h1)[1], f"{h1:.0f}", anchor="end", size=12, fill="#2b5d8a")
     svg += _text(pad + L * scale + 8, P(L, h2)[1], f"{h2:.0f}", anchor="start", size=12, fill="#2b5d8a")
-    svg += _text(W / 2, 26, f"Face {face['cle']} - {face['libelle']}", size=15, weight="bold")
+    svg += _text(W / 2, 26, title, size=15, weight="bold")
     svg += "</svg>\n"
     return svg
 

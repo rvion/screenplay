@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
-  <link rel="stylesheet" href="style.css?v=6f85b749" />
+  <link rel="stylesheet" href="style.css?v=8141800e" />
   <script type="importmap">
   {
     "imports": {
@@ -28,8 +28,8 @@
   </header>
 
   <nav class="toc">
-    <a href="#apercu">Aperçu</a>
     <a href="#modele">Modèle 3D</a>
+    <a href="#apercu">Aperçu</a>
     <a href="#plans">Plans</a>
     <a href="#debit">Débit panneaux</a>
     <a href="#achats">Liste d'achats</a>
@@ -38,6 +38,12 @@
   </nav>
 
   <main>
+    <section id="modele">
+      <h2>Modèle 3D</h2>
+      <div id="viewer"></div>
+      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer.</p>
+    </section>
+
     <section id="apercu">
       <h2>Aperçu</h2>
       <div class="grid" id="kpis"></div>
@@ -58,22 +64,16 @@
       </div>
     </section>
 
-    <section id="modele">
-      <h2>Modèle 3D</h2>
-      <div id="viewer"></div>
-      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer.</p>
-    </section>
-
     <section id="plans">
       <h2>Plans</h2>
       <div class="plans">
-        <figure><img src="assets/plan-sol.svg?v=6f85b749" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
-        <figure><img src="assets/plan-toit.svg?v=6f85b749" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
-        <figure><img src="assets/facade-A.svg?v=6f85b749" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
-        <figure><img src="assets/facade-D.svg?v=6f85b749" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
-        <figure><img src="assets/facade-C.svg?v=6f85b749" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
-        <figure><img src="assets/facade-B.svg?v=6f85b749" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
-        <figure><img src="assets/facade-G.svg?v=6f85b749" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
+        <figure><img src="assets/plan-sol.svg?v=8141800e" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
+        <figure><img src="assets/plan-toit.svg?v=8141800e" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
+        <figure><img src="assets/facade-A.svg?v=8141800e" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
+        <figure><img src="assets/facade-D.svg?v=8141800e" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
+        <figure><img src="assets/facade-C.svg?v=8141800e" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
+        <figure><img src="assets/facade-B.svg?v=8141800e" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
+        <figure><img src="assets/facade-G.svg?v=8141800e" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
       </div>
     </section>
 
@@ -178,8 +178,8 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="data.js?v=6f85b749"></script>
-  <script type="module" src="app.js?v=6f85b749"></script>
+  <script src="data.js?v=8141800e"></script>
+  <script type="module" src="app.js?v=8141800e"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (!window.SHED) return;
