@@ -10,9 +10,11 @@ Aucune dependance externe (stdlib uniquement). Lancer :  python3 scripts/generat
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
+import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARAMS = os.path.join(ROOT, "params.json")
@@ -388,6 +390,33 @@ def model3d(p, g):
 
 
 # --------------------------------------------------------------------------- #
+def stamp_assets():
+    """Ajoute ?v=<hash de contenu> aux assets references dans index.html.
+
+    Invalide proprement le cache (GitHub Pages sert avec max-age=600) : chaque
+    changement de data.js / app.js / style.css / SVG change le hash, donc l'URL.
+    """
+    targets = ["data.js", "app.js", "style.css"] + [
+        os.path.join("assets", n) for n in sorted(os.listdir(ASSETS)) if n.endswith(".svg")
+    ]
+    h = hashlib.sha1()
+    for rel in targets:
+        p = os.path.join(SITE, rel)
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                h.update(f.read())
+    stamp = h.hexdigest()[:8]
+
+    idx = os.path.join(SITE, "index.html")
+    with open(idx, encoding="utf-8") as f:
+        html = f.read()
+    pat = re.compile(r'(href|src)="(style\.css|app\.js|data\.js|assets/[\w.-]+\.svg)(?:\?v=[^"]*)?"')
+    html = pat.sub(lambda m: f'{m.group(1)}="{m.group(2)}?v={stamp}"', html)
+    with open(idx, "w", encoding="utf-8") as f:
+        f.write(html)
+    return stamp
+
+
 def main():
     p = load_params()
     g = geometry(p)
@@ -432,7 +461,8 @@ def main():
     print(f"     face C (coupe) = {g['cotes']['C']} cm")
     print(f"     panneaux murs {t['murs']['aire_brute_m2']} m2 brut / {t['murs']['aire_nette_m2']} m2 net")
     print(f"     toiture {t['toit']['nb_panneaux']} panneaux, commande totale {t['commande_panneaux_m2']} m2")
-    print(f"     {len(files)} SVG + data.js + derived.json ecrits dans site/")
+    stamp = stamp_assets()
+    print(f"     {len(files)} SVG + data.js + derived.json ecrits dans site/ (cache-bust v={stamp})")
 
 
 if __name__ == "__main__":
