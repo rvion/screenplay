@@ -8,7 +8,7 @@ Ce dépôt contient **tout le nécessaire** : plans cotés, débit matière, lis
 cahier de montage et points de vigilance — le tout généré depuis un **fichier de
 paramètres unique** et publié sur un petit **site web**.
 
-> 🌐 **Site** (après activation de Pages) : `https://<compte>.github.io/screenplay/`
+> 🌐 **Site en ligne** : **<https://rvion.github.io/screenplay/>**
 > · 🧠 **Spécification** : dossier [`agent/`](agent/) · ⚙️ **Paramètres** : [`params.json`](params.json)
 
 ---
@@ -101,11 +101,9 @@ Détail complet : section « Points de vigilance » du site et [`agent/03-decisi
 
 ## Publier le site (GitHub Pages)
 
-1. Rendre le dépôt **public**.
-2. *Settings → Pages → Source = **GitHub Actions***.
-3. Pousser sur `main` : le workflow [`pages.yml`](.github/workflows/pages.yml) régénère et
-   déploie `site/`. L'URL apparaît dans l'onglet **Actions / Pages**.
+Le dépôt est **public**, Pages est sur **Source = GitHub Actions**, et le site est **déjà en
+ligne** : <https://rvion.github.io/screenplay/>. À chaque push sur `main`, le workflow
+[`pages.yml`](.github/workflows/pages.yml) régénère et redéploie `site/` automatiquement.
 
-> Statut : développé sur la branche `claude/garden-shed-docs-n7eq2b`.
 > Le rendu 3D n'a pas pu être validé dans un navigateur réel pendant la génération
-> (cf. [`agent/06-backlog.md`](agent/06-backlog.md)) — à vérifier après publication.
+> (cf. [`agent/06-backlog.md`](agent/06-backlog.md)) — à vérifier directement sur le site.

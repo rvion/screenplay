@@ -40,7 +40,7 @@ ponts thermiques. La VMC/aérateurs devient **indispensable**, pas optionnelle.
 *À confirmer :* position exacte (centrée par défaut) et sens de charnière.
 
 ## D9 — Publication GitHub Pages via Actions, dossier `site/`
-*Pourquoi :* « adresse simple » `compte.github.io/screenplay`, déploiement auto à chaque
+*Pourquoi :* « adresse simple » `rvion.github.io/screenplay`, déploiement auto à chaque
 push, régénération possible en CI. *Écarté :* branche `gh-pages` manuelle.
 
 ## D10 — `CLAUDE.md` racine référence `agent/*` via `@`

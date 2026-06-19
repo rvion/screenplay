@@ -36,7 +36,7 @@ python3 -m http.server -d site 8000   # puis http://localhost:8000
 ## Publication GitHub Pages
 - Workflow : `.github/workflows/pages.yml` régénère puis déploie `site/`.
 - Activation : *Settings → Pages → Source = GitHub Actions* (une fois).
-- URL résultante : `https://<compte>.github.io/screenplay/`.
+- URL résultante : `https://rvion.github.io/screenplay/`.
 
 ## Invariants à préserver
 1. Aucun chiffre métier en dur hors `params.json`.
