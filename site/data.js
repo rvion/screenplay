@@ -256,10 +256,12 @@ window.SHED = {
     "face": "A",
     "largeur_cm": 90,
     "hauteur_cm": 210,
+    "position": "droite",
+    "marge_bord_cm": 5,
     "type": "porte vitree aluminium double vitrage",
     "ouverture": "vers l'exterieur",
     "role": "acces principal + source principale de lumiere naturelle",
-    "_comment": "Position : a preciser le long de la face A (par defaut centree)."
+    "_comment": "position = gauche | centre | droite (le long de la face A, cote face D pour 'droite'). marge_bord_cm = retrait depuis le coin."
   },
   "panneau": {
     "epaisseur_mm": 60,
@@ -302,7 +304,8 @@ window.SHED = {
     "door": {
       "face_index": 0,
       "width_m": 0.9,
-      "height_m": 2.1
+      "height_m": 2.1,
+      "offset_m": 1.35
     }
   },
   "svg": [

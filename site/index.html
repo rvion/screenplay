@@ -6,6 +6,14 @@
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
   <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
   <header class="hero">
@@ -178,6 +186,18 @@
       set("v-chute", pente.chute_cm);
       set("v-pente", pente.pourcent + " %");
       set("v-pente-deg", pente.degres + "°");
+    });
+    // Filet de securite : si le module 3D n'a rien rendu (WebGL absent, CDN bloque...),
+    // afficher un message plutot qu'un cadre gris muet.
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        var v = document.getElementById("viewer");
+        if (v && !v.querySelector("canvas") && !v.textContent.trim()) {
+          v.innerHTML = '<p style="padding:1rem;color:#777">Rendu 3D indisponible ici ' +
+            '(WebGL requis, ou chargement de la librairie bloqué). Les plans plus bas ' +
+            'restent entièrement valables.</p>';
+        }
+      }, 4000);
     });
   </script>
 </body>

@@ -26,6 +26,18 @@ def load_params() -> dict:
         return json.load(f)
 
 
+def door_start_cm(p: dict, face_len: float) -> float:
+    """Position du bord gauche de la porte, mesuree depuis le debut de la face."""
+    w = float(p["porte"]["largeur_cm"])
+    margin = float(p["porte"].get("marge_bord_cm", 5))
+    pos = p["porte"].get("position", "centre")
+    if pos == "droite":
+        return max(0.0, face_len - w - margin)
+    if pos == "gauche":
+        return margin
+    return max(0.0, (face_len - w) / 2.0)
+
+
 # --------------------------------------------------------------------------- #
 # Geometrie                                                                    #
 # --------------------------------------------------------------------------- #
@@ -258,13 +270,17 @@ def plan_sol_svg(p, g):
         lab = labels[i]
         svg += _text(mx, my - 6, f"{lab} = {valmap[lab]:.0f} cm", size=14, weight="bold", fill="#2b5d8a")
 
-    # Porte sur la face A (en bas), centree
-    A0 = P(g["verts"][0]); A1 = P(g["verts"][1])
-    dw = p["porte"]["largeur_cm"] * scale
-    cx = (A0[0] + A1[0]) / 2
-    svg += _line(cx - dw / 2, A0[1], cx + dw / 2, A0[1], stroke="#c0392b", w=5)
-    svg += f'<path d="M {cx-dw/2:.1f} {A0[1]:.1f} A {dw:.1f} {dw:.1f} 0 0 0 {cx-dw/2:.1f} {A0[1]+dw:.1f}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n'
-    svg += _text(cx, A0[1] + 22, f"Porte {p['porte']['largeur_cm']} cm (ouvre dehors)", fill="#c0392b", size=12)
+    # Porte sur la face A (en bas), position parametrable. Face A = verts[0]->verts[1] (le long de +x).
+    Wd = p["porte"]["largeur_cm"]
+    start = door_start_cm(p, g["cotes"]["A"])
+    hinge = P((g["verts"][0][0] + start, 0.0))         # charniere = bord gauche de la porte
+    free = P((g["verts"][0][0] + start + Wd, 0.0))      # bord libre (serrure)
+    dw = Wd * scale
+    svg += _line(hinge[0], hinge[1], free[0], free[1], stroke="#c0392b", w=5)       # ouverture
+    open_end = (hinge[0], hinge[1] + dw)                # vantail ouvert ~90 deg vers l'exterieur (bas)
+    svg += _line(hinge[0], hinge[1], open_end[0], open_end[1], stroke="#c0392b", w=2)
+    svg += f'<path d="M {free[0]:.1f} {free[1]:.1f} A {dw:.1f} {dw:.1f} 0 0 1 {open_end[0]:.1f} {open_end[1]:.1f}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n'
+    svg += _text((hinge[0] + free[0]) / 2, hinge[1] + 22, f"Porte {Wd} cm (ouvre dehors)", fill="#c0392b", size=12)
 
     svg += _text(W / 2, 28, f"Plan de sol - aire {g['aire_m2']} m2 - pente vers l'arriere (B)", size=15, weight="bold")
     svg += _text(W / 2, H - 16, "AVANT (face A)", size=12, fill="#666")
@@ -325,15 +341,15 @@ def facade_svg(p, g, face):
     pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in poly)
     svg += f'<polygon points="{pts}" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>\n'
 
-    # Porte si face concernee
+    # Porte si face concernee (position parametrable le long de la face)
     if face["cle"] == p["porte"]["face"]:
         dw = p["porte"]["largeur_cm"] * scale
         dh = p["porte"]["hauteur_cm"] * scale
-        cx = pad + (L * scale) / 2
-        bx, by = cx - dw / 2, H - pad
+        start = door_start_cm(p, L)
+        bx, by = pad + start * scale, H - pad
         svg += f'<rect x="{bx:.1f}" y="{by-dh:.1f}" width="{dw:.1f}" height="{dh:.1f}" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>\n'
-        svg += _line(bx, by - dh / 2, bx - 16, by - dh / 2, stroke="#1b6", w=1, dash="3 3")
-        svg += _text(cx, by - dh / 2, "porte vitree", fill="#178", size=11)
+        svg += _line(bx, by - dh / 2, bx - 16, by - dh / 2, stroke="#1b6", w=1, dash="3 3")  # charniere (gauche)
+        svg += _text(bx + dw / 2, by - dh / 2, "porte vitree", fill="#178", size=11)
 
     # cotes
     svg += _text(pad + L * scale / 2, H - pad + 26, f"{L:.0f} cm", size=13, weight="bold")
@@ -359,6 +375,7 @@ def model3d(p, g):
             "face_index": 0,  # face A = arete verts[0]-verts[1]
             "width_m": p["porte"]["largeur_cm"] / 100.0,
             "height_m": p["porte"]["hauteur_cm"] / 100.0,
+            "offset_m": door_start_cm(p, g["cotes"]["A"]) / 100.0,  # depuis verts[0] (FL)
         },
     }
 

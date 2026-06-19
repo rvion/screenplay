@@ -1,5 +1,5 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const S = window.SHED;
 
@@ -175,7 +175,8 @@ function addWallWithDoor(scene, V, a, b, ha, hb, door, mat) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;   // direction du mur
   const dw = door.width_m, dh = door.height_m;
-  const s0 = (len - dw) / 2, s1 = (len + dw) / 2;             // bornes ouverture
+  const off = (typeof door.offset_m === "number") ? door.offset_m : (len - dw) / 2;
+  const s0 = Math.max(0, Math.min(off, len - dw)), s1 = s0 + dw;   // bornes ouverture (position parametrable)
   const pt = (s, h) => {
     const x = a[0] + ux * s, y = a[1] + uy * s;
     return V(x, y, h);

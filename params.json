@@ -33,10 +33,12 @@
     "face": "A",
     "largeur_cm": 90,
     "hauteur_cm": 210,
+    "position": "droite",
+    "marge_bord_cm": 5,
     "type": "porte vitree aluminium double vitrage",
     "ouverture": "vers l'exterieur",
     "role": "acces principal + source principale de lumiere naturelle",
-    "_comment": "Position : a preciser le long de la face A (par defaut centree)."
+    "_comment": "position = gauche | centre | droite (le long de la face A, cote face D pour 'droite'). marge_bord_cm = retrait depuis le coin."
   },
   "divers": {
     "facteur_chute_pct": 10,
