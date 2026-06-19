@@ -28,16 +28,41 @@ def load_params() -> dict:
         return json.load(f)
 
 
-def door_start_cm(p: dict, face_len: float) -> float:
-    """Position du bord gauche de la porte, mesuree depuis le debut de la face."""
-    w = float(p["porte"]["largeur_cm"])
-    margin = float(p["porte"].get("marge_bord_cm", 5))
-    pos = p["porte"].get("position", "centre")
+FACE_INDEX = {"A": 0, "D": 1, "C": 2, "B": 3, "G": 4}
+
+
+def opening_start_cm(o: dict, face_len: float) -> float:
+    """Position du bord gauche d'une ouverture, mesuree depuis le debut de la face."""
+    w = float(o["largeur_cm"])
+    margin = float(o.get("marge_bord_cm", 5))
+    pos = o.get("position", "centre")
     if pos == "droite":
         return max(0.0, face_len - w - margin)
     if pos == "gauche":
         return margin
     return max(0.0, (face_len - w) / 2.0)
+
+
+def resolve_openings(p: dict, g: dict) -> list:
+    """Liste normalisee des ouvertures (porte + fenetres), rattachees a leur face."""
+    facelen = {f["cle"]: f["longueur_cm"] for f in g["faces"]}
+    out = []
+    for o in p.get("ouvertures", []):
+        L = facelen[o["face"]]
+        out.append({
+            "id": o.get("id", o["type"]),
+            "type": o["type"],
+            "face": o["face"],
+            "face_index": FACE_INDEX[o["face"]],
+            "largeur_cm": float(o["largeur_cm"]),
+            "hauteur_cm": float(o["hauteur_cm"]),
+            "allege_cm": float(o.get("allege_cm", 0)),
+            "start_cm": round(opening_start_cm(o, L), 1),
+            "position": o.get("position", "centre"),
+            "ouverture": o.get("ouverture", ""),
+            "description": o.get("description", ""),
+        })
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -132,11 +157,12 @@ def geometry(p: dict) -> dict:
 # --------------------------------------------------------------------------- #
 # Debit panneaux + quantites                                                   #
 # --------------------------------------------------------------------------- #
-def takeoff(p: dict, g: dict) -> dict:
+def takeoff(p: dict, g: dict, openings: list) -> dict:
     cover = float(p["panneau"]["largeur_utile_cm"])
     waste = 1.0 + float(p["divers"]["facteur_chute_pct"]) / 100.0
-    door = p["porte"]
-    door_area = (door["largeur_cm"] * door["hauteur_cm"]) / 1e4
+    ded = {}
+    for o in openings:
+        ded[o["face"]] = ded.get(o["face"], 0.0) + o["largeur_cm"] * o["hauteur_cm"] / 1e4
 
     rows = []
     gross = 0.0
@@ -148,8 +174,8 @@ def takeoff(p: dict, g: dict) -> dict:
         g_area = n * (cover / 100.0) * (hmax / 100.0)
         avg_h = (f["hauteur_debut_cm"] + f["hauteur_fin_cm"]) / 2.0
         n_area = (L / 100.0) * (avg_h / 100.0)
-        if f["cle"] == door["face"]:
-            n_area -= door_area
+        if f["cle"] in ded:
+            n_area -= ded[f["cle"]]
         gross += g_area
         net += n_area
         rows.append({
@@ -176,7 +202,7 @@ def takeoff(p: dict, g: dict) -> dict:
             "lignes": rows,
             "aire_brute_m2": round(gross, 2),
             "aire_nette_m2": round(net, 2),
-            "porte_deduite_m2": round(door_area, 2),
+            "ouvertures_deduites_m2": round(sum(ded.values()), 2),
             "total_panneaux": sum(r["nb_panneaux"] for r in rows),
         },
         "toit": {
@@ -193,7 +219,7 @@ def takeoff(p: dict, g: dict) -> dict:
     }
 
 
-def shopping(p: dict, g: dict, t: dict) -> list:
+def shopping(p: dict, g: dict, t: dict, openings: list) -> list:
     perim = g["perimetre_cm"] / 100.0
     n_corners = len(g["faces"])
     corner_h = max(g["hauteur_avant_cm"], 2.4)
@@ -201,7 +227,12 @@ def shopping(p: dict, g: dict, t: dict) -> list:
     gutter_len = (g["cotes"]["B"] + g["cotes"]["C"]) / 100.0
     anchors = math.ceil(perim / 0.5)
     screws = math.ceil((t["murs"]["aire_brute_m2"] + t["toit"]["aire_brute_m2"]) * 6)
-    return [
+    portes = [o for o in openings if o["type"] == "porte"]
+    fenetres = [o for o in openings if o["type"] == "fenetre"]
+    porte_q = ", ".join(f"{int(o['largeur_cm'])}x{int(o['hauteur_cm'])} cm" for o in portes) or "-"
+    fen_q = ", ".join(f"{int(o['largeur_cm'])}x{int(o['hauteur_cm'])} all.{int(o['allege_cm'])} (face {o['face']})" for o in fenetres) or "-"
+    open_perim = sum(2 * (o["largeur_cm"] + o["hauteur_cm"]) for o in openings) / 100.0
+    items = [
         {"poste": "Panneaux sandwich 60 mm - finition MUR (faces A,D,C,B,G)", "qte": f"{t['murs']['aire_brute_m2']} m2 brut (net ~{t['murs']['aire_nette_m2']} m2)",
          "note": "Ame PIR. Parement mural lisse/micro-nervure, laque 2 faces. Commander a longueur."},
         {"poste": "Panneaux sandwich 60 mm - finition TOIT (face T)", "qte": f"{t['toit']['nb_panneaux']} panneaux de ~{t['toit']['longueur_panneau_cm']/100:.2f} m ({t['toit']['aire_brute_m2']} m2 brut)",
@@ -218,16 +249,20 @@ def shopping(p: dict, g: dict, t: dict) -> list:
         {"poste": "Vis autoperceuses tete EPDM", "qte": f"~{screws} (boite de {math.ceil(screws/100)*100})",
          "note": "Longueur = epaisseur panneau + structure. Rondelle d'etancheite obligatoire."},
         {"poste": "Chevilles / scellement dalle", "qte": f"~{anchors}", "note": "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)."},
-        {"poste": "Porte vitree alu double vitrage", "qte": f"1 ({p['porte']['largeur_cm']}x{p['porte']['hauteur_cm']} cm)",
-         "note": "Ouverture vers l'exterieur. Cadre/dormant + seuil + joint."},
+        {"poste": "Porte vitree alu double vitrage", "qte": f"{len(portes)} ({porte_q})",
+         "note": "Ouverture vers l'exterieur. Dormant + seuil + joints."},
         {"poste": "Ventilation (VMC ou aerateurs hygro)", "qte": "1 kit",
          "note": "INDISPENSABLE en usage habitable chauffe : evite la condensation (voir vigilance)."},
-        {"poste": "Bande comprimee / mousse precomprimee", "qte": f"~{math.ceil(perim)+ math.ceil((p['porte']['largeur_cm']*2+p['porte']['hauteur_cm']*2)/100)} m",
-         "note": "Etancheite a l'air au pied et au pourtour de la porte."},
+        {"poste": "Bande comprimee / mousse precomprimee", "qte": f"~{math.ceil(perim + open_perim)} m",
+         "note": "Etancheite a l'air au pied et au pourtour des ouvertures."},
         {"poste": "Bande butyle (joints de panneaux)", "qte": f"~{math.ceil(perim*2)} m", "note": "Joints longitudinaux et perimetriques."},
         {"poste": "Mastic PU + primaire anticorrosion", "qte": "~5 cartouches + 1 primaire", "note": "Cachetage et protection des chants coupes (anticorrosion)."},
         {"poste": "Peinture de retouche (RAL parement)", "qte": "1 aerosol", "note": "Retouche des rayures et chants."},
     ]
+    if fenetres:
+        items.insert(11, {"poste": "Fenetres double vitrage", "qte": f"{len(fenetres)} : {fen_q}",
+                          "note": "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant selon besoin. Cadre + appui + joints."})
+    return items
 
 
 # --------------------------------------------------------------------------- #
@@ -254,7 +289,7 @@ def _tw(s, size):
     return len(s) * size * 0.58
 
 
-def plan_sol_svg(p, g):
+def plan_sol_svg(p, g, openings):
     pad, scale = 70, 0.42  # px par cm
     xs = [v[0] for v in g["verts"]]
     ys = [v[1] for v in g["verts"]]
@@ -284,17 +319,27 @@ def plan_sol_svg(p, g):
         lab = labels[i]
         svg += _text(mx, my - 6, f"{lab} = {valmap[lab]:.0f} cm", size=14, weight="bold", fill="#2b5d8a")
 
-    # Porte sur la face A (en bas), position parametrable. Face A = verts[0]->verts[1] (le long de +x).
-    Wd = p["porte"]["largeur_cm"]
-    start = door_start_cm(p, g["cotes"]["A"])
-    hinge = P((g["verts"][0][0] + start, 0.0))         # charniere = bord gauche de la porte
-    free = P((g["verts"][0][0] + start + Wd, 0.0))      # bord libre (serrure)
-    dw = Wd * scale
-    svg += _line(hinge[0], hinge[1], free[0], free[1], stroke="#c0392b", w=5)       # ouverture
-    open_end = (hinge[0], hinge[1] + dw)                # vantail ouvert ~90 deg vers l'exterieur (bas)
-    svg += _line(hinge[0], hinge[1], open_end[0], open_end[1], stroke="#c0392b", w=2)
-    svg += f'<path d="M {free[0]:.1f} {free[1]:.1f} A {dw:.1f} {dw:.1f} 0 0 1 {open_end[0]:.1f} {open_end[1]:.1f}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n'
-    svg += _text((hinge[0] + free[0]) / 2, hinge[1] + 22, f"Porte {Wd} cm (ouvre dehors)", fill="#c0392b", size=12)
+    # Ouvertures : porte (avec debattement exterieur) + fenetres, chacune sur sa face
+    edge = {"A": (0, 1), "D": (1, 2), "C": (2, 3), "B": (3, 4), "G": (4, 0)}
+    for o in openings:
+        i1, i2 = edge[o["face"]]
+        v1, v2 = g["verts"][i1], g["verts"][i2]
+        Lf = math.hypot(v2[0] - v1[0], v2[1] - v1[1])
+        ux, uy = (v2[0] - v1[0]) / Lf, (v2[1] - v1[1]) / Lf
+        s0, s1 = o["start_cm"], o["start_cm"] + o["largeur_cm"]
+        q0 = P((v1[0] + ux * s0, v1[1] + uy * s0))
+        q1 = P((v1[0] + ux * s1, v1[1] + uy * s1))
+        owx, owy = uy, ux  # normale exterieure, en coords ecran (unitaire)
+        if o["type"] == "porte":
+            dwpx = o["largeur_cm"] * scale
+            oe = (q0[0] + owx * dwpx, q0[1] + owy * dwpx)
+            svg += _line(q0[0], q0[1], q1[0], q1[1], stroke="#c0392b", w=5)
+            svg += _line(q0[0], q0[1], oe[0], oe[1], stroke="#c0392b", w=2)
+            svg += f'<path d="M {q1[0]:.1f} {q1[1]:.1f} A {dwpx:.1f} {dwpx:.1f} 0 0 1 {oe[0]:.1f} {oe[1]:.1f}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n'
+            svg += _text((q0[0] + q1[0]) / 2 + owx * 18, (q0[1] + q1[1]) / 2 + owy * 18, f"Porte {int(o['largeur_cm'])} (dehors)", fill="#c0392b", size=11)
+        else:
+            svg += _line(q0[0], q0[1], q1[0], q1[1], stroke="#1b9aa8", w=5)
+            svg += _text((q0[0] + q1[0]) / 2 + owx * 14, (q0[1] + q1[1]) / 2 + owy * 14, f"fen. {int(o['largeur_cm'])}", fill="#137", size=10)
 
     svg += _text(W / 2, 28, title, size=15, weight="bold")
     svg += _text(W / 2, 44, "pente vers l'arrière (face B)", size=11, fill="#888")
@@ -345,7 +390,7 @@ def plan_toit_svg(p, g):
     return svg
 
 
-def facade_svg(p, g, face):
+def facade_svg(p, g, face, openings):
     pad, scale = 60, 0.6
     L = face["longueur_cm"]
     h1, h2 = face["hauteur_debut_cm"], face["hauteur_fin_cm"]
@@ -362,15 +407,21 @@ def facade_svg(p, g, face):
     pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in poly)
     svg += f'<polygon points="{pts}" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>\n'
 
-    # Porte si face concernee (position parametrable le long de la face)
-    if face["cle"] == p["porte"]["face"]:
-        dw = p["porte"]["largeur_cm"] * scale
-        dh = p["porte"]["hauteur_cm"] * scale
-        start = door_start_cm(p, L)
-        bx, by = pad + start * scale, H - pad
-        svg += f'<rect x="{bx:.1f}" y="{by-dh:.1f}" width="{dw:.1f}" height="{dh:.1f}" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>\n'
-        svg += _line(bx, by - dh / 2, bx - 16, by - dh / 2, stroke="#1b6", w=1, dash="3 3")  # charniere (gauche)
-        svg += _text(bx + dw / 2, by - dh / 2, "porte vitree", fill="#178", size=11)
+    # Ouvertures sur cette face (porte = au sol ; fenetre = avec allege)
+    for o in openings:
+        if o["face"] != face["cle"]:
+            continue
+        ow = o["largeur_cm"] * scale
+        oh = o["hauteur_cm"] * scale
+        sx = pad + o["start_cm"] * scale
+        by = H - pad - o["allege_cm"] * scale          # bas de l'ouverture
+        svg += f'<rect x="{sx:.1f}" y="{by-oh:.1f}" width="{ow:.1f}" height="{oh:.1f}" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>\n'
+        if o["type"] == "porte":
+            svg += _line(sx, by - oh / 2, sx - 16, by - oh / 2, stroke="#1b6", w=1, dash="3 3")  # charniere (gauche)
+            svg += _text(sx + ow / 2, by - oh / 2, "porte", fill="#178", size=11)
+        else:
+            svg += _text(sx + ow / 2, by - oh / 2, "fenêtre", fill="#178", size=10)
+            svg += _text(sx + ow / 2, by + 12, f"allège {int(o['allege_cm'])}", fill="#888", size=9)
 
     # cotes
     svg += _text(pad + L * scale / 2, H - pad + 26, f"{L:.0f} cm", size=13, weight="bold")
@@ -384,23 +435,32 @@ def facade_svg(p, g, face):
 # --------------------------------------------------------------------------- #
 # Modele 3D (donnees pour Three.js)                                            #
 # --------------------------------------------------------------------------- #
-def model3d(p, g):
+def model3d(p, g, openings):
     # en metres, y = profondeur, z = hauteur
     verts_m = [[v[0] / 100.0, v[1] / 100.0] for v in g["verts"]]
     heights_m = [h / 100.0 for h in g["vert_heights_cm"]]
     deb = p["toit"]["debord_cm"]
     overhang_m = (sum(deb.values()) / len(deb)) / 100.0
+    drop = float(p["toit"]["pente_chute_cm"])
+    run = g["pente"]["run_cm"]
     return {
         "footprint": verts_m,
         "heights": heights_m,
         "thickness_m": p["panneau"]["epaisseur_mm"] / 1000.0,
         "roof_overhang_m": round(overhang_m, 3),
-        "door": {
-            "face_index": 0,  # face A = arete verts[0]-verts[1]
-            "width_m": p["porte"]["largeur_cm"] / 100.0,
-            "height_m": p["porte"]["hauteur_cm"] / 100.0,
-            "offset_m": door_start_cm(p, g["cotes"]["A"]) / 100.0,  # depuis verts[0] (FL)
-        },
+        "roof_front_m": round(g["hauteur_avant_cm"] / 100.0, 3),
+        "roof_slope": round(drop / run, 5),  # pente sans dimension (m/m)
+        "openings": [
+            {
+                "type": o["type"],
+                "face_index": o["face_index"],
+                "offset_m": round(o["start_cm"] / 100.0, 3),
+                "width_m": round(o["largeur_cm"] / 100.0, 3),
+                "height_m": round(o["hauteur_cm"] / 100.0, 3),
+                "sill_m": round(o["allege_cm"] / 100.0, 3),
+            }
+            for o in openings
+        ],
     }
 
 
@@ -435,20 +495,21 @@ def stamp_assets():
 def main():
     p = load_params()
     g = geometry(p)
-    t = takeoff(p, g)
-    sh = shopping(p, g, t)
-    m = model3d(p, g)
+    openings = resolve_openings(p, g)
+    t = takeoff(p, g, openings)
+    sh = shopping(p, g, t, openings)
+    m = model3d(p, g, openings)
 
     os.makedirs(ASSETS, exist_ok=True)
     os.makedirs(DATADIR, exist_ok=True)
 
     # SVG
     files = {
-        "plan-sol.svg": plan_sol_svg(p, g),
+        "plan-sol.svg": plan_sol_svg(p, g, openings),
         "plan-toit.svg": plan_toit_svg(p, g),
     }
     for f in g["faces"]:
-        files[f"facade-{f['cle']}.svg"] = facade_svg(p, g, f)
+        files[f"facade-{f['cle']}.svg"] = facade_svg(p, g, f, openings)
     for name, content in files.items():
         with open(os.path.join(ASSETS, name), "w", encoding="utf-8") as fh:
             fh.write(content)
@@ -458,7 +519,7 @@ def main():
         "geometrie": g,
         "debit": t,
         "achats": sh,
-        "porte": p["porte"],
+        "ouvertures": openings,
         "panneau": p["panneau"],
         "model3d": m,
         "svg": list(files.keys()),

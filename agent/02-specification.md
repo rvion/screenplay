@@ -31,9 +31,16 @@ Sommets dérivés des 4 mesures de `emprise_cm` :
 - Faces **A, B** : tête **horizontale**.
 - Nombre de panneaux/face = `ceil(longueur / largeur_utile)`.
 
-## Porte
-- Face **A**, vitrée, **ouverture extérieure**, double vitrage, charnière à gauche.
-- Sert d'apport de lumière principal. Déduite des surfaces nettes de panneaux.
+## Ouvertures (porte + fenêtres)
+- Liste paramétrique `ouvertures[]` dans `params.json`. Chaque ouverture :
+  `type` (`porte`/`fenetre`), `face`, `largeur_cm`, `hauteur_cm`, `allege_cm`
+  (hauteur du bas / sol, 0 pour une porte), `position` (`gauche`/`centre`/`droite`).
+- **Porte** : face **A**, vitrée, **ouverture extérieure**, charnière côté `position`.
+  Apport de lumière principal. **Fenêtres** : faces **D** (droite) et **B** (arrière) par défaut.
+- Chaque ouverture est **déduite** de la surface nette de panneau de sa face, **dessinée**
+  sur le plan de sol et l'élévation concernée (avec allège), et **rendue en 3D** (trou réel
+  dans le mur + vitrage ; vantail entrouvert pour la porte).
+- ⚠️ Plus de vitrage ⇒ plus de déperditions (usage chauffé) : à doser, cf. vigilance.
 
 ## Livrables générés (`generate.py`)
 | Sortie | Rôle |

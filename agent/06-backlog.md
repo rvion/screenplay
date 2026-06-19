@@ -10,10 +10,13 @@
 - [ ] Besoin **électricité / chauffage / plancher** à intégrer (bureau) ?
 
 ## Améliorations possibles (non bloquantes)
+- [x] **Ouvertures paramétriques** (porte + fenêtres D et B) : débit, plans, élévations, 3D.
+- [x] **3D** : nervures de toiture, gouttière arrière + descente, rail de pied, sol enherbé,
+      dalle béton blanche débordante.
 - [ ] Élévations : ajouter cotes de la porte et lignes d'arase sur les SVG.
-- [ ] Plan de toiture : vrai offset de polygone (mitré) au lieu de l'approximation bbox.
+- [ ] Plan de toiture / dalle : vrai offset de polygone (mitré) au lieu de la dilatation radiale.
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
-- [ ] 3D : afficher les nervures de toiture, la gouttière et le rail de pied.
+- [ ] Fenêtres : choix fixe vs ouvrant, et bilan thermique chiffré (déperditions vitrage).
 - [ ] Export PDF imprimable du cahier (via le site, `@media print`).
 - [ ] Métré chiffré (prix indicatifs) — nécessite des sources fournisseur.
 - [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).

@@ -21,7 +21,8 @@ paramètres unique** et publié sur un petit **site web**.
 | **Faces** | **A** avant (porte) · **D** droite · **C** coin coupé · **B** arrière · **G** gauche |
 | **Panneaux** | sandwich **60 mm**, âme PIR, pose murale verticale |
 | **Toit** | **mono-pente vers l'arrière**, chute 25 cm (**≈ 10 %**, dans la plage admise) |
-| **Porte** | **vitrée, ouvrant vers l'extérieur**, source principale de lumière |
+| **Ouvertures** | **porte vitrée** (face A, ouvrant dehors) + **fenêtres** (faces D et B), paramétriques |
+| **Rendu 3D** | sol, **dalle blanche débordante**, rail de pied, **toit nervuré**, gouttière arrière |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année |
 
 ### Mesures relevées sur la dalle (cm)

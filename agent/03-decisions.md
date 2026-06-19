@@ -46,3 +46,16 @@ push, régénération possible en CI. *Écarté :* branche `gh-pages` manuelle.
 ## D10 — `CLAUDE.md` racine référence `agent/*` via `@`
 *Pourquoi :* demande explicite (B11) ; charge la spec dans le contexte de l'agent
 automatiquement.
+
+## D11 — Ouvertures généralisées en liste paramétrique
+La porte (cas particulier) devient une entrée d'une liste `ouvertures[]` (porte + fenêtres).
+*Pourquoi :* ajouter/déplacer des fenêtres sans toucher au code ; déduction débit, plans,
+élévations et 3D pilotés par la même donnée. *Défaut :* 1 porte (A) + 1 fenêtre (D) + 1 (B).
+*Écarté :* coder chaque ouverture en dur.
+
+## D12 — Scène 3D enrichie (sol, dalle débordante, rail, nervures, gouttière)
+Ajout d'un sol enherbé, d'une **dalle béton blanche avec débord**, d'un **rail de pied**
+saillant, des **nervures de toiture** et d'une **gouttière arrière + descente**. Murs percés
+de vrais trous pour chaque ouverture (généralisation du mur-porte). *Pourquoi :* rendu plus
+lisible et réaliste (demande utilisateur). *Compromis :* débord de dalle/toit approximé par
+dilatation radiale (pas d'offset mitré), suffisant visuellement.

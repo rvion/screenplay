@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
-  <link rel="stylesheet" href="style.css?v=8141800e" />
+  <link rel="stylesheet" href="style.css?v=5b5faeef" />
   <script type="importmap">
   {
     "imports": {
@@ -52,7 +52,8 @@
         <b>B</b> arrière, <b>G</b> gauche. Le toit en panneau sandwich est en <b>mono-pente vers
         l'arrière</b> pour évacuer l'eau loin de l'entrée. La <b>porte vitrée</b> de la face A
         s'ouvre <b>vers l'extérieur</b> (zéro emprise intérieure) et fait office de source
-        principale de lumière naturelle.</p>
+        principale de lumière naturelle. Deux <b>fenêtres</b> (faces <b>D</b> droite et
+        <b>B</b> arrière) complètent l'éclairage. Toutes les ouvertures sont paramétriques.</p>
         <table id="faces">
           <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur (début → fin)</th></tr></thead>
           <tbody></tbody>
@@ -67,13 +68,13 @@
     <section id="plans">
       <h2>Plans</h2>
       <div class="plans">
-        <figure><img src="assets/plan-sol.svg?v=8141800e" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
-        <figure><img src="assets/plan-toit.svg?v=8141800e" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
-        <figure><img src="assets/facade-A.svg?v=8141800e" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
-        <figure><img src="assets/facade-D.svg?v=8141800e" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
-        <figure><img src="assets/facade-C.svg?v=8141800e" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
-        <figure><img src="assets/facade-B.svg?v=8141800e" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
-        <figure><img src="assets/facade-G.svg?v=8141800e" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
+        <figure><img src="assets/plan-sol.svg?v=5b5faeef" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
+        <figure><img src="assets/plan-toit.svg?v=5b5faeef" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
+        <figure><img src="assets/facade-A.svg?v=5b5faeef" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
+        <figure><img src="assets/facade-D.svg?v=5b5faeef" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
+        <figure><img src="assets/facade-C.svg?v=5b5faeef" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
+        <figure><img src="assets/facade-B.svg?v=5b5faeef" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
+        <figure><img src="assets/facade-G.svg?v=5b5faeef" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
       </div>
     </section>
 
@@ -148,6 +149,14 @@
         unique <code>toit.pente_chute_cm</code>.</p>
       </div>
       <div class="card warn">
+        <h3>🪟 Vitrage &amp; thermique</h3>
+        <p>Porte vitrée + fenêtres = bel éclairage, mais chaque m² de vitrage <b>déperd plus</b>
+        qu'un panneau 60 mm. Pour un bureau chauffé : viser un <b>double vitrage performant</b>
+        (idéalement à rupture de pont thermique), doser la surface vitrée, et soigner l'étanchéité
+        des dormants. Les ouvertures sont paramétriques (<code>ouvertures[]</code>) : on ajuste
+        nombre, taille et allège sans toucher au code.</p>
+      </div>
+      <div class="card warn">
         <h3>💧 Condensation (usage chauffé)</h3>
         <p>Les panneaux à parement acier sont étanches à la vapeur côté intérieur : le risque se
         déplace vers les <b>ponts thermiques</b> (joints, angles, pied, pourtour de porte) où la
@@ -178,8 +187,8 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="data.js?v=8141800e"></script>
-  <script type="module" src="app.js?v=8141800e"></script>
+  <script src="data.js?v=5b5faeef"></script>
+  <script type="module" src="app.js?v=5b5faeef"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (!window.SHED) return;

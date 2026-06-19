@@ -161,8 +161,8 @@
         }
       ],
       "aire_brute_m2": 27.97,
-      "aire_nette_m2": 18.68,
-      "porte_deduite_m2": 1.89,
+      "aire_nette_m2": 17.25,
+      "ouvertures_deduites_m2": 3.32,
       "total_panneaux": 12
     },
     "toit": {
@@ -180,7 +180,7 @@
   "achats": [
     {
       "poste": "Panneaux sandwich 60 mm - finition MUR (faces A,D,C,B,G)",
-      "qte": "27.97 m2 brut (net ~18.68 m2)",
+      "qte": "27.97 m2 brut (net ~17.25 m2)",
       "note": "Ame PIR. Parement mural lisse/micro-nervure, laque 2 faces. Commander a longueur."
     },
     {
@@ -231,7 +231,12 @@
     {
       "poste": "Porte vitree alu double vitrage",
       "qte": "1 (90x210 cm)",
-      "note": "Ouverture vers l'exterieur. Cadre/dormant + seuil + joint."
+      "note": "Ouverture vers l'exterieur. Dormant + seuil + joints."
+    },
+    {
+      "poste": "Fenetres double vitrage",
+      "qte": "2 : 100x80 all.110 (face D), 90x70 all.115 (face B)",
+      "note": "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant selon besoin. Cadre + appui + joints."
     },
     {
       "poste": "Ventilation (VMC ou aerateurs hygro)",
@@ -240,8 +245,8 @@
     },
     {
       "poste": "Bande comprimee / mousse precomprimee",
-      "qte": "~16 m",
-      "note": "Etancheite a l'air au pied et au pourtour de la porte."
+      "qte": "~22 m",
+      "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
     },
     {
       "poste": "Bande butyle (joints de panneaux)",
@@ -259,17 +264,47 @@
       "note": "Retouche des rayures et chants."
     }
   ],
-  "porte": {
-    "face": "A",
-    "largeur_cm": 90,
-    "hauteur_cm": 210,
-    "position": "droite",
-    "marge_bord_cm": 5,
-    "type": "porte vitree aluminium double vitrage",
-    "ouverture": "vers l'exterieur",
-    "role": "acces principal + source principale de lumiere naturelle",
-    "_comment": "position = gauche | centre | droite (le long de la face A, cote face D pour 'droite'). marge_bord_cm = retrait depuis le coin."
-  },
+  "ouvertures": [
+    {
+      "id": "porte",
+      "type": "porte",
+      "face": "A",
+      "face_index": 0,
+      "largeur_cm": 90.0,
+      "hauteur_cm": 210.0,
+      "allege_cm": 0.0,
+      "start_cm": 135.0,
+      "position": "droite",
+      "ouverture": "vers l'exterieur",
+      "description": "porte vitree aluminium double vitrage"
+    },
+    {
+      "id": "fenetre-droite",
+      "type": "fenetre",
+      "face": "D",
+      "face_index": 1,
+      "largeur_cm": 100.0,
+      "hauteur_cm": 80.0,
+      "allege_cm": 110.0,
+      "start_cm": 30.0,
+      "position": "centre",
+      "ouverture": "",
+      "description": "fenetre double vitrage (face droite)"
+    },
+    {
+      "id": "fenetre-arriere",
+      "type": "fenetre",
+      "face": "B",
+      "face_index": 3,
+      "largeur_cm": 90.0,
+      "hauteur_cm": 70.0,
+      "allege_cm": 115.0,
+      "start_cm": 25.0,
+      "position": "centre",
+      "ouverture": "",
+      "description": "fenetre double vitrage (face arriere)"
+    }
+  ],
   "panneau": {
     "epaisseur_mm": 60,
     "ame": "PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable",
@@ -309,12 +344,34 @@
     ],
     "thickness_m": 0.06,
     "roof_overhang_m": 0.16,
-    "door": {
-      "face_index": 0,
-      "width_m": 0.9,
-      "height_m": 2.1,
-      "offset_m": 1.35
-    }
+    "roof_front_m": 2.4,
+    "roof_slope": 0.10163,
+    "openings": [
+      {
+        "type": "porte",
+        "face_index": 0,
+        "offset_m": 1.35,
+        "width_m": 0.9,
+        "height_m": 2.1,
+        "sill_m": 0.0
+      },
+      {
+        "type": "fenetre",
+        "face_index": 1,
+        "offset_m": 0.3,
+        "width_m": 1.0,
+        "height_m": 0.8,
+        "sill_m": 1.1
+      },
+      {
+        "type": "fenetre",
+        "face_index": 3,
+        "offset_m": 0.25,
+        "width_m": 0.9,
+        "height_m": 0.7,
+        "sill_m": 1.15
+      }
+    ]
   },
   "svg": [
     "plan-sol.svg",
