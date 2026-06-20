@@ -1,0 +1,19 @@
+{
+  "name": "screenplay-shed",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Abri de jardin parametrique - app interactive client-side (TS) + generateur Python (plans statiques).",
+  "scripts": {
+    "build": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --target=es2020 --legal-comments=none",
+    "watch": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --target=es2020 --watch",
+    "typecheck": "tsc --noEmit",
+    "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",
+    "test:parity": "node tests/parity.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.0",
+    "esbuild": "^0.23.1",
+    "typescript": "^5.5.4"
+  }
+}

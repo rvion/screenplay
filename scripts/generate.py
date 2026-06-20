@@ -15,6 +15,7 @@ import json
 import math
 import os
 import re
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARAMS = os.path.join(ROOT, "params.json")
@@ -527,7 +528,34 @@ def budget(p: dict, g: dict, t: dict, openings: list) -> dict:
     }
 
 
+def build_core(p: dict) -> dict:
+    """Coeur de calcul partage (sert aussi d'oracle pour la parite TS via --json)."""
+    g = geometry(p)
+    openings = resolve_openings(p, g)
+    t = takeoff(p, g, openings)
+    sh = shopping(p, g, t, openings)
+    bud = budget(p, g, t, openings)
+    m = model3d(p, g, openings)
+    svg = {
+        "plan-sol": plan_sol_svg(p, g, openings),
+        "plan-toit": plan_toit_svg(p, g),
+    }
+    for f in g["faces"]:
+        svg[f"facade-{f['cle']}"] = facade_svg(p, g, f, openings)
+    return {
+        "geometrie": g, "debit": t, "achats": sh, "budget": bud,
+        "ouvertures": openings, "model3d": m, "svg": svg,
+    }
+
+
 def main():
+    if "--json" in sys.argv:
+        i = sys.argv.index("--json")
+        path = sys.argv[i + 1] if len(sys.argv) > i + 1 else PARAMS
+        with open(path, encoding="utf-8") as f:
+            print(json.dumps(build_core(json.load(f)), ensure_ascii=False, sort_keys=True))
+        return
+
     p = load_params()
     g = geometry(p)
     openings = resolve_openings(p, g)
