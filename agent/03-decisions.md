@@ -59,3 +59,11 @@ saillant, des **nervures de toiture** et d'une **gouttière arrière + descente*
 de vrais trous pour chaque ouverture (généralisation du mur-porte). *Pourquoi :* rendu plus
 lisible et réaliste (demande utilisateur). *Compromis :* débord de dalle/toit approximé par
 dilatation radiale (pas d'offset mitré), suffisant visuellement.
+
+## D13 — Budget indicatif + éditeur de config interactif
+Prix dans `params.json` (`prix_indicatifs_eur`) → `budget` calculé par `generate.py`, affiché
+en widget + liens fournisseurs (exemples, sans affiliation). Le site embarque le texte de
+`params.json` (`window.SHED_PARAMS_TEXT`) ; un éditeur permet d'éditer le JSON et de **rebâtir le
+modèle 3D en direct** via `computeModel()` (miroir JS de la géométrie). *Compromis :* seul le 3D
+est recalculé côté client ; plans SVG et tableaux chiffrés restent générés par Python (DRY préservé,
+on ne duplique pas tout le pipeline). *Écarté :* porter l'intégralité de `generate.py` en JS.

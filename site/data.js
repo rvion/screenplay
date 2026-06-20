@@ -265,6 +265,70 @@ window.SHED = {
       "note": "Retouche des rayures et chants."
     }
   ],
+  "budget": {
+    "lignes": [
+      {
+        "poste": "Panneaux sandwich - mur (brut)",
+        "qte": 27.97,
+        "unite": "m²",
+        "pu_eur": 45,
+        "montant_eur": 1259
+      },
+      {
+        "poste": "Panneaux sandwich - toit (brut)",
+        "qte": 8.43,
+        "unite": "m²",
+        "pu_eur": 52,
+        "montant_eur": 438
+      },
+      {
+        "poste": "Porte(s) vitree(s)",
+        "qte": 1,
+        "unite": "u",
+        "pu_eur": 700,
+        "montant_eur": 700
+      },
+      {
+        "poste": "Fenetre(s)",
+        "qte": 2,
+        "unite": "u",
+        "pu_eur": 260,
+        "montant_eur": 520
+      },
+      {
+        "poste": "Profils (angles, rives, rail)",
+        "qte": 33.0,
+        "unite": "ml",
+        "pu_eur": 12,
+        "montant_eur": 396
+      },
+      {
+        "poste": "Visserie + etancheite",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 160,
+        "montant_eur": 160
+      },
+      {
+        "poste": "Gouttiere + descente",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 130,
+        "montant_eur": 130
+      },
+      {
+        "poste": "Ventilation (VMC/aerateurs)",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 350,
+        "montant_eur": 350
+      }
+    ],
+    "sous_total_eur": 3953,
+    "incertitude_pct": 15.0,
+    "total_bas_eur": 3360,
+    "total_haut_eur": 4546
+  },
   "ouvertures": [
     {
       "id": "porte",
@@ -384,3 +448,4 @@ window.SHED = {
     "facade-G.svg"
   ]
 };
+window.SHED_PARAMS_TEXT = "{\n  \"_comment\": \"Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Modifiez ces valeurs puis relancez `python3 scripts/generate.py` pour regenerer plans, debit et liste d'achats.\",\n  \"projet\": {\n    \"nom\": \"Abri de jardin - panneaux sandwich\",\n    \"description\": \"Petit abri/bureau de jardin a 5 faces (carre avec un coin coupe) sur dalle beton existante.\",\n    \"auteur\": \"Remi Vion\"\n  },\n  \"emprise_cm\": {\n    \"_comment\": \"Pentagone : faces A (avant), G (gauche), D (droite), B (arriere), C (coin coupe entre arriere et droite). Mesures relevees sur la dalle existante.\",\n    \"gauche_G\": 246,\n    \"avant_A\": 230,\n    \"droite_D_jusqu_coupe\": 160,\n    \"arriere_B_jusqu_coupe\": 140\n  },\n  \"panneau\": {\n    \"epaisseur_mm\": 60,\n    \"ame\": \"PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable\",\n    \"largeur_utile_cm\": 100,\n    \"orientation_murs\": \"verticale\",\n    \"_comment\": \"largeur_utile = largeur couverte par panneau apres recouvrement de nervure (souvent 1000 ou 1150 mm selon fabricant).\"\n  },\n  \"murs\": {\n    \"hauteur_avant_cm\": 240,\n    \"_comment\": \"Hauteur au point le plus haut (egout avant). Le toit descend ensuite vers l'arriere.\"\n  },\n  \"toit\": {\n    \"pente_chute_cm\": 25,\n    \"draine_vers\": \"arriere_B\",\n    \"debord_cm\": { \"avant\": 15, \"arriere\": 20, \"gauche\": 15, \"droite\": 15, \"coupe\": 15 },\n    \"_comment\": \"pente_chute = denivele total de l'avant vers l'arriere. Porte a 25 cm sur ~2,46 m = ~10% (~5,8 deg) : dans la plage admise par la plupart des panneaux de toiture. Le brief initial demandait ~10 cm (~4%) mais c'etait sous le minimum usuel ; valeur relevee apres confirmation. Verifier la mini exacte du fabricant.\"\n  },\n  \"ouvertures\": [\n    {\n      \"id\": \"porte\",\n      \"type\": \"porte\",\n      \"face\": \"A\",\n      \"largeur_cm\": 90,\n      \"hauteur_cm\": 210,\n      \"allege_cm\": 0,\n      \"position\": \"droite\",\n      \"marge_bord_cm\": 5,\n      \"ouverture\": \"vers l'exterieur\",\n      \"description\": \"porte vitree aluminium double vitrage\"\n    },\n    {\n      \"id\": \"fenetre-droite\",\n      \"type\": \"fenetre\",\n      \"face\": \"D\",\n      \"largeur_cm\": 100,\n      \"hauteur_cm\": 80,\n      \"allege_cm\": 110,\n      \"position\": \"centre\",\n      \"description\": \"fenetre double vitrage (face droite)\"\n    },\n    {\n      \"id\": \"fenetre-arriere\",\n      \"type\": \"fenetre\",\n      \"face\": \"B\",\n      \"largeur_cm\": 90,\n      \"hauteur_cm\": 70,\n      \"allege_cm\": 115,\n      \"position\": \"centre\",\n      \"description\": \"fenetre double vitrage (face arriere)\"\n    }\n  ],\n  \"_ouvertures_comment\": \"Liste des ouvertures (porte + fenetres). type = porte|fenetre. face = A|D|C|B|G. allege_cm = hauteur du bas de l'ouverture / sol (0 pour une porte). position = gauche|centre|droite (+ marge_bord_cm). Tout est deduit du debit, dessine sur les plans/elevations et rendu en 3D.\",\n  \"divers\": {\n    \"facteur_chute_pct\": 10,\n    \"_comment\": \"Marge de perte/chute appliquee aux quantites de panneaux pour la commande.\"\n  },\n  \"prix_indicatifs_eur\": {\n    \"_comment\": \"Prix INDICATIFS a confirmer (HT, fourchette large). Modifiables : le widget budget du site se recalcule.\",\n    \"panneau_mur_m2\": 45,\n    \"panneau_toit_m2\": 52,\n    \"porte_vitree\": 700,\n    \"fenetre\": 260,\n    \"profils_ml\": 12,\n    \"visserie_etancheite_forfait\": 160,\n    \"gouttiere_descente_forfait\": 130,\n    \"ventilation_forfait\": 350,\n    \"incertitude_pct\": 15\n  }\n}\n";

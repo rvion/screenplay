@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
-  <link rel="stylesheet" href="style.css?v=5b5faeef" />
+  <link rel="stylesheet" href="style.css?v=179e809f" />
   <script type="importmap">
   {
     "imports": {
@@ -29,12 +29,14 @@
 
   <nav class="toc">
     <a href="#modele">Modèle 3D</a>
+    <a href="#config">Config</a>
     <a href="#apercu">Aperçu</a>
     <a href="#plans">Plans</a>
-    <a href="#debit">Débit panneaux</a>
-    <a href="#achats">Liste d'achats</a>
+    <a href="#debit">Débit</a>
+    <a href="#achats">Achats</a>
+    <a href="#budget">Budget</a>
     <a href="#montage">Montage</a>
-    <a href="#vigilance">Points de vigilance</a>
+    <a href="#vigilance">Vigilance</a>
   </nav>
 
   <main>
@@ -42,6 +44,22 @@
       <h2>Modèle 3D</h2>
       <div id="viewer"></div>
       <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer.</p>
+    </section>
+
+    <section id="config">
+      <h2>Configuration interactive</h2>
+      <div class="card">
+        <p class="note">Voici la source unique <code>params.json</code>. Modifie une valeur (cotes,
+        pente, ouvertures, prix…) puis <b>Appliquer</b> : le <b>modèle 3D</b> ci-dessus se met à jour
+        <b>en direct</b>. Les plans cotés et les tableaux chiffrés, eux, sont régénérés côté dépôt
+        (<code>python3 scripts/generate.py</code>).</p>
+        <textarea id="cfg-text" spellcheck="false" aria-label="params.json"></textarea>
+        <div class="cfg-actions">
+          <button id="cfg-apply" class="btn">Appliquer au modèle 3D</button>
+          <button id="cfg-reset" class="btn btn-ghost">Réinitialiser</button>
+          <span id="cfg-status" class="note"></span>
+        </div>
+      </div>
     </section>
 
     <section id="apercu">
@@ -68,13 +86,13 @@
     <section id="plans">
       <h2>Plans</h2>
       <div class="plans">
-        <figure><img src="assets/plan-sol.svg?v=5b5faeef" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
-        <figure><img src="assets/plan-toit.svg?v=5b5faeef" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
-        <figure><img src="assets/facade-A.svg?v=5b5faeef" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
-        <figure><img src="assets/facade-D.svg?v=5b5faeef" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
-        <figure><img src="assets/facade-C.svg?v=5b5faeef" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
-        <figure><img src="assets/facade-B.svg?v=5b5faeef" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
-        <figure><img src="assets/facade-G.svg?v=5b5faeef" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
+        <figure><img src="assets/plan-sol.svg?v=179e809f" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
+        <figure><img src="assets/plan-toit.svg?v=179e809f" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
+        <figure><img src="assets/facade-A.svg?v=179e809f" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
+        <figure><img src="assets/facade-D.svg?v=179e809f" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
+        <figure><img src="assets/facade-C.svg?v=179e809f" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
+        <figure><img src="assets/facade-B.svg?v=179e809f" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
+        <figure><img src="assets/facade-G.svg?v=179e809f" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
       </div>
     </section>
 
@@ -103,6 +121,29 @@
         </table>
         <p class="note">Quantités estimées à partir des paramètres — à confirmer avec le
         fournisseur de panneaux (accessoires propriétaires selon la marque).</p>
+      </div>
+    </section>
+
+    <section id="budget">
+      <h2>Estimation budgétaire</h2>
+      <div class="card">
+        <p class="note">Estimation <b>indicative</b> (HT) à partir de prix paramétrables
+        (<code>prix_indicatifs_eur</code> dans la config). À confirmer avec des devis fournisseurs.</p>
+        <table id="budget">
+          <thead><tr><th>Poste</th><th>Quantité</th><th>P.U.</th><th>Montant</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p id="budget-total" class="budget-total"></p>
+        <h3 style="margin:1rem 0 .3rem">Où acheter les panneaux sandwich</h3>
+        <p class="note">Exemples de fabricants / distributeurs à comparer (prix et disponibilité à
+        vérifier ; liens donnés à titre indicatif, sans affiliation) :</p>
+        <ul class="suppliers">
+          <li><a href="https://www.kingspan.com" target="_blank" rel="noopener noreferrer">Kingspan</a> — fabricant (âme PIR/PUR, toiture &amp; mur)</li>
+          <li><a href="https://www.bacacier.com" target="_blank" rel="noopener noreferrer">Bacacier</a> — profilés &amp; panneaux sandwich (FR)</li>
+          <li><a href="https://www.joriside.com" target="_blank" rel="noopener noreferrer">Joris Ide</a> — panneaux sandwich toiture / mur</li>
+          <li><a href="https://www.manomano.fr/recherche/panneau%20sandwich%20toiture" target="_blank" rel="noopener noreferrer">ManoMano</a> — marketplace (recherche « panneau sandwich »)</li>
+          <li><a href="https://www.google.com/search?q=panneau+sandwich+toiture+60mm+prix" target="_blank" rel="noopener noreferrer">Comparer en ligne</a> — « panneau sandwich toiture 60 mm prix »</li>
+        </ul>
       </div>
     </section>
 
@@ -187,8 +228,8 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="data.js?v=5b5faeef"></script>
-  <script type="module" src="app.js?v=5b5faeef"></script>
+  <script src="data.js?v=179e809f"></script>
+  <script type="module" src="app.js?v=179e809f"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (!window.SHED) return;

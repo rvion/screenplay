@@ -264,6 +264,70 @@
       "note": "Retouche des rayures et chants."
     }
   ],
+  "budget": {
+    "lignes": [
+      {
+        "poste": "Panneaux sandwich - mur (brut)",
+        "qte": 27.97,
+        "unite": "m²",
+        "pu_eur": 45,
+        "montant_eur": 1259
+      },
+      {
+        "poste": "Panneaux sandwich - toit (brut)",
+        "qte": 8.43,
+        "unite": "m²",
+        "pu_eur": 52,
+        "montant_eur": 438
+      },
+      {
+        "poste": "Porte(s) vitree(s)",
+        "qte": 1,
+        "unite": "u",
+        "pu_eur": 700,
+        "montant_eur": 700
+      },
+      {
+        "poste": "Fenetre(s)",
+        "qte": 2,
+        "unite": "u",
+        "pu_eur": 260,
+        "montant_eur": 520
+      },
+      {
+        "poste": "Profils (angles, rives, rail)",
+        "qte": 33.0,
+        "unite": "ml",
+        "pu_eur": 12,
+        "montant_eur": 396
+      },
+      {
+        "poste": "Visserie + etancheite",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 160,
+        "montant_eur": 160
+      },
+      {
+        "poste": "Gouttiere + descente",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 130,
+        "montant_eur": 130
+      },
+      {
+        "poste": "Ventilation (VMC/aerateurs)",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 350,
+        "montant_eur": 350
+      }
+    ],
+    "sous_total_eur": 3953,
+    "incertitude_pct": 15.0,
+    "total_bas_eur": 3360,
+    "total_haut_eur": 4546
+  },
   "ouvertures": [
     {
       "id": "porte",

@@ -492,12 +492,48 @@ def stamp_assets():
     return stamp
 
 
+def budget(p: dict, g: dict, t: dict, openings: list) -> dict:
+    """Estimation budgetaire INDICATIVE a partir de prix_indicatifs_eur (modifiables)."""
+    pr = p.get("prix_indicatifs_eur", {})
+    perim = g["perimetre_cm"] / 100.0
+    n_corners = len(g["faces"])
+    corner_h = max(g["hauteur_avant_cm"] / 100.0, 2.4)
+    profils_ml = n_corners * corner_h * 2 + perim  # angles (x2) + rail/rives approx
+    portes = sum(1 for o in openings if o["type"] == "porte")
+    fenetres = sum(1 for o in openings if o["type"] == "fenetre")
+    lignes_src = [
+        ("Panneaux sandwich - mur (brut)", t["murs"]["aire_brute_m2"], "m²", pr.get("panneau_mur_m2", 0)),
+        ("Panneaux sandwich - toit (brut)", t["toit"]["aire_brute_m2"], "m²", pr.get("panneau_toit_m2", 0)),
+        ("Porte(s) vitree(s)", portes, "u", pr.get("porte_vitree", 0)),
+        ("Fenetre(s)", fenetres, "u", pr.get("fenetre", 0)),
+        ("Profils (angles, rives, rail)", round(profils_ml, 1), "ml", pr.get("profils_ml", 0)),
+        ("Visserie + etancheite", 1, "forfait", pr.get("visserie_etancheite_forfait", 0)),
+        ("Gouttiere + descente", 1, "forfait", pr.get("gouttiere_descente_forfait", 0)),
+        ("Ventilation (VMC/aerateurs)", 1, "forfait", pr.get("ventilation_forfait", 0)),
+    ]
+    rows = []
+    sous_total = 0.0
+    for label, qte, unit, pu in lignes_src:
+        montant = qte * pu
+        sous_total += montant
+        rows.append({"poste": label, "qte": qte, "unite": unit, "pu_eur": pu, "montant_eur": round(montant)})
+    inc = float(pr.get("incertitude_pct", 15))
+    return {
+        "lignes": rows,
+        "sous_total_eur": round(sous_total),
+        "incertitude_pct": inc,
+        "total_bas_eur": round(sous_total * (1 - inc / 100)),
+        "total_haut_eur": round(sous_total * (1 + inc / 100)),
+    }
+
+
 def main():
     p = load_params()
     g = geometry(p)
     openings = resolve_openings(p, g)
     t = takeoff(p, g, openings)
     sh = shopping(p, g, t, openings)
+    bud = budget(p, g, t, openings)
     m = model3d(p, g, openings)
 
     os.makedirs(ASSETS, exist_ok=True)
@@ -519,6 +555,7 @@ def main():
         "geometrie": g,
         "debit": t,
         "achats": sh,
+        "budget": bud,
         "ouvertures": openings,
         "panneau": p["panneau"],
         "model3d": m,
@@ -530,6 +567,11 @@ def main():
         fh.write("// Genere par scripts/generate.py - NE PAS EDITER A LA MAIN\n")
         fh.write("window.SHED = ")
         json.dump(derived, fh, ensure_ascii=False, indent=2)
+        fh.write(";\n")
+        with open(PARAMS, encoding="utf-8") as pf:
+            params_text = pf.read()
+        fh.write("window.SHED_PARAMS_TEXT = ")
+        json.dump(params_text, fh, ensure_ascii=False)  # litteral chaine JS valide
         fh.write(";\n")
 
     print(f"OK - aire {g['aire_m2']} m2, perimetre {g['perimetre_cm']} cm, "

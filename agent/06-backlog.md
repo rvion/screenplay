@@ -17,8 +17,10 @@
 - [ ] Plan de toiture / dalle : vrai offset de polygone (mitré) au lieu de la dilatation radiale.
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
 - [ ] Fenêtres : choix fixe vs ouvrant, et bilan thermique chiffré (déperditions vitrage).
+- [x] **Métré chiffré** (prix indicatifs paramétrables) + widget budget + liens fournisseurs.
+- [x] **Éditeur de config interactif** sur le site : édite `params.json` → modèle 3D rebâti en direct.
 - [ ] Export PDF imprimable du cahier (via le site, `@media print`).
-- [ ] Métré chiffré (prix indicatifs) — nécessite des sources fournisseur.
+- [ ] Éditeur interactif : régénérer aussi plans/débit côté client (porter plus de `generate.py` en JS).
 - [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).
 
 ## Dette / limites connues

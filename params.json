@@ -67,5 +67,17 @@
   "divers": {
     "facteur_chute_pct": 10,
     "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
+  },
+  "prix_indicatifs_eur": {
+    "_comment": "Prix INDICATIFS a confirmer (HT, fourchette large). Modifiables : le widget budget du site se recalcule.",
+    "panneau_mur_m2": 45,
+    "panneau_toit_m2": 52,
+    "porte_vitree": 700,
+    "fenetre": 260,
+    "profils_ml": 12,
+    "visserie_etancheite_forfait": 160,
+    "gouttiere_descente_forfait": 130,
+    "ventilation_forfait": 350,
+    "incertitude_pct": 15
   }
 }

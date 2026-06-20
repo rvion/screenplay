@@ -75,6 +75,15 @@ ol.steps li { margin: .6rem 0; }
 footer { text-align: center; color: var(--muted); font-size: .85rem;
   padding: 2rem 1rem; border-top: 1px solid var(--line); margin-top: 3rem; }
 code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size: .88em; }
+#cfg-text { width: 100%; min-height: 300px; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; line-height: 1.45; border: 1px solid var(--line); border-radius: 8px; padding: .7rem; background: #fbfcfb; color: #24402f; resize: vertical; }
+.cfg-actions { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin-top: .6rem; }
+.btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: .5rem .9rem; font-size: .9rem; cursor: pointer; }
+.btn:hover { filter: brightness(1.06); }
+.btn-ghost { background: #eef2f6; color: var(--accent); }
+.budget-total { background: #f3f5f1; border-radius: 8px; padding: .6rem .8rem; font-size: .95rem; margin-top: .6rem; }
+.suppliers { margin: .4rem 0 0; padding-left: 1.1rem; }
+.suppliers li { margin: .25rem 0; font-size: .9rem; }
+.suppliers a { color: var(--accent); }
 .tag { display: inline-block; font-size: .72rem; padding: .1rem .45rem; border-radius: 6px;
   background: #eef2f6; color: var(--accent); margin-left: .3rem; }
 .tag.rake { background: #fdf6e3; color: #a07400; }
