@@ -11,7 +11,7 @@
     "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",
     "test:dom": "node tests/dom.mjs",
     "test": "npm run test:snapshot && npm run test:dom",
-    "emit": "node scripts/build.mjs --emit",
+    "emit": "npm run build:cli && node scripts/build.mjs --emit",
     "test:snapshot": "node tests/snapshot.mjs",
     "snapshot:update": "UPDATE=1 node tests/snapshot.mjs"
   },
