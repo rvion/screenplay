@@ -7,24 +7,24 @@
   "geometrie": {
     "verts": [
       [
-        0.0,
-        0.0
+        0,
+        0
       ],
       [
-        230.0,
-        0.0
+        230,
+        0
       ],
       [
-        230.0,
-        160.0
+        230,
+        160
       ],
       [
-        140.0,
-        246.0
+        140,
+        246
       ],
       [
-        0.0,
-        246.0
+        0,
+        246
       ]
     ],
     "vert_names": [
@@ -35,46 +35,46 @@
       "arriere-gauche"
     ],
     "vert_heights_cm": [
-      240.0,
-      240.0,
+      240,
+      240,
       223.7,
-      215.0,
-      215.0
+      215,
+      215
     ],
     "cotes": {
-      "G": 246.0,
-      "A": 230.0,
-      "D": 160.0,
-      "B": 140.0,
+      "G": 246,
+      "A": 230,
+      "D": 160,
+      "B": 140,
       "C": 124.5
     },
     "aire_m2": 5.27,
     "perimetre_cm": 900.5,
     "pente": {
-      "chute_cm": 25.0,
-      "run_cm": 246.0,
+      "chute_cm": 25,
+      "run_cm": 246,
       "pourcent": 10.2,
       "degres": 5.8
     },
-    "hauteur_avant_cm": 240.0,
-    "hauteur_arriere_cm": 215.0,
+    "hauteur_avant_cm": 240,
+    "hauteur_arriere_cm": 215,
     "faces": [
       {
         "cle": "A",
         "libelle": "Avant",
-        "longueur_cm": 230.0,
-        "hauteur_debut_cm": 240.0,
-        "hauteur_fin_cm": 240.0,
-        "hauteur_max_cm": 240.0,
+        "longueur_cm": 230,
+        "hauteur_debut_cm": 240,
+        "hauteur_fin_cm": 240,
+        "hauteur_max_cm": 240,
         "rake": false
       },
       {
         "cle": "D",
         "libelle": "Droite",
-        "longueur_cm": 160.0,
-        "hauteur_debut_cm": 240.0,
+        "longueur_cm": 160,
+        "hauteur_debut_cm": 240,
         "hauteur_fin_cm": 223.7,
-        "hauteur_max_cm": 240.0,
+        "hauteur_max_cm": 240,
         "rake": true
       },
       {
@@ -82,26 +82,26 @@
         "libelle": "Coupe",
         "longueur_cm": 124.5,
         "hauteur_debut_cm": 223.7,
-        "hauteur_fin_cm": 215.0,
+        "hauteur_fin_cm": 215,
         "hauteur_max_cm": 223.7,
         "rake": true
       },
       {
         "cle": "B",
         "libelle": "Arriere",
-        "longueur_cm": 140.0,
-        "hauteur_debut_cm": 215.0,
-        "hauteur_fin_cm": 215.0,
-        "hauteur_max_cm": 215.0,
+        "longueur_cm": 140,
+        "hauteur_debut_cm": 215,
+        "hauteur_fin_cm": 215,
+        "hauteur_max_cm": 215,
         "rake": false
       },
       {
         "cle": "G",
         "libelle": "Gauche",
-        "longueur_cm": 246.0,
-        "hauteur_debut_cm": 215.0,
-        "hauteur_fin_cm": 240.0,
-        "hauteur_max_cm": 240.0,
+        "longueur_cm": 246,
+        "hauteur_debut_cm": 215,
+        "hauteur_fin_cm": 240,
+        "hauteur_max_cm": 240,
         "rake": true
       }
     ]
@@ -113,8 +113,8 @@
           "face": "A",
           "libelle": "Avant",
           "finition": "mur",
-          "longueur_cm": 230.0,
-          "hauteur_cm": 240.0,
+          "longueur_cm": 230,
+          "hauteur_cm": 240,
           "nb_panneaux": 3,
           "aire_brute_m2": 7.2,
           "rake": false
@@ -123,8 +123,8 @@
           "face": "D",
           "libelle": "Droite",
           "finition": "mur",
-          "longueur_cm": 160.0,
-          "hauteur_cm": 240.0,
+          "longueur_cm": 160,
+          "hauteur_cm": 240,
           "nb_panneaux": 2,
           "aire_brute_m2": 4.8,
           "rake": true
@@ -143,8 +143,8 @@
           "face": "B",
           "libelle": "Arriere",
           "finition": "mur",
-          "longueur_cm": 140.0,
-          "hauteur_cm": 215.0,
+          "longueur_cm": 140,
+          "hauteur_cm": 215,
           "nb_panneaux": 2,
           "aire_brute_m2": 4.3,
           "rake": false
@@ -153,8 +153,8 @@
           "face": "G",
           "libelle": "Gauche",
           "finition": "mur",
-          "longueur_cm": 246.0,
-          "hauteur_cm": 240.0,
+          "longueur_cm": 246,
+          "hauteur_cm": 240,
           "nb_panneaux": 3,
           "aire_brute_m2": 7.2,
           "rake": true
@@ -170,11 +170,11 @@
       "libelle": "Toiture",
       "finition": "toit",
       "nb_panneaux": 3,
-      "longueur_panneau_cm": 281.0,
+      "longueur_panneau_cm": 281,
       "aire_brute_m2": 8.43,
       "aire_couverte_m2": 6.71
     },
-    "commande_panneaux_m2": 40.0,
+    "commande_panneaux_m2": 40,
     "facteur_chute_pct": 10
   },
   "achats": [
@@ -195,12 +195,12 @@
     },
     {
       "poste": "Profils d'angle exterieurs",
-      "qte": "5 angles x 240.0 m = ~1200 m",
+      "qte": "5 angles x 2.4 m = ~12 m",
       "note": "L'angle C n'est pas a 90 deg : prevoir profil pliable ou sur-mesure."
     },
     {
       "poste": "Profils d'angle / finition interieurs",
-      "qte": "~1200 m",
+      "qte": "~12 m",
       "note": "Couvre-joints d'angle interieurs."
     },
     {
@@ -296,7 +296,7 @@
       },
       {
         "poste": "Profils (angles, rives, rail)",
-        "qte": 33.0,
+        "qte": 33,
         "unite": "ml",
         "pu_eur": 12,
         "montant_eur": 396
@@ -324,7 +324,7 @@
       }
     ],
     "sous_total_eur": 3953,
-    "incertitude_pct": 15.0,
+    "incertitude_pct": 15,
     "total_bas_eur": 3360,
     "total_haut_eur": 4546
   },
@@ -334,10 +334,10 @@
       "type": "porte",
       "face": "A",
       "face_index": 0,
-      "largeur_cm": 90.0,
-      "hauteur_cm": 210.0,
-      "allege_cm": 0.0,
-      "start_cm": 135.0,
+      "largeur_cm": 90,
+      "hauteur_cm": 210,
+      "allege_cm": 0,
+      "start_cm": 135,
       "position": "droite",
       "ouverture": "vers l'exterieur",
       "description": "porte vitree aluminium double vitrage"
@@ -347,10 +347,10 @@
       "type": "fenetre",
       "face": "D",
       "face_index": 1,
-      "largeur_cm": 100.0,
-      "hauteur_cm": 80.0,
-      "allege_cm": 110.0,
-      "start_cm": 30.0,
+      "largeur_cm": 100,
+      "hauteur_cm": 80,
+      "allege_cm": 110,
+      "start_cm": 30,
       "position": "centre",
       "ouverture": "",
       "description": "fenetre double vitrage (face droite)"
@@ -360,10 +360,10 @@
       "type": "fenetre",
       "face": "B",
       "face_index": 3,
-      "largeur_cm": 90.0,
-      "hauteur_cm": 70.0,
-      "allege_cm": 115.0,
-      "start_cm": 25.0,
+      "largeur_cm": 90,
+      "hauteur_cm": 70,
+      "allege_cm": 115,
+      "start_cm": 25,
       "position": "centre",
       "ouverture": "",
       "description": "fenetre double vitrage (face arriere)"
@@ -379,12 +379,12 @@
   "model3d": {
     "footprint": [
       [
-        0.0,
-        0.0
+        0,
+        0
       ],
       [
         2.3,
-        0.0
+        0
       ],
       [
         2.3,
@@ -395,7 +395,7 @@
         2.46
       ],
       [
-        0.0,
+        0,
         2.46
       ]
     ],
@@ -417,13 +417,13 @@
         "offset_m": 1.35,
         "width_m": 0.9,
         "height_m": 2.1,
-        "sill_m": 0.0
+        "sill_m": 0
       },
       {
         "type": "fenetre",
         "face_index": 1,
         "offset_m": 0.3,
-        "width_m": 1.0,
+        "width_m": 1,
         "height_m": 0.8,
         "sill_m": 1.1
       },

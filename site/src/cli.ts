@@ -3,6 +3,7 @@
 //   node scripts/build.mjs --emit [params.json]   -> ecrit site/assets/*.svg, params.js, derived.json
 // Bundle via : npm run build:cli  (esbuild -> scripts/build.mjs)
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildCore } from "./compute";
@@ -31,7 +32,22 @@ function emit(p: any) {
   writeFileSync(join(SITE, "params.js"),
     "// Genere par scripts/build.mjs - parametres par defaut pour l'app.\nwindow.SHED_PARAMS = " +
     JSON.stringify(p, null, 2) + ";\n");
+  stamp();
   return core;
+}
+
+// Cache-bust : reecrit ?v=<hash> sur style.css / app.js / params.js dans index.html.
+function stamp() {
+  const idx = join(SITE, "index.html");
+  const assets = ["style.css", "app.js", "params.js"];
+  const hash = createHash("sha256");
+  for (const a of assets) {
+    try { hash.update(readFileSync(join(SITE, a))); } catch { /* app.js absent avant build */ }
+  }
+  const v = hash.digest("hex").slice(0, 8);
+  let html = readFileSync(idx, "utf8");
+  html = html.replace(/(href|src)="(style\.css|app\.js|params\.js)(?:\?v=[^"]*)?"/g, `$1="$2?v=${v}"`);
+  writeFileSync(idx, html);
 }
 
 const args = process.argv.slice(2);

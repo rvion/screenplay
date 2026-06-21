@@ -75,8 +75,33 @@ ol.steps li { margin: .6rem 0; }
 footer { text-align: center; color: var(--muted); font-size: .85rem;
   padding: 2rem 1rem; border-top: 1px solid var(--line); margin-top: 3rem; }
 code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size: .88em; }
-#cfg-text { width: 100%; min-height: 300px; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; line-height: 1.45; border: 1px solid var(--line); border-radius: 8px; padding: .7rem; background: #fbfcfb; color: #24402f; resize: vertical; }
-.cfg-actions { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin-top: .6rem; }
+/* Plans coches en SVG inline (recalcules en direct) */
+.planbox svg { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+
+/* Panneau de controles interactifs */
+.controls { display: grid; gap: .8rem; grid-template-columns: 1fr; }
+@media (min-width: 680px) { .controls { grid-template-columns: 1fr 1fr; } }
+.ctl-group { border: 1px solid var(--line); border-radius: 10px; padding: .3rem .7rem .6rem; background: #fbfcfb; }
+.ctl-group > summary { cursor: pointer; font-weight: 600; color: var(--accent); padding: .4rem 0; list-style-position: inside; }
+.ctl { display: flex; flex-direction: column; gap: .15rem; margin: .45rem 0; }
+.ctl-range input[type=range] { width: 100%; accent-color: var(--accent); }
+.ctl-lbl { font-size: .82rem; color: var(--ink); display: flex; justify-content: space-between; gap: .5rem; }
+.ctl-val { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ctl-num { flex-direction: row; align-items: center; justify-content: space-between; gap: .6rem; }
+.ctl-num select, .ctl-num input { font-size: .85rem; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .5rem 0; }
+.ctl-lbl-wide { flex: 1 0 100%; font-size: .82rem; }
+.ctl-inline { display: inline-flex; align-items: center; gap: .25rem; font-size: .78rem; color: var(--muted); }
+.ctl-inline input { width: 4.5em; font-size: .82rem; padding: .2rem .3rem; border: 1px solid var(--line); border-radius: 6px; }
+.openings { display: flex; flex-direction: column; gap: .4rem; }
+.opening-row { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; padding: .35rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.opening-row select, .opening-row input { font-size: .8rem; padding: .2rem .3rem; border: 1px solid var(--line); border-radius: 6px; }
+.opening-row .ctl-inline input { width: 3.6em; }
+.btn-mini { border: none; background: #f6e7e5; color: var(--warn); border-radius: 6px; width: 1.7rem; height: 1.7rem; cursor: pointer; font-size: .8rem; line-height: 1; }
+.btn-mini:hover { background: #f1d6d3; }
+.btn-add { align-self: flex-start; font-size: .85rem; padding: .35rem .7rem; }
+.cfg-actions { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin-top: .8rem; }
+.viewer-fallback { padding: 1rem; color: #777; }
 .btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: .5rem .9rem; font-size: .9rem; cursor: pointer; }
 .btn:hover { filter: brightness(1.06); }
 .btn-ghost { background: #eef2f6; color: var(--accent); }

@@ -19,12 +19,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Set up Python (oracle de parité pour les tests)
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Régénérer plans, débit et données 3D
-        run: python3 scripts/generate.py
+      - name: Installer les dépendances
+        run: npm ci
+      - name: Build app (esbuild) + génération des artefacts (params.js, SVG)
+        run: |
+          npm run build
+          npm run build:cli
+          node scripts/build.mjs --emit
+      - name: Tests (parité TS == Python + smoke DOM)
+        run: npm test
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact (dossier site/)

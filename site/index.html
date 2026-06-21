@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
-  <link rel="stylesheet" href="style.css?v=179e809f" />
+  <link rel="stylesheet" href="style.css?v=8eb86b97" />
   <script type="importmap">
   {
     "imports": {
@@ -49,14 +49,13 @@
     <section id="config">
       <h2>Configuration interactive</h2>
       <div class="card">
-        <p class="note">Voici la source unique <code>params.json</code>. Modifie une valeur (cotes,
-        pente, ouvertures, prix…) puis <b>Appliquer</b> : le <b>modèle 3D</b> ci-dessus se met à jour
-        <b>en direct</b>. Les plans cotés et les tableaux chiffrés, eux, sont régénérés côté dépôt
-        (<code>python3 scripts/generate.py</code>).</p>
-        <textarea id="cfg-text" spellcheck="false" aria-label="params.json"></textarea>
+        <p class="note">Réglez les <b>cotes, la pente, les panneaux, les ouvertures et les prix</b> :
+        <b>tout se recalcule en direct</b> — modèle 3D, <b>plans cotés</b>, débit et budget. La page
+        embarque la même logique que le dépôt (port TypeScript de <code>generate.py</code>, à parité
+        vérifiée), donc ce que vous voyez à l'écran est exact.</p>
+        <div id="controls" class="controls"></div>
         <div class="cfg-actions">
-          <button id="cfg-apply" class="btn">Appliquer au modèle 3D</button>
-          <button id="cfg-reset" class="btn btn-ghost">Réinitialiser</button>
+          <button id="cfg-reset" class="btn btn-ghost">Réinitialiser aux valeurs publiées</button>
           <span id="cfg-status" class="note"></span>
         </div>
       </div>
@@ -78,21 +77,22 @@
         </table>
         <p class="note">Les 5 faces ci-dessus sont les <b>murs</b> ; la <b>toiture (face T)</b>, en
         panneau sandwich finition toit, est détaillée dans la section Débit. Toutes les valeurs sont
-        calculées depuis <code>params.json</code> par <code>scripts/generate.py</code> : modifiez les
-        paramètres, relancez, tout se met à jour.</p>
+        calculées en direct à partir de la <a href="#config">configuration</a> : changez une cote,
+        tout se met à jour instantanément.</p>
       </div>
     </section>
 
     <section id="plans">
       <h2>Plans</h2>
+      <p class="note">Plans cotés <b>recalculés en direct</b> depuis la configuration ci-dessus.</p>
       <div class="plans">
-        <figure><img src="assets/plan-sol.svg?v=179e809f" alt="Plan de sol" /><figcaption>Plan de sol coté</figcaption></figure>
-        <figure><img src="assets/plan-toit.svg?v=179e809f" alt="Plan de toiture" /><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
-        <figure><img src="assets/facade-A.svg?v=179e809f" alt="Façade A" /><figcaption>Face A — Avant (porte)</figcaption></figure>
-        <figure><img src="assets/facade-D.svg?v=179e809f" alt="Façade D" /><figcaption>Face D — Droite</figcaption></figure>
-        <figure><img src="assets/facade-C.svg?v=179e809f" alt="Façade C" /><figcaption>Face C — Coin coupé</figcaption></figure>
-        <figure><img src="assets/facade-B.svg?v=179e809f" alt="Façade B" /><figcaption>Face B — Arrière</figcaption></figure>
-        <figure><img src="assets/facade-G.svg?v=179e809f" alt="Façade G" /><figcaption>Face G — Gauche</figcaption></figure>
+        <figure><div class="planbox" id="plan-plan-sol"></div><figcaption>Plan de sol coté</figcaption></figure>
+        <figure><div class="planbox" id="plan-plan-toit"></div><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-A"></div><figcaption>Face A — Avant (porte)</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-D"></div><figcaption>Face D — Droite</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-C"></div><figcaption>Face C — Coin coupé</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-B"></div><figcaption>Face B — Arrière</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-G"></div><figcaption>Face G — Gauche</figcaption></figure>
       </div>
     </section>
 
@@ -228,31 +228,7 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="data.js?v=179e809f"></script>
-  <script type="module" src="app.js?v=179e809f"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      if (!window.SHED) return;
-      var c = document.getElementById("cover");
-      if (c) c.textContent = window.SHED.panneau.largeur_utile_cm + " cm";
-      var pente = window.SHED.geometrie.pente;
-      var set = function (id, val) { var e = document.getElementById(id); if (e) e.textContent = val; };
-      set("v-chute", pente.chute_cm);
-      set("v-pente", pente.pourcent + " %");
-      set("v-pente-deg", pente.degres + "°");
-    });
-    // Filet de securite : si le module 3D n'a rien rendu (WebGL absent, CDN bloque...),
-    // afficher un message plutot qu'un cadre gris muet.
-    window.addEventListener("load", function () {
-      setTimeout(function () {
-        var v = document.getElementById("viewer");
-        if (v && !v.querySelector("canvas") && !v.textContent.trim()) {
-          v.innerHTML = '<p style="padding:1rem;color:#777">Rendu 3D indisponible ici ' +
-            '(WebGL requis, ou chargement de la librairie bloqué). Les plans plus bas ' +
-            'restent entièrement valables.</p>';
-        }
-      }, 4000);
-    });
-  </script>
+  <script src="params.js?v=8eb86b97"></script>
+  <script type="module" src="app.js?v=8eb86b97"></script>
 </body>
 </html>

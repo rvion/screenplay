@@ -1,0 +1,90 @@
+// Genere par scripts/build.mjs - parametres par defaut pour l'app.
+window.SHED_PARAMS = {
+  "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Modifiez ces valeurs puis relancez `python3 scripts/generate.py` pour regenerer plans, debit et liste d'achats.",
+  "projet": {
+    "nom": "Abri de jardin - panneaux sandwich",
+    "description": "Petit abri/bureau de jardin a 5 faces (carre avec un coin coupe) sur dalle beton existante.",
+    "auteur": "Remi Vion"
+  },
+  "emprise_cm": {
+    "_comment": "Pentagone : faces A (avant), G (gauche), D (droite), B (arriere), C (coin coupe entre arriere et droite). Mesures relevees sur la dalle existante.",
+    "gauche_G": 246,
+    "avant_A": 230,
+    "droite_D_jusqu_coupe": 160,
+    "arriere_B_jusqu_coupe": 140
+  },
+  "panneau": {
+    "epaisseur_mm": 60,
+    "ame": "PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable",
+    "largeur_utile_cm": 100,
+    "orientation_murs": "verticale",
+    "_comment": "largeur_utile = largeur couverte par panneau apres recouvrement de nervure (souvent 1000 ou 1150 mm selon fabricant)."
+  },
+  "murs": {
+    "hauteur_avant_cm": 240,
+    "_comment": "Hauteur au point le plus haut (egout avant). Le toit descend ensuite vers l'arriere."
+  },
+  "toit": {
+    "pente_chute_cm": 25,
+    "draine_vers": "arriere_B",
+    "debord_cm": {
+      "avant": 15,
+      "arriere": 20,
+      "gauche": 15,
+      "droite": 15,
+      "coupe": 15
+    },
+    "_comment": "pente_chute = denivele total de l'avant vers l'arriere. Porte a 25 cm sur ~2,46 m = ~10% (~5,8 deg) : dans la plage admise par la plupart des panneaux de toiture. Le brief initial demandait ~10 cm (~4%) mais c'etait sous le minimum usuel ; valeur relevee apres confirmation. Verifier la mini exacte du fabricant."
+  },
+  "ouvertures": [
+    {
+      "id": "porte",
+      "type": "porte",
+      "face": "A",
+      "largeur_cm": 90,
+      "hauteur_cm": 210,
+      "allege_cm": 0,
+      "position": "droite",
+      "marge_bord_cm": 5,
+      "ouverture": "vers l'exterieur",
+      "description": "porte vitree aluminium double vitrage"
+    },
+    {
+      "id": "fenetre-droite",
+      "type": "fenetre",
+      "face": "D",
+      "largeur_cm": 100,
+      "hauteur_cm": 80,
+      "allege_cm": 110,
+      "position": "centre",
+      "description": "fenetre double vitrage (face droite)"
+    },
+    {
+      "id": "fenetre-arriere",
+      "type": "fenetre",
+      "face": "B",
+      "largeur_cm": 90,
+      "hauteur_cm": 70,
+      "allege_cm": 115,
+      "position": "centre",
+      "description": "fenetre double vitrage (face arriere)"
+    }
+  ],
+  "_ouvertures_comment": "Liste des ouvertures (porte + fenetres). type = porte|fenetre. face = A|D|C|B|G. allege_cm = hauteur du bas de l'ouverture / sol (0 pour une porte). position = gauche|centre|droite (+ marge_bord_cm). Tout est deduit du debit, dessine sur les plans/elevations et rendu en 3D.",
+  "divers": {
+    "facteur_chute_pct": 10,
+    "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
+  },
+  "prix_indicatifs_eur": {
+    "_comment": "Prix INDICATIFS a confirmer (HT, fourchette large). Modifiables : le widget budget du site se recalcule.",
+    "panneau_mur_m2": 45,
+    "panneau_toit_m2": 52,
+    "porte_vitree": 700,
+    "fenetre": 260,
+    "profils_ml": 12,
+    "visserie_etancheite_forfait": 160,
+    "gouttiere_descente_forfait": 130,
+    "ventilation_forfait": 350,
+    "incertitude_pct": 15
+  }
+};
