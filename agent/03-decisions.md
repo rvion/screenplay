@@ -7,9 +7,11 @@ Toutes les cotes y vivent ; le reste est généré. *Pourquoi :* éviter les inc
 plan/débit/3D, rendre le projet réellement paramétrique (B9). *Écarté :* coter à la main
 dans le SVG / le HTML.
 
-## D2 — Génération en Python stdlib
-`scripts/generate.py` produit SVG + `data.js` + `derived.json`. *Pourquoi :* zéro install,
+## D2 — Génération en Python stdlib  *(remplacée par D14)*
+`scripts/generate.py` produisait SVG + `data.js` + `derived.json`. *Pourquoi :* zéro install,
 reproductible, lisible. *Écarté :* OpenSCAD (binaire absent de l'environnement), chaîne npm.
+**Superseded par D14** : la logique a été portée en TypeScript (calcul côté client en direct) et
+`generate.py` a été retiré.
 
 ## D3 — Rendu 3D via Three.js (CDN) lisant `window.SHED`
 *Pourquoi :* « jolis rendus » interactifs (B10) sans binaire de rendu headless, toujours
@@ -60,10 +62,20 @@ de vrais trous pour chaque ouverture (généralisation du mur-porte). *Pourquoi 
 lisible et réaliste (demande utilisateur). *Compromis :* débord de dalle/toit approximé par
 dilatation radiale (pas d'offset mitré), suffisant visuellement.
 
-## D13 — Budget indicatif + éditeur de config interactif
-Prix dans `params.json` (`prix_indicatifs_eur`) → `budget` calculé par `generate.py`, affiché
-en widget + liens fournisseurs (exemples, sans affiliation). Le site embarque le texte de
-`params.json` (`window.SHED_PARAMS_TEXT`) ; un éditeur permet d'éditer le JSON et de **rebâtir le
-modèle 3D en direct** via `computeModel()` (miroir JS de la géométrie). *Compromis :* seul le 3D
-est recalculé côté client ; plans SVG et tableaux chiffrés restent générés par Python (DRY préservé,
-on ne duplique pas tout le pipeline). *Écarté :* porter l'intégralité de `generate.py` en JS.
+## D13 — Budget indicatif + éditeur de config interactif  *(étendu par D14)*
+Prix dans `params.json` (`prix_indicatifs_eur`) → `budget` calculé, affiché en widget + liens
+fournisseurs (exemples, sans affiliation). Première version : un éditeur JSON rebâtissait **seulement
+le 3D** côté client, le reste restant généré par Python. **Étendu par D14** : désormais *tout* (plans
+SVG, tableaux, budget, 3D) est recalculé côté client par `compute.ts`, piloté par un panneau de
+contrôles (sliders / éditeur d'ouvertures) plutôt qu'un textarea JSON.
+
+## D14 — Port complet en TypeScript, Python retiré, site 100 % interactif
+Toute la logique de `generate.py` a été portée dans `site/src/compute.ts` (**pur** : sans DOM ni
+Three), bundlée par **esbuild** (`site/app.js`) et réutilisée par un **CLI Node** (`cli.ts`, mode
+`--emit` pour les artefacts versionnés, `--json` pour les tests). Le site recalcule **tout en
+direct** depuis un panneau de contrôles. *Pourquoi :* une seule source de logique (fin de la double
+implémentation Python+JS de D13), interactivité totale demandée par l'utilisateur, typage.
+*Validation :* la parité **exacte** TS == Python (données + 7 SVG, arrondi *half-even* compris) a
+été prouvée par tests avant de retirer `generate.py` ; l'oracle Python est remplacé par des
+**snapshots golden** (`tests/snapshots/*.json`) + un **smoke-test DOM** jsdom. *Écarté :* garder
+Python comme générateur (duplication, deux langages à synchroniser).

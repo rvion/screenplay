@@ -24,10 +24,6 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-      - name: Set up Python (oracle de parité pour les tests)
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
       - name: Installer les dépendances
         run: npm ci
       - name: Build app (esbuild) + génération des artefacts (params.js, SVG)
@@ -35,7 +31,7 @@ jobs:
           npm run build
           npm run build:cli
           node scripts/build.mjs --emit
-      - name: Tests (parité TS == Python + smoke DOM)
+      - name: Tests (snapshots golden + smoke DOM)
         run: npm test
       - name: Configure Pages
         uses: actions/configure-pages@v5

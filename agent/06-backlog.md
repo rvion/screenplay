@@ -18,9 +18,10 @@
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
 - [ ] Fenêtres : choix fixe vs ouvrant, et bilan thermique chiffré (déperditions vitrage).
 - [x] **Métré chiffré** (prix indicatifs paramétrables) + widget budget + liens fournisseurs.
-- [x] **Éditeur de config interactif** sur le site : édite `params.json` → modèle 3D rebâti en direct.
+- [x] **Éditeur de config interactif** sur le site : panneau de contrôles (sliders + ouvertures).
+- [x] **Port complet en TypeScript** (`compute.ts`), Python retiré, **tout recalculé côté client**
+      (plans/débit/budget/3D) ; parité prouvée puis snapshots golden + smoke DOM (cf. D14).
 - [ ] Export PDF imprimable du cahier (via le site, `@media print`).
-- [ ] Éditeur interactif : régénérer aussi plans/débit côté client (porter plus de `generate.py` en JS).
 - [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).
 
 ## Dette / limites connues

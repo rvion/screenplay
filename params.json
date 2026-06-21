@@ -1,5 +1,5 @@
 {
-  "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Modifiez ces valeurs puis relancez `python3 scripts/generate.py` pour regenerer plans, debit et liste d'achats.",
+  "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Le site recalcule tout en direct (TypeScript) ; pour regenerer les artefacts versionnes : npm run build && npm run emit.",
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
     "description": "Petit abri/bureau de jardin a 5 faces (carre avec un coin coupe) sur dalle beton existante.",

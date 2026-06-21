@@ -51,29 +51,36 @@ Gauche **246** · Avant **230** · Droite jusqu'à la coupe **160** · Arrière 
 
 ## Comment ça marche (paramétrique)
 
+Le site est **100 % interactif** : un panneau de contrôles (cotes, pente, panneaux,
+ouvertures, prix) **recalcule tout en direct** — KPIs, débit, **plans SVG cotés** et
+modèle 3D. Pas besoin de rien lancer pour explorer : ouvre simplement le site.
+
+Pour le développement / régénérer les artefacts versionnés :
+
 ```bash
-# 1. éditer les cotes
-$EDITOR params.json
-# 2. régénérer plans + débit + liste d'achats + données 3D
-python3 scripts/generate.py
-# 3. prévisualiser le site
-python3 -m http.server -d site 8000   # http://localhost:8000
+npm ci                              # esbuild + typescript + jsdom (dev)
+$EDITOR params.json                 # éditer les cotes par défaut
+npm run build && npm run emit       # bundle l'app + regénère params.js, SVG, derived.json
+npm test                            # snapshots golden + smoke DOM
+python3 -m http.server -d site 8000 # prévisualiser (ou ouvrir site/index.html)
 ```
 
-Tout est calculé depuis [`params.json`](params.json) : plans SVG, tableaux du site et
-modèle 3D. **Aucune cote n'est écrite à la main ailleurs.** `generate.py` n'utilise que la
-**bibliothèque standard Python** (rien à installer) ; la 3D utilise Three.js via CDN.
+Toute la logique vit dans [`site/src/compute.ts`](site/src/compute.ts) (géométrie, débit,
+plans SVG, budget, 3D) — **pur**, donc partagé entre le navigateur, le CLI Node et les tests.
+Les cotes par défaut vivent dans [`params.json`](params.json). **Aucune cote n'est écrite à
+la main ailleurs.** La 3D utilise Three.js via CDN.
 
 ---
 
 ## Structure du dépôt
 
 ```
-params.json          ← source unique de vérité (cotes en cm)
-scripts/generate.py  ← génère plans SVG + data.js + derived.json
+params.json          ← cotes par défaut (source unique des dimensions, en cm)
+site/src/            ← app TypeScript : compute (logique) + viewer/render/controls/main
+site/                ← site GitHub Pages (index.html + app.js bundlé + params.js + plans)
+tests/               ← snapshots golden (compute) + smoke DOM (jsdom)
 agent/               ← spécification spec-first (voir CLAUDE.md)
-site/                ← site GitHub Pages (index.html + 3D + plans + tableaux)
-.github/workflows/   ← déploiement automatique de Pages
+.github/workflows/   ← build TS + tests + déploiement automatique de Pages
 CLAUDE.md            ← référence la spec agent/ (contexte de l'agent)
 ```
 

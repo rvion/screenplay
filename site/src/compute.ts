@@ -1,6 +1,7 @@
-// Coeur de calcul de l'abri — PORT EXACT de scripts/generate.py.
-// Pur : aucune dependance DOM / Three. Utilisable navigateur ET Node.
-// La parite avec Python est verifiee par tests (npm run test:parity).
+// Coeur de calcul de l'abri — SOURCE UNIQUE de la logique (geometrie, debit,
+// plans SVG, budget, modele 3D). Pur : aucune dependance DOM / Three, donc
+// utilisable navigateur ET Node (CLI + tests). Couvert par des snapshots golden
+// (npm run test:snapshot). Historiquement porte depuis l'ancien generate.py.
 
 export type Params = any;
 

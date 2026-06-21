@@ -47,6 +47,7 @@ Pentagone antihoraire : `FL → FR → Dfin → Bfin → BL`.
 | G (gauche) | 240 → 215 | oui |
 
 ## Vérification
-`python3 scripts/generate.py` affiche aire, périmètre, C, pente et débit ; ces valeurs
-doivent correspondre au tableau ci-dessus. Toute modification de `emprise_cm`,
-`murs.hauteur_avant_cm` ou `toit.pente_chute_cm` se répercute automatiquement.
+Le site affiche aire, périmètre, C, pente et débit (recalculés en direct par `compute.ts`) ; ces
+valeurs doivent correspondre au tableau ci-dessus. Les snapshots golden (`npm test`) figent cette
+sortie. Toute modification de `emprise_cm`, `murs.hauteur_avant_cm` ou `toit.pente_chute_cm` se
+répercute automatiquement.

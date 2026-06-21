@@ -42,22 +42,29 @@ Sommets dérivés des 4 mesures de `emprise_cm` :
   dans le mur + vitrage ; vantail entrouvert pour la porte).
 - ⚠️ Plus de vitrage ⇒ plus de déperditions (usage chauffé) : à doser, cf. vigilance.
 
-## Livrables générés (`generate.py`)
+## Calcul & livrables (`site/src/compute.ts`)
+`buildCore(params)` (pur, sans DOM/Three) produit géométrie + débit + achats + budget + modèle 3D
+**et** les 7 SVG. Consommé en direct par le site (recalcul à chaque réglage) et par le CLI Node
+`site/src/cli.ts --emit`, qui écrit les artefacts **versionnés** :
+
 | Sortie | Rôle |
 |---|---|
-| `site/data.js` | `window.SHED` : géométrie + débit + achats + modèle 3D (consommé par le site) |
-| `site/data/derived.json` | même contenu en JSON (référence / outils) |
-| `site/assets/plan-sol.svg` | plan de sol coté + porte |
+| `site/params.js` | `window.SHED_PARAMS` : cotes par défaut (chargées par l'app, marche en `file://`) |
+| `site/data/derived.json` | géométrie + débit + achats + budget + modèle 3D en JSON (référence / outils) |
+| `site/assets/plan-sol.svg` | plan de sol coté + porte (snapshot statique pour le README) |
 | `site/assets/plan-toit.svg` | plan de toiture + sens d'écoulement |
 | `site/assets/facade-{A,D,C,B,G}.svg` | élévations cotées (trapèzes si biais) |
 
 ## Site (`site/`)
-- `index.html` + `style.css` + `app.js` (Three.js via CDN, OrbitControls).
-- Sections : Aperçu (KPIs), Modèle 3D, Plans, Débit, Achats, Montage, Vigilance.
-- Tableaux **remplis dynamiquement** depuis `window.SHED` (pas de chiffre en dur).
+- `index.html` + `style.css` + `app.js` (bundle esbuild de `src/`, Three.js via CDN, OrbitControls).
+- Sections : Aperçu (KPIs), Modèle 3D, **Configuration interactive (contrôles)**, Plans, Débit,
+  Achats, Budget, Montage, Vigilance.
+- **Tout** est recalculé en direct depuis les contrôles : KPIs, tableaux, plans SVG inline et 3D
+  (pas de chiffre en dur, pas de `fetch`).
 - Doit tomber en panne **proprement** si WebGL absent (message + plans toujours visibles).
 
 ## Contraintes techniques
-- Python **stdlib uniquement** ; pas d'étape de build pour le site.
-- Fonctionne en `file://` (d'où `data.js` injecté plutôt que `fetch` JSON).
+- Logique **TypeScript pure** dans `compute.ts` (réutilisable navigateur + Node) ; build esbuild.
+- Fonctionne en `file://` (d'où `params.js` injecté plutôt que `fetch` JSON).
+- Tests : snapshots golden (`compute.ts`) + smoke DOM (jsdom) — `npm test`.
 - Publication : GitHub Pages (Actions) — voir `05-pipeline.md`.

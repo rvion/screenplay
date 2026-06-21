@@ -14,17 +14,23 @@ Toute la spécification vit dans `agent/`. Avant d'agir, lis-la — elle fait fo
 - @agent/06-backlog.md — questions ouvertes, améliorations, limites
 
 ## Règles d'or
-1. **`params.json` est la source unique de vérité.** Aucune cote en dur ailleurs.
-2. Après toute édition de `params.json`, lancer `python3 scripts/generate.py` et
-   **committer les fichiers générés** (`site/data.js`, `site/assets/*.svg`,
-   `site/data/derived.json`).
-3. `scripts/generate.py` reste **stdlib Python uniquement**.
-4. Le site doit fonctionner en `file://` (données via `data.js`, pas de `fetch`) et
+1. **`params.json` est la source unique de vérité des cotes.** Aucune cote en dur ailleurs.
+2. **`site/src/compute.ts` est la source unique de la logique** (géométrie, débit, plans SVG,
+   budget, modèle 3D). Le site la rejoue en direct ; le CLI Node la réutilise. Reste **pur**
+   (aucun `import` de DOM ni de Three) pour tourner navigateur **et** Node.
+3. Après toute édition de `compute.ts` : `npm run build` (bundle esbuild → `site/app.js`) puis
+   `npm run emit` (regénère `site/params.js`, `site/assets/*.svg`, `site/data/derived.json` +
+   cache-bust). **Committer les fichiers générés.** Lancer `npm test` (snapshots + smoke DOM).
+4. Si un changement de calcul est **voulu**, mettre à jour les snapshots : `npm run snapshot:update`.
+5. Le site doit fonctionner en `file://` (données via `params.js`, pas de `fetch`) et
    **dégrader proprement** sans WebGL.
-5. Si tu modifies la géométrie, mets à jour `agent/04-geometrie.md`.
+6. Si tu modifies la géométrie, mets à jour `agent/04-geometrie.md`.
 
 ## Commandes utiles
 ```bash
-python3 scripts/generate.py            # régénère plans + débit + données 3D
-python3 -m http.server -d site 8000    # prévisualise le site
+npm ci                                 # installe esbuild / typescript / jsdom (dev)
+npm run build && npm run emit          # bundle l'app + régénère params.js, SVG, derived.json
+npm test                               # snapshots golden (compute.ts) + smoke DOM (jsdom)
+npm run typecheck                      # tsc --noEmit
+python3 -m http.server -d site 8000    # prévisualise le site (ou ouvrir site/index.html)
 ```
