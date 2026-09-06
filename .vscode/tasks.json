@@ -7,7 +7,7 @@
    "tasks": [
       {
          "label": "starts everything",
-         "dependsOn": ["👁  TSC", "🚀  shipkit"],
+         "dependsOn": ["👁  TSC", "🚀  shipkit", "🌐  site"],
          "group": { "kind": "build", "isDefault": true },
          "runOptions": { "runOn": "folderOpen", "instanceLimit": 1 },
          "problemMatcher": []
@@ -37,6 +37,19 @@
          "options": { "cwd": "${workspaceFolder}" },
          "isBackground": true,
          "presentation": { "reveal": "always", "close": false },
+         "group": "build",
+         "runOptions": { "instanceLimit": 1 },
+         "problemMatcher": []
+      },
+      {
+         "label": "🌐  site",
+         "detail": "Sert site/ en local — http://localhost:8000 (fichiers générés : npm run build && npm run emit)",
+         "type": "process",
+         "command": "python3",
+         "args": ["-m", "http.server", "-d", "site", "8000"],
+         "options": { "cwd": "${workspaceFolder}" },
+         "isBackground": true,
+         "presentation": { "reveal": "never", "close": false },
          "group": "build",
          "runOptions": { "instanceLimit": 1 },
          "problemMatcher": []
