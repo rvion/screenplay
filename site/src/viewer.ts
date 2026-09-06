@@ -270,9 +270,10 @@ function populate(group: Vec, m: Model) {
   const railMat = new THREE.MeshStandardMaterial({ color: 0x6b7177, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 0xb4bac0, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
 
-  // Dalle reelle (pentagone si coin coupe) : montre ce qui deborde.
-  group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.05, -0.12), concreteMat));
-  group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.02), 0.10, 0.0), railMat));
+  // Dalle reelle (pentagone si coin coupe), dessus a z=0 ; rail de pied sous les panneaux
+  // (0,5 cm hors du nu exterieur : jamais coplanaire avec le bord de dalle).
+  group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.0, -0.14), concreteMat));
+  group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.005), 0.06, 0.001), railMat));
 
   const openings = m.openings || [];
   for (let i = 0; i < n; i++) {
@@ -326,7 +327,7 @@ export function createViewer(container: HTMLElement, model0: Model): Viewer {
 
   const grass = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 0x83a957, roughness: 1 }));
   grass.rotation.x = -Math.PI / 2;
-  grass.position.y = -0.005;
+  grass.position.y = -0.07;
   grass.receiveShadow = true;
   scene.add(grass);
 

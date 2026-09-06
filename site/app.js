@@ -866,8 +866,8 @@ function populate(group2, m) {
   const concreteMat = new THREE.MeshStandardMaterial({ color: 15394783, roughness: 0.95, side: THREE.DoubleSide });
   const railMat = new THREE.MeshStandardMaterial({ color: 7041399, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 11844288, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
-  group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.05, -0.12), concreteMat));
-  group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.02), 0.1, 0), railMat));
+  group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0, -0.14), concreteMat));
+  group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 5e-3), 0.06, 1e-3), railMat));
   const openings = m.openings || [];
   for (let i = 0; i < n; i++) {
     const a = fp[i], b = fp[(i + 1) % n], ha = hs[i], hb = hs[(i + 1) % n];
@@ -925,7 +925,7 @@ function createViewer(container, model0) {
   scene.add(new THREE.HemisphereLight(13624319, 7039824, 0.4));
   const grass = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 8628567, roughness: 1 }));
   grass.rotation.x = -Math.PI / 2;
-  grass.position.y = -5e-3;
+  grass.position.y = -0.07;
   grass.receiveShadow = true;
   scene.add(grass);
   const building = new THREE.Group();
