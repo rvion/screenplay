@@ -1,3 +1,30 @@
 node_modules/
 scripts/build.mjs
 build/
+# machine-local permission allowlist (CLAUDE.local.md is in the shipkit block below)
+.claude/settings.local.json
+
+# >>> shipkit gitignore policy (SK004) — managed block, edit outside only
+.rv-private/
+.rv-reflections/
+.rv-social/
+.rv-journal/
+.rv-domain/
+.rv-assets/out/
+# venue folders stay ignored until the listing is live — override below the block
+.rv-itch/
+.rv-steam/
+.rv-discord/
+CLAUDE.local.md
+tmp/
+.*.tmp-*
+.comfy-ts/
+*.loras.local.txt
+# shipkit writes these on every run — ignored AND untracked (untrack-generated.ts)
+STATUS.md
+STATUS.md.lock
+.STATUS.md.tmp-*
+STATUS.full.md
+STATUS.full.md.lock
+.STATUS.full.md.tmp-*
+# <<< shipkit gitignore policy

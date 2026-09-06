@@ -7,18 +7,27 @@
   "scripts": {
     "build": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --external:three/* --target=es2020 --legal-comments=none",
     "watch": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --external:three/* --target=es2020 --watch",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "shipkit ci --only typecheck",
+    "typecheck:raw": "tsc --noEmit",
     "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",
     "test:dom": "node tests/dom.mjs",
-    "test": "npm run test:snapshot && npm run test:dom",
+    "test": "shipkit ci --only test",
+    "test:raw": "npm run test:snapshot && npm run test:dom",
     "emit": "npm run build:cli && node scripts/build.mjs --emit",
     "test:snapshot": "node tests/snapshot.mjs",
-    "snapshot:update": "UPDATE=1 node tests/snapshot.mjs"
+    "snapshot:update": "UPDATE=1 node tests/snapshot.mjs",
+    "hub": "bun --watch node_modules/rvlib-shipkit/src/cli.ts serve"
   },
   "devDependencies": {
     "@types/node": "^22.20.0",
     "esbuild": "^0.23.1",
     "jsdom": "^25.0.1",
+    "rvlib-shipkit": "^0.36.0",
     "typescript": "^5.5.4"
+  },
+  "rvt": {
+    "roots": [
+      "site/src"
+    ]
   }
 }

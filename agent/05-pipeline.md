@@ -3,12 +3,14 @@
 ## Arborescence
 ```
 screenplay/
-├── CLAUDE.md            # référence agent/* via @ (contexte de l'agent)
+├── CLAUDE.md            # 2 lignes : @./CLAUDE.local.md puis @./agent/index.md (cf. D15)
+├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
 ├── README.md           # cahier lisible sur GitHub (public)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
 ├── tsconfig.json
-├── agent/              # spec-first : vision, besoins, spec, décisions, géométrie, pipeline, backlog
+├── agent/              # spec-first : index.md (routeur, chargé par CLAUDE.md) + vision, besoins,
+│                       # spec, décisions, géométrie, pipeline, backlog, handoff
 ├── tests/
 │   ├── snapshot.mjs    # snapshots golden de compute.ts (remplace l'oracle Python)
 │   ├── cases.mjs       # jeux de params partagés
@@ -30,8 +32,10 @@ screenplay/
 npm ci                         # une fois (esbuild, typescript, jsdom)
 npm run build                  # bundle src/main.ts -> site/app.js
 npm run emit                   # cli.ts --emit : params.js + assets/*.svg + derived.json + cache-bust
-npm test                       # snapshots golden + smoke DOM
+npm test                       # snapshots golden + smoke DOM (routé par shipkit ; test:raw = brut)
+shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré
 ```
+La CI GitHub (`pages.yml`) appelle `npm run test:raw` : shipkit (bun) n'y est pas installé.
 Les fichiers générés (`app.js`, `params.js`, `assets/*.svg`, `data/derived.json`) sont **commités**
 pour que le site fonctionne même sans CI. Si un changement de calcul est **voulu** :
 `npm run snapshot:update`.

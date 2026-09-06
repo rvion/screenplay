@@ -1,0 +1,45 @@
+{
+   // one master task with runOn folderOpen, every dev process as a subtask.
+   // Opening the folder in vscode starts them all. Add a subtask per
+   // long-running watcher the stack earns (dev server, css, tests), never
+   // for a one-off script.
+   "version": "2.0.0",
+   "tasks": [
+      {
+         "label": "starts everything",
+         "dependsOn": ["👁  TSC", "🚀  shipkit"],
+         "group": { "kind": "build", "isDefault": true },
+         "runOptions": { "runOn": "folderOpen", "instanceLimit": 1 },
+         "problemMatcher": []
+      },
+      {
+         "label": "👁  TSC",
+         "detail": "Get all typescript errors in problems pane",
+         "type": "process",
+         "command": "${workspaceFolder}/node_modules/.bin/tsc",
+         "args": ["--noEmit", "--incremental", "--watch", "--project", "tsconfig.json"],
+         "options": {
+            "cwd": "${workspaceFolder}",
+            "env": { "NODE_OPTIONS": "--max-old-space-size=8192" }
+         },
+         "isBackground": true,
+         "presentation": { "reveal": "never", "clear": true },
+         "group": "build",
+         "runOptions": { "instanceLimit": 1 },
+         "problemMatcher": []
+      },
+      {
+         "label": "🚀  shipkit",
+         "detail": "The shipkit hub at http://localhost:4885 — clickable URLs: the page, /graph/wiki, /graph/agent",
+         "type": "process",
+         "command": "bun",
+         "args": ["run", "hub"],
+         "options": { "cwd": "${workspaceFolder}" },
+         "isBackground": true,
+         "presentation": { "reveal": "always", "close": false },
+         "group": "build",
+         "runOptions": { "instanceLimit": 1 },
+         "problemMatcher": []
+      }
+   ]
+}

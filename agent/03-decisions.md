@@ -79,3 +79,19 @@ implémentation Python+JS de D13), interactivité totale demandée par l'utilisa
 été prouvée par tests avant de retirer `generate.py` ; l'oracle Python est remplacé par des
 **snapshots golden** (`tests/snapshots/*.json`) + un **smoke-test DOM** jsdom. *Écarté :* garder
 Python comme générateur (duplication, deux langages à synchroniser).
+
+## D15 — Câblage corvion : `CLAUDE.md` réduit à deux lignes, routeur `agent/index.md`
+`CLAUDE.md` ne contient plus que deux imports : `@./CLAUDE.local.md` (fichier **gitignoré**,
+propre à la machine de Rémi, qui charge `~/dev/corvion/wiki/index.md`) puis `@./agent/index.md`.
+Tout l'ancien contenu de `CLAUDE.md` (description, règles d'or, commandes, `@` vers les pages
+de spec) vit désormais dans `agent/index.md`, le routeur du dépôt. *Pourquoi :* opt-in au wiki
+corvion (identité + capacités de l'agent) sans exposer un chemin privé dans un dépôt public ;
+l'ordre des deux lignes est sémantique (contexte de base d'abord, docs du dépôt ensuite pour
+qu'elles priment). Un clone étranger ignore silencieusement l'import manquant et ne charge que
+`agent/`. Règle machine : SK003 de `shipkit check`. *Complète D10* (le `@` vers `agent/*` passe
+par `agent/index.md`). *Écarté :* garder le contenu dans `CLAUDE.md` (invisible au graphe
+`agent/` du hub) ; mettre l'import local en ligne 2 (inverse l'ordre).
+Dans la foulée, `shipkit init` a câblé le dépôt : `repo.config.ts` (visibilité `public`), scripts
+`test`/`typecheck` routés par `shipkit ci` (`*:raw` = l'outil brut, utilisé par la CI GitHub),
+`.vscode/tasks.json` (hub sur 4885), `.claude/settings.json` (silencieux d'attribution + une seule
+porte d'entrée pour les runners), `rvlib-shipkit` en devDependency.

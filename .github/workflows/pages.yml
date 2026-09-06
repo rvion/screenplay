@@ -32,7 +32,8 @@ jobs:
           npm run build:cli
           node scripts/build.mjs --emit
       - name: Tests (snapshots golden + smoke DOM)
-        run: npm test
+        # test:raw = the runner itself; `npm test` goes through shipkit, absent on CI
+        run: npm run test:raw
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact (dossier site/)
