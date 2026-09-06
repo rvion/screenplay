@@ -287,6 +287,7 @@ export function budget(p: Params, g: any, t: any, openings: any[]) {
     ["Visserie + etancheite", 1, "forfait", get("visserie_etancheite_forfait")],
     ["Gouttiere + descente", 1, "forfait", get("gouttiere_descente_forfait")],
     ["Ventilation (VMC/aerateurs)", 1, "forfait", get("ventilation_forfait")],
+    ["Livraison des panneaux", 1, "forfait", get("livraison_forfait")],
   ];
   const rows: any[] = [];
   let sous = 0;

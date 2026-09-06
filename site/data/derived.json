@@ -272,15 +272,15 @@
         "poste": "Panneaux sandwich - mur + rehausse (brut)",
         "qte": 28.26,
         "unite": "m²",
-        "pu_eur": 45,
-        "montant_eur": 1272
+        "pu_eur": 35,
+        "montant_eur": 989
       },
       {
         "poste": "Panneaux sandwich - toit (brut)",
         "qte": 8.47,
         "unite": "m²",
-        "pu_eur": 52,
-        "montant_eur": 440
+        "pu_eur": 35,
+        "montant_eur": 296
       },
       {
         "poste": "Porte vitree",
@@ -314,14 +314,21 @@
         "poste": "Ventilation (VMC/aerateurs)",
         "qte": 1,
         "unite": "forfait",
-        "pu_eur": 350,
-        "montant_eur": 350
+        "pu_eur": 150,
+        "montant_eur": 150
+      },
+      {
+        "poste": "Livraison des panneaux",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 150,
+        "montant_eur": 150
       }
     ],
-    "sous_total_eur": 3397,
+    "sous_total_eur": 2920,
     "incertitude_pct": 15,
-    "total_bas_eur": 2887,
-    "total_haut_eur": 3906
+    "total_bas_eur": 2482,
+    "total_haut_eur": 3358
   },
   "ouvertures": [
     {

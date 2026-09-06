@@ -262,7 +262,8 @@ function budget(p, g, t, openings) {
     ["Profils (angles, rives, rail)", rnd(profils_ml, 1), "ml", get("profils_ml")],
     ["Visserie + etancheite", 1, "forfait", get("visserie_etancheite_forfait")],
     ["Gouttiere + descente", 1, "forfait", get("gouttiere_descente_forfait")],
-    ["Ventilation (VMC/aerateurs)", 1, "forfait", get("ventilation_forfait")]
+    ["Ventilation (VMC/aerateurs)", 1, "forfait", get("ventilation_forfait")],
+    ["Livraison des panneaux", 1, "forfait", get("livraison_forfait")]
   ];
   const rows = [];
   let sous = 0;

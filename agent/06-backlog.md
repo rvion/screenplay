@@ -35,6 +35,8 @@
       complet (historique, cf. D11–D14).
 
 ## Dette / limites connues
+- Prix = médians marché 2026 (fourniture seule, HT), pas des devis. Longueurs de stock non
+  modélisées : si le fournisseur ne coupe pas à longueur, compter +15–30 % sur la ligne murs.
 - Quantités de visserie / accessoires = estimations à recouper avec le fabricant.
 - Pas de validation structurelle (vent/neige/charge) — hors périmètre actuel.
 - `npm test` / `npm run typecheck` passent par `shipkit ci` ; les variantes `:raw` lancent
