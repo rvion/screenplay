@@ -730,6 +730,8 @@ function createViewer(container, model0) {
   const sun = new THREE.DirectionalLight(16777215, 1);
   sun.position.set(5, 8, 3);
   sun.castShadow = true;
+  sun.shadow.bias = -8e-4;
+  sun.shadow.mapSize.set(2048, 2048);
   scene.add(sun);
   scene.add(new THREE.HemisphereLight(13624319, 7039824, 0.4));
   const grass = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 8628567, roughness: 1 }));

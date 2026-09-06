@@ -214,6 +214,8 @@ export function createViewer(container: HTMLElement, model0: Model): Viewer {
   const sun = new THREE.DirectionalLight(0xffffff, 1.0);
   sun.position.set(5, 8, 3);
   sun.castShadow = true;
+  sun.shadow.bias = -0.0008;
+  sun.shadow.mapSize.set(2048, 2048);
   scene.add(sun);
   scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x6b6b50, 0.4));
 
