@@ -120,3 +120,8 @@ code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size
 .opening-card { border: 1px solid var(--line); border-radius: 8px; padding: .3rem .6rem .4rem; background: #fff; margin-bottom: .4rem; }
 .opening-card .ctl-row { justify-content: space-between; }
 .opening-card select { font-size: .8rem; padding: .2rem .3rem; border: 1px solid var(--line); border-radius: 6px; }
+.row-sub td { background: #f3f5f1; font-weight: 600; color: var(--muted); }
+.row-amen td:first-child { padding-left: 1.2rem; }
+.ctl-check { flex-direction: row; align-items: center; gap: .5rem; font-size: .85rem; }
+.ctl-check input { accent-color: var(--accent); }
+ol.confort { padding-left: 1.2rem; } ol.confort li { margin: .5rem 0; }

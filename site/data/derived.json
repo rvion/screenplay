@@ -30,8 +30,8 @@
       "arriere-gauche"
     ],
     "vert_heights_cm": [
-      240,
-      240,
+      237.5,
+      237.5,
       215,
       215
     ],
@@ -40,17 +40,18 @@
       "G": 240
     },
     "aire_m2": 4.8,
+    "aire_interieure_m2": 4.29,
     "emprise_debords_m2": 5.2,
     "perimetre_cm": 880,
     "pente": {
-      "chute_cm": 25,
+      "chute_cm": 22.5,
       "run_cm": 240,
-      "pourcent": 10.4,
-      "degres": 5.95,
-      "rampant_cm": 241.3
+      "pourcent": 9.4,
+      "degres": 5.36,
+      "rampant_cm": 241.1
     },
     "hauteur_mur_cm": 215,
-    "hauteur_avant_cm": 240,
+    "hauteur_avant_cm": 237.5,
     "hauteur_arriere_cm": 215,
     "faces": [
       {
@@ -58,9 +59,9 @@
         "libelle": "Avant",
         "longueur_cm": 200,
         "hauteur_mur_cm": 215,
-        "hauteur_debut_cm": 240,
-        "hauteur_fin_cm": 240,
-        "hauteur_max_cm": 240,
+        "hauteur_debut_cm": 237.5,
+        "hauteur_fin_cm": 237.5,
+        "hauteur_max_cm": 237.5,
         "rehausse": "bandeau"
       },
       {
@@ -68,9 +69,9 @@
         "libelle": "Droite",
         "longueur_cm": 240,
         "hauteur_mur_cm": 215,
-        "hauteur_debut_cm": 240,
+        "hauteur_debut_cm": 237.5,
         "hauteur_fin_cm": 215,
-        "hauteur_max_cm": 240,
+        "hauteur_max_cm": 237.5,
         "rehausse": "triangle"
       },
       {
@@ -89,8 +90,8 @@
         "longueur_cm": 240,
         "hauteur_mur_cm": 215,
         "hauteur_debut_cm": 215,
-        "hauteur_fin_cm": 240,
-        "hauteur_max_cm": 240,
+        "hauteur_fin_cm": 237.5,
+        "hauteur_max_cm": 237.5,
         "rehausse": "triangle"
       }
     ],
@@ -240,41 +241,49 @@
         }
       ],
       "aire_brute_m2": 19.35,
-      "aire_nette_m2": 16.13,
-      "ouvertures_deduites_m2": 2.79,
+      "aire_nette_m2": 15.01,
+      "ouvertures_deduites_m2": 3.91,
       "total_panneaux": 9
     },
     "rehausse": {
+      "materiau": "bois",
       "pieces": [
         {
           "label": "R1",
           "piece": "Bandeau avant (face A)",
           "longueur_cm": 200,
-          "hauteur_cm": 25,
+          "hauteur_cm": 22.5,
           "nb": 1,
-          "note": "rectangle, pose sur le mur A"
+          "note": "madrier droit, pose sur le mur A"
         },
         {
           "label": "R2+R3",
-          "piece": "Triangles lateraux (R2 face G, R3 face D)",
+          "piece": "Coins lateraux (R2 face G, R3 face D)",
           "longueur_cm": 240,
-          "hauteur_cm": 25,
+          "hauteur_cm": 22.5,
           "nb": 2,
-          "note": "1 bande G x chute coupee en diagonale = 2 triangles (tourner R3 de 180 deg)"
+          "note": "1 madrier de G coupe en diagonale = 2 coins (tourner R3 de 180 deg)"
         }
       ],
-      "nb_panneaux": 1,
-      "longueur_panneau_cm": 240,
-      "aire_brute_m2": 2.4,
-      "aire_nette_m2": 1.1
+      "nb_panneaux": 0,
+      "longueur_panneau_cm": 0,
+      "aire_brute_m2": 0,
+      "aire_nette_m2": 0,
+      "section_mm": [
+        75,
+        225
+      ],
+      "longueur_stock_cm": 480,
+      "ml": 4.4,
+      "nb_madriers": 1
     },
     "toit": {
       "face": "T",
       "libelle": "Toiture",
       "nb_panneaux": 2,
       "largeur_cm": 200,
-      "longueur_panneau_cm": 261.4,
-      "aire_brute_m2": 5.23,
+      "longueur_panneau_cm": 261.1,
+      "aire_brute_m2": 5.22,
       "aire_couverte_m2": 5.2,
       "portee_cm": 260,
       "pieces": [
@@ -288,21 +297,26 @@
         }
       ]
     },
-    "commande_mur_m2": 23.9,
-    "commande_toit_m2": 5.8,
-    "commande_panneaux_m2": 29.7,
+    "commande_mur_m2": 21.3,
+    "commande_toit_m2": 5.7,
+    "commande_panneaux_m2": 27,
     "facteur_chute_pct": 10
   },
   "achats": [
     {
-      "poste": "Panneaux sandwich 60 mm - finition MUR (murs + rehausse)",
-      "qte": "9 panneaux de 2.15 m + 1 de 2.40 m (~23.9 m2 avec chute)",
-      "note": "Ame PIR, autoportants (pas d'ossature). Parement mural lisse/micro-nervure, laque 2 faces. Coupes droites + 1 diagonale."
+      "poste": "Panneaux sandwich 60 mm - finition MUR",
+      "qte": "9 panneaux de 2.15 m (~21.3 m2 avec chute)",
+      "note": "Ame PIR, autoportants (pas d'ossature). FIXATION CACHEE dans le joint (pas de tete de vis visible), parement lisse/micro-nervure, couleur au choix (mur fonce + toit clair). Coupes droites uniquement."
+    },
+    {
+      "poste": "Rehausse bois : madrier 75x225 mm traite classe 4",
+      "qte": "1 x 4.80 m (4.4 ml : R1 = 200 cm droit, R2+R3 = 240 cm coupe en diagonale)",
+      "note": "Pose sur le chant des panneaux (bande butyle), visse dans les panneaux ; sert de lisse haute qui lie murs et toit. Larmier par-dessus cote exterieur."
     },
     {
       "poste": "Panneaux sandwich 60 mm - finition TOIT (face T)",
-      "qte": "2 panneaux de ~2.61 m (~5.8 m2 avec chute)",
-      "note": "Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~2.60 m : verifier le tableau de portees du fabricant."
+      "qte": "2 panneaux de ~2.61 m (~5.7 m2 avec chute)",
+      "note": "Profil TOITURE (nervures hautes), sens de la pente, COULEUR CLAIRE (chaleur d'ete). Portee libre ~2.60 m : verifier le tableau de portees du fabricant."
     },
     {
       "poste": "Rail / lambourde de pied",
@@ -311,7 +325,7 @@
     },
     {
       "poste": "Profils d'angle exterieurs + interieurs",
-      "qte": "4 angles x 2.40 m, ext + int = ~20 m",
+      "qte": "4 angles x 2.38 m, ext + int = ~19 m",
       "note": "4 angles droits standard (profil L / couvre-joint)."
     },
     {
@@ -331,7 +345,7 @@
     },
     {
       "poste": "Vis autoperceuses tete EPDM",
-      "qte": "~162 (boite de 200)",
+      "qte": "~148 (boite de 200)",
       "note": "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire."
     },
     {
@@ -342,12 +356,12 @@
     {
       "poste": "Bloc-porte vitre alu double vitrage",
       "qte": "1 (100x215 cm)",
-      "note": "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Ouverture vers l'exterieur, seuil + joints."
+      "note": "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Poignee + serrure, ouverture vers l'exterieur, seuil + joints. La piece touchee tous les jours : ne pas economiser ici."
     },
     {
       "poste": "Fenetre(s) double vitrage",
-      "qte": "1 : 80x80 all.110 (face D)",
-      "note": "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant. La garder dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints."
+      "qte": "2 : 80x110 all.95 (face D, oscillo-battante), 80x110 all.95 (face G, fixe)",
+      "note": "allege = hauteur sous fenetre (cm). L'ouvrante assure la ventilation traversante avec la porte. Chaque fenetre dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints."
     },
     {
       "poste": "Ventilation (VMC ou aerateurs hygro)",
@@ -356,7 +370,7 @@
     },
     {
       "poste": "Bande comprimee / mousse precomprimee",
-      "qte": "~19 m",
+      "qte": "~23 m",
       "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
     },
     {
@@ -373,78 +387,178 @@
       "poste": "Peinture de retouche (RAL parement)",
       "qte": "1 aerosol",
       "note": "Retouche des rayures et chants."
+    },
+    {
+      "poste": "Plancher isole",
+      "qte": "~4.29 m2, 6 cm",
+      "note": "plancher isole : lambourdes + 40 mm d'isolant + OSB + sol vinyle/parquet. Hauteur sous plafond arriere ~2.09 m."
+    },
+    {
+      "poste": "Electricite (cable existant par le sol)",
+      "qte": "1 lot",
+      "note": "cable existant par le sol : multiprise parafoudre + plafonnier LED + chemins de cable"
+    },
+    {
+      "poste": "Chauffage",
+      "qte": "1",
+      "note": "radiateur panneau 750 W avec thermostat"
+    },
+    {
+      "poste": "Store / occultation",
+      "qte": "1",
+      "note": "store sur la porte vitree (soleil / ecran)"
+    },
+    {
+      "poste": "Finition interieure",
+      "qte": "1 lot",
+      "note": "couvre-joints d'angle interieurs, tapis, rideau (acoustique)"
     }
   ],
   "budget": {
     "lignes": [
       {
-        "poste": "Panneaux sandwich - mur + rehausse (brut)",
-        "qte": 21.75,
+        "poste": "Panneaux sandwich - mur (brut)",
+        "qte": 19.35,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 761
+        "montant_eur": 677,
+        "groupe": "coque"
+      },
+      {
+        "poste": "Surcout fixation cachee (mur)",
+        "qte": 19.35,
+        "unite": "m²",
+        "pu_eur": 5,
+        "montant_eur": 97,
+        "groupe": "coque"
       },
       {
         "poste": "Panneaux sandwich - toit (brut)",
-        "qte": 5.23,
+        "qte": 5.22,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 183
+        "montant_eur": 183,
+        "groupe": "coque"
       },
       {
-        "poste": "Porte vitree",
-        "qte": 1,
-        "unite": "u",
-        "pu_eur": 700,
-        "montant_eur": 700
+        "poste": "Rehausse bois (madrier)",
+        "qte": 4.4,
+        "unite": "ml",
+        "pu_eur": 10,
+        "montant_eur": 44,
+        "groupe": "coque"
       },
       {
-        "poste": "Fenetre(s)",
+        "poste": "Bloc-porte vitre",
         "qte": 1,
         "unite": "u",
-        "pu_eur": 250,
-        "montant_eur": 250
+        "pu_eur": 900,
+        "montant_eur": 900,
+        "groupe": "coque"
+      },
+      {
+        "poste": "Fenetre(s) fixe(s)",
+        "qte": 1,
+        "unite": "u",
+        "pu_eur": 200,
+        "montant_eur": 200,
+        "groupe": "coque"
+      },
+      {
+        "poste": "Fenetre(s) ouvrante(s)",
+        "qte": 1,
+        "unite": "u",
+        "pu_eur": 320,
+        "montant_eur": 320,
+        "groupe": "coque"
       },
       {
         "poste": "Profils (angles, rives, rail)",
-        "qte": 28,
+        "qte": 27.8,
         "unite": "ml",
         "pu_eur": 12,
-        "montant_eur": 336
+        "montant_eur": 334,
+        "groupe": "coque"
       },
       {
         "poste": "Visserie + etancheite",
         "qte": 1,
         "unite": "forfait",
         "pu_eur": 160,
-        "montant_eur": 160
+        "montant_eur": 160,
+        "groupe": "coque"
       },
       {
         "poste": "Gouttiere + descente",
         "qte": 1,
         "unite": "forfait",
         "pu_eur": 130,
-        "montant_eur": 130
+        "montant_eur": 130,
+        "groupe": "coque"
       },
       {
         "poste": "Ventilation (VMC/aerateurs)",
         "qte": 1,
         "unite": "forfait",
         "pu_eur": 150,
-        "montant_eur": 150
+        "montant_eur": 150,
+        "groupe": "coque"
       },
       {
         "poste": "Livraison des panneaux",
         "qte": 1,
         "unite": "forfait",
         "pu_eur": 150,
-        "montant_eur": 150
+        "montant_eur": 150,
+        "groupe": "coque"
+      },
+      {
+        "poste": "Amenagement - plancher isole",
+        "qte": 4.29,
+        "unite": "m²",
+        "pu_eur": 45,
+        "montant_eur": 193,
+        "groupe": "amenagement"
+      },
+      {
+        "poste": "Amenagement - electricite (multiprise, eclairage)",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 80,
+        "montant_eur": 80,
+        "groupe": "amenagement"
+      },
+      {
+        "poste": "Amenagement - chauffage",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 120,
+        "montant_eur": 120,
+        "groupe": "amenagement"
+      },
+      {
+        "poste": "Amenagement - store",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 60,
+        "montant_eur": 60,
+        "groupe": "amenagement"
+      },
+      {
+        "poste": "Amenagement - finition interieure",
+        "qte": 1,
+        "unite": "forfait",
+        "pu_eur": 120,
+        "montant_eur": 120,
+        "groupe": "amenagement"
       }
     ],
-    "sous_total_eur": 2820,
+    "coque_eur": 3344,
+    "amenagement_eur": 573,
+    "sous_total_eur": 3917,
     "incertitude_pct": 15,
-    "total_bas_eur": 2397,
-    "total_haut_eur": 3243
+    "total_bas_eur": 3330,
+    "total_haut_eur": 4505
   },
   "ouvertures": [
     {
@@ -457,8 +571,9 @@
       "allege_cm": 0,
       "start_cm": 100,
       "position": "droite",
+      "ouvrant": true,
       "ouverture": "vers l'exterieur",
-      "description": "bloc-porte vitre aluminium (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper"
+      "description": "bloc-porte vitre aluminium double vitrage, poignee + serrure (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper"
     },
     {
       "id": "fenetre-droite",
@@ -466,12 +581,27 @@
       "face": "D",
       "face_index": 1,
       "largeur_cm": 80,
-      "hauteur_cm": 80,
-      "allege_cm": 110,
+      "hauteur_cm": 110,
+      "allege_cm": 95,
       "start_cm": 110,
       "position": 110,
+      "ouvrant": true,
       "ouverture": "",
-      "description": "fenetre PVC double vitrage, face droite, dans le 2e panneau (110-190 cm depuis l'avant)"
+      "description": "fenetre oscillo-battante double vitrage, face droite, dans le module D2 (ventilation traversante avec la porte)"
+    },
+    {
+      "id": "fenetre-gauche",
+      "type": "fenetre",
+      "face": "G",
+      "face_index": 3,
+      "largeur_cm": 80,
+      "hauteur_cm": 110,
+      "allege_cm": 95,
+      "start_cm": 110,
+      "position": 110,
+      "ouvrant": false,
+      "ouverture": "",
+      "description": "fenetre fixe double vitrage, face gauche, dans le module G2 (la face G se compte depuis l'arriere : 110-190 = 50-130 depuis l'avant)"
     }
   ],
   "panneau": {
@@ -502,8 +632,8 @@
       ]
     ],
     "heights": [
-      2.4,
-      2.4,
+      2.375,
+      2.375,
       2.15,
       2.15
     ],
@@ -528,8 +658,8 @@
         2.5
       ]
     ],
-    "roof_front_m": 2.4,
-    "roof_slope": 0.10417,
+    "roof_front_m": 2.375,
+    "roof_slope": 0.09375,
     "slab": [
       [
         -0.02,
@@ -613,17 +743,20 @@
       {
         "label": "R1",
         "face_index": 0,
-        "kind": "bandeau"
+        "kind": "bandeau",
+        "materiau": "bois"
       },
       {
         "label": "R2",
         "face_index": 3,
-        "kind": "triangle"
+        "kind": "triangle",
+        "materiau": "bois"
       },
       {
         "label": "R3",
         "face_index": 1,
-        "kind": "triangle"
+        "kind": "triangle",
+        "materiau": "bois"
       }
     ],
     "roof_panels": [
@@ -638,10 +771,13 @@
         "x1_m": 2
       }
     ],
+    "rehausse_materiau": "bois",
+    "floor_m": 0.06,
     "openings": [
       {
         "type": "porte",
         "face_index": 0,
+        "ouvrant": true,
         "offset_m": 1,
         "width_m": 1,
         "height_m": 2.15,
@@ -650,10 +786,20 @@
       {
         "type": "fenetre",
         "face_index": 1,
+        "ouvrant": true,
         "offset_m": 1.1,
         "width_m": 0.8,
-        "height_m": 0.8,
-        "sill_m": 1.1
+        "height_m": 1.1,
+        "sill_m": 0.95
+      },
+      {
+        "type": "fenetre",
+        "face_index": 3,
+        "ouvrant": false,
+        "offset_m": 1.1,
+        "width_m": 0.8,
+        "height_m": 1.1,
+        "sill_m": 0.95
       }
     ]
   },

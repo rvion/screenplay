@@ -162,3 +162,17 @@ bandes de 5 cm à découper de part et d'autre d'une porte de 90. Règle codée
 panneau du débit, du 3D et des étiquettes. *Effet :* 9 panneaux de mur + 2 de toit, commande
 ~29,7 m², budget ~2 820 € HT. *Écarté :* garder 10 cm de débord latéral (3e panneau à refendre) ;
 porte 90 dans un panneau (chutes, bandes fragiles). *Complète* D17/D18.
+
+## D23 — Rehausse en bois, deux fenêtres, aménagement chiffré : « simple, abordable, robuste, agréable »
+L'utilisateur précise l'objectif : pas le moins cher, mais un bureau agréable au quotidien.
+(1) **Rehausse en madrier 75 × 225** (`rehausse.materiau = "bois"`) : un madrier coupé en
+diagonale = R2/R3, un droit = R1 ; chute ramenée à 22,5 cm (9,4 %, > 5°). Le bois se coupe à la
+scie circulaire, tient les vis et fait **lisse haute** entre murs et toit — le point faible
+structurel des triangles de panneau disparaît. (2) **Deux fenêtres 80 × 110** : ouvrante face D
+(ventilation traversante avec la porte), fixe face G ; prix distincts. (3) **Bloc-porte alu**
+avec serrure à 900 €, panneaux mur à **fixation cachée**, toit **clair**. (4) Bloc `amenagement`
+(plancher isolé, multiprise + éclairage sur le câble existant, chauffage, store, finition
+intérieure) : cases à cocher, budget en deux groupes **coque / aménagement**, plancher en 3D.
+*Écarté :* supprimer la gouttière (le débord de 10 cm goutte sur la dalle qui dépasse) ;
+tableau électrique (câble déjà en place). *Effet :* coque ~3 340 €, aménagement ~570 €, total
+~3 920 € HT. *Complète* D17 (rehausse), D20 (fenêtres), D22.

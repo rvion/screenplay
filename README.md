@@ -16,18 +16,22 @@ paramètres unique** et publié sur un petit **site web**.
 ## Le principe, en une phrase
 
 Une boîte rectangulaire dont **tous les panneaux de mur sont des rectangles identiques**
-(coupes droites) ; la pente du toit vient d'une **rehausse** posée dessus : **une bande coupée
-en diagonale** (deux triangles, faces gauche et droite) et **un bandeau** sur la face avant.
-Une seule coupe en biais dans tout le projet. Deux ouvertures : la **porte vitrée** et une
-**fenêtre** sur la face droite, calée dans un seul panneau.
+(coupes droites) ; la pente du toit vient d'une **rehausse en bois** posée dessus : **un madrier
+coupé en diagonale** (deux coins, faces gauche et droite) et **un madrier droit** sur la face
+avant, qui font aussi lisse haute. Une seule coupe en biais dans tout le projet. Un **bloc-porte
+vitré** et **deux fenêtres** (ouvrante à droite, fixe à gauche), chacune dans un seul panneau.
+Objectif : **simple, abordable, robuste, agréable tous les jours**.
 
 | | |
 |---|---|
 | **Emprise** | **200 × 240 cm** = **4,8 m²** (5,2 m² débords inclus) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
-| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **9 panneaux de 215 cm** + 1 pour la rehausse (le module A2 est pris par le bloc-porte) |
-| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,9°), **2 panneaux toiture entiers** de ~2,61 m, rives affleurantes |
+| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, fixation cachée, pose verticale, **9 panneaux de 215 cm** (le module A2 est pris par le bloc-porte) |
+| **Rehausse** | **1 madrier 75 × 225** de 4,8 m : 240 coupé en diagonale (2 coins) + 200 droit ; sert de lisse haute |
+| **Toit** | **mono-pente vers l'arrière**, rehausse 22,5 cm (**≈ 9,4 %**, 5,4°), **2 panneaux toiture entiers** de ~2,61 m, couleur claire, rives affleurantes |
 | **Porte** | **bloc-porte vitré 100 × 215** (dormant compris), face A à droite : remplace le panneau A2, rien à découper |
-| **Fenêtre** | **80 × 80**, allège 110, face D, dans le 2e panneau (liste `fenetres[]`, vide = aucune) |
+| **Fenêtres** | **2 × 80 × 110**, allège 95 : ouvrante face D (module D2), fixe face G (module G2) |
+| **Aménagement** | plancher isolé, multiprise + éclairage (câble déjà en place), chauffage, store, finitions : ~570 € |
+| **Budget** | ≈ **3 900 € HT** (coque ~3 340 € + aménagement ~570 €), fourchette 3 300 – 4 500 € |
 | **Dalle** | existante, à **coin coupé** (relevé exact à saisir) ; l'abri est posé avec 2 cm de marge, tout sur la dalle |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
@@ -103,7 +107,8 @@ La conception détaillée vit dans [`agent/`](agent/) :
   (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
 - **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
   (neige/vent), sinon ajouter une panne.
-- **Pente du toit** : 25 cm ≈ **10 %** (5,8°). Vérifier la pente mini du fabricant.
+- **Pente du toit** : 22,5 cm ≈ **9,4 %** (5,4°). Vérifier la pente mini du fabricant.
+- **Chaleur d'été** : toit clair, fenêtre ouvrante face à la porte, store sur le vitrage exposé.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
   thermiques (dont le joint mur/rehausse). **Ventilation indispensable**.
 - **Porte et fenêtre** : double vitrage performant (le vitrage déperd 4 à 5 fois plus que le

@@ -52,16 +52,18 @@ function renderDebit(core: Core, p: Params) {
     `<tr><td><b>${x.face}</b> · ${x.libelle}</td><td><span class="tag">mur</span></td>` +
     `<td>${x.pieces.map((q: any) => q.remplace_par ? `<s>${q.label}</s> = ${q.remplace_par}` : `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${x.hauteur_cm} cm — coupes droites</td>` +
     `<td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m²</td></tr>`).join("");
-  rows += `<tr><td><b>R</b> · Rehausse</td><td><span class="tag rake">mur</span></td>` +
-    `<td>${r.pieces.map((q: any) => `<b>${q.label}</b> ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td>` +
-    `<td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m²</td></tr>`;
+  const bois = r.materiau === "bois";
+  rows += `<tr><td><b>R</b> · Rehausse</td><td><span class="tag rake">${bois ? "bois" : "mur"}</span></td>` +
+    `<td>${r.pieces.map((q: any) => `<b>${q.label}</b> ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, ` +
+    (bois ? `${r.nb_madriers} madrier ${r.section_mm[0]}×${r.section_mm[1]} de ${(r.longueur_stock_cm / 100).toFixed(2)} m (${r.ml} ml)` : `tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m`) + `</td>` +
+    `<td>${bois ? r.nb_madriers + " madrier" : r.nb_panneaux}</td><td>${bois ? "—" : r.aire_brute_m2 + " m²"}</td></tr>`;
   rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> · ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td>` +
     `<td>${t.toit.pieces.map((q: any) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente · couvre ${t.toit.aire_couverte_m2} m²</td>` +
     `<td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m²</td></tr>`;
   setHTML("#debit tbody", rows);
   setHTML("#debit-resume",
-    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m² brut, ${t.murs.aire_nette_m2} m² net) ` +
-    `+ <b>${r.nb_panneaux} panneau</b> de rehausse. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. ` +
+    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m² brut, ${t.murs.aire_nette_m2} m² net)` +
+    (bois ? ` + rehausse en <b>bois</b> (${r.nb_madriers} madrier)` : ` + <b>${r.nb_panneaux} panneau</b> de rehausse`) + `. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. ` +
     `Commande totale avec chute ${t.facteur_chute_pct} % : <b>${t.commande_panneaux_m2} m²</b>.`);
 }
 
@@ -72,11 +74,29 @@ function renderAchats(core: Core) {
 
 function renderBudget(core: Core) {
   const b = core.budget;
-  setHTML("#budget tbody", b.lignes.map((r: any) =>
-    `<tr><td>${r.poste}</td><td>${r.qte} ${r.unite}</td><td>${r.pu_eur} €</td><td><b>${r.montant_eur} €</b></td></tr>`).join(""));
+  const row = (r: any) => `<tr class="${r.groupe === "amenagement" ? "row-amen" : ""}"><td>${r.poste}</td><td>${r.qte} ${r.unite}</td><td>${r.pu_eur} €</td><td><b>${r.montant_eur} €</b></td></tr>`;
+  const coque = b.lignes.filter((r: any) => r.groupe !== "amenagement"), amen = b.lignes.filter((r: any) => r.groupe === "amenagement");
+  setHTML("#budget tbody", coque.map(row).join("") +
+    `<tr class="row-sub"><td colspan="3">Coque (structure, menuiseries, toit)</td><td><b>${b.coque_eur} €</b></td></tr>` +
+    amen.map(row).join("") +
+    (amen.length ? `<tr class="row-sub"><td colspan="3">Aménagement (confort au quotidien)</td><td><b>${b.amenagement_eur} €</b></td></tr>` : ""));
   setHTML("#budget-total",
-    `Sous-total <b>${b.sous_total_eur} €</b> HT · fourchette indicative ` +
+    `Total <b>${b.sous_total_eur} €</b> HT · fourchette indicative ` +
     `<b>${b.total_bas_eur} – ${b.total_haut_eur} €</b> (±${b.incertitude_pct} %)`);
+}
+
+function renderAmenagement(core: Core, p: Params) {
+  const am = p.amenagement || {}, g = core.geometrie;
+  const items: [string, string, string][] = [
+    ["plancher", "🪵 Plancher isolé", am.plancher ? `${am.plancher.description}. ${am.plancher.epaisseur_cm} cm ⇒ hauteur sous plafond ${((g.hauteur_arriere_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m à l'arrière, ${((g.hauteur_avant_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m à l'avant.` : ""],
+    ["electricite", "🔌 Électricité", am.electricite ? am.electricite.description : ""],
+    ["chauffage", "🔥 Chauffage", am.chauffage ? am.chauffage.description : ""],
+    ["store", "🌞 Store", am.store ? am.store.description : ""],
+    ["finition_interieure", "🎧 Finition intérieure", am.finition_interieure ? am.finition_interieure.description : ""],
+  ];
+  setHTML("#amenagement-list", items.filter(([k]) => am[k] && am[k].actif)
+    .map(([, t, d]) => `<li><b>${t}.</b> ${d}</li>`).join("") || "<li class=\"note\">Aucun aménagement activé (voir réglages).</li>");
+  setText("v-interieur", String(g.aire_interieure_m2));
 }
 
 function renderVigilance(core: Core, p: Params) {
@@ -106,5 +126,6 @@ export function renderAll(core: Core, p: Params) {
   renderDebit(core, p);
   renderAchats(core);
   renderBudget(core);
+  renderAmenagement(core, p);
   renderVigilance(core, p);
 }

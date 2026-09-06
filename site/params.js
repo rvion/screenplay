@@ -35,7 +35,7 @@ window.SHED_PARAMS = {
     "_comment": "Hauteur des panneaux muraux (rectangles, coupes droites) = hauteur arriere. L'avant = hauteur_cm + toit.pente_chute_cm grace a la rehausse."
   },
   "toit": {
-    "pente_chute_cm": 25,
+    "pente_chute_cm": 22.5,
     "draine_vers": "arriere_B",
     "debord_cm": {
       "avant": 10,
@@ -43,7 +43,17 @@ window.SHED_PARAMS = {
       "gauche": 0,
       "droite": 0
     },
-    "_comment": "Debords lateraux a 0 : le toit fait exactement A de large = 2 panneaux de 100, la rive est fermee par une bavette de rive (standard). pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse = 1 bande G x chute coupee en diagonale (2 triangles, faces G et D) + 1 bande A x chute (bandeau avant)."
+    "_comment": "Debords lateraux a 0 : le toit fait exactement A de large = 2 panneaux de 100, la rive est fermee par une bavette de rive (standard). pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse est en BOIS (voir rehausse) : chute = hauteur de la section du madrier (225 mm)."
+  },
+  "rehausse": {
+    "materiau": "bois",
+    "section_mm": [
+      75,
+      225
+    ],
+    "longueur_stock_cm": 480,
+    "prix_ml_eur": 10,
+    "_comment": "Madrier traite classe 4, section 75 x 225 (stock). R2+R3 = un madrier de G coupe en diagonale (2 coins), R1 = un madrier de A droit (bandeau). Fait aussi office de lisse haute qui lie murs et toit. Alternative : materiau = panneau (bande de panneau sandwich coupee en diagonale)."
   },
   "porte": {
     "face": "A",
@@ -52,7 +62,7 @@ window.SHED_PARAMS = {
     "position": "droite",
     "marge_bord_cm": 0,
     "ouverture": "vers l'exterieur",
-    "description": "bloc-porte vitre aluminium (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper",
+    "description": "bloc-porte vitre aluminium double vitrage, poignee + serrure (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper",
     "_comment": "Largeur = largeur utile d'un panneau et hauteur = hauteur des murs : le bloc-porte REMPLACE un panneau entier (A2), pas de bande de 5 cm a decouper. position = gauche|centre|droite (+ marge_bord_cm) ou distance en cm."
   },
   "fenetres": [
@@ -60,23 +70,65 @@ window.SHED_PARAMS = {
       "id": "fenetre-droite",
       "face": "D",
       "largeur_cm": 80,
-      "hauteur_cm": 80,
-      "allege_cm": 110,
+      "hauteur_cm": 110,
+      "allege_cm": 95,
       "position": 110,
-      "description": "fenetre PVC double vitrage, face droite, dans le 2e panneau (110-190 cm depuis l'avant)"
+      "ouvrant": true,
+      "description": "fenetre oscillo-battante double vitrage, face droite, dans le module D2 (ventilation traversante avec la porte)"
+    },
+    {
+      "id": "fenetre-gauche",
+      "face": "G",
+      "largeur_cm": 80,
+      "hauteur_cm": 110,
+      "allege_cm": 95,
+      "position": 110,
+      "ouvrant": false,
+      "description": "fenetre fixe double vitrage, face gauche, dans le module G2 (la face G se compte depuis l'arriere : 110-190 = 50-130 depuis l'avant)"
     }
   ],
   "_fenetres_comment": "Liste (vide = aucune). Chaque fenetre : face A|D|B|G, largeur, hauteur, allege (bas de fenetre / sol), position (gauche|centre|droite ou distance en cm). Conseil : la garder dans un seul panneau (ne pas chevaucher un joint).",
+  "amenagement": {
+    "_comment": "Confort au quotidien (bureau). actif = compte au budget et s'affiche sur le site. L'electricite arrive deja par le sol : pas de tableau, juste multiprise + eclairage.",
+    "plancher": {
+      "actif": true,
+      "epaisseur_cm": 6,
+      "prix_m2_eur": 45,
+      "description": "plancher isole : lambourdes + 40 mm d'isolant + OSB + sol vinyle/parquet"
+    },
+    "electricite": {
+      "actif": true,
+      "forfait_eur": 80,
+      "description": "cable existant par le sol : multiprise parafoudre + plafonnier LED + chemins de cable"
+    },
+    "chauffage": {
+      "actif": true,
+      "forfait_eur": 120,
+      "description": "radiateur panneau 750 W avec thermostat"
+    },
+    "store": {
+      "actif": true,
+      "forfait_eur": 60,
+      "description": "store sur la porte vitree (soleil / ecran)"
+    },
+    "finition_interieure": {
+      "actif": true,
+      "forfait_eur": 120,
+      "description": "couvre-joints d'angle interieurs, tapis, rideau (acoustique)"
+    }
+  },
   "divers": {
     "facteur_chute_pct": 10,
     "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
   },
   "prix_indicatifs_eur": {
-    "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300, PVC 300-600 ; fenetre PVC fixe 150-300, oscillo-battante 250-450). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",
+    "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300 ; fenetre PVC fixe 150-300, oscillo-battante 250-450 ; surcout panneaux mur a fixation cachee ~5 EUR/m2). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",
     "panneau_mur_m2": 35,
     "panneau_toit_m2": 35,
-    "porte_vitree": 700,
-    "fenetre": 250,
+    "porte_vitree": 900,
+    "fenetre_fixe": 200,
+    "fenetre_ouvrante": 320,
+    "fixation_cachee_m2": 5,
     "profils_ml": 12,
     "visserie_etancheite_forfait": 160,
     "gouttiere_descente_forfait": 130,

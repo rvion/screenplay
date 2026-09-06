@@ -12,6 +12,8 @@
 <text x="185.2" y="291.3" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="normal">porte 100 (ouvre dehors)</text>
 <line x1="206.2" y1="189.1" x2="206.2" y2="155.5" stroke="#1b9aa8" stroke-width="5"/>
 <text x="222.2" y="176.3" text-anchor="middle" fill="#137" font-size="10" font-weight="normal">fen. 80</text>
+<line x1="122.2" y1="180.7" x2="122.2" y2="214.3" stroke="#1b9aa8" stroke-width="5"/>
+<text x="106.2" y="201.5" text-anchor="middle" fill="#137" font-size="10" font-weight="normal">fen. 80</text>
 <text x="164.2" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · 200 × 240 cm · 4.8 m²</text>
 <text x="164.2" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">pente vers l'arrière (face B) · dalle réelle en pointillé</text>
 <text x="164.2" y="312.2" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (face A)</text>

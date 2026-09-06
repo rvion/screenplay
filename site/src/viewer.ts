@@ -238,6 +238,9 @@ function addGlass(scene: Vec, V: any, a: number[], b: number[], o: any) {
     scene.add(new THREE.LineLoop(
       new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
       new THREE.LineBasicMaterial({ color: 0x55626b })));
+    if (o.ouvrant) { // trait diagonal = sens d'ouverture (symbole menuiserie)
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(s0, y0), P((s0 + s1) / 2, y1), P(s1, y0)]), new THREE.LineBasicMaterial({ color: 0x55626b })));
+    }
     return;
   }
   const hinge = new THREE.Group();
@@ -261,7 +264,8 @@ function populate(group: Vec, m: Model) {
   const roofZ = (ym: number) => m.roof_front_m - (m.roof_slope || 0) * ym;
 
   const panelMat = new THREE.MeshStandardMaterial({ color: 0xeef0f2, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
-  const rehMat = new THREE.MeshStandardMaterial({ color: 0xf1e6c8, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const rehMat = new THREE.MeshStandardMaterial({ color: m.rehausse_materiau === "bois" ? 0xb8895a : 0xf1e6c8, roughness: m.rehausse_materiau === "bois" ? 0.85 : 0.5, metalness: 0.05, side: THREE.DoubleSide });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0xc9a77c, roughness: 0.7, side: THREE.DoubleSide });
   const baseMat = new THREE.MeshStandardMaterial({ color: 0x4a5058, roughness: 0.8, side: THREE.DoubleSide });
   const roofMat = new THREE.MeshStandardMaterial({ color: 0x9aa7b4, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
   const roofBaseMat = new THREE.MeshStandardMaterial({ color: 0x4a5058, roughness: 0.8, side: THREE.DoubleSide });
@@ -274,6 +278,7 @@ function populate(group: Vec, m: Model) {
   // (0,5 cm hors du nu exterieur : jamais coplanaire avec le bord de dalle).
   group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.0, -0.14), concreteMat));
   group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.005), 0.06, 0.001), railMat));
+  if (m.floor_m > 0) group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, -(m.thickness_m || 0.06)), m.floor_m + 0.005, 0.002), floorMat));
 
   const openings = m.openings || [];
   for (let i = 0; i < n; i++) {

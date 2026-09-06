@@ -3,6 +3,10 @@
 Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés le 2026-09-06**
 (simplification : rectangle, rehausse, porte seule, 60 mm autoportant).
 
+## Objectif (formulé le 2026-09-06)
+**Simple, abordable, robuste, agréable à utiliser tous les jours.** Pas « le moins cher » : un
+bureau qu'on aime, pas un abri.
+
 ## Fonctionnels
 - **B1 — Forme.** **Rectangle, 4 faces** (révisé : le coin coupé de la dalle n'est plus suivi,
   « un carré est mieux, faisons plus simple »). Nommage :
@@ -21,9 +25,12 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
   liste `fenetres[]` paramétrique (vide = aucune).
 - **B6 — Toit mono-pente** : l'eau s'écoule **vers l'arrière (face B)**.
 - **B7 — Coupes simples.** Tous les panneaux de mur sont des **rectangles** identiques (coupes
-  droites). La pente est obtenue par une **rehausse** : **une bande coupée en diagonale** (deux
-  triangles, faces G et D) + **un bandeau** rectangulaire sur la face A. Une seule coupe en biais
-  dans tout le projet.
+  droites). La pente est obtenue par une **rehausse en bois** : un madrier coupé en diagonale
+  (deux coins, faces G et D) + un madrier droit sur la face A. Une seule coupe en biais dans tout
+  le projet, dans du bois, et elle sert de lisse haute.
+- **B13 — Confort quotidien.** Lumière des deux côtés (fenêtre ouvrante à droite, fixe à gauche),
+  ventilation traversante, toit clair, plancher isolé, chauffage, store, finitions intérieures.
+  **Électricité : un câble arrive déjà par le sol** ⇒ multiprise + éclairage, pas de tableau.
 - **B8 — Usage** : **pièce à vivre / bureau**, toute l'année, **chauffée** ⇒ isolation soignée
   et gestion de la vapeur/condensation.
 
@@ -40,15 +47,16 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
 - Hébergement : **GitHub Pages + README riche**.
 
 ## Hypothèses (à valider par l'utilisateur)
-- **H1** Hauteur des murs (arrière) **215 cm** ; avant = 215 + 25 = **240 cm**
-  (`murs.hauteur_cm`, `toit.pente_chute_cm`).
+- **H1** Hauteur des murs (arrière) **215 cm** ; avant = 215 + 22,5 = **237,5 cm**
+  (`murs.hauteur_cm`, `toit.pente_chute_cm` = section du madrier 225 mm).
 - **H2** **Bloc-porte 100 × 215 cm** (dormant compris = un module entier, remplace le panneau A2),
   face A, calé à droite, charnière côté droit. Vantail vitré ~90 cm dedans.
 - **H3** Largeur utile de panneau **100 cm**, pose **verticale** des panneaux muraux.
 - **H4** Débords de toit **10 cm devant/derrière, 0 sur les côtés** (toit = 2 panneaux entiers,
   rives affleurantes). Emprise débords inclus 200 × 260 = 5,2 m² ⇒ déclaration préalable
   probable, à confirmer en mairie.
-- **H5** Âme **PIR**.
+- **H5** Âme **PIR**, panneaux mur à **fixation cachée**, toit **couleur claire**.
+- **H7** Rehausse en madrier **75 × 225 classe 4**, stock 4,8 m (`rehausse`).
 - **H6** Portée libre du toit ≈ **2,6 m** sans panne : à confirmer dans le tableau de portées du
   fabricant pour du 60 mm (sinon une panne intermédiaire).
 

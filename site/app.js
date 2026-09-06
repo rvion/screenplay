@@ -53,6 +53,7 @@ var f0 = (x) => pyfix(x, 0);
 var f1 = (x) => pyfix(x, 1);
 var f2 = (x) => pyfix(x, 2);
 var itr = (x) => Math.trunc(x);
+var fz = (x) => Number.isInteger(x) ? f0(x) : f1(x);
 function geometry(p) {
   const A = +p.emprise_cm.avant_A, G = +p.emprise_cm.gauche_G;
   const FL = [0, 0], FR = [A, 0], BR = [A, G], BL = [0, G];
@@ -117,6 +118,7 @@ function geometry(p) {
     vert_heights_cm: verts.map((v) => rnd(h_at(v[1]), 1)),
     cotes: { A, G },
     aire_m2: rnd(A * G / 1e4, 2),
+    aire_interieure_m2: rnd((A - 2 * +p.panneau.epaisseur_mm / 10) * (G - 2 * +p.panneau.epaisseur_mm / 10) / 1e4, 2),
     emprise_debords_m2: rnd((A + +p.toit.debord_cm.gauche + +p.toit.debord_cm.droite) * (G + +p.toit.debord_cm.avant + +p.toit.debord_cm.arriere) / 1e4, 2),
     perimetre_cm: rnd(2 * (A + G), 1),
     pente: { chute_cm: drop, run_cm: run, pourcent: rnd(slope_pct, 1), degres: rnd(slope_deg, 2), rampant_cm: rnd(rampant, 1) },
@@ -140,7 +142,7 @@ function resolve_openings(p, g) {
   const facelen = {};
   for (const f of g.faces) facelen[f.cle] = f.longueur_cm;
   const list = p.porte ? [{ id: "porte", type: "porte", allege_cm: 0, ...p.porte }] : [];
-  (p.fenetres || []).forEach((f, i) => list.push({ id: `fenetre-${i + 1}`, type: "fenetre", ...f }));
+  (p.fenetres || []).forEach((f, i) => list.push({ id: `fenetre-${i + 1}`, type: "fenetre", ouvrant: false, ...f }));
   return list.map((o) => ({
     id: o.id,
     type: o.type,
@@ -151,6 +153,7 @@ function resolve_openings(p, g) {
     allege_cm: +o.allege_cm || 0,
     start_cm: rnd(opening_start_cm(o, facelen[o.face]), 1),
     position: o.position == null ? "centre" : o.position,
+    ouvrant: o.type === "porte" ? true : !!o.ouvrant,
     ouverture: o.ouverture || "",
     description: o.description || ""
   }));
@@ -198,19 +201,29 @@ function takeoff(p, g, openings) {
       pieces
     });
   }
+  const rh = p.rehausse || { materiau: "panneau" };
   const strip_len = Math.max(A, G);
   const n_reh = Math.ceil(2 * drop / cover);
   const reh_gross = n_reh * (cover / 100) * (strip_len / 100);
+  const bois = rh.materiau === "bois";
+  const stock = bois ? +rh.longueur_stock_cm || 480 : 0;
   const rehausse = {
+    materiau: bois ? "bois" : "panneau",
     pieces: [
-      { label: "R1", piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: "rectangle, pose sur le mur A" },
-      { label: "R2+R3", piece: "Triangles lateraux (R2 face G, R3 face D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: "1 bande G x chute coupee en diagonale = 2 triangles (tourner R3 de 180 deg)" }
+      { label: "R1", piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: bois ? "madrier droit, pose sur le mur A" : "rectangle, pose sur le mur A" },
+      { label: "R2+R3", piece: "Coins lateraux (R2 face G, R3 face D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: bois ? "1 madrier de G coupe en diagonale = 2 coins (tourner R3 de 180 deg)" : "1 bande G x chute coupee en diagonale = 2 triangles (tourner R3 de 180 deg)" }
     ],
-    nb_panneaux: n_reh,
-    longueur_panneau_cm: strip_len,
-    aire_brute_m2: rnd(reh_gross, 2),
-    aire_nette_m2: rnd((A * drop + G * drop) / 1e4, 2)
+    nb_panneaux: bois ? 0 : n_reh,
+    longueur_panneau_cm: bois ? 0 : strip_len,
+    aire_brute_m2: bois ? 0 : rnd(reh_gross, 2),
+    aire_nette_m2: bois ? 0 : rnd((A * drop + G * drop) / 1e4, 2)
   };
+  if (bois) {
+    rehausse.section_mm = rh.section_mm || [75, 225];
+    rehausse.longueur_stock_cm = stock;
+    rehausse.ml = rnd((A + G) / 100, 2);
+    rehausse.nb_madriers = Math.ceil((A + G) / stock);
+  }
   const deb = p.toit.debord_cm;
   const width_x = A + +deb.gauche + +deb.droite;
   const len_h = G + +deb.avant + +deb.arriere;
@@ -240,9 +253,9 @@ function takeoff(p, g, openings) {
       portee_cm: rnd(len_h, 1),
       pieces: roof_pieces
     },
-    commande_mur_m2: rnd((gross + reh_gross) * waste, 1),
+    commande_mur_m2: rnd((gross + (bois ? 0 : reh_gross)) * waste, 1),
     commande_toit_m2: rnd(roof_gross * waste, 1),
-    commande_panneaux_m2: rnd((gross + reh_gross + roof_gross) * waste, 1),
+    commande_panneaux_m2: rnd((gross + (bois ? 0 : reh_gross) + roof_gross) * waste, 1),
     facteur_chute_pct: p.divers.facteur_chute_pct
   };
 }
@@ -256,12 +269,15 @@ function shopping(p, g, t, openings) {
   const portes = openings.filter((o) => o.type === "porte");
   const porte_q = portes.map((o) => `${itr(o.largeur_cm)}x${itr(o.hauteur_cm)} cm`).join(", ") || "-";
   const fenetres = openings.filter((o) => o.type === "fenetre");
-  const fen_q = fenetres.map((o) => `${itr(o.largeur_cm)}x${itr(o.hauteur_cm)} all.${itr(o.allege_cm)} (face ${o.face})`).join(", ");
+  const fen_q = fenetres.map((o) => `${itr(o.largeur_cm)}x${itr(o.hauteur_cm)} all.${itr(o.allege_cm)} (face ${o.face}, ${o.ouvrant ? "oscillo-battante" : "fixe"})`).join(", ");
+  const r = t.rehausse;
+  const rehItem = r.materiau === "bois" ? { poste: `Rehausse bois : madrier ${r.section_mm[0]}x${r.section_mm[1]} mm traite classe 4`, qte: `${r.nb_madriers} x ${f2(r.longueur_stock_cm / 100)} m (${r.ml} ml : R1 = ${itr(A)} cm droit, R2+R3 = ${itr(G)} cm coupe en diagonale)`, note: "Pose sur le chant des panneaux (bande butyle), visse dans les panneaux ; sert de lisse haute qui lie murs et toit. Larmier par-dessus cote exterieur." } : { poste: "Rehausse : bande de panneau mur", qte: `${r.nb_panneaux} panneau de ${f2(r.longueur_panneau_cm / 100)} m`, note: "2 bandes (A x chute, G x chute), la 2e coupee en diagonale." };
   const open_perim = openings.reduce((a, o) => a + 2 * (o.largeur_cm + o.hauteur_cm), 0) / 100;
   const ep = p.panneau.epaisseur_mm;
   const items = [
-    { poste: `Panneaux sandwich ${ep} mm - finition MUR (murs + rehausse)`, qte: `${t.murs.total_panneaux} panneaux de ${f2(g.hauteur_mur_cm / 100)} m + ${t.rehausse.nb_panneaux} de ${f2(t.rehausse.longueur_panneau_cm / 100)} m (~${t.commande_mur_m2} m2 avec chute)`, note: "Ame PIR, autoportants (pas d'ossature). Parement mural lisse/micro-nervure, laque 2 faces. Coupes droites + 1 diagonale." },
-    { poste: `Panneaux sandwich ${ep} mm - finition TOIT (face T)`, qte: `${t.toit.nb_panneaux} panneaux de ~${f2(t.toit.longueur_panneau_cm / 100)} m (~${t.commande_toit_m2} m2 avec chute)`, note: `Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~${f2(t.toit.portee_cm / 100)} m : verifier le tableau de portees du fabricant.` },
+    { poste: `Panneaux sandwich ${ep} mm - finition MUR`, qte: `${t.murs.total_panneaux} panneaux de ${f2(g.hauteur_mur_cm / 100)} m${t.rehausse.nb_panneaux ? ` + ${t.rehausse.nb_panneaux} de ${f2(t.rehausse.longueur_panneau_cm / 100)} m` : ""} (~${t.commande_mur_m2} m2 avec chute)`, note: "Ame PIR, autoportants (pas d'ossature). FIXATION CACHEE dans le joint (pas de tete de vis visible), parement lisse/micro-nervure, couleur au choix (mur fonce + toit clair). Coupes droites uniquement." },
+    rehItem,
+    { poste: `Panneaux sandwich ${ep} mm - finition TOIT (face T)`, qte: `${t.toit.nb_panneaux} panneaux de ~${f2(t.toit.longueur_panneau_cm / 100)} m (~${t.commande_toit_m2} m2 avec chute)`, note: `Profil TOITURE (nervures hautes), sens de la pente, COULEUR CLAIRE (chaleur d'ete). Portee libre ~${f2(t.toit.portee_cm / 100)} m : verifier le tableau de portees du fabricant.` },
     { poste: "Rail / lambourde de pied", qte: `~${ceil(perim) + 1} m`, note: "U galvanise OU bois traite classe 4, sur bande EPDM. Sureleve les panneaux de la dalle." },
     { poste: "Profils d'angle exterieurs + interieurs", qte: `4 angles x ${f2(corner_h)} m, ext + int = ~${ceil(8 * corner_h)} m`, note: "4 angles droits standard (profil L / couvre-joint)." },
     { poste: "Bavette d'egout haut (avant)", qte: `~${ceil(A / 100) + 1} m`, note: "Larmier en haut de la face avant." },
@@ -269,7 +285,7 @@ function shopping(p, g, t, openings) {
     { poste: "Gouttiere + 1 descente", qte: `~${ceil(A / 100) + 1} m + 1 descente`, note: "En bas de pente (face B), descente a un angle arriere." },
     { poste: "Vis autoperceuses tete EPDM", qte: `~${screws} (boite de ${ceil(screws / 100) * 100})`, note: "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire." },
     { poste: "Chevilles / scellement dalle", qte: `~${anchors}`, note: "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)." },
-    { poste: "Bloc-porte vitre alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Ouverture vers l'exterieur, seuil + joints." },
+    { poste: "Bloc-porte vitre alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Poignee + serrure, ouverture vers l'exterieur, seuil + joints. La piece touchee tous les jours : ne pas economiser ici." },
     { poste: "Ventilation (VMC ou aerateurs hygro)", qte: "1 kit", note: "INDISPENSABLE en usage habitable chauffe : evite la condensation (voir vigilance)." },
     { poste: "Bande comprimee / mousse precomprimee", qte: `~${ceil(perim + open_perim)} m`, note: "Etancheite a l'air au pied et au pourtour des ouvertures." },
     { poste: "Bande butyle (joints de panneaux)", qte: `~${ceil(perim * 2)} m`, note: "Joints longitudinaux, joint mur/rehausse et perimetriques." },
@@ -277,8 +293,15 @@ function shopping(p, g, t, openings) {
     { poste: "Peinture de retouche (RAL parement)", qte: "1 aerosol", note: "Retouche des rayures et chants." }
   ];
   if (fenetres.length) {
-    items.splice(10, 0, { poste: "Fenetre(s) double vitrage", qte: `${fenetres.length} : ${fen_q}`, note: "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant. La garder dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints." });
+    items.splice(11, 0, { poste: "Fenetre(s) double vitrage", qte: `${fenetres.length} : ${fen_q}`, note: "allege = hauteur sous fenetre (cm). L'ouvrante assure la ventilation traversante avec la porte. Chaque fenetre dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints." });
   }
+  const am = p.amenagement || {};
+  const on = (k) => am[k] && am[k].actif;
+  if (on("plancher")) items.push({ poste: "Plancher isole", qte: `~${g.aire_interieure_m2} m2, ${am.plancher.epaisseur_cm} cm`, note: `${am.plancher.description}. Hauteur sous plafond arriere ~${f2((g.hauteur_arriere_cm - am.plancher.epaisseur_cm) / 100)} m.` });
+  if (on("electricite")) items.push({ poste: "Electricite (cable existant par le sol)", qte: "1 lot", note: am.electricite.description });
+  if (on("chauffage")) items.push({ poste: "Chauffage", qte: "1", note: am.chauffage.description });
+  if (on("store")) items.push({ poste: "Store / occultation", qte: "1", note: am.store.description });
+  if (on("finition_interieure")) items.push({ poste: "Finition interieure", qte: "1 lot", note: am.finition_interieure.description });
   return items;
 }
 function budget(p, g, t, openings) {
@@ -288,28 +311,50 @@ function budget(p, g, t, openings) {
   const corner_h = g.hauteur_avant_cm / 100;
   const profils_ml = 4 * corner_h * 2 + perim;
   const portes = openings.filter((o) => o.type === "porte").length;
-  const fenetres = openings.filter((o) => o.type === "fenetre").length;
+  const fen_fixes = openings.filter((o) => o.type === "fenetre" && !o.ouvrant).length;
+  const fen_ouv = openings.filter((o) => o.type === "fenetre" && o.ouvrant).length;
+  const bois = t.rehausse.materiau === "bois";
+  const mur_m2 = rnd(t.murs.aire_brute_m2 + (bois ? 0 : t.rehausse.aire_brute_m2), 2);
   const src = [
-    ["Panneaux sandwich - mur + rehausse (brut)", rnd(t.murs.aire_brute_m2 + t.rehausse.aire_brute_m2, 2), "m\xB2", get("panneau_mur_m2")],
-    ["Panneaux sandwich - toit (brut)", t.toit.aire_brute_m2, "m\xB2", get("panneau_toit_m2")],
-    ["Porte vitree", portes, "u", get("porte_vitree")],
-    ["Fenetre(s)", fenetres, "u", get("fenetre")],
+    [bois ? "Panneaux sandwich - mur (brut)" : "Panneaux sandwich - mur + rehausse (brut)", mur_m2, "m\xB2", get("panneau_mur_m2")],
+    ["Surcout fixation cachee (mur)", mur_m2, "m\xB2", get("fixation_cachee_m2")],
+    ["Panneaux sandwich - toit (brut)", t.toit.aire_brute_m2, "m\xB2", get("panneau_toit_m2")]
+  ];
+  if (bois) src.push(["Rehausse bois (madrier)", t.rehausse.ml, "ml", p.rehausse && p.rehausse.prix_ml_eur != null ? +p.rehausse.prix_ml_eur : 10]);
+  src.push(
+    ["Bloc-porte vitre", portes, "u", get("porte_vitree")],
+    ["Fenetre(s) fixe(s)", fen_fixes, "u", get("fenetre_fixe")],
+    ["Fenetre(s) ouvrante(s)", fen_ouv, "u", get("fenetre_ouvrante")],
     ["Profils (angles, rives, rail)", rnd(profils_ml, 1), "ml", get("profils_ml")],
     ["Visserie + etancheite", 1, "forfait", get("visserie_etancheite_forfait")],
     ["Gouttiere + descente", 1, "forfait", get("gouttiere_descente_forfait")],
     ["Ventilation (VMC/aerateurs)", 1, "forfait", get("ventilation_forfait")],
     ["Livraison des panneaux", 1, "forfait", get("livraison_forfait")]
-  ];
+  );
+  const am = p.amenagement || {};
+  const amen = [];
+  if (am.plancher && am.plancher.actif) amen.push(["Amenagement - plancher isole", g.aire_interieure_m2, "m\xB2", +am.plancher.prix_m2_eur || 0]);
+  for (const [k, label] of [["electricite", "Amenagement - electricite (multiprise, eclairage)"], ["chauffage", "Amenagement - chauffage"], ["store", "Amenagement - store"], ["finition_interieure", "Amenagement - finition interieure"]]) {
+    if (am[k] && am[k].actif) amen.push([label, 1, "forfait", +am[k].forfait_eur || 0]);
+  }
   const rows = [];
-  let sous = 0;
+  let sous = 0, coque = 0;
   for (const [label, qte, unit, pu] of src) {
     const montant = qte * pu;
     sous += montant;
-    rows.push({ poste: label, qte, unite: unit, pu_eur: pu, montant_eur: rnd(montant) });
+    coque += montant;
+    rows.push({ poste: label, qte, unite: unit, pu_eur: pu, montant_eur: rnd(montant), groupe: "coque" });
+  }
+  for (const [label, qte, unit, pu] of amen) {
+    const montant = qte * pu;
+    sous += montant;
+    rows.push({ poste: label, qte, unite: unit, pu_eur: pu, montant_eur: rnd(montant), groupe: "amenagement" });
   }
   const inc = pr.incertitude_pct == null ? 15 : +pr.incertitude_pct;
   return {
     lignes: rows,
+    coque_eur: rnd(coque),
+    amenagement_eur: rnd(sous - coque),
     sous_total_eur: rnd(sous),
     incertitude_pct: inc,
     total_bas_eur: rnd(sous * (1 - inc / 100)),
@@ -331,11 +376,14 @@ function model3d(p, g, openings) {
       panels.push({ label: `${f.cle}${i + 1}`, face_index: FACE_INDEX[f.cle], s0_m: m(s0), s1_m: m(s1) });
     }
   });
+  const rehMat = p.rehausse && p.rehausse.materiau || "panneau";
   const rehausse_pieces = drop > 0 ? [
-    { label: "R1", face_index: FACE_INDEX.A, kind: "bandeau" },
-    { label: "R2", face_index: FACE_INDEX.G, kind: "triangle" },
-    { label: "R3", face_index: FACE_INDEX.D, kind: "triangle" }
+    { label: "R1", face_index: FACE_INDEX.A, kind: "bandeau", materiau: rehMat },
+    { label: "R2", face_index: FACE_INDEX.G, kind: "triangle", materiau: rehMat },
+    { label: "R3", face_index: FACE_INDEX.D, kind: "triangle", materiau: rehMat }
   ] : [];
+  const am = p.amenagement || {};
+  const floor_m = am.plancher && am.plancher.actif ? m(+am.plancher.epaisseur_cm || 6) : 0;
   const roof_w = A + +deb.gauche + +deb.droite;
   const roof_panels = [];
   for (let i = 0, n = Math.ceil(roof_w / cover); i < n; i++) roof_panels.push({
@@ -363,9 +411,12 @@ function model3d(p, g, openings) {
     panels,
     rehausse_pieces,
     roof_panels,
+    rehausse_materiau: rehMat,
+    floor_m,
     openings: openings.map((o) => ({
       type: o.type,
       face_index: o.face_index,
+      ouvrant: !!o.ouvrant,
       offset_m: m(o.start_cm),
       width_m: m(o.largeur_cm),
       height_m: m(o.hauteur_cm),
@@ -503,6 +554,7 @@ function plan_toit_svg(p, g, t) {
   return svg;
 }
 function plan_rehausse_svg(p, g, t) {
+  if (t.rehausse.materiau === "bois") return plan_rehausse_bois_svg(p, g, t);
   const pad = 50, scale = 1;
   const cover = +p.panneau.largeur_utile_cm;
   const { A, G } = g.cotes;
@@ -538,6 +590,43 @@ function plan_rehausse_svg(p, g, t) {
   svg += "</svg>\n";
   return svg;
 }
+function plan_rehausse_bois_svg(p, g, t) {
+  const pad = 50, scale = 1;
+  const { A, G } = g.cotes;
+  const drop = g.pente.chute_cm;
+  const r = t.rehausse;
+  const stock = r.longueur_stock_cm;
+  const title = `Rehausse bois \xB7 ${r.nb_madriers} madrier ${r.section_mm[0]}\xD7${r.section_mm[1]} de ${f2(stock / 100)} m \u2192 R1 + R2 + R3`;
+  const lab1 = `R2+R3 : ${f0(G)} cm coup\xE9 en diagonale = 2 coins (R3 tourn\xE9 de 180\xB0)`;
+  const lab2 = `R1 : bandeau avant ${f0(A)} cm, coupe droite`;
+  const base_W = Math.max(stock, A + G + 4) * scale + 2 * pad;
+  const H = drop * scale + 2 * pad + 60;
+  const W = Math.max(base_W, tw(title, 15) + 24, tw(lab1, 11) + 2 * pad);
+  const xoff = (W - base_W) / 2;
+  const P = (x, y) => [pad + xoff + x * scale, pad + 20 + y * scale];
+  let svg = svgHeader(rnd(W), rnd(H));
+  const wood = "#d9b98a", woodLine = "#8a5a2b";
+  svg += poly([P(0, 0), P(stock, 0), P(stock, drop), P(0, drop)], "#f3f5f1", "#999", 1.5, "5 4");
+  svg += poly([P(0, 0), P(G, 0), P(G, drop), P(0, drop)], wood, woodLine, 2);
+  const d0 = P(0, drop), d1 = P(G, 0);
+  svg += line(d0[0], d0[1], d1[0], d1[1], woodLine, 2, "6 3");
+  svg += text(P(G * 0.12, 0)[0], P(0, drop)[1] - 4, "R2 (G)", "middle", woodLine, 11, "bold");
+  svg += text(P(G * 0.88, 0)[0], P(0, 0)[1] + 12, "R3 (D)", "middle", woodLine, 11, "bold");
+  const x2 = G + 4;
+  svg += poly([P(x2, 0), P(x2 + A, 0), P(x2 + A, drop), P(x2, drop)], wood, woodLine, 2);
+  svg += text(P(x2 + A / 2, 0)[0], P(0, drop / 2)[1] + 4, "R1 (A)", "middle", woodLine, 11, "bold");
+  const ly = P(0, drop)[1] + 22;
+  svg += text(P(0, 0)[0], ly, lab1, "start", woodLine, 11);
+  svg += text(P(0, 0)[0], ly + 16, lab2, "start", woodLine, 11);
+  svg += text(P(0, 0)[0], ly + 32, `chute de madrier : ${f0(Math.max(0, stock - A - G))} cm \xB7 section ${r.section_mm[0]} \xD7 ${r.section_mm[1]} mm = rehausse de ${fz(drop)} cm`, "start", "#888", 11);
+  svg += text(P(G / 2, 0)[0], P(0, 0)[1] - 8, `${f0(G)} cm`, "middle", "#666", 11);
+  svg += text(P(x2 + A / 2, 0)[0], P(0, 0)[1] - 8, `${f0(A)} cm`, "middle", "#666", 11);
+  svg += text(P(0, 0)[0] - 6, P(0, drop / 2)[1] + 4, `${fz(drop)}`, "end", woodLine, 11);
+  svg += text(W / 2, 26, title, "middle", "#222", 15, "bold");
+  svg += text(W / 2, H - 12, "pos\xE9 sur le chant des panneaux, viss\xE9, sert de lisse haute \xB7 larmier par-dessus \xE0 l'ext\xE9rieur", "middle", "#888", 11);
+  svg += "</svg>\n";
+  return svg;
+}
 function facade_svg(p, g, face, openings) {
   const pad = 60, scale = 0.6;
   const L = face.longueur_cm, h1 = face.hauteur_debut_cm, h2 = face.hauteur_fin_cm, Hm = face.hauteur_mur_cm;
@@ -553,14 +642,16 @@ function facade_svg(p, g, face, openings) {
     const a = P(x, 0), b = P(x, Hm);
     svg += line(a[0], a[1], b[0], b[1], "#8fa3b8", 1, "4 3");
   }
+  const boisF = p.rehausse && p.rehausse.materiau === "bois";
+  const rf = boisF ? "#d9b98a" : "#fdf6e3", rs = boisF ? "#8a5a2b" : "#a07400";
   if (face.rehausse !== "aucune") {
-    svg += poly([P(0, Hm), P(L, Hm), P(L, h2), P(0, h1)], "#fdf6e3", "#a07400", 2);
+    svg += poly([P(0, Hm), P(L, Hm), P(L, h2), P(0, h1)], rf, rs, 2);
     if (face.rehausse === "bandeau") {
       const mid = P(L / 2, (h1 + Hm) / 2);
-      svg += text(mid[0], mid[1] + 4, `R1 \xB7 bandeau ${f0(L)} \xD7 ${f0(h1 - Hm)}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] + 4, `R1 \xB7 ${boisF ? "madrier" : "bandeau"} ${f0(L)} \xD7 ${fz(h1 - Hm)}`, "middle", rs, 10, "bold");
     } else {
       const mid = P(L / 2, (h1 + h2) / 2);
-      svg += text(mid[0], mid[1] - 8, `${face.cle === "G" ? "R2" : "R3"} \xB7 triangle ${f0(L)} \xD7 ${f0(Math.abs(h1 - h2))}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] - 8, `${face.cle === "G" ? "R2" : "R3"} \xB7 ${boisF ? "coin bois" : "triangle"} ${f0(L)} \xD7 ${fz(Math.abs(h1 - h2))}`, "middle", rs, 10, "bold");
     }
   }
   for (const o of openings) {
@@ -575,7 +666,7 @@ function facade_svg(p, g, face, openings) {
       svg += text(sx + ow / 2, by - oh / 2 - 6, o.largeur_cm >= cover - 0.5 ? "bloc-porte" : "porte", "middle", "#178", 11);
       svg += text(sx + ow / 2, by - oh / 2 + 8, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 10);
     } else {
-      svg += text(sx + ow / 2, by - oh / 2 - 2, "fen\xEAtre", "middle", "#178", 10);
+      svg += text(sx + ow / 2, by - oh / 2 - 2, o.ouvrant ? "fen\xEAtre ouvrante" : "fen\xEAtre fixe", "middle", "#178", 10);
       svg += text(sx + ow / 2, by - oh / 2 + 10, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 9);
       svg += text(sx + ow / 2, by + 12, `all\xE8ge ${itr(o.allege_cm)}`, "middle", "#888", 9);
     }
@@ -597,8 +688,8 @@ function facade_svg(p, g, face, openings) {
   }
   const nPan = Array.from({ length: Math.ceil(L / cover) }, (_, i) => panel_replaced_by(mine, face.cle, i * cover, Math.min((i + 1) * cover, L), Hm) ? 0 : 1).reduce((a, b) => a + b, 0);
   svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm \xB7 ${nPan} panneau${nPan > 1 ? "x" : ""} de ${f0(Hm)}`, "middle", "#222", 13, "bold");
-  svg += text(pad - 8, P(0, h1)[1], `${f0(h1)}`, "end", "#2b5d8a", 12);
-  svg += text(pad + L * scale + 8, P(L, h2)[1], `${f0(h2)}`, "start", "#2b5d8a", 12);
+  svg += text(pad - 8, P(0, h1)[1], `${fz(h1)}`, "end", "#2b5d8a", 12);
+  svg += text(pad + L * scale + 8, P(L, h2)[1], `${fz(h2)}`, "start", "#2b5d8a", 12);
   svg += text(W / 2, 26, title, "middle", "#222", 15, "bold");
   svg += "</svg>\n";
   return svg;
@@ -855,6 +946,9 @@ function addGlass(scene, V, a, b, o) {
       new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
       new THREE.LineBasicMaterial({ color: 5595755 })
     ));
+    if (o.ouvrant) {
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(s0, y0), P((s0 + s1) / 2, y1), P(s1, y0)]), new THREE.LineBasicMaterial({ color: 5595755 })));
+    }
     return;
   }
   const hinge = new THREE.Group();
@@ -877,7 +971,8 @@ function populate(group2, m) {
   const V = (x, y, z) => new THREE.Vector3(x - cx, z, cy - y);
   const roofZ = (ym) => m.roof_front_m - (m.roof_slope || 0) * ym;
   const panelMat = new THREE.MeshStandardMaterial({ color: 15659250, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
-  const rehMat = new THREE.MeshStandardMaterial({ color: 15853256, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const rehMat = new THREE.MeshStandardMaterial({ color: m.rehausse_materiau === "bois" ? 12093786 : 15853256, roughness: m.rehausse_materiau === "bois" ? 0.85 : 0.5, metalness: 0.05, side: THREE.DoubleSide });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 13215612, roughness: 0.7, side: THREE.DoubleSide });
   const baseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
   const roofMat = new THREE.MeshStandardMaterial({ color: 10135476, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
   const roofBaseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
@@ -887,6 +982,7 @@ function populate(group2, m) {
   const metalMat = new THREE.MeshStandardMaterial({ color: 11844288, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
   group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0, -0.14), concreteMat));
   group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 5e-3), 0.06, 1e-3), railMat));
+  if (m.floor_m > 0) group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, -(m.thickness_m || 0.06)), m.floor_m + 5e-3, 2e-3), floorMat));
   const openings = m.openings || [];
   for (let i = 0; i < n; i++) {
     const a = fp[i], b = fp[(i + 1) % n], ha = hs[i], hb = hs[(i + 1) % n];
@@ -1009,12 +1105,13 @@ function renderPlans(core) {
 function renderDebit(core, p) {
   const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
   let rows = t.murs.lignes.map((x) => `<tr><td><b>${x.face}</b> \xB7 ${x.libelle}</td><td><span class="tag">mur</span></td><td>${x.pieces.map((q) => q.remplace_par ? `<s>${q.label}</s> = ${q.remplace_par}` : `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${x.hauteur_cm} cm \u2014 coupes droites</td><td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m\xB2</td></tr>`).join("");
-  rows += `<tr><td><b>R</b> \xB7 Rehausse</td><td><span class="tag rake">mur</span></td><td>${r.pieces.map((q) => `<b>${q.label}</b> ${q.longueur_cm} \xD7 ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tir\xE9es de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td><td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m\xB2</td></tr>`;
+  const bois = r.materiau === "bois";
+  rows += `<tr><td><b>R</b> \xB7 Rehausse</td><td><span class="tag rake">${bois ? "bois" : "mur"}</span></td><td>${r.pieces.map((q) => `<b>${q.label}</b> ${q.longueur_cm} \xD7 ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, ` + (bois ? `${r.nb_madriers} madrier ${r.section_mm[0]}\xD7${r.section_mm[1]} de ${(r.longueur_stock_cm / 100).toFixed(2)} m (${r.ml} ml)` : `tir\xE9es de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m`) + `</td><td>${bois ? r.nb_madriers + " madrier" : r.nb_panneaux}</td><td>${bois ? "\u2014" : r.aire_brute_m2 + " m\xB2"}</td></tr>`;
   rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> \xB7 ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td><td>${t.toit.pieces.map((q) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente \xB7 couvre ${t.toit.aire_couverte_m2} m\xB2</td><td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m\xB2</td></tr>`;
   setHTML("#debit tbody", rows);
   setHTML(
     "#debit-resume",
-    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m\xB2 brut, ${t.murs.aire_nette_m2} m\xB2 net) + <b>${r.nb_panneaux} panneau</b> de rehausse. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. Commande totale avec chute ${t.facteur_chute_pct} % : <b>${t.commande_panneaux_m2} m\xB2</b>.`
+    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m\xB2 brut, ${t.murs.aire_nette_m2} m\xB2 net)` + (bois ? ` + rehausse en <b>bois</b> (${r.nb_madriers} madrier)` : ` + <b>${r.nb_panneaux} panneau</b> de rehausse`) + `. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. Commande totale avec chute ${t.facteur_chute_pct} % : <b>${t.commande_panneaux_m2} m\xB2</b>.`
   );
 }
 function renderAchats(core) {
@@ -1022,11 +1119,25 @@ function renderAchats(core) {
 }
 function renderBudget(core) {
   const b = core.budget;
-  setHTML("#budget tbody", b.lignes.map((r) => `<tr><td>${r.poste}</td><td>${r.qte} ${r.unite}</td><td>${r.pu_eur} \u20AC</td><td><b>${r.montant_eur} \u20AC</b></td></tr>`).join(""));
+  const row = (r) => `<tr class="${r.groupe === "amenagement" ? "row-amen" : ""}"><td>${r.poste}</td><td>${r.qte} ${r.unite}</td><td>${r.pu_eur} \u20AC</td><td><b>${r.montant_eur} \u20AC</b></td></tr>`;
+  const coque = b.lignes.filter((r) => r.groupe !== "amenagement"), amen = b.lignes.filter((r) => r.groupe === "amenagement");
+  setHTML("#budget tbody", coque.map(row).join("") + `<tr class="row-sub"><td colspan="3">Coque (structure, menuiseries, toit)</td><td><b>${b.coque_eur} \u20AC</b></td></tr>` + amen.map(row).join("") + (amen.length ? `<tr class="row-sub"><td colspan="3">Am\xE9nagement (confort au quotidien)</td><td><b>${b.amenagement_eur} \u20AC</b></td></tr>` : ""));
   setHTML(
     "#budget-total",
-    `Sous-total <b>${b.sous_total_eur} \u20AC</b> HT \xB7 fourchette indicative <b>${b.total_bas_eur} \u2013 ${b.total_haut_eur} \u20AC</b> (\xB1${b.incertitude_pct} %)`
+    `Total <b>${b.sous_total_eur} \u20AC</b> HT \xB7 fourchette indicative <b>${b.total_bas_eur} \u2013 ${b.total_haut_eur} \u20AC</b> (\xB1${b.incertitude_pct} %)`
   );
+}
+function renderAmenagement(core, p) {
+  const am = p.amenagement || {}, g = core.geometrie;
+  const items = [
+    ["plancher", "\u{1FAB5} Plancher isol\xE9", am.plancher ? `${am.plancher.description}. ${am.plancher.epaisseur_cm} cm \u21D2 hauteur sous plafond ${((g.hauteur_arriere_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m \xE0 l'arri\xE8re, ${((g.hauteur_avant_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m \xE0 l'avant.` : ""],
+    ["electricite", "\u{1F50C} \xC9lectricit\xE9", am.electricite ? am.electricite.description : ""],
+    ["chauffage", "\u{1F525} Chauffage", am.chauffage ? am.chauffage.description : ""],
+    ["store", "\u{1F31E} Store", am.store ? am.store.description : ""],
+    ["finition_interieure", "\u{1F3A7} Finition int\xE9rieure", am.finition_interieure ? am.finition_interieure.description : ""]
+  ];
+  setHTML("#amenagement-list", items.filter(([k]) => am[k] && am[k].actif).map(([, t, d]) => `<li><b>${t}.</b> ${d}</li>`).join("") || '<li class="note">Aucun am\xE9nagement activ\xE9 (voir r\xE9glages).</li>');
+  setText("v-interieur", String(g.aire_interieure_m2));
 }
 function renderVigilance(core, p) {
   const g = core.geometrie, pente = g.pente, d = g.dalle;
@@ -1054,6 +1165,7 @@ function renderAll(core, p) {
   renderDebit(core, p);
   renderAchats(core);
   renderBudget(core);
+  renderAmenagement(core, p);
   renderVigilance(core, p);
 }
 
@@ -1108,6 +1220,20 @@ function buildControls(container, params, onChange) {
     }));
     return h("label", { class: "ctl ctl-num" }, [h("span", { class: "ctl-lbl" }, [label]), sel]);
   }
+  function check(label, obj, key) {
+    const input = h("input", { type: "checkbox" });
+    input.checked = !!obj[key];
+    input.addEventListener("change", () => {
+      obj[key] = input.checked;
+      onChange();
+    });
+    return h("label", { class: "ctl ctl-check" }, [input, h("span", {}, [label])]);
+  }
+  function amenagementGroup() {
+    const am = params.amenagement || (params.amenagement = {});
+    const labels = [["plancher", "Plancher isol\xE9"], ["electricite", "\xC9lectricit\xE9 (multiprise + \xE9clairage)"], ["chauffage", "Chauffage"], ["store", "Store"], ["finition_interieure", "Finition int\xE9rieure"]];
+    return labels.filter(([k]) => am[k]).map(([k, l]) => check(l, am[k], "actif"));
+  }
   function priceControls() {
     const pr = params.prix_indicatifs_eur || {};
     return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number").map((k) => num(k.replace(/_/g, " "), pr, k, 1, "5.5em"));
@@ -1148,11 +1274,12 @@ function buildControls(container, params, onChange) {
         slider("Largeur", w, "largeur_cm", 40, 140),
         slider("Hauteur", w, "hauteur_cm", 40, 140),
         slider("All\xE8ge (bas / sol)", w, "allege_cm", 60, 160),
-        slider("Position depuis le d\xE9but de la face", w, "position", 0, 400)
+        slider("Position depuis le d\xE9but de la face", w, "position", 0, 400),
+        check("Ouvrante (oscillo-battante)", w, "ouvrant")
       ]));
     });
     body.append(h("button", { class: "btn btn-ghost btn-add", onclick: () => {
-      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 80, allege_cm: 110, position: 110 });
+      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 110, allege_cm: 95, position: 110, ouvrant: false });
       rerender();
     } }, ["+ Ajouter une fen\xEAtre"]));
     return body;
@@ -1187,6 +1314,7 @@ function buildControls(container, params, onChange) {
         select("Position sur la face avant", params.porte, "position", POSITIONS)
       ]),
       group("Fen\xEAtres", [windowsGroup()], (params.fenetres || []).length > 0),
+      group("Am\xE9nagement", amenagementGroup()),
       group("Panneaux", [
         slider("Largeur utile", params.panneau, "largeur_utile_cm", 80, 120),
         slider("Chute / pertes", params.divers, "facteur_chute_pct", 0, 30, 1, "%")

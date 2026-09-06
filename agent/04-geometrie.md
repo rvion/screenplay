@@ -6,7 +6,7 @@
 | `emprise_cm.avant_A` (largeur) | A | 200 |
 | `emprise_cm.gauche_G` (profondeur) | G | 240 |
 | `murs.hauteur_cm` (panneaux de mur = arrière) | H | 215 |
-| `toit.pente_chute_cm` (rehausse avant = chute) | c | 25 |
+| `toit.pente_chute_cm` (rehausse avant = chute = section du madrier) | c | 22,5 |
 
 ## Sommets (plan, origine = coin avant-gauche)
 ```
@@ -33,28 +33,30 @@ droit dépasse de 20 cm derrière le mur B, coupe 90 × 86 conservée ⇒ `t = 0
 (Ancien relevé 230 × 246 / 160 / 140 avec l'abri au coin : 54 × 51 cm hors dalle pour 200 × 240.)
 
 ## Hauteurs et rehausse
-- `h(y) = H + c·(1 − y/G) = 215 + 25·(1 − y/240)` : avant **240**, arrière **215**.
-- Pente = `c / G = 25/240 ≈ 10,4 %` soit **5,9°** ; rampant = `√(G² + c²) ≈ 241,3 cm`.
+- `h(y) = H + c·(1 − y/G) = 215 + 22,5·(1 − y/240)` : avant **237,5**, arrière **215**.
+- Pente = `c / G = 22,5/240 ≈ 9,4 %` soit **5,4°** (> 5° usuel) ; rampant ≈ **241,1 cm**.
 - **Murs** : 4 faces, hauteur H = 215 partout (rectangles).
-- **Rehausse** posée sur les murs :
+- **Rehausse bois** (madrier 75 × 225 classe 4) posée sur le chant des murs :
 
 | Face | pièce | dimensions | hauteur finie |
 |---|---|---|---|
-| A (avant) | bandeau rectangulaire | 200 × 25 | 240 → 240 |
-| D (droite) | triangle rectangle | base 240, hauteur 25 | 240 → 215 |
+| A (avant) | R1 madrier droit | 200 × 22,5 | 237,5 → 237,5 |
+| D (droite) | R3 coin (triangle rectangle) | base 240, hauteur 22,5 | 237,5 → 215 |
 | B (arrière) | aucune | — | 215 → 215 |
-| G (gauche) | triangle rectangle | base 240, hauteur 25 | 215 → 240 |
+| G (gauche) | R2 coin (triangle rectangle) | base 240, hauteur 22,5 | 215 → 237,5 |
 
-Les deux triangles proviennent d'**une bande 240 × 25 coupée en diagonale** ; le second est
-tourné de 180° dans son plan (le parement extérieur reste dehors). Bande + bandeau (200 × 25)
-tiennent dans **un panneau 240 × 100** (50 cm utilisés) : `ceil(2c / largeur_utile)` panneau.
+R2 et R3 sortent d'**un madrier de 240 coupé en diagonale** (R3 tourné de 180°) ; R1 est un
+madrier droit de 200. Total 4,4 ml ⇒ **1 madrier de stock 4,8 m** (chute 40 cm). Ils font
+lisse haute : le toit se visse dedans.
 Murs : A et B = 2 modules, D et G = 3 ; le module A2 est pris par le bloc-porte 100 × 215 ⇒
 **9 panneaux de 215** à commander.
 
 ## Toiture
 - Rectangle débordant : largeur `A + 0 + 0 = 200`, profondeur `G + dav + darr = 260`.
 - Panneaux dans le sens de la pente : `200/100 = 2` panneaux entiers, longueur
-  `260·√(1+(c/G)²) ≈ 261,4 cm`. Rives latérales affleurantes (bavette de rive).
+  `260·√(1+(c/G)²) ≈ 261,1 cm`. Rives latérales affleurantes (bavette de rive).
+- Intérieur (parois 6 cm) : `(A−12)(G−12)` = 188 × 228 = **4,29 m²** (`aire_interieure_m2`) ;
+  avec plancher 6 cm : 2,09 m sous plafond à l'arrière, 2,31 m à l'avant.
 - Portée libre ≈ 2,6 m (à vérifier contre le tableau du fabricant pour 60 mm).
 
 ## Vérification

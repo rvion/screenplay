@@ -1,8 +1,9 @@
 # screenplay — abri de jardin / bureau paramétrique
 
-Conception, plans, débit, budget et modèle 3D d'un petit abri de jardin (rectangle 4 faces,
-panneaux sandwich 60 mm autoportants, pente par rehausse, une porte) que Rémi construit
-lui-même sur une dalle déjà coulée. Projet
+Conception, plans, débit, budget et modèle 3D d'un petit bureau de jardin (rectangle 200 × 240,
+panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,
+aménagement chiffré) que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
+abordable, robuste, agréable tous les jours. Projet
 **spec-first** : la conception est écrite *avant* le code, dans ce dossier `agent/`.
 Stack : TypeScript pur (`site/src/compute.ts`) bundlé par esbuild en un seul `site/app.js`,
 Three.js via CDN, tests Node (snapshots golden + jsdom), publication GitHub Pages.

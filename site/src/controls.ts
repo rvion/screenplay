@@ -54,6 +54,19 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
     return h("label", { class: "ctl ctl-num" }, [h("span", { class: "ctl-lbl" }, [label]), sel]);
   }
 
+  function check(label: string, obj: any, key: string): HTMLElement {
+    const input = h("input", { type: "checkbox" }) as HTMLInputElement;
+    input.checked = !!obj[key];
+    input.addEventListener("change", () => { obj[key] = input.checked; onChange(); });
+    return h("label", { class: "ctl ctl-check" }, [input, h("span", {}, [label])]);
+  }
+
+  function amenagementGroup(): HTMLElement[] {
+    const am = params.amenagement || (params.amenagement = {});
+    const labels: [string, string][] = [["plancher", "Plancher isolé"], ["electricite", "Électricité (multiprise + éclairage)"], ["chauffage", "Chauffage"], ["store", "Store"], ["finition_interieure", "Finition intérieure"]];
+    return labels.filter(([k]) => am[k]).map(([k, l]) => check(l, am[k], "actif"));
+  }
+
   function priceControls(): HTMLElement[] {
     const pr = params.prix_indicatifs_eur || {};
     return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number")
@@ -78,10 +91,11 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
         slider("Hauteur", w, "hauteur_cm", 40, 140),
         slider("Allège (bas / sol)", w, "allege_cm", 60, 160),
         slider("Position depuis le début de la face", w, "position", 0, 400),
+        check("Ouvrante (oscillo-battante)", w, "ouvrant"),
       ]));
     });
     body.append(h("button", { class: "btn btn-ghost btn-add", onclick: () => {
-      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 80, allege_cm: 110, position: 110 });
+      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 110, allege_cm: 95, position: 110, ouvrant: false });
       rerender();
     } }, ["+ Ajouter une fenêtre"]));
     return body;
@@ -114,6 +128,7 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
         select("Position sur la face avant", params.porte, "position", POSITIONS),
       ]),
       group("Fenêtres", [windowsGroup()], (params.fenetres || []).length > 0),
+      group("Aménagement", amenagementGroup()),
       group("Panneaux", [
         slider("Largeur utile", params.panneau, "largeur_utile_cm", 80, 120),
         slider("Chute / pertes", params.divers, "facteur_chute_pct", 0, 30, 1, "%"),
