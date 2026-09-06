@@ -130,6 +130,7 @@ export function geometry(p: Params) {
     vert_heights_cm: verts.map((v) => rnd(h_at(v[1]), 1)),
     cotes: { A, G },
     aire_m2: rnd(A * G / 1e4, 2),
+    emprise_debords_m2: rnd((A + (+p.toit.debord_cm.gauche) + (+p.toit.debord_cm.droite)) * (G + (+p.toit.debord_cm.avant) + (+p.toit.debord_cm.arriere)) / 1e4, 2),
     perimetre_cm: rnd(2 * (A + G), 1),
     pente: { chute_cm: drop, run_cm: run, pourcent: rnd(slope_pct, 1), degres: rnd(slope_deg, 2), rampant_cm: rnd(rampant, 1) },
     hauteur_mur_cm: H,

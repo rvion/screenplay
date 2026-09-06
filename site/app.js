@@ -112,6 +112,7 @@ function geometry(p) {
     vert_heights_cm: verts.map((v) => rnd(h_at(v[1]), 1)),
     cotes: { A, G },
     aire_m2: rnd(A * G / 1e4, 2),
+    emprise_debords_m2: rnd((A + +p.toit.debord_cm.gauche + +p.toit.debord_cm.droite) * (G + +p.toit.debord_cm.avant + +p.toit.debord_cm.arriere) / 1e4, 2),
     perimetre_cm: rnd(2 * (A + G), 1),
     pente: { chute_cm: drop, run_cm: run, pourcent: rnd(slope_pct, 1), degres: rnd(slope_deg, 2), rampant_cm: rnd(rampant, 1) },
     hauteur_mur_cm: H,
@@ -862,6 +863,10 @@ function renderVigilance(core, p) {
   setText("v-pente-deg", pente.degres + "\xB0");
   setText("v-portee", (core.debit.toit.portee_cm / 100).toFixed(2) + " m");
   setText("v-ep", String(p.panneau.epaisseur_mm));
+  setText("v-emprise", String(g.aire_m2));
+  setText("v-emprise-deb", String(g.emprise_debords_m2));
+  const seuil = document.getElementById("v-seuil");
+  if (seuil) seuil.textContent = g.emprise_debords_m2 <= 5 ? "sous le seuil des 5 m\xB2 d\xE9bords inclus : a priori aucune formalit\xE9." : g.aire_m2 <= 5 ? "murs sous 5 m\xB2 mais d\xE9bords inclus au-dessus : selon la lecture de la mairie, d\xE9claration pr\xE9alable possible." : "au-dessus de 5 m\xB2 : d\xE9claration pr\xE9alable \xE0 pr\xE9voir.";
   const card = document.getElementById("v-dalle");
   if (card && d) {
     const hors = d.hors_dalle_m2 > 0 || d.depasse_bbox;

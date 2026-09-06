@@ -39,6 +39,7 @@ ok($("#plan-plan-rehausse").querySelector("svg") !== null, "plan de rehausse SVG
 ok(!$("#v-dalle").hidden, "vigilance dalle affichee (coin hors dalle)");
 ok($("#cover").textContent.includes("cm"), "largeur utile affichee");
 ok($("#v-pente").textContent.includes("%"), "pente vigilance affichee");
+ok(/m²|seuil/.test($("#v-seuil").textContent), "seuil 5 m2 affiche");
 
 // controles presents
 const ranges = $("#controls").querySelectorAll('input[type=range]');

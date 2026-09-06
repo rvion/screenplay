@@ -140,3 +140,14 @@ Le site propose une carte par fenêtre (face + curseurs) et un bouton d'ajout. *
 côté droit ; coût contenu (+250 € indicatif) et un seul panneau découpé. *Écarté :* revenir à la
 liste unique `ouvertures[]` de D11 (la porte a des règles propres : allège 0, vantail, seuil).
 *Amende* D18 (« seule ouverture » ne tient plus) ; *complète* D11.
+
+## D21 — Emprise 200 × 240 (4,8 m²), débords 10 cm, pas d'angle pour gagner 0,4 m²
+Le terrain laisse ~2,00 × 2,40 m si l'on veut **faire le tour** de l'abri ; atteindre 5 m² imposait
+de reprendre l'angle coupé. Choix : **200 × 240**, débords ramenés à 10 cm, petit triangle
+(~54 × 51 cm) de dalle à combler. *Pourquoi :* l'angle rapporte ~0,4 m² intérieur (une bande de
+30 cm) contre deux angles obtus, des profils sur mesure, la perte du tour (entretien gouttière,
+distance aux limites) et le passage au-dessus de 5 m². *Réglementaire :* ≤ 5 m² d'emprise au sol
+et de surface de plancher = aucune formalité ; l'emprise au sol compte les débords, donc 220 × 260
+= 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie. Le site affiche les deux
+chiffres (carte « Seuil des 5 m² »). *Écarté :* 230 × 246 (0,39 m² hors dalle, pas de tour),
+200 × 190 (seul rectangle entièrement sur la dalle, 3,8 m², trop petit). *Précise* D16.

@@ -1,11 +1,11 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Coin arrière-droit hors dalle** (emprise 230 × 246 sur une dalle à coin coupé) :
-      compléter la dalle sous le triangle 90 × 86 (coulage / plots), ou réduire `gauche_G` pour
-      tenir sur la partie pleine (ex. 230 × 160 = 3,7 m², plus petit). Le site calcule et
-      affiche le débord en direct.
-- [ ] **Portée du toit** ≈ 2,8 m en 60 mm sans panne : confirmer dans le tableau de portées du
+- [ ] **Coin arrière-droit hors dalle** : avec 200 × 240, combler le triangle ~54 × 51 cm
+      (béton ou plots) avant le montage. Le site calcule et affiche le débord en direct.
+- [ ] **Formalités** : 4,8 m² de murs mais 5,72 m² débords inclus ⇒ vérifier en mairie si une
+      déclaration préalable est due (et la distance aux limites du PLU).
+- [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
       fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.
 - [ ] **Pente** : 25 cm (≈ 10 %). Vérifier la mini exacte du fabricant de panneaux toiture.
 - [ ] **Hauteur des murs** réelle souhaitée (hypothèse 215 arrière / 240 avant).
@@ -25,7 +25,7 @@
 
 ## Fait (2026-09-06, simplification)
 - [x] **Rectangle 4 faces** au lieu du pentagone à coin coupé ; dalle réelle conservée en
-      `dalle_cm` pour calculer le débord.
+      `dalle_cm` pour calculer le débord. Emprise finale **200 × 240** (D21).
 - [x] **Rehausse** : murs rectangulaires + 1 bande coupée en diagonale (2 triangles) + 1 bandeau ;
       plan de coupe SVG dédié ; joints dessinés en 3D et sur les élévations.
 - [x] **Porte + liste `fenetres[]`** (une fenêtre face D par défaut, D20) ; contrôles réduits ;

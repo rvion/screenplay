@@ -9,9 +9,11 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
   **A** = avant, **D** = droite, **B** = arrière, **G** = gauche, **T** = toiture.
 - **B2 — Surface.** Environ **5 m²** au sol.
 - **B3 — Dalle réelle** (déjà coulée) : Gauche **246**, Avant **230**, Droite jusqu'à la coupe
-  **160**, Arrière jusqu'à la coupe **140** (cm). Le coin arrière-droit est coupé. L'emprise par
-  défaut est la boîte englobante **230 × 246** : un triangle **90 × 86 cm** déborde donc de la
-  dalle au coin arrière-droit — **à trancher** (compléter la dalle, ou réduire G). Voir vigilance.
+  **160**, Arrière jusqu'à la coupe **140** (cm). Le coin arrière-droit est coupé. **Emprise
+  retenue : 200 × 240** (4,8 m²) : on peut **en faire le tour** (contrainte du terrain), on
+  reste sous 5 m² de murs, et seul un petit triangle (~54 × 51 cm) déborde de la dalle au coin
+  arrière-droit — **à combler** (quelques sacs de béton ou plots). L'angle coupé pour atteindre
+  5,3 m² a été jugé non rentable (+0,4 m² intérieur contre 2 angles obtus et pas de tour).
 - **B4 — Murs & toit** en **panneaux sandwich 60 mm autoportants** : pas d'ossature secondaire
   (« on m'a dit que 6 cm est autoportant »). Seulement rail de pied + profils d'angle.
 - **B5 — Porte de service vitrée**, **ouvrant vers l'extérieur**, **source principale de
@@ -42,9 +44,10 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
   (`murs.hauteur_cm`, `toit.pente_chute_cm`).
 - **H2** Porte **90 × 210 cm**, face A, calée **à droite** (marge 5 cm), charnière côté droit.
 - **H3** Largeur utile de panneau **100 cm**, pose **verticale** des panneaux muraux.
-- **H4** Débords de toit 15–20 cm.
+- **H4** Débords de toit **10 cm** (réduits : l'emprise au sol réglementaire compte les débords ;
+  220 × 260 = 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie).
 - **H5** Âme **PIR**.
-- **H6** Portée libre du toit ≈ **2,8 m** sans panne : à confirmer dans le tableau de portées du
+- **H6** Portée libre du toit ≈ **2,6 m** sans panne : à confirmer dans le tableau de portées du
   fabricant pour du 60 mm (sinon une panne intermédiaire).
 
 ## Non-objectifs (pour l'instant)

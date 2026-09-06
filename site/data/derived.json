@@ -11,16 +11,16 @@
         0
       ],
       [
-        230,
+        200,
         0
       ],
       [
-        230,
-        246
+        200,
+        240
       ],
       [
         0,
-        246
+        240
       ]
     ],
     "vert_names": [
@@ -36,17 +36,18 @@
       215
     ],
     "cotes": {
-      "A": 230,
-      "G": 246
+      "A": 200,
+      "G": 240
     },
-    "aire_m2": 5.66,
-    "perimetre_cm": 952,
+    "aire_m2": 4.8,
+    "emprise_debords_m2": 5.72,
+    "perimetre_cm": 880,
     "pente": {
       "chute_cm": 25,
-      "run_cm": 246,
-      "pourcent": 10.2,
-      "degres": 5.8,
-      "rampant_cm": 247.3
+      "run_cm": 240,
+      "pourcent": 10.4,
+      "degres": 5.95,
+      "rampant_cm": 241.3
     },
     "hauteur_mur_cm": 215,
     "hauteur_avant_cm": 240,
@@ -55,7 +56,7 @@
       {
         "cle": "A",
         "libelle": "Avant",
-        "longueur_cm": 230,
+        "longueur_cm": 200,
         "hauteur_mur_cm": 215,
         "hauteur_debut_cm": 240,
         "hauteur_fin_cm": 240,
@@ -65,7 +66,7 @@
       {
         "cle": "D",
         "libelle": "Droite",
-        "longueur_cm": 246,
+        "longueur_cm": 240,
         "hauteur_mur_cm": 215,
         "hauteur_debut_cm": 240,
         "hauteur_fin_cm": 215,
@@ -75,7 +76,7 @@
       {
         "cle": "B",
         "libelle": "Arriere",
-        "longueur_cm": 230,
+        "longueur_cm": 200,
         "hauteur_mur_cm": 215,
         "hauteur_debut_cm": 215,
         "hauteur_fin_cm": 215,
@@ -85,7 +86,7 @@
       {
         "cle": "G",
         "libelle": "Gauche",
-        "longueur_cm": 246,
+        "longueur_cm": 240,
         "hauteur_mur_cm": 215,
         "hauteur_debut_cm": 215,
         "hauteur_fin_cm": 240,
@@ -99,10 +100,10 @@
       "droite_jusqu_coupe": 160,
       "arriere_jusqu_coupe": 140,
       "coupe_cm": 124.5,
-      "hors_dalle_m2": 0.39,
+      "hors_dalle_m2": 0.14,
       "hors_dalle_triangle_cm": [
-        90,
-        86
+        53.7,
+        51.3
       ],
       "depasse_bbox": false
     }
@@ -113,16 +114,16 @@
         {
           "face": "A",
           "libelle": "Avant",
-          "longueur_cm": 230,
+          "longueur_cm": 200,
           "hauteur_cm": 215,
-          "nb_panneaux": 3,
-          "aire_brute_m2": 6.45,
+          "nb_panneaux": 2,
+          "aire_brute_m2": 4.3,
           "rehausse": "bandeau"
         },
         {
           "face": "D",
           "libelle": "Droite",
-          "longueur_cm": 246,
+          "longueur_cm": 240,
           "hauteur_cm": 215,
           "nb_panneaux": 3,
           "aire_brute_m2": 6.45,
@@ -131,78 +132,78 @@
         {
           "face": "B",
           "libelle": "Arriere",
-          "longueur_cm": 230,
+          "longueur_cm": 200,
           "hauteur_cm": 215,
-          "nb_panneaux": 3,
-          "aire_brute_m2": 6.45,
+          "nb_panneaux": 2,
+          "aire_brute_m2": 4.3,
           "rehausse": "aucune"
         },
         {
           "face": "G",
           "libelle": "Gauche",
-          "longueur_cm": 246,
+          "longueur_cm": 240,
           "hauteur_cm": 215,
           "nb_panneaux": 3,
           "aire_brute_m2": 6.45,
           "rehausse": "triangle"
         }
       ],
-      "aire_brute_m2": 25.8,
-      "aire_nette_m2": 17.94,
+      "aire_brute_m2": 21.5,
+      "aire_nette_m2": 16.39,
       "ouvertures_deduites_m2": 2.53,
-      "total_panneaux": 12
+      "total_panneaux": 10
     },
     "rehausse": {
       "pieces": [
         {
           "piece": "Bandeau avant (face A)",
-          "longueur_cm": 230,
+          "longueur_cm": 200,
           "hauteur_cm": 25,
           "nb": 1,
           "note": "rectangle, pose sur le mur A"
         },
         {
           "piece": "Triangles lateraux (faces G et D)",
-          "longueur_cm": 246,
+          "longueur_cm": 240,
           "hauteur_cm": 25,
           "nb": 2,
           "note": "1 bande G x chute coupee en diagonale = 2 triangles (tourner le 2e de 180 deg)"
         }
       ],
       "nb_panneaux": 1,
-      "longueur_panneau_cm": 246,
-      "aire_brute_m2": 2.46,
-      "aire_nette_m2": 1.19
+      "longueur_panneau_cm": 240,
+      "aire_brute_m2": 2.4,
+      "aire_nette_m2": 1.1
     },
     "toit": {
       "face": "T",
       "libelle": "Toiture",
       "nb_panneaux": 3,
-      "largeur_cm": 260,
-      "longueur_panneau_cm": 282.4,
-      "aire_brute_m2": 8.47,
-      "aire_couverte_m2": 7.31,
-      "portee_cm": 281
+      "largeur_cm": 220,
+      "longueur_panneau_cm": 261.4,
+      "aire_brute_m2": 7.84,
+      "aire_couverte_m2": 5.72,
+      "portee_cm": 260
     },
-    "commande_mur_m2": 31.1,
-    "commande_toit_m2": 9.3,
-    "commande_panneaux_m2": 40.4,
+    "commande_mur_m2": 26.3,
+    "commande_toit_m2": 8.6,
+    "commande_panneaux_m2": 34.9,
     "facteur_chute_pct": 10
   },
   "achats": [
     {
       "poste": "Panneaux sandwich 60 mm - finition MUR (murs + rehausse)",
-      "qte": "12 panneaux de 2.15 m + 1 de 2.46 m (~31.1 m2 avec chute)",
+      "qte": "10 panneaux de 2.15 m + 1 de 2.40 m (~26.3 m2 avec chute)",
       "note": "Ame PIR, autoportants (pas d'ossature). Parement mural lisse/micro-nervure, laque 2 faces. Coupes droites + 1 diagonale."
     },
     {
       "poste": "Panneaux sandwich 60 mm - finition TOIT (face T)",
-      "qte": "3 panneaux de ~2.82 m (~9.3 m2 avec chute)",
-      "note": "Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~2.81 m : verifier le tableau de portees du fabricant."
+      "qte": "3 panneaux de ~2.61 m (~8.6 m2 avec chute)",
+      "note": "Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~2.60 m : verifier le tableau de portees du fabricant."
     },
     {
       "poste": "Rail / lambourde de pied",
-      "qte": "~11 m",
+      "qte": "~10 m",
       "note": "U galvanise OU bois traite classe 4, sur bande EPDM. Sureleve les panneaux de la dalle."
     },
     {
@@ -212,7 +213,7 @@
     },
     {
       "poste": "Bavette d'egout haut (avant)",
-      "qte": "~4 m",
+      "qte": "~3 m",
       "note": "Larmier en haut de la face avant."
     },
     {
@@ -222,17 +223,17 @@
     },
     {
       "poste": "Gouttiere + 1 descente",
-      "qte": "~4 m + 1 descente",
+      "qte": "~3 m + 1 descente",
       "note": "En bas de pente (face B), descente a un angle arriere."
     },
     {
       "poste": "Vis autoperceuses tete EPDM",
-      "qte": "~221 (boite de 300)",
+      "qte": "~191 (boite de 200)",
       "note": "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire."
     },
     {
       "poste": "Chevilles / scellement dalle",
-      "qte": "~20",
+      "qte": "~18",
       "note": "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)."
     },
     {
@@ -252,12 +253,12 @@
     },
     {
       "poste": "Bande comprimee / mousse precomprimee",
-      "qte": "~19 m",
+      "qte": "~18 m",
       "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
     },
     {
       "poste": "Bande butyle (joints de panneaux)",
-      "qte": "~20 m",
+      "qte": "~18 m",
       "note": "Joints longitudinaux, joint mur/rehausse et perimetriques."
     },
     {
@@ -275,17 +276,17 @@
     "lignes": [
       {
         "poste": "Panneaux sandwich - mur + rehausse (brut)",
-        "qte": 28.26,
+        "qte": 23.9,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 989
+        "montant_eur": 836
       },
       {
         "poste": "Panneaux sandwich - toit (brut)",
-        "qte": 8.47,
+        "qte": 7.84,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 296
+        "montant_eur": 274
       },
       {
         "poste": "Porte vitree",
@@ -303,10 +304,10 @@
       },
       {
         "poste": "Profils (angles, rives, rail)",
-        "qte": 28.7,
+        "qte": 28,
         "unite": "ml",
         "pu_eur": 12,
-        "montant_eur": 344
+        "montant_eur": 336
       },
       {
         "poste": "Visserie + etancheite",
@@ -337,10 +338,10 @@
         "montant_eur": 150
       }
     ],
-    "sous_total_eur": 3170,
+    "sous_total_eur": 2987,
     "incertitude_pct": 15,
-    "total_bas_eur": 2694,
-    "total_haut_eur": 3645
+    "total_bas_eur": 2539,
+    "total_haut_eur": 3435
   },
   "ouvertures": [
     {
@@ -351,7 +352,7 @@
       "largeur_cm": 90,
       "hauteur_cm": 210,
       "allege_cm": 0,
-      "start_cm": 135,
+      "start_cm": 105,
       "position": "droite",
       "ouverture": "vers l'exterieur",
       "description": "porte vitree aluminium double vitrage - source principale de lumiere"
@@ -385,16 +386,16 @@
         0
       ],
       [
-        2.3,
+        2,
         0
       ],
       [
-        2.3,
-        2.46
+        2,
+        2.4
       ],
       [
         0,
-        2.46
+        2.4
       ]
     ],
     "heights": [
@@ -408,24 +409,24 @@
     "thickness_m": 0.06,
     "roof_outline": [
       [
-        -0.15,
-        -0.15
+        -0.1,
+        -0.1
       ],
       [
-        2.45,
-        -0.15
+        2.1,
+        -0.1
       ],
       [
-        2.45,
-        2.66
+        2.1,
+        2.5
       ],
       [
-        -0.15,
-        2.66
+        -0.1,
+        2.5
       ]
     ],
     "roof_front_m": 2.4,
-    "roof_slope": 0.10163,
+    "roof_slope": 0.10417,
     "slab": [
       [
         0,
@@ -453,7 +454,7 @@
       {
         "type": "porte",
         "face_index": 0,
-        "offset_m": 1.35,
+        "offset_m": 1.05,
         "width_m": 0.9,
         "height_m": 2.1,
         "sill_m": 0

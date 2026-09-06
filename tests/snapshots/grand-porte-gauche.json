@@ -35,6 +35,7 @@
    "G": 260
   },
   "aire_m2": 7.8,
+  "emprise_debords_m2": 10.37,
   "perimetre_cm": 1120,
   "pente": {
    "chute_cm": 32,

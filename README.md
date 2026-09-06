@@ -1,7 +1,7 @@
 # 🏡 Abri de jardin — panneaux sandwich
 
 Conception **paramétrique**, **spec-first** et auto-documentée d'un petit
-**abri / bureau de jardin** (≈ 5,7 m²) **rectangulaire**, murs et toit en
+**abri / bureau de jardin** (2,00 × 2,40 m, 4,8 m²) **rectangulaire**, murs et toit en
 **panneaux sandwich 60 mm autoportants** (pas d'ossature), sur une **dalle béton déjà coulée**.
 
 Ce dépôt contient **tout le nécessaire** : plans cotés, débit matière, liste d'achats,
@@ -23,12 +23,12 @@ Une seule coupe en biais dans tout le projet. Deux ouvertures : la **porte vitr�
 
 | | |
 |---|---|
-| **Emprise** | **230 × 246 cm** ≈ **5,66 m²** (4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche) |
-| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **12 panneaux de 215 cm** + 1 pour la rehausse |
-| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,8°), 3 panneaux toiture de ~2,82 m |
+| **Emprise** | **200 × 240 cm** = **4,8 m²** (5,72 m² débords inclus) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
+| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **10 panneaux de 215 cm** + 1 pour la rehausse |
+| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,9°), 3 panneaux toiture de ~2,61 m |
 | **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, source principale de lumière |
 | **Fenêtre** | **80 × 80**, allège 110, face D, dans le 2e panneau (liste `fenetres[]`, vide = aucune) |
-| **Dalle** | réelle 246 × 230 à **coin coupé** : le coin arrière-droit (90 × 86 cm) **déborde** — à trancher |
+| **Dalle** | réelle 246 × 230 à **coin coupé** : un petit triangle (~54 × 51 cm) déborde au coin arrière-droit — à combler |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
 ---
@@ -97,10 +97,11 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 ## ⚠️ Points de vigilance (résumé)
 
-- **Coin arrière-droit hors dalle** : la dalle a un coin coupé ; avec l'emprise 230 × 246 un
-  triangle de 90 × 86 cm déborde. Compléter la dalle (coulage / plots) **ou** réduire la
-  profondeur `gauche_G`. À trancher avant de commander.
-- **Portée du toit** ≈ 2,8 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
+- **Coin arrière-droit hors dalle** : la dalle a un coin coupé ; avec 200 × 240 un triangle de
+  ~54 × 51 cm déborde. Le combler (quelques sacs de béton ou plots) avant le montage.
+- **Seuil des 5 m²** : 4,8 m² de murs, 5,72 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
+  (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
+- **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
   (neige/vent), sinon ajouter une panne.
 - **Pente du toit** : 25 cm ≈ **10 %** (5,8°). Vérifier la pente mini du fabricant.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts

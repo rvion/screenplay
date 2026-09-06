@@ -6,9 +6,9 @@
     "auteur": "Remi Vion"
   },
   "emprise_cm": {
-    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). Par defaut = bbox de la dalle ; le coin arriere-droit depasse alors de la dalle (voir dalle_cm et vigilance).",
-    "avant_A": 230,
-    "gauche_G": 246
+    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et seul un petit triangle (~54 x 52 cm) du coin arriere-droit depasse de la dalle (a combler).",
+    "avant_A": 200,
+    "gauche_G": 240
   },
   "dalle_cm": {
     "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). Sert uniquement a verifier que l'emprise tient dessus : le site calcule la partie hors dalle.",
@@ -32,7 +32,7 @@
   "toit": {
     "pente_chute_cm": 25,
     "draine_vers": "arriere_B",
-    "debord_cm": { "avant": 15, "arriere": 20, "gauche": 15, "droite": 15 },
+    "debord_cm": { "avant": 10, "arriere": 10, "gauche": 10, "droite": 10 },
     "_comment": "pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse = 1 bande G x chute coupee en diagonale (2 triangles, faces G et D) + 1 bande A x chute (bandeau avant)."
   },
   "porte": {
