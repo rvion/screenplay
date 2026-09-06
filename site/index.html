@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
-  <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin à 5 faces en panneaux sandwich." />
-  <link rel="stylesheet" href="style.css?v=6f4653bd" />
+  <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin rectangulaire en panneaux sandwich 60 mm autoportants." />
+  <link rel="stylesheet" href="style.css?v=d57e055f" />
   <script type="importmap">
   {
     "imports": {
@@ -18,19 +18,18 @@
 <body>
   <header class="hero">
     <h1>🏡 Abri de jardin · panneaux sandwich</h1>
-    <p>Carré à coin coupé (5 faces) · toit mono-pente · porte vitrée · sur dalle béton existante</p>
+    <p>Rectangle 4 faces · panneaux 60 mm autoportants · toit mono-pente par rehausse · une porte vitrée · sur dalle existante</p>
     <div class="badges">
-      <span class="badge">Spec-first</span>
+      <span class="badge">Coupes droites</span>
+      <span class="badge">Sans ossature</span>
       <span class="badge">Paramétrique</span>
-      <span class="badge">Panneaux 60 mm</span>
-      <span class="badge">~5 m²</span>
     </div>
   </header>
 
   <nav class="toc">
-    <a href="#modele">Modèle 3D</a>
-    <a href="#config">Config</a>
     <a href="#apercu">Aperçu</a>
+    <a href="#modele">3D</a>
+    <a href="#config">Réglages</a>
     <a href="#plans">Plans</a>
     <a href="#debit">Débit</a>
     <a href="#achats">Achats</a>
@@ -40,59 +39,52 @@
   </nav>
 
   <main>
+    <section id="apercu">
+      <h2>Aperçu</h2>
+      <div class="grid" id="kpis"></div>
+      <div class="card">
+        <p><b>Le principe, en une phrase :</b> une boîte rectangulaire en panneaux sandwich
+        <b>60 mm autoportants</b> (pas d'ossature), dont <b>tous les panneaux de mur sont des
+        rectangles identiques</b> ; la pente du toit vient d'une <b>rehausse</b> posée dessus —
+        <b>une bande coupée en diagonale</b> (deux triangles, faces gauche et droite) et
+        <b>un bandeau</b> sur la face avant. Le toit descend vers l'<b>arrière</b>. Une seule
+        ouverture : la <b>porte vitrée</b> (face avant, ouvrant dehors), qui apporte la lumière.</p>
+        <table id="faces">
+          <thead><tr><th>Face</th><th>Longueur</th><th>Mur (rectangle)</th><th>Rehausse → hauteur finie</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">Faces : <b>A</b> avant (porte) · <b>D</b> droite · <b>B</b> arrière (bas de pente)
+        · <b>G</b> gauche · <b>T</b> toiture. Tout se recalcule depuis les <a href="#config">réglages</a>.</p>
+      </div>
+    </section>
+
     <section id="modele">
       <h2>Modèle 3D</h2>
       <div id="viewer"></div>
-      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer.</p>
+      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer. Les traits gris sont les joints de panneaux ; la dalle dessinée est la vraie (coin coupé).</p>
     </section>
 
     <section id="config">
-      <h2>Configuration interactive</h2>
+      <h2>Réglages</h2>
       <div class="card">
-        <p class="note">Réglez les <b>cotes, la pente, les panneaux, les ouvertures et les prix</b> :
-        <b>tout se recalcule en direct</b> — modèle 3D, <b>plans cotés</b>, débit et budget. La page
-        embarque la logique de calcul du dépôt (TypeScript, couverte par des tests),
-        donc ce que vous voyez à l'écran est exact.</p>
         <div id="controls" class="controls"></div>
         <div class="cfg-actions">
-          <button id="cfg-reset" class="btn btn-ghost">Réinitialiser aux valeurs publiées</button>
+          <button id="cfg-reset" class="btn btn-ghost">Réinitialiser</button>
           <span id="cfg-status" class="note"></span>
         </div>
       </div>
     </section>
 
-    <section id="apercu">
-      <h2>Aperçu</h2>
-      <div class="grid" id="kpis"></div>
-      <div class="card">
-        <p>Abri à <b>5 faces</b> : <b>A</b> avant (porte), <b>D</b> droite, <b>C</b> coin coupé,
-        <b>B</b> arrière, <b>G</b> gauche. Le toit en panneau sandwich est en <b>mono-pente vers
-        l'arrière</b> pour évacuer l'eau loin de l'entrée. La <b>porte vitrée</b> de la face A
-        s'ouvre <b>vers l'extérieur</b> (zéro emprise intérieure) et fait office de source
-        principale de lumière naturelle. Deux <b>fenêtres</b> (faces <b>D</b> droite et
-        <b>B</b> arrière) complètent l'éclairage. Toutes les ouvertures sont paramétriques.</p>
-        <table id="faces">
-          <thead><tr><th>Face</th><th>Longueur</th><th>Hauteur (début → fin)</th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <p class="note">Les 5 faces ci-dessus sont les <b>murs</b> ; la <b>toiture (face T)</b>, en
-        panneau sandwich finition toit, est détaillée dans la section Débit. Toutes les valeurs sont
-        calculées en direct à partir de la <a href="#config">configuration</a> : changez une cote,
-        tout se met à jour instantanément.</p>
-      </div>
-    </section>
-
     <section id="plans">
       <h2>Plans</h2>
-      <p class="note">Plans cotés <b>recalculés en direct</b> depuis la configuration ci-dessus.</p>
       <div class="plans">
-        <figure><div class="planbox" id="plan-plan-sol"></div><figcaption>Plan de sol coté</figcaption></figure>
-        <figure><div class="planbox" id="plan-plan-toit"></div><figcaption>Plan de toiture &amp; écoulement</figcaption></figure>
-        <figure><div class="planbox" id="plan-facade-A"></div><figcaption>Face A — Avant (porte)</figcaption></figure>
-        <figure><div class="planbox" id="plan-facade-D"></div><figcaption>Face D — Droite</figcaption></figure>
-        <figure><div class="planbox" id="plan-facade-C"></div><figcaption>Face C — Coin coupé</figcaption></figure>
-        <figure><div class="planbox" id="plan-facade-B"></div><figcaption>Face B — Arrière</figcaption></figure>
-        <figure><div class="planbox" id="plan-facade-G"></div><figcaption>Face G — Gauche</figcaption></figure>
+        <figure><div class="planbox" id="plan-plan-sol"></div><figcaption>Plan de sol (dalle réelle en pointillé)</figcaption></figure>
+        <figure><div class="planbox" id="plan-plan-toit"></div><figcaption>Toiture &amp; écoulement</figcaption></figure>
+        <figure class="wide"><div class="planbox" id="plan-plan-rehausse"></div><figcaption>Plan de coupe de la rehausse (1 panneau)</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-A"></div><figcaption>Face A — Avant (porte + bandeau)</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-G"></div><figcaption>Face G — Gauche (triangle)</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-D"></div><figcaption>Face D — Droite (triangle)</figcaption></figure>
+        <figure><div class="planbox" id="plan-facade-B"></div><figcaption>Face B — Arrière (rectangle seul)</figcaption></figure>
       </div>
     </section>
 
@@ -101,14 +93,13 @@
       <div class="card">
         <p id="debit-resume"></p>
         <table id="debit">
-          <thead><tr><th>Face</th><th>Finition</th><th>Dimensions</th><th>Nb panneaux</th><th>Aire brute</th></tr></thead>
+          <thead><tr><th>Face</th><th>Finition</th><th>Pièces</th><th>Panneaux</th><th>Aire brute</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="note">Deux <b>finitions</b> de panneau, même épaisseur (60 mm) : <b>mur</b> (parement
-        lisse/micro-nervuré) pour les faces A·D·C·B·G, et <b>toit</b> (profil nervuré qui évacue
-        l'eau) pour la face <b>T</b>. Panneaux muraux posés <b>verticaux</b> (largeur utile
-        <span id="cover"></span>) ; les faces à <b>tête en biais</b> reçoivent une coupe d'arase
-        (le toit descend). Débit indicatif à recouper avec le fournisseur.</p>
+        <p class="note">Deux <b>finitions</b>, même épaisseur : <b>mur</b> (parement lisse) pour A·D·B·G et la
+        rehausse, <b>toit</b> (profil nervuré) pour T. Murs posés <b>verticaux</b>, largeur utile
+        <span id="cover"></span>. Toutes les coupes sont droites sauf <b>une diagonale</b> (la bande des
+        triangles). Débit indicatif à recouper avec le fournisseur.</p>
       </div>
     </section>
 
@@ -119,106 +110,83 @@
           <thead><tr><th>Poste</th><th>Quantité</th><th>Remarque</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="note">Quantités estimées à partir des paramètres — à confirmer avec le
-        fournisseur de panneaux (accessoires propriétaires selon la marque).</p>
       </div>
     </section>
 
     <section id="budget">
-      <h2>Estimation budgétaire</h2>
+      <h2>Budget indicatif</h2>
       <div class="card">
-        <p class="note">Estimation <b>indicative</b> (HT) à partir de prix paramétrables
-        (<code>prix_indicatifs_eur</code> dans la config). À confirmer avec des devis fournisseurs.</p>
         <table id="budget">
           <thead><tr><th>Poste</th><th>Quantité</th><th>P.U.</th><th>Montant</th></tr></thead>
           <tbody></tbody>
         </table>
         <p id="budget-total" class="budget-total"></p>
-        <h3 style="margin:1rem 0 .3rem">Où acheter les panneaux sandwich</h3>
-        <p class="note">Exemples de fabricants / distributeurs à comparer (prix et disponibilité à
-        vérifier ; liens donnés à titre indicatif, sans affiliation) :</p>
-        <ul class="suppliers">
-          <li><a href="https://www.kingspan.com" target="_blank" rel="noopener noreferrer">Kingspan</a> — fabricant (âme PIR/PUR, toiture &amp; mur)</li>
-          <li><a href="https://www.bacacier.com" target="_blank" rel="noopener noreferrer">Bacacier</a> — profilés &amp; panneaux sandwich (FR)</li>
-          <li><a href="https://www.joriside.com" target="_blank" rel="noopener noreferrer">Joris Ide</a> — panneaux sandwich toiture / mur</li>
-          <li><a href="https://www.manomano.fr/recherche/panneau%20sandwich%20toiture" target="_blank" rel="noopener noreferrer">ManoMano</a> — marketplace (recherche « panneau sandwich »)</li>
-          <li><a href="https://www.google.com/search?q=panneau+sandwich+toiture+60mm+prix" target="_blank" rel="noopener noreferrer">Comparer en ligne</a> — « panneau sandwich toiture 60 mm prix »</li>
-        </ul>
+        <p class="note">Prix HT indicatifs, modifiables dans les réglages (groupe « Prix »). À confirmer par devis :
+        <a href="https://www.kingspan.com" target="_blank" rel="noopener noreferrer">Kingspan</a> ·
+        <a href="https://www.bacacier.com" target="_blank" rel="noopener noreferrer">Bacacier</a> ·
+        <a href="https://www.joriside.com" target="_blank" rel="noopener noreferrer">Joris Ide</a> ·
+        <a href="https://www.manomano.fr/recherche/panneau%20sandwich%20toiture" target="_blank" rel="noopener noreferrer">ManoMano</a>
+        (exemples, sans affiliation).</p>
       </div>
     </section>
 
     <section id="montage">
-      <h2>Cahier de montage</h2>
+      <h2>Montage en 6 étapes</h2>
       <div class="card">
         <ol class="steps">
-          <li><b>Préparer la dalle.</b> Vérifier planéité et niveau, tracer l'emprise du pentagone
-            (A, D, C, B, G) à la craie, repérer le point bas de drainage (coin arrière-droit).</li>
-          <li><b>Étanchéité de pied.</b> Coller une bande EPDM/bitume sur tout le périmètre, puis
-            fixer le rail de pied (U galvanisé ou bois traité classe 4) avec chevilles/scellement
-            tous les ~50 cm. Le rail surélève les panneaux : jamais de panneau directement dans l'eau.</li>
-          <li><b>Monter les angles.</b> Démarrer par un angle de référence ; poser les panneaux
-            muraux verticaux face par face, joint à joint, bande butyle dans les recouvrements.
-            Soigner l'angle <b>C</b> (non orthogonal).</li>
-          <li><b>Réserver la porte (face A).</b> Encadrer l'ouverture, poser le dormant alu, vérifier
-            l'aplomb et le débattement <b>extérieur</b> du vantail.</li>
-          <li><b>Araser en tête.</b> Recouper les panneaux des faces en biais (G, D, C) selon la pente,
-            de façon à recevoir le toit à plat sur un seul plan incliné.</li>
-          <li><b>Poser la toiture.</b> Panneaux de toiture dans le sens de la pente (avant→arrière),
-            recouvrements de nervure vers le bas, débords selon plan, vis tête EPDM en sommet de
-            nervure.</li>
-          <li><b>Finitions eau.</b> Bavette d'égout haut (avant), bavettes de rive (G, D, C),
-            gouttière en bas de pente (B + C) avec descente au point bas.</li>
-          <li><b>Étanchéité &amp; ventilation.</b> Mastiquer tous les points singuliers, protéger les
-            chants coupés (primaire anticorrosion), poser la VMC/aérateurs (indispensable en usage
-            chauffé).</li>
-          <li><b>Pose porte &amp; réglages.</b> Poser le vantail vitré, régler les paumelles, joint de
-            seuil, test d'ouverture/fermeture et d'étanchéité.</li>
+          <li><b>Dalle et pied.</b> Vérifier le niveau, tracer le rectangle, coller la bande EPDM sur le
+            périmètre, fixer le rail de pied (chevilles tous les ~50 cm). Le rail surélève les panneaux :
+            jamais de panneau dans l'eau.</li>
+          <li><b>Couper.</b> Tous les panneaux de mur à la même hauteur (coupes droites). Sur un panneau
+            de plus : deux bandes de la hauteur de la chute ; l'une coupée en diagonale donne les
+            deux triangles, l'autre est le bandeau avant.</li>
+          <li><b>Monter les murs.</b> Partir d'un angle, poser les panneaux verticaux face par face,
+            butyle dans les joints, profils d'angle aux 4 coins (tous à 90°). Réserver la porte sur la
+            face avant.</li>
+          <li><b>Poser la rehausse.</b> Bandeau sur le mur avant, triangle sur chaque mur latéral
+            (pointe vers l'arrière), joint butyle + vis. Le sommet forme un plan incliné unique.</li>
+          <li><b>Poser le toit.</b> Panneaux de toiture dans le sens de la pente, recouvrements vers le
+            bas, débords selon plan, vis tête EPDM en sommet de nervure. Bavette avant, rives
+            latérales, gouttière arrière + descente.</li>
+          <li><b>Finir.</b> Porte vitrée (dormant, vantail, seuil, réglage), mastic aux points
+            singuliers, primaire sur les chants coupés, ventilation (obligatoire en usage chauffé).</li>
         </ol>
       </div>
     </section>
 
     <section id="vigilance">
       <h2>Points de vigilance</h2>
-      <div class="card warn">
-        <h3>⚠️ Pente du toit</h3>
-        <p>Pente réglée à <b><span id="v-chute"></span> cm</b> de chute, soit
-        <b><span id="v-pente"></span></b> (<span id="v-pente-deg"></span>) sur ~2,46 m de profondeur.
-        C'est dans la plage admise par la plupart des panneaux de toiture sandwich (le mini usuel se
-        situe souvent autour de 5°/8,75 %). <b>Reste à confirmer la pente minimale exacte du
-        fabricant</b> retenu, surtout sur cette longueur de rampant. Le brief initial visait ~10 cm
-        (~4 %), trop faible : valeur relevée après vérification. Tout se règle via le paramètre
-        unique <code>toit.pente_chute_cm</code>.</p>
+      <div class="card warn" id="v-dalle" hidden>
+        <h3>🧱 Coin arrière-droit hors dalle</h3>
+        <p>La dalle réelle a un coin coupé : avec cette emprise, un triangle de
+        <b><span id="v-dalle-tri"></span></b> déborde de la dalle au coin arrière-droit. Deux options :
+        <b>compléter la dalle</b> (petit coulage ou plots) sous ce coin, ou <b>réduire la profondeur</b>
+        (G) pour tenir sur la partie pleine. À trancher avant de commander.</p>
       </div>
       <div class="card warn">
-        <h3>🪟 Vitrage &amp; thermique</h3>
-        <p>Porte vitrée + fenêtres = bel éclairage, mais chaque m² de vitrage <b>déperd plus</b>
-        qu'un panneau 60 mm. Pour un bureau chauffé : viser un <b>double vitrage performant</b>
-        (idéalement à rupture de pont thermique), doser la surface vitrée, et soigner l'étanchéité
-        des dormants. Les ouvertures sont paramétriques (<code>ouvertures[]</code>) : on ajuste
-        nombre, taille et allège sans toucher au code.</p>
+        <h3>📏 Panneaux <span id="v-ep"></span> mm autoportants &amp; portée du toit</h3>
+        <p>Hypothèse retenue : les panneaux sont autoportants, <b>aucune ossature</b> (seulement rail
+        de pied + profils d'angle). Le toit franchit <b><span id="v-portee"></span></b> sans appui
+        intermédiaire : <b>vérifier dans le tableau de portées du fabricant</b> (charge neige/vent)
+        que 60 mm suffit, sinon ajouter une panne au milieu.</p>
+      </div>
+      <div class="card warn">
+        <h3>⚠️ Pente du toit</h3>
+        <p>Rehausse de <b><span id="v-chute"></span> cm</b>, soit <b><span id="v-pente"></span></b>
+        (<span id="v-pente-deg"></span>). C'est dans la plage admise par la plupart des panneaux de toiture
+        (mini usuel ≈ 5°/8,75 %) : <b>confirmer la pente minimale du fabricant</b>.</p>
       </div>
       <div class="card warn">
         <h3>💧 Condensation (usage chauffé)</h3>
-        <p>Les panneaux à parement acier sont étanches à la vapeur côté intérieur : le risque se
-        déplace vers les <b>ponts thermiques</b> (joints, angles, pied, pourtour de porte) où la
-        condensation peut apparaître. <b>Ventilation obligatoire</b> (VMC simple flux ou aérateurs
-        hygro), traitement soigné des jonctions, pas de pont thermique au rail de pied.</p>
+        <p>Parements acier = pare-vapeur : la condensation se déplace vers les <b>ponts thermiques</b>
+        (joints, angles, pied, pourtour de porte, joint mur/rehausse). <b>Ventilation obligatoire</b>
+        (VMC simple flux ou aérateurs hygro) et jonctions soignées.</p>
       </div>
       <div class="card warn">
-        <h3>🌧️ Drainage &amp; pied de mur</h3>
-        <p>L'eau converge vers le coin arrière-droit : prévoir gouttière sur B + C et une descente à
-        ce point bas, évacuée loin de la dalle. Bande d'étanchéité au pied indispensable (remontées
-        capillaires).</p>
-      </div>
-      <div class="card warn">
-        <h3>📐 Angle C non orthogonal</h3>
-        <p>L'angle du coin coupé n'est pas à 90°. Profils d'angle pliables ou sur-mesure ;
-        attention aux coupes d'about des panneaux et de la toiture sur cette face.</p>
-      </div>
-      <div class="card warn">
-        <h3>🚪 Porte ouvrant vers l'extérieur</h3>
-        <p>Vérifier le débattement extérieur (aucun obstacle, terrasse), la tenue au vent (arrêt de
-        porte), et l'étanchéité du seuil. Double vitrage recommandé pour un usage bureau.</p>
+        <h3>🚪 Porte : unique source de lumière, ouvrant dehors</h3>
+        <p>Vitrage généreux mais double vitrage performant (déperditions). Vérifier le débattement
+        extérieur, l'arrêt de porte (vent) et l'étanchéité du seuil. Gouttière arrière + descente
+        évacuée loin de la dalle.</p>
       </div>
     </section>
   </main>
@@ -228,7 +196,7 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="params.js?v=6f4653bd"></script>
-  <script type="module" src="app.js?v=6f4653bd"></script>
+  <script src="params.js?v=d57e055f"></script>
+  <script type="module" src="app.js?v=d57e055f"></script>
 </body>
 </html>

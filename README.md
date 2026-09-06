@@ -1,11 +1,11 @@
 # 🏡 Abri de jardin — panneaux sandwich
 
 Conception **paramétrique**, **spec-first** et auto-documentée d'un petit
-**abri / bureau de jardin** (≈ 5 m²) à **5 faces** (carré avec un coin coupé),
-murs et toit en **panneaux sandwich 60 mm**, sur une **dalle béton déjà coulée**.
+**abri / bureau de jardin** (≈ 5,7 m²) **rectangulaire**, murs et toit en
+**panneaux sandwich 60 mm autoportants** (pas d'ossature), sur une **dalle béton déjà coulée**.
 
 Ce dépôt contient **tout le nécessaire** : plans cotés, débit matière, liste d'achats,
-cahier de montage et points de vigilance — le tout généré depuis un **fichier de
+cahier de montage en 6 étapes et points de vigilance — le tout généré depuis un **fichier de
 paramètres unique** et publié sur un petit **site web**.
 
 > 🌐 **Site en ligne** : **<https://rvion.github.io/screenplay/>**
@@ -13,21 +13,21 @@ paramètres unique** et publié sur un petit **site web**.
 
 ---
 
-## En bref
+## Le principe, en une phrase
+
+Une boîte rectangulaire dont **tous les panneaux de mur sont des rectangles identiques**
+(coupes droites) ; la pente du toit vient d'une **rehausse** posée dessus : **une bande coupée
+en diagonale** (deux triangles, faces gauche et droite) et **un bandeau** sur la face avant.
+Une seule coupe en biais dans tout le projet. **Une seule ouverture** : la porte vitrée.
 
 | | |
 |---|---|
-| **Surface au sol** | ≈ **5,27 m²** |
-| **Faces** | **A** avant (porte) · **D** droite · **C** coin coupé · **B** arrière · **G** gauche |
-| **Panneaux** | sandwich **60 mm**, âme PIR, pose murale verticale |
-| **Toit** | **mono-pente vers l'arrière**, chute 25 cm (**≈ 10 %**, dans la plage admise) |
-| **Ouvertures** | **porte vitrée** (face A, ouvrant dehors) + **fenêtres** (faces D et B), paramétriques |
-| **Rendu 3D** | sol, **dalle blanche débordante**, rail de pied, **toit nervuré**, gouttière arrière |
-| **Usage** | bureau / pièce à vivre, chauffé toute l'année |
-
-### Mesures relevées sur la dalle (cm)
-Gauche **246** · Avant **230** · Droite jusqu'à la coupe **160** · Arrière jusqu'à la coupe **140**
-→ face **C** (coupe) **calculée** ≈ **124,5 cm** · périmètre ≈ **900 cm**.
+| **Emprise** | **230 × 246 cm** ≈ **5,66 m²** (4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche) |
+| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **12 panneaux de 215 cm** + 1 pour la rehausse |
+| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,8°), 3 panneaux toiture de ~2,82 m |
+| **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, **seule source de lumière** |
+| **Dalle** | réelle 246 × 230 à **coin coupé** : le coin arrière-droit (90 × 86 cm) **déborde** — à trancher |
+| **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
 ---
 
@@ -37,22 +37,24 @@ Gauche **246** · Avant **230** · Droite jusqu'à la coupe **160** · Arrière 
 |---|---|
 | ![Plan de sol](site/assets/plan-sol.svg) | ![Plan de toiture](site/assets/plan-toit.svg) |
 
-| Face A — Avant | Face G — Gauche | Face B — Arrière |
-|---|---|---|
-| ![Face A](site/assets/facade-A.svg) | ![Face G](site/assets/facade-G.svg) | ![Face B](site/assets/facade-B.svg) |
+![Plan de coupe de la rehausse](site/assets/plan-rehausse.svg)
 
-| Face D — Droite | Face C — Coin coupé |
+| Face A — Avant | Face G — Gauche |
 |---|---|
-| ![Face D](site/assets/facade-D.svg) | ![Face C](site/assets/facade-C.svg) |
+| ![Face A](site/assets/facade-A.svg) | ![Face G](site/assets/facade-G.svg) |
 
-*(Le **modèle 3D interactif** est sur le site.)*
+| Face D — Droite | Face B — Arrière |
+|---|---|
+| ![Face D](site/assets/facade-D.svg) | ![Face B](site/assets/facade-B.svg) |
+
+*(Le **modèle 3D interactif** est sur le site : dalle réelle, joints de panneaux, porte, toit.)*
 
 ---
 
 ## Comment ça marche (paramétrique)
 
-Le site est **100 % interactif** : un panneau de contrôles (cotes, pente, panneaux,
-ouvertures, prix) **recalcule tout en direct** — KPIs, débit, **plans SVG cotés** et
+Le site est **interactif** : quelques réglages (emprise, hauteur des murs, rehausse, porte,
+largeur utile) **recalculent tout en direct** — KPIs, débit, **plans SVG cotés**, budget et
 modèle 3D. Pas besoin de rien lancer pour explorer : ouvre simplement le site.
 
 Pour le développement / régénérer les artefacts versionnés :
@@ -61,7 +63,7 @@ Pour le développement / régénérer les artefacts versionnés :
 npm ci                              # esbuild + typescript + jsdom (dev)
 $EDITOR params.json                 # éditer les cotes par défaut
 npm run build && npm run emit       # bundle l'app + regénère params.js, SVG, derived.json
-npm test                            # snapshots golden + smoke DOM
+npm run test:raw                    # snapshots golden + smoke DOM
 python3 -m http.server -d site 8000 # prévisualiser (ou ouvrir site/index.html)
 ```
 
@@ -79,9 +81,8 @@ params.json          ← cotes par défaut (source unique des dimensions, en cm)
 site/src/            ← app TypeScript : compute (logique) + viewer/render/controls/main
 site/                ← site GitHub Pages (index.html + app.js bundlé + params.js + plans)
 tests/               ← snapshots golden (compute) + smoke DOM (jsdom)
-agent/               ← spécification spec-first (voir CLAUDE.md)
+agent/               ← spécification spec-first (voir CLAUDE.md → agent/index.md)
 .github/workflows/   ← build TS + tests + déploiement automatique de Pages
-CLAUDE.md            ← référence la spec agent/ (contexte de l'agent)
 ```
 
 La conception détaillée vit dans [`agent/`](agent/) :
@@ -94,24 +95,21 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 ## ⚠️ Points de vigilance (résumé)
 
-- **Pente du toit** : réglée à 25 cm ≈ **10 %** (5,8°), dans la plage admise par la plupart des
-  panneaux de toiture. **Vérifier la pente mini exacte du fabricant.** Paramètre `toit.pente_chute_cm`.
+- **Coin arrière-droit hors dalle** : la dalle a un coin coupé ; avec l'emprise 230 × 246 un
+  triangle de 90 × 86 cm déborde. Compléter la dalle (coulage / plots) **ou** réduire la
+  profondeur `gauche_G`. À trancher avant de commander.
+- **Portée du toit** ≈ 2,8 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
+  (neige/vent), sinon ajouter une panne.
+- **Pente du toit** : 25 cm ≈ **10 %** (5,8°). Vérifier la pente mini du fabricant.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
-  thermiques. **Ventilation (VMC/aérateurs) indispensable**.
-- **Drainage** : eau vers le coin arrière-droit → gouttière sur B + C + descente au point bas,
-  évacuée loin de la dalle ; bande d'étanchéité au pied.
-- **Angle C non orthogonal** : profils d'angle pliables/sur-mesure, coupes d'about soignées.
-- **Porte extérieure** : vérifier débattement, arrêt de porte (vent), étanchéité du seuil.
-
-Détail complet : section « Points de vigilance » du site et [`agent/03-decisions.md`](agent/03-decisions.md).
+  thermiques (dont le joint mur/rehausse). **Ventilation indispensable**.
+- **Porte extérieure** : unique source de lumière (double vitrage performant), débattement,
+  arrêt de porte, étanchéité du seuil ; gouttière arrière + descente loin de la dalle.
 
 ---
 
 ## Publier le site (GitHub Pages)
 
-Le dépôt est **public**, Pages est sur **Source = GitHub Actions**, et le site est **déjà en
-ligne** : <https://rvion.github.io/screenplay/>. À chaque push sur `main`, le workflow
-[`pages.yml`](.github/workflows/pages.yml) régénère et redéploie `site/` automatiquement.
-
-> Le rendu 3D n'a pas pu être validé dans un navigateur réel pendant la génération
-> (cf. [`agent/06-backlog.md`](agent/06-backlog.md)) — à vérifier directement sur le site.
+Pages est sur **Source = GitHub Actions** ; le workflow
+[`pages.yml`](.github/workflows/pages.yml) régénère et redéploie `site/` à chaque push sur la
+branche par défaut. Site : <https://rvion.github.io/screenplay/>.

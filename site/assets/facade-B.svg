@@ -1,11 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204 249" font-family="system-ui,sans-serif" font-size="13">
-<rect width="204" height="249" fill="#fbfbf8"/>
-<polygon points="60.0,189.0 144.0,189.0 144.0,60.0 60.0,60.0" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>
-<rect x="75.0" y="78.0" width="54.0" height="42.0" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>
-<text x="102.0" y="99.0" text-anchor="middle" fill="#178" font-size="10" font-weight="normal">fenêtre</text>
-<text x="102.0" y="132.0" text-anchor="middle" fill="#888" font-size="9" font-weight="normal">allège 115</text>
-<text x="102.0" y="215.0" text-anchor="middle" fill="#222" font-size="13" font-weight="bold">140 cm</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 258 249" font-family="system-ui,sans-serif" font-size="13">
+<rect width="258" height="249" fill="#fbfbf8"/>
+<polygon points="60.0,189.0 198.0,189.0 198.0,60.0 60.0,60.0" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>
+<line x1="120.0" y1="189.0" x2="120.0" y2="60.0" stroke="#8fa3b8" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="180.0" y1="189.0" x2="180.0" y2="60.0" stroke="#8fa3b8" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="129.0" y="215.0" text-anchor="middle" fill="#222" font-size="13" font-weight="bold">230 cm · 3 panneaux de 215</text>
 <text x="52.0" y="60.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>
-<text x="152.0" y="60.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>
-<text x="102.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face B — Arriere</text>
+<text x="206.0" y="60.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>
+<text x="129.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face B — Arriere</text>
 </svg>

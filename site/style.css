@@ -67,6 +67,7 @@ figure figcaption { font-size: .85rem; color: var(--muted); margin-top: .4rem; o
 .plans figure { min-width: 0; }
 .warn { border-left: 4px solid var(--warn); background: #fdf3f2; }
 .warn h3 { color: var(--warn); margin-top: 0; }
+.warn p { margin-bottom: 0; }
 ol.steps { padding-left: 1.2rem; }
 ol.steps li { margin: .6rem 0; }
 #viewer { width: 100%; height: 460px; border-radius: var(--radius);
@@ -113,3 +114,6 @@ code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size
   background: #eef2f6; color: var(--accent); margin-left: .3rem; }
 .tag.rake { background: #fdf6e3; color: #a07400; }
 .tag.toit { background: #e8eee2; color: #50701d; }
+.row-toit { background: #eef2e8; }
+.plans figure.wide { grid-column: 1 / -1; }
+[hidden] { display: none !important; }

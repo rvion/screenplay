@@ -1,30 +1,41 @@
 # Backlog & questions ouvertes
 
-## À confirmer avec l'utilisateur
-- [x] **Pente** : relevée de 10 → **25 cm** (≈ 10 %) après confirmation. Reste à vérifier la
-      mini exacte du fabricant de panneaux toiture.
-- [ ] **Hauteur d'égout avant** réelle souhaitée (hypothèse 240 cm ; arrière en découle = 215 cm).
-- [ ] **Porte** : dimensions (90×210 ?), position exacte sur A, sens de charnière.
-- [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm) → recalcule le débit.
-- [ ] **Âme** : PIR vs laine de roche (feu/acoustique vs poids/prix).
+## À trancher avec l'utilisateur
+- [ ] **Coin arrière-droit hors dalle** (emprise 230 × 246 sur une dalle à coin coupé) :
+      compléter la dalle sous le triangle 90 × 86 (coulage / plots), ou réduire `gauche_G` pour
+      tenir sur la partie pleine (ex. 230 × 160 = 3,7 m², plus petit). Le site calcule et
+      affiche le débord en direct.
+- [ ] **Portée du toit** ≈ 2,8 m en 60 mm sans panne : confirmer dans le tableau de portées du
+      fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.
+- [ ] **Pente** : 25 cm (≈ 10 %). Vérifier la mini exacte du fabricant de panneaux toiture.
+- [ ] **Hauteur des murs** réelle souhaitée (hypothèse 215 arrière / 240 avant).
+- [ ] **Porte** : dimensions (90 × 210 ?), position (à droite par défaut), sens de charnière.
+- [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
+- [ ] **Âme** : PIR vs laine de roche.
 - [ ] Besoin **électricité / chauffage / plancher** à intégrer (bureau) ?
 
 ## Améliorations possibles (non bloquantes)
-- [x] **Ouvertures paramétriques** (porte + fenêtres D et B) : débit, plans, élévations, 3D.
-- [x] **3D** : nervures de toiture, gouttière arrière + descente, rail de pied, sol enherbé,
-      dalle béton blanche débordante.
-- [ ] Élévations : ajouter cotes de la porte et lignes d'arase sur les SVG.
-- [ ] Plan de toiture / dalle : vrai offset de polygone (mitré) au lieu de la dilatation radiale.
+- [ ] Réintroduire des **fenêtres** (liste d'ouvertures) si la porte seule éclaire trop peu.
+- [ ] Élévations : cotes des joints de panneaux et de la porte plus détaillées.
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
-- [ ] Fenêtres : choix fixe vs ouvrant, et bilan thermique chiffré (déperditions vitrage).
-- [x] **Métré chiffré** (prix indicatifs paramétrables) + widget budget + liens fournisseurs.
-- [x] **Éditeur de config interactif** sur le site : panneau de contrôles (sliders + ouvertures).
-- [x] **Port complet en TypeScript** (`compute.ts`), Python retiré, **tout recalculé côté client**
-      (plans/débit/budget/3D) ; parité prouvée puis snapshots golden + smoke DOM (cf. D14).
+- [ ] Bilan thermique chiffré (vitrage de la porte, ponts thermiques).
 - [ ] Export PDF imprimable du cahier (via le site, `@media print`).
 - [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).
+- [ ] Renommer la branche par défaut (`claude/garden-shed-docs-n7eq2b` → `main`) et mettre à jour
+      `pages.yml` (aucune branche `main`/`master` n'existe aujourd'hui).
+
+## Fait (2026-09-06, simplification)
+- [x] **Rectangle 4 faces** au lieu du pentagone à coin coupé ; dalle réelle conservée en
+      `dalle_cm` pour calculer le débord.
+- [x] **Rehausse** : murs rectangulaires + 1 bande coupée en diagonale (2 triangles) + 1 bandeau ;
+      plan de coupe SVG dédié ; joints dessinés en 3D et sur les élévations.
+- [x] **Porte seule** (plus de fenêtres) ; contrôles réduits ; montage en 6 étapes ;
+      épaisseur fixée à 60 mm autoportant.
+- [x] Ouvertures paramétriques, 3D enrichie, budget + fournisseurs, éditeur interactif, port TS
+      complet (historique, cf. D11–D14).
 
 ## Dette / limites connues
-- Le contour de toiture est approximé (bbox dilatée + coupe), pas un offset exact.
 - Quantités de visserie / accessoires = estimations à recouper avec le fabricant.
 - Pas de validation structurelle (vent/neige/charge) — hors périmètre actuel.
+- `npm test` / `npm run typecheck` passent par `shipkit ci` ; les variantes `:raw` lancent
+  directement les tests Node.

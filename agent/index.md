@@ -1,7 +1,8 @@
 # screenplay — abri de jardin / bureau paramétrique
 
-Conception, plans, débit, budget et modèle 3D d'un petit abri de jardin (5 faces, coin coupé,
-panneaux sandwich 60 mm) que Rémi construit lui-même sur une dalle déjà coulée. Projet
+Conception, plans, débit, budget et modèle 3D d'un petit abri de jardin (rectangle 4 faces,
+panneaux sandwich 60 mm autoportants, pente par rehausse, une porte) que Rémi construit
+lui-même sur une dalle déjà coulée. Projet
 **spec-first** : la conception est écrite *avant* le code, dans ce dossier `agent/`.
 Stack : TypeScript pur (`site/src/compute.ts`) bundlé par esbuild en un seul `site/app.js`,
 Three.js via CDN, tests Node (snapshots golden + jsdom), publication GitHub Pages.
@@ -51,6 +52,6 @@ Toute la spécification vit dans ce dossier — la mettre à jour AVANT de chang
 | besoins, hypothèses à valider, non-objectifs | `agent/01-besoins.md` |
 | `compute.ts`, livrables, sections du site, contraintes techniques | `agent/02-specification.md` |
 | pourquoi une chose est comme elle est (ADR) | `agent/03-decisions.md` |
-| `emprise_cm`, sommets, toiture, têtes de murs | `agent/04-geometrie.md` |
+| `emprise_cm`, `dalle_cm`, rehausse (triangles + bandeau), toiture | `agent/04-geometrie.md` |
 | arborescence, `npm run build/emit`, fichiers générés, Pages | `agent/05-pipeline.md` |
 | questions ouvertes, améliorations, dette | `agent/06-backlog.md` |

@@ -19,7 +19,9 @@ cahier de montage et points de vigilance — le tout **paramétrique** et publi�
    `site/app.js`, pas de framework) ; rendu 3D via Three.js (CDN).
    Doit fonctionner hors-ligne (`file://`) et sur GitHub Pages.
 5. **Lisible par un humain non-pro du bâtiment.** Le livrable explique aussi *à quoi faire
-   attention* (pente, condensation, drainage, angle non orthogonal, porte extérieure).
+   attention* (pente, portée du toit, condensation, débord de dalle, porte extérieure).
+6. **Le plus simple qui marche.** Rectangle, coupes droites, une seule ouverture, aucune
+   ossature : moins de pièces, moins d'étapes, moins cher.
 
 ## Définition de « terminé »
 - `params.json` décrit l'abri réel ; `site/src/compute.ts` produit plans + débit + achats + data 3D.

@@ -1,53 +1,53 @@
 # Géométrie (détail mathématique)
 
-## Entrées (`emprise_cm`)
-| Mesure | Symbole | Valeur (cm) |
+## Entrées
+| Paramètre | Symbole | Valeur (cm) |
 |---|---|---|
-| Gauche | G | 246 |
-| Avant | A | 230 |
-| Droite jusqu'à la coupe | D | 160 |
-| Arrière jusqu'à la coupe | B | 140 |
+| `emprise_cm.avant_A` (largeur) | A | 230 |
+| `emprise_cm.gauche_G` (profondeur) | G | 246 |
+| `murs.hauteur_cm` (panneaux de mur = arrière) | H | 215 |
+| `toit.pente_chute_cm` (rehausse avant = chute) | c | 25 |
 
 ## Sommets (plan, origine = coin avant-gauche)
 ```
-FL  = (0,   0)      coin avant-gauche
-FR  = (A,   0)   = (230,   0)   coin avant-droit
-Dfin= (A,   D)   = (230, 160)   fin de la face Droite (début de la coupe)
-Bfin= (B,   G)   = (140, 246)   fin de la face Arrière (autre bout de la coupe)
-BL  = (0,   G)   = (0,   246)   coin arrière-gauche
+FL = (0, 0)        coin avant-gauche
+FR = (A, 0)   = (230,   0)   coin avant-droit
+BR = (A, G)   = (230, 246)   coin arrière-droit
+BL = (0, G)   = (0,   246)   coin arrière-gauche
 ```
-Pentagone antihoraire : `FL → FR → Dfin → Bfin → BL`.
+Rectangle antihoraire : `FL → FR → BR → BL`. Faces : A = FL→FR (230), D = FR→BR (246),
+B = BR→BL (230), G = BL→FL (246). Périmètre = 2(A+G) = **952 cm**. Aire = A·G = **5,66 m²**.
 
-## Longueurs de faces
-- A = FL→FR = **230**
-- D = FR→Dfin = **160**
-- **C = Dfin→Bfin = √((230−140)² + (160−246)²) = √(90² + 86²) ≈ 124,5 cm** *(calculée)*
-- B = Bfin→BL = **140**
-- G = BL→FL = **246**
-- Périmètre ≈ **900,5 cm**
+## Dalle réelle (`dalle_cm`) et partie hors dalle
+Dalle = pentagone `(0,0) (230,0) (230,160) (140,246) (0,246)` ; coin coupé de largeur
+`cw = 230−140 = 90` et profondeur `ch = 246−160 = 86` (coupe ≈ 124,5 cm).
+Avec `uA = clamp((A−140)/cw)`, `vG = clamp((G−160)/ch)` et `t = max(0, uA+vG−1)`, le
+triangle de l'emprise hors dalle a pour côtés `t·cw × t·ch`. Par défaut `t = 1` ⇒
+**90 × 86 cm = 0,39 m²** au coin arrière-droit. Pour `G ≤ 160` ou `A ≤ 140` : rien hors dalle.
 
-## Aire (formule du lacet)
-`aire = ½ |Σ (xᵢ·yᵢ₊₁ − xᵢ₊₁·yᵢ)| ≈ 52 710 cm² ≈ 5,27 m²` ✅ (cible ~5 m²).
+## Hauteurs et rehausse
+- `h(y) = H + c·(1 − y/G) = 215 + 25·(1 − y/246)` : avant **240**, arrière **215**.
+- Pente = `c / G = 25/246 ≈ 10,2 %` soit **5,8°** ; rampant = `√(G² + c²) ≈ 247,3 cm`.
+- **Murs** : 4 faces, hauteur H = 215 partout (rectangles).
+- **Rehausse** posée sur les murs :
 
-## Toiture mono-pente
-- Profondeur de référence (run) = `G = 246 cm`.
-- Chute = `pente_chute_cm = 25 cm` (relevée de 10 → 25 cm après confirmation, cf. D6).
-- `h(y) = hauteur_avant − chute · y / G = 240 − 25 · y/246`.
-- Hauteurs par sommet : avant **240**, `Dfin` ≈ **223,7**, `Bfin`/`BL` **215**.
-- Pente = `25 / 246 ≈ 10,2 %` soit **5,8°**. ✅ dans la plage admise (vérifier mini fabricant).
-- Sens d'écoulement : `+y` (vers l'arrière) ; **point bas = coin arrière-droit `Bfin`**.
+| Face | pièce | dimensions | hauteur finie |
+|---|---|---|---|
+| A (avant) | bandeau rectangulaire | 230 × 25 | 240 → 240 |
+| D (droite) | triangle rectangle | base 246, hauteur 25 | 240 → 215 |
+| B (arrière) | aucune | — | 215 → 215 |
+| G (gauche) | triangle rectangle | base 246, hauteur 25 | 215 → 240 |
 
-## Têtes de murs
-| Face | début → fin (cm) | biais ? |
-|---|---|---|
-| A (avant) | 240 → 240 | non |
-| D (droite) | 240 → 223,7 | oui |
-| C (coupe) | 223,7 → 215 | oui |
-| B (arrière) | 215 → 215 | non |
-| G (gauche) | 240 → 215 | oui |
+Les deux triangles proviennent d'**une bande 246 × 25 coupée en diagonale** ; le second est
+tourné de 180° dans son plan (le parement extérieur reste dehors). Bande + bandeau (230 × 25)
+tiennent dans **un panneau 246 × 100** (50 cm utilisés) : `ceil(2c / largeur_utile)` panneau.
+
+## Toiture
+- Rectangle débordant : largeur `A + dG + dD = 260`, profondeur `G + dav + darr = 281`.
+- Panneaux dans le sens de la pente : `ceil(260/100) = 3`, longueur `281·√(1+(c/G)²) ≈ 282,4 cm`.
+- Portée libre ≈ 2,81 m (à vérifier contre le tableau du fabricant pour 60 mm).
 
 ## Vérification
-Le site affiche aire, périmètre, C, pente et débit (recalculés en direct par `compute.ts`) ; ces
-valeurs doivent correspondre au tableau ci-dessus. Les snapshots golden (`npm test`) figent cette
-sortie. Toute modification de `emprise_cm`, `murs.hauteur_avant_cm` ou `toit.pente_chute_cm` se
-répercute automatiquement.
+Le site affiche aire, périmètre, pente, rampant, débit et le triangle hors dalle (recalculés en
+direct par `compute.ts`) ; ces valeurs doivent correspondre au tableau ci-dessus. Les snapshots
+golden (`npm run test:raw`) figent cette sortie.

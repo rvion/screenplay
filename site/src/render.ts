@@ -14,27 +14,28 @@ function setText(id: string, txt: string) {
 }
 
 function renderKpis(core: Core, p: Params) {
-  const g = core.geometrie;
+  const g = core.geometrie, t = core.debit;
   const data: [string, string][] = [
-    [g.aire_m2 + " m²", "Surface au sol"],
+    [g.aire_m2 + " m²", `Surface (${g.cotes.A} × ${g.cotes.G} cm)`],
     [g.pente.pourcent + " %", "Pente toiture (" + g.pente.degres + "°)"],
-    [p.panneau.epaisseur_mm + " mm", "Panneaux sandwich"],
-    [core.debit.commande_panneaux_m2 + " m²", "Panneaux à commander"],
+    [`${t.murs.total_panneaux + t.rehausse.nb_panneaux} + ${t.toit.nb_panneaux}`, "Panneaux mur + toit"],
+    [t.commande_panneaux_m2 + " m²", "À commander (avec chute)"],
   ];
   setHTML("#kpis", data.map(([v, l]) =>
     `<div class="card kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join(""));
 }
+
+const REH: Record<string, string> = { bandeau: "bandeau", triangle: "triangle", aucune: "—" };
 
 function renderFaces(core: Core) {
   const g = core.geometrie, t = core.debit.toit;
   let rows = g.faces.map((f: any) =>
     `<tr><td><b>${f.cle}</b> · ${f.libelle}</td>` +
     `<td>${f.longueur_cm} cm</td>` +
-    `<td>${f.hauteur_debut_cm} → ${f.hauteur_fin_cm} cm` +
-    (f.rake ? ' <span class="tag rake">biais</span>' : "") + `</td></tr>`).join("");
-  rows += `<tr style="background:#eef2e8"><td><b>${t.face}</b> · ${t.libelle} <span class="tag toit">toit</span></td>` +
-    `<td>${(t.longueur_panneau_cm / 100).toFixed(2)} m <span class="note">(rampant)</span></td>` +
-    `<td>${g.hauteur_avant_cm} → ${g.hauteur_arriere_cm} cm · pente ${g.pente.pourcent}%</td></tr>`;
+    `<td>${f.hauteur_mur_cm} cm</td>` +
+    `<td>${f.rehausse === "aucune" ? "—" : `<span class="tag rake">${REH[f.rehausse]}</span> → ${f.hauteur_debut_cm}–${f.hauteur_fin_cm} cm`}</td></tr>`).join("");
+  rows += `<tr class="row-toit"><td><b>${t.face}</b> · ${t.libelle} <span class="tag toit">toit</span></td>` +
+    `<td>${t.largeur_cm} cm</td><td colspan="2">${(t.longueur_panneau_cm / 100).toFixed(2)} m de rampant · ${g.hauteur_avant_cm} → ${g.hauteur_arriere_cm} cm</td></tr>`;
   setHTML("#faces tbody", rows);
 }
 
@@ -45,23 +46,23 @@ function renderPlans(core: Core) {
   }
 }
 
-function renderDebit(core: Core) {
-  const t = core.debit;
-  let rows = t.murs.lignes.map((r: any) =>
-    `<tr><td><b>${r.face}</b> · ${r.libelle}</td>` +
-    `<td><span class="tag">mur</span></td>` +
-    `<td>${r.longueur_cm} × ${r.hauteur_cm} cm` +
-    (r.rake ? ' <span class="tag rake">tête en biais</span>' : "") + `</td>` +
-    `<td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m²</td></tr>`).join("");
-  rows += `<tr style="background:#eef2e8"><td><b>${t.toit.face}</b> · ${t.toit.libelle}</td>` +
-    `<td><span class="tag toit">toit</span></td>` +
-    `<td>${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m (sens de la pente) · couvre ${t.toit.aire_couverte_m2} m²</td>` +
+function renderDebit(core: Core, p: Params) {
+  const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
+  let rows = t.murs.lignes.map((x: any) =>
+    `<tr><td><b>${x.face}</b> · ${x.libelle}</td><td><span class="tag">mur</span></td>` +
+    `<td>${x.nb_panneaux} × ${cover} × ${x.hauteur_cm} cm pour ${x.longueur_cm} cm — coupes droites</td>` +
+    `<td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m²</td></tr>`).join("");
+  rows += `<tr><td><b>R</b> · Rehausse</td><td><span class="tag rake">mur</span></td>` +
+    `<td>${r.pieces.map((q: any) => `${q.nb} × ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td>` +
+    `<td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m²</td></tr>`;
+  rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> · ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td>` +
+    `<td>${t.toit.nb_panneaux} × ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente · couvre ${t.toit.aire_couverte_m2} m²</td>` +
     `<td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m²</td></tr>`;
   setHTML("#debit tbody", rows);
   setHTML("#debit-resume",
-    `Murs : <b>${t.murs.total_panneaux} panneaux</b> (~${t.murs.aire_brute_m2} m² brut, ${t.murs.aire_nette_m2} m² net). ` +
-    `Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. ` +
-    `Commande totale avec chute ${t.facteur_chute_pct}% : <b>${t.commande_panneaux_m2} m²</b>.`);
+    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m² brut, ${t.murs.aire_nette_m2} m² net) ` +
+    `+ <b>${r.nb_panneaux} panneau</b> de rehausse. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. ` +
+    `Commande totale avec chute ${t.facteur_chute_pct} % : <b>${t.commande_panneaux_m2} m²</b>.`);
 }
 
 function renderAchats(core: Core) {
@@ -79,18 +80,26 @@ function renderBudget(core: Core) {
 }
 
 function renderVigilance(core: Core, p: Params) {
-  const pente = core.geometrie.pente;
+  const g = core.geometrie, pente = g.pente, d = g.dalle;
   setText("cover", p.panneau.largeur_utile_cm + " cm");
   setText("v-chute", String(pente.chute_cm));
   setText("v-pente", pente.pourcent + " %");
   setText("v-pente-deg", pente.degres + "°");
+  setText("v-portee", (core.debit.toit.portee_cm / 100).toFixed(2) + " m");
+  setText("v-ep", String(p.panneau.epaisseur_mm));
+  const card = document.getElementById("v-dalle");
+  if (card && d) {
+    const hors = d.hors_dalle_m2 > 0 || d.depasse_bbox;
+    card.hidden = !hors;
+    setText("v-dalle-tri", `${d.hors_dalle_triangle_cm[0]} × ${d.hors_dalle_triangle_cm[1]} cm (${d.hors_dalle_m2} m²)`);
+  } else if (card) card.hidden = true;
 }
 
 export function renderAll(core: Core, p: Params) {
   renderKpis(core, p);
   renderFaces(core);
   renderPlans(core);
-  renderDebit(core);
+  renderDebit(core, p);
   renderAchats(core);
   renderBudget(core);
   renderVigilance(core, p);

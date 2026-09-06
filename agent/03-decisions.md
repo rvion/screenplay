@@ -95,3 +95,38 @@ Dans la foulée, `shipkit init` a câblé le dépôt : `repo.config.ts` (visibil
 `test`/`typecheck` routés par `shipkit ci` (`*:raw` = l'outil brut, utilisé par la CI GitHub),
 `.vscode/tasks.json` (hub sur 4885), `.claude/settings.json` (silencieux d'attribution + une seule
 porte d'entrée pour les runners), `rvlib-shipkit` en devDependency.
+
+## D16 — Emprise rectangulaire (abandon du coin coupé)
+Le bâtiment devient un **rectangle A × G** à 4 faces ; le coin coupé de la dalle n'est plus suivi
+par les murs. `dalle_cm` conserve les mesures réelles, uniquement pour calculer la partie de
+l'emprise **hors dalle** (triangle 90 × 86 cm par défaut) et l'afficher (plan, 3D, vigilance).
+*Pourquoi :* « l'angle est une mauvaise idée, un carré est mieux, faisons plus simple » : 4 angles à
+90°, profils standard, aucune coupe d'about en biais, moins de pièces. *Écarté :* réduire d'office
+l'emprise à 230 × 160 pour tenir sur la dalle (3,7 m², trop petit) — c'est à l'utilisateur de
+trancher entre compléter la dalle et réduire G. *Remplace* les sommets `Dfin`/`Bfin` et la face C.
+
+## D17 — Pente par rehausse : murs rectangulaires + 2 triangles + 1 bandeau
+Tous les panneaux de mur sont des **rectangles identiques** de hauteur `murs.hauteur_cm` (coupes
+droites). La pente vient d'une **rehausse** : une bande `G × chute` coupée **en diagonale** donne
+les deux triangles des faces G et D (le second tourné de 180° dans son plan, même parement dehors),
+plus un bandeau `A × chute` sur la face A ; le mur B reste à H. Les deux bandes sortent d'un seul
+panneau (`debit.rehausse`, plan de coupe `plan-rehausse.svg`). *Pourquoi :* les coupes d'arase
+en biais sur chaque panneau (D5) étaient « bizarres » ; ici une seule coupe en biais dans tout
+le projet. *Écarté :* garder l'arase par panneau ; poser les panneaux latéraux horizontaux.
+*Remplace* D5 pour la tête des murs (la pose verticale est conservée).
+
+## D18 — Une seule ouverture : la porte vitrée
+`ouvertures[]` (D11) est remplacé par un objet `porte` unique ; les fenêtres par défaut sont
+retirées, ainsi que l'éditeur d'ouvertures du site. La logique interne reste une liste
+(`resolve_openings`) pour réintroduire des fenêtres sans refonte. *Pourquoi :* demande explicite
+(« pas de fenêtre pour l'instant, une seule porte comme source de lumière ») ; moins de pièces,
+moins de déperditions, budget réduit. *Complète* D8.
+
+## D19 — Panneaux 60 mm autoportants, épaisseur fixée, site allégé
+L'épaisseur n'est plus un réglage du site : **60 mm** est la valeur du projet, choisie parce que
+ces panneaux sont **autoportants** (pas d'ossature secondaire, seulement rail de pied + profils
+d'angle). Le site est réduit : réglages emprise/murs/toit/porte/panneaux (prix repliés), montage
+en 6 étapes, vigilance recentrée (débord de dalle, portée du toit, pente, condensation, porte).
+*Pourquoi :* « le site est trop d'étapes, trop complexe, trop cher » ; une épaisseur plus fine
+imposerait une ossature. *À vérifier :* portée libre du toit (~2,8 m) dans le tableau du
+fabricant. *Complète* D7 ; *rend caduc* le choix 40/60/80/100 de D13/D14.

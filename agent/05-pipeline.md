@@ -23,7 +23,7 @@ screenplay/
     ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
     ├── .nojekyll
-    ├── assets/*.svg    # GÉNÉRÉS (plans + façades, snapshot statique pour le README)
+    ├── assets/*.svg    # GÉNÉRÉS : plan-sol, plan-toit, plan-rehausse, facade-{A,D,B,G}
     └── data/derived.json # GÉNÉRÉ (référence)
 ```
 
@@ -32,7 +32,7 @@ screenplay/
 npm ci                         # une fois (esbuild, typescript, jsdom)
 npm run build                  # bundle src/main.ts -> site/app.js
 npm run emit                   # cli.ts --emit : params.js + assets/*.svg + derived.json + cache-bust
-npm test                       # snapshots golden + smoke DOM (routé par shipkit ; test:raw = brut)
+npm run test:raw               # snapshots golden + smoke DOM (npm test passe par shipkit ci) (routé par shipkit ; test:raw = brut)
 shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré
 ```
 La CI GitHub (`pages.yml`) appelle `npm run test:raw` : shipkit (bun) n'y est pas installé.
@@ -57,4 +57,4 @@ python3 -m http.server -d site 8000   # puis http://localhost:8000
 3. Le site doit marcher en `file://` (donc `params.js`, pas de `fetch`).
 4. La 3D doit échouer proprement sans WebGL (les plans restent lisibles).
 5. Quand on touche la géométrie/calcul : mettre à jour `agent/04-geometrie.md`, relancer
-   `npm run build && npm run emit`, et vérifier/mettre à jour les snapshots (`npm test`).
+   `npm run build && npm run emit`, et vérifier/mettre à jour les snapshots (`npm run test:raw`).

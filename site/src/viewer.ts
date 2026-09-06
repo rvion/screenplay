@@ -1,5 +1,7 @@
-// Scene Three.js — port de l'ancien app.js. Reconstruit le batiment a chaque
-// changement de parametres via rebuild(model3d). THREE est externe (importmap CDN).
+// Scene Three.js. Reconstruit le batiment a chaque changement de parametres via
+// rebuild(model3d). THREE est externe (importmap CDN). Rendu volontairement
+// simple : dalle reelle (coin coupe), rail, murs rectangulaires + rehausse
+// (joints visibles), porte vitree, toit debordant nervure, gouttiere arriere.
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -20,28 +22,7 @@ function makeSky() {
   return tex;
 }
 
-function yRangeAtX(poly: number[][], x: number): [number, number] | null {
-  const ys: number[] = [], n = poly.length;
-  for (let i = 0; i < n; i++) {
-    const x1 = poly[i][0], y1 = poly[i][1], x2 = poly[(i + 1) % n][0], y2 = poly[(i + 1) % n][1];
-    if ((x1 <= x && x < x2) || (x2 <= x && x < x1)) {
-      const t = (x - x1) / (x2 - x1);
-      ys.push(y1 + t * (y2 - y1));
-    }
-  }
-  return ys.length < 2 ? null : [Math.min(...ys), Math.max(...ys)];
-}
-
-function dilate(fp: number[][], over: number): number[][] {
-  const n = fp.length;
-  const gx = fp.reduce((s, p) => s + p[0], 0) / n;
-  const gy = fp.reduce((s, p) => s + p[1], 0) / n;
-  return fp.map((p) => {
-    const dx = p[0] - gx, dy = p[1] - gy, d = Math.hypot(dx, dy) || 1;
-    return [p[0] + (dx / d) * over, p[1] + (dy / d) * over];
-  });
-}
-
+// Prisme vertical (dalle, rail) sur un contour quelconque (convexe ou simple).
 function prismGeo(V: (x: number, y: number, z: number) => Vec, outline: number[][], zTop: number, zBot: number) {
   const n = outline.length;
   const top = outline.map((p) => V(p[0], p[1], zTop));
@@ -59,18 +40,22 @@ function prismGeo(V: (x: number, y: number, z: number) => Vec, outline: number[]
   return g;
 }
 
-function addRoofSlab(scene: Vec, V: any, fp: number[][], hs: number[], thk: number, overhang: number, mat: Vec) {
-  const n = fp.length;
-  const outer = dilate(fp, overhang);
-  const top = outer.map((p, i) => V(p[0], p[1], hs[i] + thk));
-  const bot = outer.map((p, i) => V(p[0], p[1], hs[i]));
+function offsetRect(r: number[][], d: number): number[][] {
+  const xs = r.map((p) => p[0]), ys = r.map((p) => p[1]);
+  const x0 = Math.min(...xs) - d, x1 = Math.max(...xs) + d, y0 = Math.min(...ys) - d, y1 = Math.max(...ys) + d;
+  return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+}
+
+function addRoofSlab(scene: Vec, V: any, outline: number[][], roofZ: (y: number) => number, thk: number, mat: Vec) {
+  const n = outline.length;
+  const top = outline.map((p) => V(p[0], p[1], roofZ(p[1]) + thk));
+  const bot = outline.map((p) => V(p[0], p[1], roofZ(p[1])));
   const pts: Vec[] = [];
   for (let i = 1; i < n - 1; i++) pts.push(top[0], top[i], top[i + 1]);
   for (let i = 1; i < n - 1; i++) pts.push(bot[0], bot[i + 1], bot[i]);
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n;
-    pts.push(top[i], bot[i], bot[j]);
-    pts.push(top[i], bot[j], top[j]);
+    pts.push(top[i], bot[i], bot[j], top[i], bot[j], top[j]);
   }
   const g = new THREE.BufferGeometry();
   g.setFromPoints(pts);
@@ -80,43 +65,37 @@ function addRoofSlab(scene: Vec, V: any, fp: number[][], hs: number[], thk: numb
   scene.add(mesh);
 }
 
-function addRoofRibs(parent: Vec, V: any, fp: number[][], roofZ: (y: number) => number, thk: number, over: number, mat: Vec) {
-  const outline = dilate(fp, over);
-  const xs = outline.map((p) => p[0]);
-  const minx = Math.min(...xs), maxx = Math.max(...xs);
+function addRoofRibs(parent: Vec, V: any, outline: number[][], roofZ: (y: number) => number, thk: number, mat: Vec) {
+  const xs = outline.map((p) => p[0]), ys = outline.map((p) => p[1]);
+  const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
   const step = 0.18, ribW = 0.045, eps = 0.012, inset = 0.05;
   const zt = (yy: number) => roofZ(yy) + thk + eps;
+  const y0 = miny + inset, y1 = maxy - inset;
   const pts: Vec[] = [];
   for (let x = minx + 0.06; x < maxx - ribW; x += step) {
-    const yr = yRangeAtX(outline, x + ribW / 2);
-    if (!yr) continue;
-    const y0 = yr[0] + inset, y1 = yr[1] - inset;
-    if (y1 - y0 < 0.08) continue;
     pts.push(V(x, y0, zt(y0)), V(x + ribW, y0, zt(y0)), V(x + ribW, y1, zt(y1)),
              V(x, y0, zt(y0)), V(x + ribW, y1, zt(y1)), V(x, y1, zt(y1)));
   }
-  if (!pts.length) return;
   const g = new THREE.BufferGeometry();
   g.setFromPoints(pts);
   g.computeVertexNormals();
   parent.add(new THREE.Mesh(g, mat));
 }
 
-function addBackGutter(scene: Vec, V: any, fp: number[][], roofZ: (y: number) => number, over: number, mat: Vec) {
-  const Bend = fp[3], BL = fp[4];
-  const yb = Math.max(Bend[1], BL[1]) + over * 0.8;
-  const x0 = Math.min(Bend[0], BL[0]), x1 = Math.max(Bend[0], BL[0]);
-  const zc = roofZ(Math.max(Bend[1], BL[1])) - 0.03;
-  const len = (x1 - x0) + 0.12;
-  const gutter = new THREE.Mesh(new THREE.BoxGeometry(len, 0.06, 0.08), mat);
+function addGutter(scene: Vec, V: any, a: number[], b: number[], roofZ: (y: number) => number, over: number, mat: Vec) {
+  const yb = Math.max(a[1], b[1]) + over * 0.8;
+  const x0 = Math.min(a[0], b[0]), x1 = Math.max(a[0], b[0]);
+  const zc = roofZ(Math.max(a[1], b[1])) - 0.03;
+  const gutter = new THREE.Mesh(new THREE.BoxGeometry((x1 - x0) + 0.12, 0.06, 0.08), mat);
   gutter.position.copy(V((x0 + x1) / 2, yb, zc));
   gutter.castShadow = true;
   scene.add(gutter);
   const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, Math.max(zc, 0.1), 14), mat);
-  pipe.position.copy(V(Bend[0], yb, zc / 2));
+  pipe.position.copy(V(a[0], yb, zc / 2));
   scene.add(pipe);
 }
 
+// Mur = bande de quads entre 0 et topAt(s) (lineaire), perce des trous `holes`.
 function addWall(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: number, holes: any[], mat: Vec) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
@@ -141,37 +120,37 @@ function addWall(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: n
   scene.add(mesh);
 }
 
-function addGlass(scene: Vec, V: any, a: number[], b: number[], o: any) {
+// Joints de panneaux : verticaux tous les `cover`, + joint mur/rehausse a `wallH`.
+function addJoints(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: number, wallH: number, cover: number, mat: Vec) {
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
+  const nx = uy * 0.004, ny = -ux * 0.004; // legerement devant le mur (exterieur)
+  const P = (s: number, h: number) => V(a[0] + ux * s + nx, a[1] + uy * s + ny, h);
+  const pts: Vec[] = [];
+  for (let s = cover; s < len - 1e-4; s += cover) pts.push(P(s, 0), P(s, wallH));
+  if (Math.max(ha, hb) > wallH + 1e-4) pts.push(P(0, wallH), P(len, wallH));
+  if (!pts.length) return;
+  scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
+}
+
+function addDoor(scene: Vec, V: any, a: number[], b: number[], o: any) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
   const P = (s: number, h: number) => V(a[0] + ux * s, a[1] + uy * s, h);
-  const s0 = o.offset_m, s1 = o.offset_m + o.width_m, y0 = o.sill_m, y1 = o.sill_m + o.height_m;
   const glass = new THREE.MeshPhysicalMaterial({
     color: 0xbfe3ef, transparent: true, opacity: 0.34, roughness: 0.05, transmission: 0.6, side: THREE.DoubleSide,
   });
-  if (o.type === "porte") {
-    const hinge = new THREE.Group();
-    hinge.position.copy(P(s0, 0));
-    const dir = new THREE.Vector3().subVectors(P(s1, 0), P(s0, 0));
-    dir.y = 0; dir.normalize();
-    hinge.rotation.y = -Math.atan2(dir.z, dir.x);
-    const lg = new THREE.PlaneGeometry(o.width_m, o.height_m);
-    lg.translate(o.width_m / 2, o.height_m / 2, 0);
-    const leaf = new THREE.Mesh(lg, glass);
-    leaf.rotation.y = -0.6;
-    hinge.add(leaf);
-    scene.add(hinge);
-  } else {
-    const g = new THREE.BufferGeometry();
-    g.setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y0), P(s1, y1), P(s0, y1)]);
-    g.computeVertexNormals();
-    scene.add(new THREE.Mesh(g, glass));
-    const frame = new THREE.LineLoop(
-      new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
-      new THREE.LineBasicMaterial({ color: 0x55626b })
-    );
-    scene.add(frame);
-  }
+  const hinge = new THREE.Group();
+  hinge.position.copy(P(o.offset_m, 0));
+  const dir = new THREE.Vector3().subVectors(P(o.offset_m + o.width_m, 0), P(o.offset_m, 0));
+  dir.y = 0; dir.normalize();
+  hinge.rotation.y = -Math.atan2(dir.z, dir.x);
+  const lg = new THREE.PlaneGeometry(o.width_m, o.height_m);
+  lg.translate(o.width_m / 2, o.height_m / 2, 0);
+  const leaf = new THREE.Mesh(lg, glass);
+  leaf.rotation.y = -0.6;
+  hinge.add(leaf);
+  scene.add(hinge);
 }
 
 function populate(group: Vec, m: Model) {
@@ -179,7 +158,7 @@ function populate(group: Vec, m: Model) {
   const cx = fp.reduce((s: number, p: number[]) => s + p[0], 0) / n;
   const cy = fp.reduce((s: number, p: number[]) => s + p[1], 0) / n;
   const V = (x: number, y: number, z: number) => new THREE.Vector3(x - cx, z, cy - y);
-  const roofZ = (ym: number) => (m.roof_front_m != null ? m.roof_front_m - (m.roof_slope || 0) * ym : hs[0]);
+  const roofZ = (ym: number) => m.roof_front_m - (m.roof_slope || 0) * ym;
 
   const panelMat = new THREE.MeshStandardMaterial({ color: 0xeef0f2, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
   const roofMat = new THREE.MeshStandardMaterial({ color: 0x9aa7b4, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
@@ -187,9 +166,11 @@ function populate(group: Vec, m: Model) {
   const concreteMat = new THREE.MeshStandardMaterial({ color: 0xeae7df, roughness: 0.95, side: THREE.DoubleSide });
   const railMat = new THREE.MeshStandardMaterial({ color: 0x6b7177, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 0xb4bac0, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
+  const jointMat = new THREE.LineBasicMaterial({ color: 0x8a9096 });
 
-  group.add(new THREE.Mesh(prismGeo(V, dilate(fp, 0.22), 0.05, -0.12), concreteMat));
-  group.add(new THREE.Mesh(prismGeo(V, dilate(fp, 0.03), 0.10, 0.0), railMat));
+  // Dalle reelle (pentagone si coin coupe) : montre ce qui deborde.
+  group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.05, -0.12), concreteMat));
+  group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.02), 0.10, 0.0), railMat));
 
   const openings = m.openings || [];
   for (let i = 0; i < n; i++) {
@@ -198,13 +179,15 @@ function populate(group: Vec, m: Model) {
       s0: o.offset_m, s1: o.offset_m + o.width_m, y0: o.sill_m, y1: o.sill_m + o.height_m,
     }));
     addWall(group, V, a, b, ha, hb, holes, panelMat);
+    addJoints(group, V, a, b, ha, hb, m.wall_height_m, m.panel_cover_m || 1, jointMat);
   }
-  for (const o of openings) addGlass(group, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
+  for (const o of openings) addDoor(group, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
 
-  const over = m.roof_overhang_m || 0.15;
-  addRoofSlab(group, V, fp, hs, m.thickness_m, over, roofMat);
-  addRoofRibs(group, V, fp, roofZ, m.thickness_m, over, ribMat);
-  addBackGutter(group, V, fp, roofZ, over, metalMat);
+  const outline = m.roof_outline || offsetRect(fp, 0.15);
+  addRoofSlab(group, V, outline, roofZ, m.thickness_m, roofMat);
+  addRoofRibs(group, V, outline, roofZ, m.thickness_m, ribMat);
+  const gi = m.gutter_face_index == null ? 2 : m.gutter_face_index;
+  addGutter(group, V, fp[gi], fp[(gi + 1) % n], roofZ, 0.2, metalMat);
 }
 
 export interface Viewer { rebuild(model: Model): void; }
