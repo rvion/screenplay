@@ -33,18 +33,18 @@
   "toit": {
     "pente_chute_cm": 25,
     "draine_vers": "arriere_B",
-    "debord_cm": { "avant": 10, "arriere": 10, "gauche": 10, "droite": 10 },
-    "_comment": "pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse = 1 bande G x chute coupee en diagonale (2 triangles, faces G et D) + 1 bande A x chute (bandeau avant)."
+    "debord_cm": { "avant": 10, "arriere": 10, "gauche": 0, "droite": 0 },
+    "_comment": "Debords lateraux a 0 : le toit fait exactement A de large = 2 panneaux de 100, la rive est fermee par une bavette de rive (standard). pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse = 1 bande G x chute coupee en diagonale (2 triangles, faces G et D) + 1 bande A x chute (bandeau avant)."
   },
   "porte": {
     "face": "A",
-    "largeur_cm": 90,
-    "hauteur_cm": 210,
+    "largeur_cm": 100,
+    "hauteur_cm": 215,
     "position": "droite",
-    "marge_bord_cm": 5,
+    "marge_bord_cm": 0,
     "ouverture": "vers l'exterieur",
-    "description": "porte vitree aluminium double vitrage - source principale de lumiere",
-    "_comment": "Ouverture principale. position = gauche|centre|droite sur la face (+ marge_bord_cm), ou un nombre = distance en cm depuis le debut de la face."
+    "description": "bloc-porte vitre aluminium (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper",
+    "_comment": "Largeur = largeur utile d'un panneau et hauteur = hauteur des murs : le bloc-porte REMPLACE un panneau entier (A2), pas de bande de 5 cm a decouper. position = gauche|centre|droite (+ marge_bord_cm) ou distance en cm."
   },
   "fenetres": [
     {

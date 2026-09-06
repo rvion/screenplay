@@ -3,13 +3,16 @@
 ## À trancher avec l'utilisateur
 - [ ] **Dalle : saisir le relevé exact** (`dalle_cm`, provisoire depuis le 2026-09-06 : 2 cm de
       marge, côté droit +20 cm derrière le mur B). Le site calcule et affiche tout débord en direct.
-- [ ] **Formalités** : 4,8 m² de murs mais 5,72 m² débords inclus ⇒ vérifier en mairie si une
+- [ ] **Formalités** : 4,8 m² de murs mais 5,2 m² débords inclus ⇒ vérifier en mairie si une
       déclaration préalable est due (et la distance aux limites du PLU).
 - [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
       fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.
 - [ ] **Pente** : 25 cm (≈ 10 %). Vérifier la mini exacte du fabricant de panneaux toiture.
 - [ ] **Hauteur des murs** réelle souhaitée (hypothèse 215 arrière / 240 avant).
-- [ ] **Porte** : dimensions (90 × 210 ?), position (à droite par défaut), sens de charnière.
+- [ ] **Bloc-porte** : confirmer chez le menuisier un bloc 100 × 215 dormant compris (vantail ~90),
+      sens de charnière.
+- [ ] Simplifications restantes proposées : rehausse en bois (chevron biseauté + planche) ;
+      supprimer la gouttière arrière (larmier + gravier) ; fenêtre fixe.
 - [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
 - [ ] **Âme** : PIR vs laine de roche.
 - [ ] Besoin **électricité / chauffage / plancher** à intégrer (bureau) ?

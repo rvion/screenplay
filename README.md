@@ -23,10 +23,10 @@ Une seule coupe en biais dans tout le projet. Deux ouvertures : la **porte vitr�
 
 | | |
 |---|---|
-| **Emprise** | **200 × 240 cm** = **4,8 m²** (5,72 m² débords inclus) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
-| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **10 panneaux de 215 cm** + 1 pour la rehausse |
-| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,9°), 3 panneaux toiture de ~2,61 m |
-| **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, source principale de lumière |
+| **Emprise** | **200 × 240 cm** = **4,8 m²** (5,2 m² débords inclus) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
+| **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **9 panneaux de 215 cm** + 1 pour la rehausse (le module A2 est pris par le bloc-porte) |
+| **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,9°), **2 panneaux toiture entiers** de ~2,61 m, rives affleurantes |
+| **Porte** | **bloc-porte vitré 100 × 215** (dormant compris), face A à droite : remplace le panneau A2, rien à découper |
 | **Fenêtre** | **80 × 80**, allège 110, face D, dans le 2e panneau (liste `fenetres[]`, vide = aucune) |
 | **Dalle** | existante, à **coin coupé** (relevé exact à saisir) ; l'abri est posé avec 2 cm de marge, tout sur la dalle |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
@@ -99,7 +99,7 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 - **Dalle** : le relevé exact reste à saisir dans `dalle_cm` ; le site affiche en direct toute
   partie de l'emprise qui déborderait de la dalle.
-- **Seuil des 5 m²** : 4,8 m² de murs, 5,72 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
+- **Seuil des 5 m²** : 4,8 m² de murs, 5,2 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
   (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
 - **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
   (neige/vent), sinon ajouter une panne.

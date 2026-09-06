@@ -32,7 +32,9 @@
 ## Toiture — face T
 - Mono-pente, plan unique : `h(y) = hauteur_cm + chute · (1 − y/G)`, avant haut → arrière bas.
 - Rectangle débordant `(A + débords G/D) × (G + débords avant/arrière)` ; panneaux dans le sens
-  de la pente, longueur = rampant du rectangle débordant.
+  de la pente, longueur = rampant du rectangle débordant. **Débords latéraux = 0 par défaut** :
+  le toit fait exactement `A` de large ⇒ `A / largeur_utile` panneaux entiers (2), rive fermée
+  par une bavette affleurante.
 - Finition **toit** (nervures hautes) : produit différent des panneaux de mur.
 - Gouttière sur toute la face **B**, une descente à un angle arrière.
 
@@ -40,6 +42,11 @@
 - Objet `porte` dans `params.json` : `face` (A), `largeur_cm`, `hauteur_cm`, `position`,
   `marge_bord_cm`. Vitrée, ouvrant **extérieur**, source principale de lumière. Rendue en 3D
   avec un vantail entrouvert.
+- **Bloc-porte au module** : par défaut `largeur_cm` = largeur utile (100) et `hauteur_cm` =
+  hauteur des murs (215), calé à droite sans marge ⇒ la porte **remplace le panneau A2**
+  (`panel_replaced_by`) : il sort du débit, du 3D et des étiquettes (« A2 = bloc-porte »).
+  Règle générale : un panneau est remplacé quand une ouverture allège 0, pleine hauteur, couvre
+  toute sa largeur.
 - Liste `fenetres[]` (vide = aucune) : `face`, `largeur_cm`, `hauteur_cm`, `allege_cm`,
   `position`. Défaut : **une fenêtre 80 × 80, allège 110, face D, à 110 cm de l'avant** — donc
   entièrement dans le 2e panneau (100–200), jamais à cheval sur un joint.

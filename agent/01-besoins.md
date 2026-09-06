@@ -42,10 +42,12 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
 ## Hypothèses (à valider par l'utilisateur)
 - **H1** Hauteur des murs (arrière) **215 cm** ; avant = 215 + 25 = **240 cm**
   (`murs.hauteur_cm`, `toit.pente_chute_cm`).
-- **H2** Porte **90 × 210 cm**, face A, calée **à droite** (marge 5 cm), charnière côté droit.
+- **H2** **Bloc-porte 100 × 215 cm** (dormant compris = un module entier, remplace le panneau A2),
+  face A, calé à droite, charnière côté droit. Vantail vitré ~90 cm dedans.
 - **H3** Largeur utile de panneau **100 cm**, pose **verticale** des panneaux muraux.
-- **H4** Débords de toit **10 cm** (réduits : l'emprise au sol réglementaire compte les débords ;
-  220 × 260 = 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie).
+- **H4** Débords de toit **10 cm devant/derrière, 0 sur les côtés** (toit = 2 panneaux entiers,
+  rives affleurantes). Emprise débords inclus 200 × 260 = 5,2 m² ⇒ déclaration préalable
+  probable, à confirmer en mairie.
 - **H5** Âme **PIR**.
 - **H6** Portée libre du toit ≈ **2,6 m** sans panne : à confirmer dans le tableau de portées du
   fabricant pour du 60 mm (sinon une panne intermédiaire).

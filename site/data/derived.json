@@ -40,7 +40,7 @@
       "G": 240
     },
     "aire_m2": 4.8,
-    "emprise_debords_m2": 5.72,
+    "emprise_debords_m2": 5.2,
     "perimetre_cm": 880,
     "pente": {
       "chute_cm": 25,
@@ -149,17 +149,19 @@
           "libelle": "Avant",
           "longueur_cm": 200,
           "hauteur_cm": 215,
-          "nb_panneaux": 2,
-          "aire_brute_m2": 4.3,
+          "nb_panneaux": 1,
+          "aire_brute_m2": 2.15,
           "rehausse": "bandeau",
           "pieces": [
             {
               "label": "A1",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "A2",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": "porte"
             }
           ]
         },
@@ -174,15 +176,18 @@
           "pieces": [
             {
               "label": "D1",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "D2",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "D3",
-              "largeur_cm": 40
+              "largeur_cm": 40,
+              "remplace_par": null
             }
           ]
         },
@@ -197,11 +202,13 @@
           "pieces": [
             {
               "label": "B1",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "B2",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             }
           ]
         },
@@ -216,23 +223,26 @@
           "pieces": [
             {
               "label": "G1",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "G2",
-              "largeur_cm": 100
+              "largeur_cm": 100,
+              "remplace_par": null
             },
             {
               "label": "G3",
-              "largeur_cm": 40
+              "largeur_cm": 40,
+              "remplace_par": null
             }
           ]
         }
       ],
-      "aire_brute_m2": 21.5,
-      "aire_nette_m2": 16.39,
-      "ouvertures_deduites_m2": 2.53,
-      "total_panneaux": 10
+      "aire_brute_m2": 19.35,
+      "aire_nette_m2": 16.13,
+      "ouvertures_deduites_m2": 2.79,
+      "total_panneaux": 9
     },
     "rehausse": {
       "pieces": [
@@ -261,11 +271,11 @@
     "toit": {
       "face": "T",
       "libelle": "Toiture",
-      "nb_panneaux": 3,
-      "largeur_cm": 220,
+      "nb_panneaux": 2,
+      "largeur_cm": 200,
       "longueur_panneau_cm": 261.4,
-      "aire_brute_m2": 7.84,
-      "aire_couverte_m2": 5.72,
+      "aire_brute_m2": 5.23,
+      "aire_couverte_m2": 5.2,
       "portee_cm": 260,
       "pieces": [
         {
@@ -275,27 +285,23 @@
         {
           "label": "T2",
           "largeur_cm": 100
-        },
-        {
-          "label": "T3",
-          "largeur_cm": 20
         }
       ]
     },
-    "commande_mur_m2": 26.3,
-    "commande_toit_m2": 8.6,
-    "commande_panneaux_m2": 34.9,
+    "commande_mur_m2": 23.9,
+    "commande_toit_m2": 5.8,
+    "commande_panneaux_m2": 29.7,
     "facteur_chute_pct": 10
   },
   "achats": [
     {
       "poste": "Panneaux sandwich 60 mm - finition MUR (murs + rehausse)",
-      "qte": "10 panneaux de 2.15 m + 1 de 2.40 m (~26.3 m2 avec chute)",
+      "qte": "9 panneaux de 2.15 m + 1 de 2.40 m (~23.9 m2 avec chute)",
       "note": "Ame PIR, autoportants (pas d'ossature). Parement mural lisse/micro-nervure, laque 2 faces. Coupes droites + 1 diagonale."
     },
     {
       "poste": "Panneaux sandwich 60 mm - finition TOIT (face T)",
-      "qte": "3 panneaux de ~2.61 m (~8.6 m2 avec chute)",
+      "qte": "2 panneaux de ~2.61 m (~5.8 m2 avec chute)",
       "note": "Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~2.60 m : verifier le tableau de portees du fabricant."
     },
     {
@@ -316,7 +322,7 @@
     {
       "poste": "Bavettes de rive (gauche/droite)",
       "qte": "~6 m",
-      "note": "Rives laterales du toit, avec debord."
+      "note": "Rives laterales du toit (affleurantes si debord lateral = 0 : la bavette ferme le chant du panneau)."
     },
     {
       "poste": "Gouttiere + 1 descente",
@@ -325,7 +331,7 @@
     },
     {
       "poste": "Vis autoperceuses tete EPDM",
-      "qte": "~191 (boite de 200)",
+      "qte": "~162 (boite de 200)",
       "note": "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire."
     },
     {
@@ -334,9 +340,9 @@
       "note": "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)."
     },
     {
-      "poste": "Porte vitree alu double vitrage",
-      "qte": "1 (90x210 cm)",
-      "note": "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
+      "poste": "Bloc-porte vitre alu double vitrage",
+      "qte": "1 (100x215 cm)",
+      "note": "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Ouverture vers l'exterieur, seuil + joints."
     },
     {
       "poste": "Fenetre(s) double vitrage",
@@ -350,7 +356,7 @@
     },
     {
       "poste": "Bande comprimee / mousse precomprimee",
-      "qte": "~18 m",
+      "qte": "~19 m",
       "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
     },
     {
@@ -373,17 +379,17 @@
     "lignes": [
       {
         "poste": "Panneaux sandwich - mur + rehausse (brut)",
-        "qte": 23.9,
+        "qte": 21.75,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 836
+        "montant_eur": 761
       },
       {
         "poste": "Panneaux sandwich - toit (brut)",
-        "qte": 7.84,
+        "qte": 5.23,
         "unite": "m²",
         "pu_eur": 35,
-        "montant_eur": 274
+        "montant_eur": 183
       },
       {
         "poste": "Porte vitree",
@@ -435,10 +441,10 @@
         "montant_eur": 150
       }
     ],
-    "sous_total_eur": 2987,
+    "sous_total_eur": 2820,
     "incertitude_pct": 15,
-    "total_bas_eur": 2539,
-    "total_haut_eur": 3435
+    "total_bas_eur": 2397,
+    "total_haut_eur": 3243
   },
   "ouvertures": [
     {
@@ -446,13 +452,13 @@
       "type": "porte",
       "face": "A",
       "face_index": 0,
-      "largeur_cm": 90,
-      "hauteur_cm": 210,
+      "largeur_cm": 100,
+      "hauteur_cm": 215,
       "allege_cm": 0,
-      "start_cm": 105,
+      "start_cm": 100,
       "position": "droite",
       "ouverture": "vers l'exterieur",
-      "description": "porte vitree aluminium double vitrage - source principale de lumiere"
+      "description": "bloc-porte vitre aluminium (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper"
     },
     {
       "id": "fenetre-droite",
@@ -506,19 +512,19 @@
     "thickness_m": 0.06,
     "roof_outline": [
       [
-        -0.1,
+        0,
         -0.1
       ],
       [
-        2.1,
+        2,
         -0.1
       ],
       [
-        2.1,
+        2,
         2.5
       ],
       [
-        -0.1,
+        0,
         2.5
       ]
     ],
@@ -553,12 +559,6 @@
         "face_index": 0,
         "s0_m": 0,
         "s1_m": 1
-      },
-      {
-        "label": "A2",
-        "face_index": 0,
-        "s0_m": 1,
-        "s1_m": 2
       },
       {
         "label": "D1",
@@ -629,27 +629,22 @@
     "roof_panels": [
       {
         "label": "T1",
-        "x0_m": -0.1,
-        "x1_m": 0.9
+        "x0_m": 0,
+        "x1_m": 1
       },
       {
         "label": "T2",
-        "x0_m": 0.9,
-        "x1_m": 1.9
-      },
-      {
-        "label": "T3",
-        "x0_m": 1.9,
-        "x1_m": 2.1
+        "x0_m": 1,
+        "x1_m": 2
       }
     ],
     "openings": [
       {
         "type": "porte",
         "face_index": 0,
-        "offset_m": 1.05,
-        "width_m": 0.9,
-        "height_m": 2.1,
+        "offset_m": 1,
+        "width_m": 1,
+        "height_m": 2.15,
         "sill_m": 0
       },
       {

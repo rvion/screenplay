@@ -50,7 +50,7 @@ function renderDebit(core: Core, p: Params) {
   const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
   let rows = t.murs.lignes.map((x: any) =>
     `<tr><td><b>${x.face}</b> · ${x.libelle}</td><td><span class="tag">mur</span></td>` +
-    `<td>${x.pieces.map((q: any) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${x.hauteur_cm} cm — coupes droites</td>` +
+    `<td>${x.pieces.map((q: any) => q.remplace_par ? `<s>${q.label}</s> = ${q.remplace_par}` : `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${x.hauteur_cm} cm — coupes droites</td>` +
     `<td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m²</td></tr>`).join("");
   rows += `<tr><td><b>R</b> · Rehausse</td><td><span class="tag rake">mur</span></td>` +
     `<td>${r.pieces.map((q: any) => `<b>${q.label}</b> ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td>` +

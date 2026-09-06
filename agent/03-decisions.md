@@ -151,3 +151,14 @@ et de surface de plancher = aucune formalité ; l'emprise au sol compte les déb
 = 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie. Le site affiche les deux
 chiffres (carte « Seuil des 5 m² »). *Écarté :* 230 × 246 (0,39 m² hors dalle, pas de tour),
 200 × 190 (seul rectangle entièrement sur la dalle, 3,8 m², trop petit). *Précise* D16.
+
+## D22 — Toit à 2 panneaux entiers (débords latéraux 0) et bloc-porte au module
+Deux simplifications de débit. (1) Débords latéraux ramenés à 0 : le toit fait exactement `A`
+= 200 de large, soit **2 panneaux entiers** au lieu de 2 + une bande de 20 cm ; la rive est fermée
+par une bavette affleurante (pratique standard). (2) La porte devient un **bloc-porte 100 × 215**,
+dormant compris, aux cotes d'un module : il **remplace le panneau A2** au lieu de laisser deux
+bandes de 5 cm à découper de part et d'autre d'une porte de 90. Règle codée
+(`panel_replaced_by`) : une ouverture allège 0, pleine hauteur, couvrant tout un module retire ce
+panneau du débit, du 3D et des étiquettes. *Effet :* 9 panneaux de mur + 2 de toit, commande
+~29,7 m², budget ~2 820 € HT. *Écarté :* garder 10 cm de débord latéral (3e panneau à refendre) ;
+porte 90 dans un panneau (chutes, bandes fragiles). *Complète* D17/D18.

@@ -6,10 +6,10 @@
 <text x="214.2" y="188.9" text-anchor="start" fill="#2b5d8a" font-size="14" font-weight="bold">D = 240 cm</text>
 <text x="164.2" y="126.5" text-anchor="middle" fill="#2b5d8a" font-size="14" font-weight="bold">B = 200 cm</text>
 <text x="114.2" y="188.9" text-anchor="end" fill="#2b5d8a" font-size="14" font-weight="bold">G = 240 cm</text>
-<line x1="166.3" y1="235.3" x2="204.1" y2="235.3" stroke="#c0392b" stroke-width="5"/>
-<line x1="166.3" y1="235.3" x2="166.3" y2="273.1" stroke="#c0392b" stroke-width="2"/>
-<path d="M 204.1 235.3 A 37.8 37.8 0 0 1 166.3 273.1" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
-<text x="185.2" y="287.1" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="normal">porte 90 (ouvre dehors)</text>
+<line x1="164.2" y1="235.3" x2="206.2" y2="235.3" stroke="#c0392b" stroke-width="5"/>
+<line x1="164.2" y1="235.3" x2="164.2" y2="277.3" stroke="#c0392b" stroke-width="2"/>
+<path d="M 206.2 235.3 A 42.0 42.0 0 0 1 164.2 277.3" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="185.2" y="291.3" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="normal">porte 100 (ouvre dehors)</text>
 <line x1="206.2" y1="189.1" x2="206.2" y2="155.5" stroke="#1b9aa8" stroke-width="5"/>
 <text x="222.2" y="176.3" text-anchor="middle" fill="#137" font-size="10" font-weight="normal">fen. 80</text>
 <text x="164.2" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · 200 × 240 cm · 4.8 m²</text>

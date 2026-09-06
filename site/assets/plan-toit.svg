@@ -1,19 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 398 249" font-family="system-ui,sans-serif" font-size="13">
 <rect width="398" height="249" fill="#fbfbf8"/>
-<polygon points="152.8,179.2 245.2,179.2 245.2,70.0 152.8,70.0" fill="#e8eee2" stroke="#6b8e23" stroke-width="2"/>
-<polygon points="157.0,175.0 241.1,175.0 241.1,74.2 157.0,74.2" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="6 4"/>
-<line x1="194.8" y1="179.2" x2="194.8" y2="70.0" stroke="#9aab7a" stroke-width="1" stroke-dasharray="3 3"/>
-<line x1="236.8" y1="179.2" x2="236.8" y2="70.0" stroke="#9aab7a" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="173.8" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T1</text>
-<text x="215.8" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T2</text>
-<text x="241.1" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T3</text>
-<line x1="180.6" y1="170.8" x2="180.6" y2="78.4" stroke="#2b7" stroke-width="2"/>
-<polygon points="181,78 176,87 186,87" fill="#2b7"/>
-<line x1="217.5" y1="170.8" x2="217.5" y2="78.4" stroke="#2b7" stroke-width="2"/>
-<polygon points="218,78 213,87 223,87" fill="#2b7"/>
-<text x="199.0" y="62.0" text-anchor="middle" fill="#50701d" font-size="12" font-weight="bold">220 cm</text>
-<text x="253.2" y="128.6" text-anchor="start" fill="#50701d" font-size="11" font-weight="normal">261 cm (rampant)</text>
-<text x="199.0" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de toiture · 3 panneaux · pente 10.4 %</text>
+<polygon points="157.0,179.2 241.0,179.2 241.0,70.0 157.0,70.0" fill="#e8eee2" stroke="#6b8e23" stroke-width="2"/>
+<polygon points="157.0,175.0 241.0,175.0 241.0,74.2 157.0,74.2" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="6 4"/>
+<line x1="199.0" y1="179.2" x2="199.0" y2="70.0" stroke="#9aab7a" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="178.0" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T1</text>
+<text x="220.0" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T2</text>
+<line x1="182.2" y1="170.8" x2="182.2" y2="78.4" stroke="#2b7" stroke-width="2"/>
+<polygon points="182,78 177,87 187,87" fill="#2b7"/>
+<line x1="215.8" y1="170.8" x2="215.8" y2="78.4" stroke="#2b7" stroke-width="2"/>
+<polygon points="216,78 211,87 221,87" fill="#2b7"/>
+<text x="199.0" y="62.0" text-anchor="middle" fill="#50701d" font-size="12" font-weight="bold">200 cm</text>
+<text x="249.0" y="128.6" text-anchor="start" fill="#50701d" font-size="11" font-weight="normal">261 cm (rampant)</text>
+<text x="199.0" y="28.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de toiture · 2 panneaux · pente 10.4 %</text>
 <text x="199.0" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">5.95° · écoulement vers l'arrière</text>
 <text x="199.0" y="233.2" text-anchor="middle" fill="#2b7" font-size="12" font-weight="normal">écoulement de l'eau →</text>
 </svg>

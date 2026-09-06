@@ -35,7 +35,7 @@
    "G": 160
   },
   "aire_m2": 3.68,
-  "emprise_debords_m2": 4.5,
+  "emprise_debords_m2": 4.14,
   "perimetre_cm": 780,
   "pente": {
    "chute_cm": 25,
@@ -150,15 +150,18 @@
      "pieces": [
       {
        "label": "A1",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "A2",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "A3",
-       "largeur_cm": 30
+       "largeur_cm": 30,
+       "remplace_par": null
       }
      ]
     },
@@ -173,11 +176,13 @@
      "pieces": [
       {
        "label": "D1",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "D2",
-       "largeur_cm": 60
+       "largeur_cm": 60,
+       "remplace_par": null
       }
      ]
     },
@@ -192,15 +197,18 @@
      "pieces": [
       {
        "label": "B1",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "B2",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "B3",
-       "largeur_cm": 30
+       "largeur_cm": 30,
+       "remplace_par": null
       }
      ]
     },
@@ -215,11 +223,13 @@
      "pieces": [
       {
        "label": "G1",
-       "largeur_cm": 100
+       "largeur_cm": 100,
+       "remplace_par": null
       },
       {
        "label": "G2",
-       "largeur_cm": 60
+       "largeur_cm": 60,
+       "remplace_par": null
       }
      ]
     }
@@ -257,10 +267,10 @@
    "face": "T",
    "libelle": "Toiture",
    "nb_panneaux": 3,
-   "largeur_cm": 250,
+   "largeur_cm": 230,
    "longueur_panneau_cm": 182.2,
    "aire_brute_m2": 5.47,
-   "aire_couverte_m2": 4.5,
+   "aire_couverte_m2": 4.14,
    "portee_cm": 180,
    "pieces": [
     {
@@ -273,7 +283,7 @@
     },
     {
      "label": "T3",
-     "largeur_cm": 50
+     "largeur_cm": 30
     }
    ]
   },
@@ -311,7 +321,7 @@
   {
    "poste": "Bavettes de rive (gauche/droite)",
    "qte": "~5 m",
-   "note": "Rives laterales du toit, avec debord."
+   "note": "Rives laterales du toit (affleurantes si debord lateral = 0 : la bavette ferme le chant du panneau)."
   },
   {
    "poste": "Gouttiere + 1 descente",
@@ -329,9 +339,9 @@
    "note": "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)."
   },
   {
-   "poste": "Porte vitree alu double vitrage",
+   "poste": "Bloc-porte vitre alu double vitrage",
    "qte": "0 (-)",
-   "note": "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
+   "note": "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Ouverture vers l'exterieur, seuil + joints."
   },
   {
    "poste": "Ventilation (VMC ou aerateurs hygro)",
@@ -461,19 +471,19 @@
   "thickness_m": 0.06,
   "roof_outline": [
    [
-    -0.1,
+    0,
     -0.1
    ],
    [
-    2.4,
+    2.3,
     -0.1
    ],
    [
-    2.4,
+    2.3,
     1.7
    ],
    [
-    -0.1,
+    0,
     1.7
    ]
   ],
@@ -584,25 +594,25 @@
   "roof_panels": [
    {
     "label": "T1",
-    "x0_m": -0.1,
-    "x1_m": 0.9
+    "x0_m": 0,
+    "x1_m": 1
    },
    {
     "label": "T2",
-    "x0_m": 0.9,
-    "x1_m": 1.9
+    "x0_m": 1,
+    "x1_m": 2
    },
    {
     "label": "T3",
-    "x0_m": 1.9,
-    "x1_m": 2.4
+    "x0_m": 2,
+    "x1_m": 2.3
    }
   ],
   "openings": []
  },
  "svg": {
   "plan-sol": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 337 326\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"337\" height=\"326\" fill=\"#fbfbf8\"/>\n<polygon points=\"119.9,236.2 205.6,236.2 205.6,126.1 167.8,90.0 119.9,90.0\" fill=\"#eeeae0\" stroke=\"#a89f8a\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/>\n<polygon points=\"120.7,235.3 217.3,235.3 217.3,168.1 120.7,168.1\" fill=\"#dce8f5\" stroke=\"#2b5d8a\" stroke-width=\"2\"/>\n<text x=\"169.0\" y=\"253.3\" text-anchor=\"middle\" fill=\"#2b5d8a\" font-size=\"14\" font-weight=\"bold\">A = 230 cm</text>\n<text x=\"225.3\" y=\"205.7\" text-anchor=\"start\" fill=\"#2b5d8a\" font-size=\"14\" font-weight=\"bold\">D = 160 cm</text>\n<text x=\"169.0\" y=\"160.1\" text-anchor=\"middle\" fill=\"#2b5d8a\" font-size=\"14\" font-weight=\"bold\">B = 230 cm</text>\n<text x=\"112.7\" y=\"205.7\" text-anchor=\"end\" fill=\"#2b5d8a\" font-size=\"14\" font-weight=\"bold\">G = 160 cm</text>\n<text x=\"168.6\" y=\"28.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Plan de sol · 230 × 160 cm · 3.68 m²</text>\n<text x=\"168.6\" y=\"44.0\" text-anchor=\"middle\" fill=\"#888\" font-size=\"11\" font-weight=\"normal\">pente vers l'arrière (face B) · dalle réelle en pointillé</text>\n<text x=\"168.6\" y=\"312.2\" text-anchor=\"middle\" fill=\"#666\" font-size=\"12\" font-weight=\"normal\">AVANT (face A)</text>\n</svg>\n",
-  "plan-toit": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 398 216\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"398\" height=\"216\" fill=\"#fbfbf8\"/>\n<polygon points=\"146.5,145.6 251.5,145.6 251.5,70.0 146.5,70.0\" fill=\"#e8eee2\" stroke=\"#6b8e23\" stroke-width=\"2\"/>\n<polygon points=\"150.7,141.4 247.3,141.4 247.3,74.2 150.7,74.2\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"6 4\"/>\n<line x1=\"188.5\" y1=\"145.6\" x2=\"188.5\" y2=\"70.0\" stroke=\"#9aab7a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/>\n<line x1=\"230.5\" y1=\"145.6\" x2=\"230.5\" y2=\"70.0\" stroke=\"#9aab7a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/>\n<text x=\"167.5\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T1</text>\n<text x=\"209.5\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T2</text>\n<text x=\"241.0\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T3</text>\n<line x1=\"178.0\" y1=\"137.2\" x2=\"178.0\" y2=\"78.4\" stroke=\"#2b7\" stroke-width=\"2\"/>\n<polygon points=\"178,78 173,87 183,87\" fill=\"#2b7\"/>\n<line x1=\"220.0\" y1=\"137.2\" x2=\"220.0\" y2=\"78.4\" stroke=\"#2b7\" stroke-width=\"2\"/>\n<polygon points=\"220,78 215,87 225,87\" fill=\"#2b7\"/>\n<text x=\"199.0\" y=\"62.0\" text-anchor=\"middle\" fill=\"#50701d\" font-size=\"12\" font-weight=\"bold\">250 cm</text>\n<text x=\"259.5\" y=\"111.8\" text-anchor=\"start\" fill=\"#50701d\" font-size=\"11\" font-weight=\"normal\">182 cm (rampant)</text>\n<text x=\"199.0\" y=\"28.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Plan de toiture · 3 panneaux · pente 15.6 %</text>\n<text x=\"199.0\" y=\"44.0\" text-anchor=\"middle\" fill=\"#888\" font-size=\"11\" font-weight=\"normal\">8.88° · écoulement vers l'arrière</text>\n<text x=\"199.0\" y=\"199.6\" text-anchor=\"middle\" fill=\"#2b7\" font-size=\"12\" font-weight=\"normal\">écoulement de l'eau →</text>\n</svg>\n",
+  "plan-toit": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 398 216\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"398\" height=\"216\" fill=\"#fbfbf8\"/>\n<polygon points=\"150.8,145.6 247.3,145.6 247.3,70.0 150.8,70.0\" fill=\"#e8eee2\" stroke=\"#6b8e23\" stroke-width=\"2\"/>\n<polygon points=\"150.8,141.4 247.3,141.4 247.3,74.2 150.8,74.2\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"6 4\"/>\n<line x1=\"192.8\" y1=\"145.6\" x2=\"192.8\" y2=\"70.0\" stroke=\"#9aab7a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/>\n<line x1=\"234.8\" y1=\"145.6\" x2=\"234.8\" y2=\"70.0\" stroke=\"#9aab7a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/>\n<text x=\"171.8\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T1</text>\n<text x=\"213.8\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T2</text>\n<text x=\"241.1\" y=\"113.8\" text-anchor=\"middle\" fill=\"#8aa06a\" font-size=\"18\" font-weight=\"bold\">T3</text>\n<line x1=\"179.7\" y1=\"137.2\" x2=\"179.7\" y2=\"78.4\" stroke=\"#2b7\" stroke-width=\"2\"/>\n<polygon points=\"180,78 175,87 185,87\" fill=\"#2b7\"/>\n<line x1=\"218.4\" y1=\"137.2\" x2=\"218.4\" y2=\"78.4\" stroke=\"#2b7\" stroke-width=\"2\"/>\n<polygon points=\"218,78 213,87 223,87\" fill=\"#2b7\"/>\n<text x=\"199.1\" y=\"62.0\" text-anchor=\"middle\" fill=\"#50701d\" font-size=\"12\" font-weight=\"bold\">230 cm</text>\n<text x=\"255.3\" y=\"111.8\" text-anchor=\"start\" fill=\"#50701d\" font-size=\"11\" font-weight=\"normal\">182 cm (rampant)</text>\n<text x=\"199.0\" y=\"28.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Plan de toiture · 3 panneaux · pente 15.6 %</text>\n<text x=\"199.0\" y=\"44.0\" text-anchor=\"middle\" fill=\"#888\" font-size=\"11\" font-weight=\"normal\">8.88° · écoulement vers l'arrière</text>\n<text x=\"199.1\" y=\"199.6\" text-anchor=\"middle\" fill=\"#2b7\" font-size=\"12\" font-weight=\"normal\">écoulement de l'eau →</text>\n</svg>\n",
   "plan-rehausse": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 731 220\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"731\" height=\"220\" fill=\"#fbfbf8\"/>\n<polygon points=\"50.0,70.0 280.0,70.0 280.0,170.0 50.0,170.0\" fill=\"#f3f5f1\" stroke=\"#999\" stroke-width=\"1.5\" stroke-dasharray=\"5 4\"/>\n<polygon points=\"50.0,70.0 210.0,70.0 210.0,95.0 50.0,95.0\" fill=\"#fdf6e3\" stroke=\"#a07400\" stroke-width=\"2\"/>\n<line x1=\"50.0\" y1=\"95.0\" x2=\"210.0\" y2=\"70.0\" stroke=\"#a07400\" stroke-width=\"2\" stroke-dasharray=\"6 3\"/>\n<text x=\"69.2\" y=\"91.0\" text-anchor=\"middle\" fill=\"#a07400\" font-size=\"11\" font-weight=\"bold\">R2 (G)</text>\n<text x=\"190.8\" y=\"82.0\" text-anchor=\"middle\" fill=\"#a07400\" font-size=\"11\" font-weight=\"bold\">R3 (D)</text>\n<polygon points=\"50.0,103.0 280.0,103.0 280.0,128.0 50.0,128.0\" fill=\"#e3ecf7\" stroke=\"#2b5d8a\" stroke-width=\"2\"/>\n<text x=\"165.0\" y=\"119.5\" text-anchor=\"middle\" fill=\"#2b5d8a\" font-size=\"11\" font-weight=\"bold\">R1 · bandeau A</text>\n<text x=\"296.0\" y=\"86.5\" text-anchor=\"start\" fill=\"#a07400\" font-size=\"11\" font-weight=\"normal\">bande 1 : 160 × 25, coupée en diagonale = triangle G + triangle D</text>\n<text x=\"296.0\" y=\"119.5\" text-anchor=\"start\" fill=\"#2b5d8a\" font-size=\"11\" font-weight=\"normal\">bande 2 : bandeau avant 230 × 25</text>\n<text x=\"296.0\" y=\"170.0\" text-anchor=\"start\" fill=\"#999\" font-size=\"11\" font-weight=\"normal\">panneau 230 × 100 cm (reste = chute)</text>\n<text x=\"165.0\" y=\"62.0\" text-anchor=\"middle\" fill=\"#666\" font-size=\"11\" font-weight=\"normal\">230 cm</text>\n<text x=\"44.0\" y=\"86.5\" text-anchor=\"end\" fill=\"#a07400\" font-size=\"11\" font-weight=\"normal\">25</text>\n<text x=\"44.0\" y=\"119.5\" text-anchor=\"end\" fill=\"#2b5d8a\" font-size=\"11\" font-weight=\"normal\">25</text>\n<text x=\"365.4\" y=\"26.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Rehausse · 1 panneau 230 × 100 cm → 2 triangles + 1 bandeau</text>\n<text x=\"365.4\" y=\"208.0\" text-anchor=\"middle\" fill=\"#888\" font-size=\"11\" font-weight=\"normal\">toutes coupes droites + une seule diagonale · le triangle D est le même que G, tourné de 180°</text>\n</svg>\n",
   "facade-A": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 258 264\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"258\" height=\"264\" fill=\"#fbfbf8\"/>\n<polygon points=\"60.0,204.0 198.0,204.0 198.0,75.0 60.0,75.0\" fill=\"#eef2f6\" stroke=\"#2b5d8a\" stroke-width=\"2\"/>\n<line x1=\"120.0\" y1=\"204.0\" x2=\"120.0\" y2=\"75.0\" stroke=\"#8fa3b8\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/>\n<line x1=\"180.0\" y1=\"204.0\" x2=\"180.0\" y2=\"75.0\" stroke=\"#8fa3b8\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/>\n<polygon points=\"60.0,75.0 198.0,75.0 198.0,60.0 60.0,60.0\" fill=\"#fdf6e3\" stroke=\"#a07400\" stroke-width=\"2\"/>\n<text x=\"129.0\" y=\"71.5\" text-anchor=\"middle\" fill=\"#a07400\" font-size=\"10\" font-weight=\"bold\">R1 · bandeau 230 × 25</text>\n<text x=\"90.0\" y=\"99.1\" text-anchor=\"middle\" fill=\"#9fb0c2\" font-size=\"18\" font-weight=\"bold\">A1</text>\n<text x=\"150.0\" y=\"99.1\" text-anchor=\"middle\" fill=\"#9fb0c2\" font-size=\"18\" font-weight=\"bold\">A2</text>\n<text x=\"189.0\" y=\"99.1\" text-anchor=\"middle\" fill=\"#9fb0c2\" font-size=\"18\" font-weight=\"bold\">A3</text>\n<text x=\"129.0\" y=\"230.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"13\" font-weight=\"bold\">230 cm · 3 panneaux de 215</text>\n<text x=\"52.0\" y=\"60.0\" text-anchor=\"end\" fill=\"#2b5d8a\" font-size=\"12\" font-weight=\"normal\">240</text>\n<text x=\"206.0\" y=\"60.0\" text-anchor=\"start\" fill=\"#2b5d8a\" font-size=\"12\" font-weight=\"normal\">240</text>\n<text x=\"129.0\" y=\"26.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Face A — Avant</text>\n</svg>\n",
   "facade-D": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 216 264\" font-family=\"system-ui,sans-serif\" font-size=\"13\">\n<rect width=\"216\" height=\"264\" fill=\"#fbfbf8\"/>\n<polygon points=\"60.0,204.0 156.0,204.0 156.0,75.0 60.0,75.0\" fill=\"#eef2f6\" stroke=\"#2b5d8a\" stroke-width=\"2\"/>\n<line x1=\"120.0\" y1=\"204.0\" x2=\"120.0\" y2=\"75.0\" stroke=\"#8fa3b8\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/>\n<polygon points=\"60.0,75.0 156.0,75.0 156.0,75.0 60.0,60.0\" fill=\"#fdf6e3\" stroke=\"#a07400\" stroke-width=\"2\"/>\n<text x=\"108.0\" y=\"59.5\" text-anchor=\"middle\" fill=\"#a07400\" font-size=\"10\" font-weight=\"bold\">R3 · triangle 160 × 25</text>\n<text x=\"90.0\" y=\"99.1\" text-anchor=\"middle\" fill=\"#9fb0c2\" font-size=\"18\" font-weight=\"bold\">D1</text>\n<text x=\"138.0\" y=\"99.1\" text-anchor=\"middle\" fill=\"#9fb0c2\" font-size=\"18\" font-weight=\"bold\">D2</text>\n<text x=\"108.0\" y=\"230.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"13\" font-weight=\"bold\">160 cm · 2 panneaux de 215</text>\n<text x=\"52.0\" y=\"60.0\" text-anchor=\"end\" fill=\"#2b5d8a\" font-size=\"12\" font-weight=\"normal\">240</text>\n<text x=\"164.0\" y=\"75.0\" text-anchor=\"start\" fill=\"#2b5d8a\" font-size=\"12\" font-weight=\"normal\">215</text>\n<text x=\"108.0\" y=\"26.0\" text-anchor=\"middle\" fill=\"#222\" font-size=\"15\" font-weight=\"bold\">Face D — Droite</text>\n</svg>\n",

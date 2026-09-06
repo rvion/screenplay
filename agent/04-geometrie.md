@@ -17,7 +17,8 @@ BL = (0, G)   = (0,   240)   coin arrière-gauche
 ```
 Rectangle antihoraire : `FL → FR → BR → BL`. Faces : A = FL→FR (200), D = FR→BR (240),
 B = BR→BL (200), G = BL→FL (240). Périmètre = 2(A+G) = **880 cm**. Aire = A·G = **4,80 m²**.
-Emprise débords inclus (10 cm partout) : 220 × 260 = **5,72 m²** (`emprise_debords_m2`).
+Emprise débords inclus (10 cm devant/derrière, 0 sur les côtés) : 200 × 260 = **5,20 m²**
+(`emprise_debords_m2`).
 
 ## Dalle réelle (`dalle_cm`) et partie hors dalle
 Dalle = pentagone `(0,0) (dA,0) (dA,dD) (dB,dG) (0,dG)` dans son propre repère ; l'abri est posé
@@ -47,11 +48,13 @@ droit dépasse de 20 cm derrière le mur B, coupe 90 × 86 conservée ⇒ `t = 0
 Les deux triangles proviennent d'**une bande 240 × 25 coupée en diagonale** ; le second est
 tourné de 180° dans son plan (le parement extérieur reste dehors). Bande + bandeau (200 × 25)
 tiennent dans **un panneau 240 × 100** (50 cm utilisés) : `ceil(2c / largeur_utile)` panneau.
-Murs : A et B = 2 panneaux, D et G = 3 ⇒ **10 panneaux de 215**.
+Murs : A et B = 2 modules, D et G = 3 ; le module A2 est pris par le bloc-porte 100 × 215 ⇒
+**9 panneaux de 215** à commander.
 
 ## Toiture
-- Rectangle débordant : largeur `A + dG + dD = 220`, profondeur `G + dav + darr = 260`.
-- Panneaux dans le sens de la pente : `ceil(220/100) = 3`, longueur `260·√(1+(c/G)²) ≈ 261,4 cm`.
+- Rectangle débordant : largeur `A + 0 + 0 = 200`, profondeur `G + dav + darr = 260`.
+- Panneaux dans le sens de la pente : `200/100 = 2` panneaux entiers, longueur
+  `260·√(1+(c/G)²) ≈ 261,4 cm`. Rives latérales affleurantes (bavette de rive).
 - Portée libre ≈ 2,6 m (à vérifier contre le tableau du fabricant pour 60 mm).
 
 ## Vérification

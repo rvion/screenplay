@@ -175,6 +175,16 @@ export function resolve_openings(p: Params, g: any) {
   }));
 }
 
+// Un panneau [s0,s1] est "remplace" quand une ouverture pleine hauteur (allege 0, haut >= H)
+// couvre toute sa largeur : c'est un bloc-porte qui prend le module, pas un panneau decoupe.
+export function panel_replaced_by(openings: any[], face: string, s0: number, s1: number, H: number): any | null {
+  for (const o of openings) {
+    if (o.face !== face || o.allege_cm > 0.5) continue;
+    if (o.start_cm <= s0 + 0.5 && o.start_cm + o.largeur_cm >= s1 - 0.5 && o.allege_cm + o.hauteur_cm >= H - 0.5) return o;
+  }
+  return null;
+}
+
 /* ----------------------------------------------------------------- */
 /* Debit + quantites                                                  */
 /* ----------------------------------------------------------------- */
@@ -191,13 +201,19 @@ export function takeoff(p: Params, g: any, openings: any[]) {
   let gross = 0, net = 0;
   for (const f of g.faces) {
     const L = f.longueur_cm;
-    const nn = Math.ceil(L / cover);
+    const nb = Math.ceil(L / cover);
+    const pieces: any[] = [];
+    let nn = 0;
+    for (let i = 0; i < nb; i++) {
+      const s0 = i * cover, s1 = Math.min((i + 1) * cover, L);
+      const rep = panel_replaced_by(openings, f.cle, s0, s1, H);
+      pieces.push({ label: `${f.cle}${i + 1}`, largeur_cm: rnd(s1 - s0, 1), remplace_par: rep ? rep.id : null });
+      if (!rep) nn++;
+    }
     const g_area = nn * (cover / 100) * (H / 100);
     let n_area = (L / 100) * (H / 100);
     if (f.cle in ded) n_area -= ded[f.cle];
     gross += g_area; net += n_area;
-    const pieces = [];
-    for (let i = 0; i < nn; i++) pieces.push({ label: `${f.cle}${i + 1}`, largeur_cm: rnd(Math.min(cover, L - i * cover), 1) });
     rows.push({
       face: f.cle, libelle: f.libelle, longueur_cm: L, hauteur_cm: H,
       nb_panneaux: nn, aire_brute_m2: rnd(g_area, 2), rehausse: f.rehausse, pieces,
@@ -271,11 +287,11 @@ export function shopping(p: Params, g: any, t: any, openings: any[]) {
     { poste: "Rail / lambourde de pied", qte: `~${ceil(perim) + 1} m`, note: "U galvanise OU bois traite classe 4, sur bande EPDM. Sureleve les panneaux de la dalle." },
     { poste: "Profils d'angle exterieurs + interieurs", qte: `4 angles x ${f2(corner_h)} m, ext + int = ~${ceil(8 * corner_h)} m`, note: "4 angles droits standard (profil L / couvre-joint)." },
     { poste: "Bavette d'egout haut (avant)", qte: `~${ceil(A / 100) + 1} m`, note: "Larmier en haut de la face avant." },
-    { poste: "Bavettes de rive (gauche/droite)", qte: `~${ceil(2 * G / 100) + 1} m`, note: "Rives laterales du toit, avec debord." },
+    { poste: "Bavettes de rive (gauche/droite)", qte: `~${ceil(2 * G / 100) + 1} m`, note: "Rives laterales du toit (affleurantes si debord lateral = 0 : la bavette ferme le chant du panneau)." },
     { poste: "Gouttiere + 1 descente", qte: `~${ceil(A / 100) + 1} m + 1 descente`, note: "En bas de pente (face B), descente a un angle arriere." },
     { poste: "Vis autoperceuses tete EPDM", qte: `~${screws} (boite de ${ceil(screws / 100) * 100})`, note: "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire." },
     { poste: "Chevilles / scellement dalle", qte: `~${anchors}`, note: "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)." },
-    { poste: "Porte vitree alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints." },
+    { poste: "Bloc-porte vitre alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Dormant compris, aux cotes d'un module entier (largeur utile x hauteur de mur) : remplace un panneau, rien a decouper. Ouverture vers l'exterieur, seuil + joints." },
     { poste: "Ventilation (VMC ou aerateurs hygro)", qte: "1 kit", note: "INDISPENSABLE en usage habitable chauffe : evite la condensation (voir vigilance)." },
     { poste: "Bande comprimee / mousse precomprimee", qte: `~${ceil(perim + open_perim)} m`, note: "Etancheite a l'air au pied et au pourtour des ouvertures." },
     { poste: "Bande butyle (joints de panneaux)", qte: `~${ceil(perim * 2)} m`, note: "Joints longitudinaux, joint mur/rehausse et perimetriques." },
@@ -336,10 +352,11 @@ export function model3d(p: Params, g: any, openings: any[]) {
   const panels: any[] = [];
   g.faces.forEach((f: any) => {
     const n = Math.ceil(f.longueur_cm / cover);
-    for (let i = 0; i < n; i++) panels.push({
-      label: `${f.cle}${i + 1}`, face_index: FACE_INDEX[f.cle],
-      s0_m: m(i * cover), s1_m: m(Math.min((i + 1) * cover, f.longueur_cm)),
-    });
+    for (let i = 0; i < n; i++) {
+      const s0 = i * cover, s1 = Math.min((i + 1) * cover, f.longueur_cm);
+      if (panel_replaced_by(openings, f.cle, s0, s1, g.hauteur_mur_cm)) continue;
+      panels.push({ label: `${f.cle}${i + 1}`, face_index: FACE_INDEX[f.cle], s0_m: m(s0), s1_m: m(s1) });
+    }
   });
   const rehausse_pieces = drop > 0 ? [
     { label: "R1", face_index: FACE_INDEX.A, kind: "bandeau" },
@@ -575,7 +592,7 @@ export function facade_svg(p: Params, g: any, face: any, openings: any[]): strin
     svg += `<rect x="${f1(sx)}" y="${f1(by - oh)}" width="${f1(ow)}" height="${f1(oh)}" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>\n`;
     if (o.type === "porte") {
       svg += line(sx, by - oh / 2, sx - 16, by - oh / 2, "#1b6", 1, "3 3");
-      svg += text(sx + ow / 2, by - oh / 2 - 6, "porte", "middle", "#178", 11);
+      svg += text(sx + ow / 2, by - oh / 2 - 6, o.largeur_cm >= cover - 0.5 ? "bloc-porte" : "porte", "middle", "#178", 11);
       svg += text(sx + ow / 2, by - oh / 2 + 8, `${itr(o.largeur_cm)}×${itr(o.hauteur_cm)}`, "middle", "#178", 10);
     } else {
       svg += text(sx + ow / 2, by - oh / 2 - 2, "fenêtre", "middle", "#178", 10);
@@ -587,13 +604,20 @@ export function facade_svg(p: Params, g: any, face: any, openings: any[]): strin
   const mine = openings.filter((o) => o.face === face.cle);
   for (let i = 0, n = Math.ceil(L / cover); i < n; i++) {
     const x0 = i * cover, x1 = Math.min((i + 1) * cover, L);
+    const rep = panel_replaced_by(mine, face.cle, x0, x1, Hm);
+    if (rep) {
+      const c = P((x0 + x1) / 2, Hm * 0.9);
+      svg += text(c[0], c[1] + 4, `${face.cle}${i + 1} = bloc-porte`, "middle", "#178", 10, "bold");
+      continue;
+    }
     const over = mine.filter((o) => o.start_cm < x1 && o.start_cm + o.largeur_cm > x0);
     const topOpen = over.length ? Math.max(...over.map((o) => o.allege_cm + o.hauteur_cm)) : 0;
     const hy = over.length ? Math.min(Hm - 6, topOpen + (Hm - topOpen) / 2) : Hm * 0.86;
     const c = P((x0 + x1) / 2, hy);
     svg += text(c[0], c[1] + 6, `${face.cle}${i + 1}`, "middle", "#9fb0c2", over.length && Hm - topOpen < 30 ? 11 : 18, "bold");
   }
-  svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm · ${Math.ceil(L / cover)} panneaux de ${f0(Hm)}`, "middle", "#222", 13, "bold");
+  const nPan = Array.from({ length: Math.ceil(L / cover) }, (_, i) => panel_replaced_by(mine, face.cle, i * cover, Math.min((i + 1) * cover, L), Hm) ? 0 : 1).reduce((a: number, b: number) => a + b, 0);
+  svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm · ${nPan} panneau${nPan > 1 ? "x" : ""} de ${f0(Hm)}`, "middle", "#222", 13, "bold");
   svg += text(pad - 8, P(0, h1)[1], `${f0(h1)}`, "end", "#2b5d8a", 12);
   svg += text(pad + L * scale + 8, P(L, h2)[1], `${f0(h2)}`, "start", "#2b5d8a", 12);
   svg += text(W / 2, 26, title, "middle", "#222", 15, "bold");
