@@ -1,8 +1,8 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Coin arrière-droit hors dalle** : avec 200 × 240, combler le triangle ~54 × 51 cm
-      (béton ou plots) avant le montage. Le site calcule et affiche le débord en direct.
+- [ ] **Dalle : saisir le relevé exact** (`dalle_cm`, provisoire depuis le 2026-09-06 : 2 cm de
+      marge, côté droit +20 cm derrière le mur B). Le site calcule et affiche tout débord en direct.
 - [ ] **Formalités** : 4,8 m² de murs mais 5,72 m² débords inclus ⇒ vérifier en mairie si une
       déclaration préalable est due (et la distance aux limites du PLU).
 - [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du

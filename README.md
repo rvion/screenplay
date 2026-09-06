@@ -28,7 +28,7 @@ Une seule coupe en biais dans tout le projet. Deux ouvertures : la **porte vitr�
 | **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,9°), 3 panneaux toiture de ~2,61 m |
 | **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, source principale de lumière |
 | **Fenêtre** | **80 × 80**, allège 110, face D, dans le 2e panneau (liste `fenetres[]`, vide = aucune) |
-| **Dalle** | réelle 246 × 230 à **coin coupé** : un petit triangle (~54 × 51 cm) déborde au coin arrière-droit — à combler |
+| **Dalle** | existante, à **coin coupé** (relevé exact à saisir) ; l'abri est posé avec 2 cm de marge, tout sur la dalle |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
 ---
@@ -97,8 +97,8 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 ## ⚠️ Points de vigilance (résumé)
 
-- **Coin arrière-droit hors dalle** : la dalle a un coin coupé ; avec 200 × 240 un triangle de
-  ~54 × 51 cm déborde. Le combler (quelques sacs de béton ou plots) avant le montage.
+- **Dalle** : le relevé exact reste à saisir dans `dalle_cm` ; le site affiche en direct toute
+  partie de l'emprise qui déborderait de la dalle.
 - **Seuil des 5 m²** : 4,8 m² de murs, 5,72 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
   (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
 - **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant

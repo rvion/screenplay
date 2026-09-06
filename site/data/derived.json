@@ -95,15 +95,48 @@
       }
     ],
     "dalle": {
-      "avant": 230,
-      "gauche": 246,
-      "droite_jusqu_coupe": 160,
-      "arriere_jusqu_coupe": 140,
+      "avant": 204,
+      "gauche": 348,
+      "droite_jusqu_coupe": 262,
+      "arriere_jusqu_coupe": 114,
+      "decalage_cm": [
+        2,
+        2
+      ],
+      "polygone": [
+        [
+          -2,
+          -2
+        ],
+        [
+          202,
+          -2
+        ],
+        [
+          202,
+          260
+        ],
+        [
+          112,
+          346
+        ],
+        [
+          -2,
+          346
+        ]
+      ],
       "coupe_cm": 124.5,
-      "hors_dalle_m2": 0.14,
+      "marges_cm": {
+        "gauche": 2,
+        "avant": 2,
+        "droite": 2,
+        "arriere_droite": 20,
+        "arriere_gauche": 106
+      },
+      "hors_dalle_m2": 0,
       "hors_dalle_triangle_cm": [
-        53.7,
-        51.3
+        0,
+        0
       ],
       "depasse_bbox": false
     }
@@ -493,24 +526,24 @@
     "roof_slope": 0.10417,
     "slab": [
       [
-        0,
-        0
+        -0.02,
+        -0.02
       ],
       [
-        2.3,
-        0
+        2.02,
+        -0.02
       ],
       [
-        2.3,
-        1.6
+        2.02,
+        2.6
       ],
       [
-        1.4,
-        2.46
+        1.12,
+        3.46
       ],
       [
-        0,
-        2.46
+        -0.02,
+        3.46
       ]
     ],
     "gutter_face_index": 2,

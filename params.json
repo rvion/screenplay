@@ -11,11 +11,12 @@
     "gauche_G": 240
   },
   "dalle_cm": {
-    "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). Sert uniquement a verifier que l'emprise tient dessus : le site calcule la partie hors dalle.",
-    "gauche": 246,
-    "avant": 230,
-    "droite_jusqu_coupe": 160,
-    "arriere_jusqu_coupe": 140
+    "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). PROVISOIRE (2026-09-06) : mesures exactes a saisir. Hypothese : 2 cm de dalle autour de l'abri (gauche, avant, droite), le cote droit (le plus court) depasse de 20 cm derriere le mur arriere, coupe conservee a 90 x 86. decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle.",
+    "gauche": 348,
+    "avant": 204,
+    "droite_jusqu_coupe": 262,
+    "arriere_jusqu_coupe": 114,
+    "decalage_cm": { "x": 2, "y": 2 }
   },
   "panneau": {
     "epaisseur_mm": 60,

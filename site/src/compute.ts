@@ -106,22 +106,28 @@ export function geometry(p: Params) {
   });
 
   // Dalle reelle (coin arriere-droit coupe) : partie de l'emprise hors dalle.
+  // decalage = position du coin avant-gauche de l'abri dans le repere de la dalle.
   let dalle: any = null;
   const d = p.dalle_cm;
   if (d) {
     const dA = +d.avant, dG = +d.gauche, dD = +d.droite_jusqu_coupe, dB = +d.arriere_jusqu_coupe;
+    const ox = d.decalage_cm ? +d.decalage_cm.x : 0, oy = d.decalage_cm ? +d.decalage_cm.y : 0;
     const cw = dA - dB, ch = dG - dD;           // triangle coupe : largeur x profondeur
     const clamp = (v: number) => Math.max(0, Math.min(1, v));
-    const uA = cw > 0 ? clamp((A - dB) / cw) : 0;
-    const vG = ch > 0 ? clamp((G - dD) / ch) : 0;
+    const uA = cw > 0 ? clamp((ox + A - dB) / cw) : 0;
+    const vG = ch > 0 ? clamp((oy + G - dD) / ch) : 0;
     const t = Math.max(0, uA + vG - 1);       // fraction du triangle occupee par le batiment
     const dx = t * cw, dy = t * ch;
     dalle = {
       avant: dA, gauche: dG, droite_jusqu_coupe: dD, arriere_jusqu_coupe: dB,
+      decalage_cm: [ox, oy],
+      // polygone de la dalle dans le repere de l'abri (origine = coin avant-gauche de l'abri)
+      polygone: [[0, 0], [dA, 0], [dA, dD], [dB, dG], [0, dG]].map(([x, y]) => [rnd(x - ox, 1), rnd(y - oy, 1)]),
       coupe_cm: rnd(Math.hypot(cw, ch), 1),
+      marges_cm: { gauche: ox, avant: oy, droite: rnd(dA - ox - A, 1), arriere_droite: rnd(dD - oy - G, 1), arriere_gauche: rnd(dG - oy - G, 1) },
       hors_dalle_m2: rnd(dx * dy / 2 / 1e4, 2),
       hors_dalle_triangle_cm: [rnd(dx, 1), rnd(dy, 1)],
-      depasse_bbox: A > dA + 1e-9 || G > dG + 1e-9,
+      depasse_bbox: ox < 0 || oy < 0 || ox + A > dA + 1e-9 || oy + G > dG + 1e-9,
     };
   }
 
@@ -345,9 +351,7 @@ export function model3d(p: Params, g: any, openings: any[]) {
   for (let i = 0, n = Math.ceil(roof_w / cover); i < n; i++) roof_panels.push({
     label: `T${i + 1}`, x0_m: m(-deb.gauche + i * cover), x1_m: m(-deb.gauche + Math.min((i + 1) * cover, roof_w)),
   });
-  const slab = g.dalle
-    ? [[0, 0], [g.dalle.avant, 0], [g.dalle.avant, g.dalle.droite_jusqu_coupe], [g.dalle.arriere_jusqu_coupe, g.dalle.gauche], [0, g.dalle.gauche]]
-    : g.verts;
+  const slab = g.dalle ? g.dalle.polygone : g.verts;
   return {
     footprint: g.verts.map((v: number[]) => [m(v[0]), m(v[1])]),
     heights: g.vert_heights_cm.map((h: number) => rnd(h / 100, 3)),
@@ -395,18 +399,17 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
   const pad = 90, scale = 0.42;
   const { A, G } = g.cotes;
   const d = g.dalle;
-  const bw = d ? Math.max(A, d.avant) : A, bh = d ? Math.max(G, d.gauche) : G;
-  const base_W = bw * scale + 2 * pad;
-  const H = bh * scale + 2 * pad;
+  const allx = [0, A, ...(d ? d.polygone.map((q: number[]) => q[0]) : [])];
+  const ally = [0, G, ...(d ? d.polygone.map((q: number[]) => q[1]) : [])];
+  const minx = Math.min(...allx), maxx = Math.max(...allx), miny = Math.min(...ally), maxy = Math.max(...ally);
+  const base_W = (maxx - minx) * scale + 2 * pad;
+  const H = (maxy - miny) * scale + 2 * pad;
   const title = `Plan de sol · ${A} × ${G} cm · ${g.aire_m2} m²`;
   const W = Math.max(base_W, tw(title, 15) + 24);
   const xoff = (W - base_W) / 2;
-  const P = (v: number[]) => [pad + xoff + v[0] * scale, H - pad - v[1] * scale];
+  const P = (v: number[]) => [pad + xoff + (v[0] - minx) * scale, H - pad - (v[1] - miny) * scale];
   let svg = svgHeader(rnd(W), rnd(H));
-  if (d) {
-    const slab = [[0, 0], [d.avant, 0], [d.avant, d.droite_jusqu_coupe], [d.arriere_jusqu_coupe, d.gauche], [0, d.gauche]];
-    svg += poly(slab.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
-  }
+  if (d) svg += poly(d.polygone.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
   svg += poly(g.verts.map(P), "#dce8f5", "#2b5d8a", 2);
   if (d && d.hors_dalle_m2 > 0) {
     const [dx, dy] = d.hors_dalle_triangle_cm;

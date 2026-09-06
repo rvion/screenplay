@@ -11,8 +11,8 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
 - **B3 — Dalle réelle** (déjà coulée) : Gauche **246**, Avant **230**, Droite jusqu'à la coupe
   **160**, Arrière jusqu'à la coupe **140** (cm). Le coin arrière-droit est coupé. **Emprise
   retenue : 200 × 240** (4,8 m²) : on peut **en faire le tour** (contrainte du terrain), on
-  reste sous 5 m² de murs, et seul un petit triangle (~54 × 51 cm) déborde de la dalle au coin
-  arrière-droit — **à combler** (quelques sacs de béton ou plots). L'angle coupé pour atteindre
+  reste sous 5 m² de murs. Relevé exact de la dalle **à fournir** (`dalle_cm` provisoire : 2 cm
+  de marge autour, côté droit 20 cm derrière le mur B). L'angle coupé pour atteindre
   5,3 m² a été jugé non rentable (+0,4 m² intérieur contre 2 angles obtus et pas de tour).
 - **B4 — Murs & toit** en **panneaux sandwich 60 mm autoportants** : pas d'ossature secondaire
   (« on m'a dit que 6 cm est autoportant »). Seulement rail de pied + profils d'angle.

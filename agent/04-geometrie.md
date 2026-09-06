@@ -20,12 +20,16 @@ B = BR→BL (200), G = BL→FL (240). Périmètre = 2(A+G) = **880 cm**. Aire = 
 Emprise débords inclus (10 cm partout) : 220 × 260 = **5,72 m²** (`emprise_debords_m2`).
 
 ## Dalle réelle (`dalle_cm`) et partie hors dalle
-Dalle = pentagone `(0,0) (230,0) (230,160) (140,246) (0,246)` ; coin coupé de largeur
-`cw = 230−140 = 90` et profondeur `ch = 246−160 = 86` (coupe ≈ 124,5 cm).
-Avec `uA = clamp((A−140)/cw)`, `vG = clamp((G−160)/ch)` et `t = max(0, uA+vG−1)`, le
-triangle de l'emprise hors dalle a pour côtés `t·cw × t·ch`. Par défaut (200 × 240) :
-`uA = 0,667`, `vG = 0,930`, `t = 0,597` ⇒ **≈ 54 × 51 cm = 0,14 m²** au coin arrière-droit, à
-combler. Pour `G ≤ 160` ou `A ≤ 140` : rien hors dalle. (Avec 230 × 246 : 90 × 86 = 0,39 m².)
+Dalle = pentagone `(0,0) (dA,0) (dA,dD) (dB,dG) (0,dG)` dans son propre repère ; l'abri est posé
+avec son coin avant-gauche en `decalage_cm = (ox, oy)`. Coin coupé de largeur `cw = dA − dB` et
+profondeur `ch = dG − dD`.
+Avec `uA = clamp((ox+A−dB)/cw)`, `vG = clamp((oy+G−dD)/ch)` et `t = max(0, uA+vG−1)`, le
+triangle de l'emprise hors dalle (au coin arrière-droit de l'abri) a pour côtés `t·cw × t·ch`.
+
+**Valeurs provisoires (2026-09-06, à remplacer par le relevé exact)** : `dA = 204`, `dG = 348`,
+`dD = 262`, `dB = 114`, `(ox, oy) = (2, 2)` ⇒ 2 cm de dalle à gauche, devant et à droite, le côté
+droit dépasse de 20 cm derrière le mur B, coupe 90 × 86 conservée ⇒ `t = 0`, **rien hors dalle**.
+(Ancien relevé 230 × 246 / 160 / 140 avec l'abri au coin : 54 × 51 cm hors dalle pour 200 × 240.)
 
 ## Hauteurs et rehausse
 - `h(y) = H + c·(1 − y/G) = 215 + 25·(1 − y/240)` : avant **240**, arrière **215**.

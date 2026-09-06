@@ -36,7 +36,7 @@ ok(/€/.test($("#budget-total").textContent), "budget total affiche");
 ok($("#plan-plan-sol").querySelector("svg") !== null, "plan de sol SVG injecte");
 ok($("#plan-facade-A").querySelector("svg") !== null, "facade A SVG injectee");
 ok($("#plan-plan-rehausse").querySelector("svg") !== null, "plan de rehausse SVG injecte");
-ok(!$("#v-dalle").hidden, "vigilance dalle affichee (coin hors dalle)");
+ok($("#v-dalle").hidden === true, "vigilance dalle masquee (rien hors dalle)");
 ok($("#cover").textContent.includes("cm"), "largeur utile affichee");
 ok($("#v-pente").textContent.includes("%"), "pente vigilance affichee");
 ok(/m²|seuil/.test($("#v-seuil").textContent), "seuil 5 m2 affiche");
