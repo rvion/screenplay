@@ -36,13 +36,17 @@
 - Finition **toit** (nervures hautes) : produit différent des panneaux de mur.
 - Gouttière sur toute la face **B**, une descente à un angle arrière.
 
-## Porte (seule ouverture)
-- Objet `porte` dans `params.json` : `face` (A), `largeur_cm`, `hauteur_cm`, `position`
-  (`gauche`/`centre`/`droite`), `marge_bord_cm`. Vitrée, ouvrant **extérieur**, source
-  principale de lumière. Déduite du net des murs, dessinée (plan de sol + élévation A), rendue en
-  3D (trou réel + vantail entrouvert).
-- Pas de fenêtre. `compute.ts` garde une liste interne d'ouvertures (`resolve_openings`) pour
-  pouvoir en rajouter plus tard sans refonte.
+## Ouvertures : porte + fenêtres
+- Objet `porte` dans `params.json` : `face` (A), `largeur_cm`, `hauteur_cm`, `position`,
+  `marge_bord_cm`. Vitrée, ouvrant **extérieur**, source principale de lumière. Rendue en 3D
+  avec un vantail entrouvert.
+- Liste `fenetres[]` (vide = aucune) : `face`, `largeur_cm`, `hauteur_cm`, `allege_cm`,
+  `position`. Défaut : **une fenêtre 80 × 80, allège 110, face D, à 110 cm de l'avant** — donc
+  entièrement dans le 2e panneau (100–200), jamais à cheval sur un joint.
+- `position` accepte `gauche`/`centre`/`droite` (+ marge) **ou un nombre** = distance en cm
+  depuis le début de la face. Le site convertit en nombre au premier affichage du curseur.
+- Toute ouverture est déduite du net des murs, dessinée (plan de sol + élévation), rendue en 3D
+  (trou réel + vitrage), comptée en achats et au budget (`prix_indicatifs_eur.fenetre`).
 
 ## Calcul & livrables (`site/src/compute.ts`)
 `buildCore(params)` (pur, sans DOM/Three) produit géométrie + débit + achats + budget + modèle 3D
@@ -60,8 +64,9 @@
 ## Site (`site/`)
 - `index.html` + `style.css` + `app.js` (bundle esbuild de `src/`, Three.js via CDN).
 - Sections : Aperçu (KPIs + tableau des faces), 3D, **Réglages** (emprise, murs, toit, porte,
-  panneaux ; prix repliés), Plans, Débit, Achats, Budget, **Montage en 6 étapes**, Vigilance.
-- Volontairement court : pas d'éditeur d'ouvertures, pas de choix d'épaisseur (60 mm fixé).
+  fenêtres, panneaux ; prix repliés), Plans, Débit, Achats, Budget, **Montage en 6 étapes**, Vigilance.
+- Volontairement court : une carte par fenêtre (face + 4 curseurs), pas de choix d'épaisseur
+  (60 mm fixé).
 - Tout est recalculé en direct (pas de chiffre en dur, pas de `fetch`). Dégrade proprement sans
   WebGL (message + plans).
 - 3D : dalle réelle (coin coupé visible), rail, murs percés, **joints de panneaux dessinés**

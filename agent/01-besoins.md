@@ -14,8 +14,9 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
   dalle au coin arrière-droit — **à trancher** (compléter la dalle, ou réduire G). Voir vigilance.
 - **B4 — Murs & toit** en **panneaux sandwich 60 mm autoportants** : pas d'ossature secondaire
   (« on m'a dit que 6 cm est autoportant »). Seulement rail de pied + profils d'angle.
-- **B5 — Porte de service vitrée**, **ouvrant vers l'extérieur**, **seule ouverture** du
-  projet et **source unique de lumière naturelle**. **Pas de fenêtre pour l'instant.**
+- **B5 — Porte de service vitrée**, **ouvrant vers l'extérieur**, **source principale de
+  lumière naturelle**. Depuis le 2026-09-06 : **une fenêtre sur la face droite (D)** par défaut,
+  liste `fenetres[]` paramétrique (vide = aucune).
 - **B6 — Toit mono-pente** : l'eau s'écoule **vers l'arrière (face B)**.
 - **B7 — Coupes simples.** Tous les panneaux de mur sont des **rectangles** identiques (coupes
   droites). La pente est obtenue par une **rehausse** : **une bande coupée en diagonale** (deux
@@ -47,7 +48,6 @@ Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés
   fabricant pour du 60 mm (sinon une panne intermédiaire).
 
 ## Non-objectifs (pour l'instant)
-- Fenêtres (retirées ; réintroduction possible plus tard).
 - Calcul réglementaire/structurel signé, étude de sol, déclaration préalable de travaux.
 - Électricité / CVC détaillés (mentionnés en vigilance, non chiffrés finement).
 - Commande réelle / liens fournisseurs spécifiques.

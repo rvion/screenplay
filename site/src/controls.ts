@@ -1,9 +1,10 @@
-// Panneau de reglages, volontairement court : dimensions, toit, porte, panneaux.
+// Panneau de reglages, volontairement court : dimensions, toit, porte, fenetres, panneaux.
 // Mute l'objet `params` (par reference) puis appelle onChange() -> main.ts
 // recalcule tout (KPIs, debit, plans, budget, 3D). Prix repliés par defaut.
-import type { Params } from "./compute";
+import { opening_start_cm, type Params } from "./compute";
 
 const POSITIONS: [string, string][] = [["gauche", "à gauche"], ["centre", "centrée"], ["droite", "à droite"]];
+const FACES: [string, string][] = [["A", "A · avant"], ["D", "D · droite"], ["B", "B · arrière"], ["G", "G · gauche"]];
 
 function h(tag: string, attrs: Record<string, any> = {}, children: (Node | string)[] = []): HTMLElement {
   const e = document.createElement(tag);
@@ -59,6 +60,33 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
       .map((k) => num(k.replace(/_/g, " "), pr, k, 1, "5.5em"));
   }
 
+  function windowsGroup(): HTMLElement {
+    const list: any[] = params.fenetres || (params.fenetres = []);
+    const body = h("div", { class: "openings" });
+    const rerender = () => { renderPanel(); onChange(); };
+    list.forEach((w, i) => {
+      const faceSel = h("select", { onchange: () => { w.face = faceSel.value; onChange(); } },
+        FACES.map(([v, l]) => { const o = h("option", { value: v }, [l]) as HTMLOptionElement; if (w.face === v) o.selected = true; return o; })) as HTMLSelectElement;
+      if (typeof w.position !== "number") { // "gauche|centre|droite" -> distance equivalente
+        const faceLen = (w.face === "A" || w.face === "B") ? +params.emprise_cm.avant_A : +params.emprise_cm.gauche_G;
+        w.position = Math.round(opening_start_cm(w, faceLen));
+      }
+      body.append(h("div", { class: "opening-card" }, [
+        h("div", { class: "ctl-row" }, [h("b", {}, [`Fenêtre ${i + 1}`]), faceSel,
+          h("button", { class: "btn-mini", title: "Supprimer", onclick: () => { list.splice(i, 1); rerender(); } }, ["✕"])]),
+        slider("Largeur", w, "largeur_cm", 40, 140),
+        slider("Hauteur", w, "hauteur_cm", 40, 140),
+        slider("Allège (bas / sol)", w, "allege_cm", 60, 160),
+        slider("Position depuis le début de la face", w, "position", 0, 400),
+      ]));
+    });
+    body.append(h("button", { class: "btn btn-ghost btn-add", onclick: () => {
+      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 80, allege_cm: 110, position: 110 });
+      rerender();
+    } }, ["+ Ajouter une fenêtre"]));
+    return body;
+  }
+
   function renderPanel() {
     container.innerHTML = "";
     const e = params.emprise_cm;
@@ -80,11 +108,12 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
           }),
         ]),
       ]),
-      group("Porte (seule ouverture)", [
+      group("Porte", [
         slider("Largeur", params.porte, "largeur_cm", 60, 140),
         slider("Hauteur", params.porte, "hauteur_cm", 180, 230),
         select("Position sur la face avant", params.porte, "position", POSITIONS),
       ]),
+      group("Fenêtres", [windowsGroup()], (params.fenetres || []).length > 0),
       group("Panneaux", [
         slider("Largeur utile", params.panneau, "largeur_utile_cm", 80, 120),
         slider("Chute / pertes", params.divers, "facteur_chute_pct", 0, 30, 1, "%"),

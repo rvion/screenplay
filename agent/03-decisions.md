@@ -130,3 +130,13 @@ en 6 étapes, vigilance recentrée (débord de dalle, portée du toit, pente, co
 *Pourquoi :* « le site est trop d'étapes, trop complexe, trop cher » ; une épaisseur plus fine
 imposerait une ossature. *À vérifier :* portée libre du toit (~2,8 m) dans le tableau du
 fabricant. *Complète* D7 ; *rend caduc* le choix 40/60/80/100 de D13/D14.
+
+## D20 — Retour d'une fenêtre (face D), liste `fenetres[]` séparée de la porte
+Après D18 (porte seule), l'utilisateur demande une fenêtre sur la face droite. `params.json`
+reçoit une liste `fenetres[]` (une fenêtre 80 × 80, allège 110, face D, à 110 cm de l'avant),
+distincte de l'objet `porte`. `position` accepte désormais un **nombre** (distance en cm) pour
+caler la fenêtre **dans un seul panneau** (le 2e, 100–200 cm) et ne jamais chevaucher un joint.
+Le site propose une carte par fenêtre (face + curseurs) et un bouton d'ajout. *Pourquoi :* lumière
+côté droit ; coût contenu (+250 € indicatif) et un seul panneau découpé. *Écarté :* revenir à la
+liste unique `ouvertures[]` de D11 (la porte a des règles propres : allège 0, vantail, seuil).
+*Amende* D18 (« seule ouverture » ne tient plus) ; *complète* D11.

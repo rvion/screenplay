@@ -18,14 +18,16 @@ paramètres unique** et publié sur un petit **site web**.
 Une boîte rectangulaire dont **tous les panneaux de mur sont des rectangles identiques**
 (coupes droites) ; la pente du toit vient d'une **rehausse** posée dessus : **une bande coupée
 en diagonale** (deux triangles, faces gauche et droite) et **un bandeau** sur la face avant.
-Une seule coupe en biais dans tout le projet. **Une seule ouverture** : la porte vitrée.
+Une seule coupe en biais dans tout le projet. Deux ouvertures : la **porte vitrée** et une
+**fenêtre** sur la face droite, calée dans un seul panneau.
 
 | | |
 |---|---|
 | **Emprise** | **230 × 246 cm** ≈ **5,66 m²** (4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche) |
 | **Panneaux** | sandwich **60 mm autoportants**, âme PIR, pose murale verticale, **12 panneaux de 215 cm** + 1 pour la rehausse |
 | **Toit** | **mono-pente vers l'arrière**, rehausse 25 cm (**≈ 10 %**, 5,8°), 3 panneaux toiture de ~2,82 m |
-| **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, **seule source de lumière** |
+| **Porte** | vitrée, **90 × 210**, face A à droite, ouvrant dehors, source principale de lumière |
+| **Fenêtre** | **80 × 80**, allège 110, face D, dans le 2e panneau (liste `fenetres[]`, vide = aucune) |
 | **Dalle** | réelle 246 × 230 à **coin coupé** : le coin arrière-droit (90 × 86 cm) **déborde** — à trancher |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
@@ -43,7 +45,7 @@ Une seule coupe en biais dans tout le projet. **Une seule ouverture** : la porte
 |---|---|
 | ![Face A](site/assets/facade-A.svg) | ![Face G](site/assets/facade-G.svg) |
 
-| Face D — Droite | Face B — Arrière |
+| Face D — Droite (fenêtre) | Face B — Arrière |
 |---|---|
 | ![Face D](site/assets/facade-D.svg) | ![Face B](site/assets/facade-B.svg) |
 
@@ -54,7 +56,7 @@ Une seule coupe en biais dans tout le projet. **Une seule ouverture** : la porte
 ## Comment ça marche (paramétrique)
 
 Le site est **interactif** : quelques réglages (emprise, hauteur des murs, rehausse, porte,
-largeur utile) **recalculent tout en direct** — KPIs, débit, **plans SVG cotés**, budget et
+fenêtres, largeur utile) **recalculent tout en direct** — KPIs, débit, **plans SVG cotés**, budget et
 modèle 3D. Pas besoin de rien lancer pour explorer : ouvre simplement le site.
 
 Pour le développement / régénérer les artefacts versionnés :
@@ -103,8 +105,9 @@ La conception détaillée vit dans [`agent/`](agent/) :
 - **Pente du toit** : 25 cm ≈ **10 %** (5,8°). Vérifier la pente mini du fabricant.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
   thermiques (dont le joint mur/rehausse). **Ventilation indispensable**.
-- **Porte extérieure** : unique source de lumière (double vitrage performant), débattement,
-  arrêt de porte, étanchéité du seuil ; gouttière arrière + descente loin de la dalle.
+- **Porte et fenêtre** : double vitrage performant (le vitrage déperd 4 à 5 fois plus que le
+  panneau), fenêtre dans un seul panneau, débattement et arrêt de porte, étanchéité du seuil ;
+  gouttière arrière + descente loin de la dalle.
 
 ---
 

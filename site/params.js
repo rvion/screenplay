@@ -3,7 +3,7 @@ window.SHED_PARAMS = {
   "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Le site recalcule tout en direct (TypeScript) ; pour regenerer les artefacts versionnes : npm run build && npm run emit.",
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
-    "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, une seule porte vitree, sur dalle beton existante.",
+    "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
     "auteur": "Remi Vion"
   },
   "emprise_cm": {
@@ -48,18 +48,31 @@ window.SHED_PARAMS = {
     "position": "droite",
     "marge_bord_cm": 5,
     "ouverture": "vers l'exterieur",
-    "description": "porte vitree aluminium double vitrage - seule ouverture, source principale de lumiere",
-    "_comment": "Seule ouverture du projet (pas de fenetre pour l'instant). position = gauche|centre|droite sur la face (+ marge_bord_cm)."
+    "description": "porte vitree aluminium double vitrage - source principale de lumiere",
+    "_comment": "Ouverture principale. position = gauche|centre|droite sur la face (+ marge_bord_cm), ou un nombre = distance en cm depuis le debut de la face."
   },
+  "fenetres": [
+    {
+      "id": "fenetre-droite",
+      "face": "D",
+      "largeur_cm": 80,
+      "hauteur_cm": 80,
+      "allege_cm": 110,
+      "position": 110,
+      "description": "fenetre PVC double vitrage, face droite, dans le 2e panneau (110-190 cm depuis l'avant)"
+    }
+  ],
+  "_fenetres_comment": "Liste (vide = aucune). Chaque fenetre : face A|D|B|G, largeur, hauteur, allege (bas de fenetre / sol), position (gauche|centre|droite ou distance en cm). Conseil : la garder dans un seul panneau (ne pas chevaucher un joint).",
   "divers": {
     "facteur_chute_pct": 10,
     "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
   },
   "prix_indicatifs_eur": {
-    "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300, PVC 300-600). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",
+    "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300, PVC 300-600 ; fenetre PVC fixe 150-300, oscillo-battante 250-450). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",
     "panneau_mur_m2": 35,
     "panneau_toit_m2": 35,
     "porte_vitree": 700,
+    "fenetre": 250,
     "profils_ml": 12,
     "visserie_etancheite_forfait": 160,
     "gouttiere_descente_forfait": 130,

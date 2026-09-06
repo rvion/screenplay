@@ -11,6 +11,8 @@ export function makeCases(base) {
     p.toit.pente_chute_cm = 32;
     p.toit.debord_cm = { avant: 20, arriere: 25, gauche: 10, droite: 30 };
     p.porte = { ...p.porte, position: "gauche", largeur_cm: 100, hauteur_cm: 215 };
+    p.fenetres = [{ face: "D", largeur_cm: 100, hauteur_cm: 90, allege_cm: 100, position: "centre" },
+                  { face: "B", largeur_cm: 60, hauteur_cm: 60, allege_cm: 120, position: "droite" }];
     p.prix_indicatifs_eur.panneau_mur_m2 = 49;
     p.prix_indicatifs_eur.incertitude_pct = 20;
     cases.push({ name: "grand-porte-gauche", params: p });
@@ -20,6 +22,7 @@ export function makeCases(base) {
     const p = clone(base);
     p.emprise_cm = { avant_A: 230, gauche_G: 160 };
     delete p.porte;
+    p.fenetres = [];
     cases.push({ name: "sur-dalle-sans-porte", params: p });
   }
   {

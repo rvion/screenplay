@@ -15,7 +15,6 @@
 - [ ] Besoin **électricité / chauffage / plancher** à intégrer (bureau) ?
 
 ## Améliorations possibles (non bloquantes)
-- [ ] Réintroduire des **fenêtres** (liste d'ouvertures) si la porte seule éclaire trop peu.
 - [ ] Élévations : cotes des joints de panneaux et de la porte plus détaillées.
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
 - [ ] Bilan thermique chiffré (vitrage de la porte, ponts thermiques).
@@ -29,8 +28,8 @@
       `dalle_cm` pour calculer le débord.
 - [x] **Rehausse** : murs rectangulaires + 1 bande coupée en diagonale (2 triangles) + 1 bandeau ;
       plan de coupe SVG dédié ; joints dessinés en 3D et sur les élévations.
-- [x] **Porte seule** (plus de fenêtres) ; contrôles réduits ; montage en 6 étapes ;
-      épaisseur fixée à 60 mm autoportant.
+- [x] **Porte + liste `fenetres[]`** (une fenêtre face D par défaut, D20) ; contrôles réduits ;
+      montage en 6 étapes ; épaisseur fixée à 60 mm autoportant ; prix médians 2026 + livraison.
 - [x] Ouvertures paramétriques, 3D enrichie, budget + fournisseurs, éditeur interactif, port TS
       complet (historique, cf. D11–D14).
 

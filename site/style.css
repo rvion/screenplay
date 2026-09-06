@@ -117,3 +117,6 @@ code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size
 .row-toit { background: #eef2e8; }
 .plans figure.wide { grid-column: 1 / -1; }
 [hidden] { display: none !important; }
+.opening-card { border: 1px solid var(--line); border-radius: 8px; padding: .3rem .6rem .4rem; background: #fff; margin-bottom: .4rem; }
+.opening-card .ctl-row { justify-content: space-between; }
+.opening-card select { font-size: .8rem; padding: .2rem .3rem; border: 1px solid var(--line); border-radius: 6px; }

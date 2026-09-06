@@ -124,7 +124,8 @@ function geometry(p) {
 function opening_start_cm(o, face_len) {
   const w = +o.largeur_cm;
   const margin = o.marge_bord_cm == null ? 5 : +o.marge_bord_cm;
-  const pos = o.position || "centre";
+  const pos = o.position == null ? "centre" : o.position;
+  if (typeof pos === "number" || /^\d+(\.\d+)?$/.test(String(pos))) return Math.max(0, Math.min(+pos, face_len - w));
   if (pos === "droite") return Math.max(0, face_len - w - margin);
   if (pos === "gauche") return margin;
   return Math.max(0, (face_len - w) / 2);
@@ -133,6 +134,7 @@ function resolve_openings(p, g) {
   const facelen = {};
   for (const f of g.faces) facelen[f.cle] = f.longueur_cm;
   const list = p.porte ? [{ id: "porte", type: "porte", allege_cm: 0, ...p.porte }] : [];
+  (p.fenetres || []).forEach((f, i) => list.push({ id: `fenetre-${i + 1}`, type: "fenetre", ...f }));
   return list.map((o) => ({
     id: o.id,
     type: o.type,
@@ -142,7 +144,7 @@ function resolve_openings(p, g) {
     hauteur_cm: +o.hauteur_cm,
     allege_cm: +o.allege_cm || 0,
     start_cm: rnd(opening_start_cm(o, facelen[o.face]), 1),
-    position: o.position || "centre",
+    position: o.position == null ? "centre" : o.position,
     ouverture: o.ouverture || "",
     description: o.description || ""
   }));
@@ -228,9 +230,11 @@ function shopping(p, g, t, openings) {
   const screws = ceil((t.murs.aire_brute_m2 + t.rehausse.aire_brute_m2 + t.toit.aire_brute_m2) * 6);
   const portes = openings.filter((o) => o.type === "porte");
   const porte_q = portes.map((o) => `${itr(o.largeur_cm)}x${itr(o.hauteur_cm)} cm`).join(", ") || "-";
+  const fenetres = openings.filter((o) => o.type === "fenetre");
+  const fen_q = fenetres.map((o) => `${itr(o.largeur_cm)}x${itr(o.hauteur_cm)} all.${itr(o.allege_cm)} (face ${o.face})`).join(", ");
   const open_perim = openings.reduce((a, o) => a + 2 * (o.largeur_cm + o.hauteur_cm), 0) / 100;
   const ep = p.panneau.epaisseur_mm;
-  return [
+  const items = [
     { poste: `Panneaux sandwich ${ep} mm - finition MUR (murs + rehausse)`, qte: `${t.murs.total_panneaux} panneaux de ${f2(g.hauteur_mur_cm / 100)} m + ${t.rehausse.nb_panneaux} de ${f2(t.rehausse.longueur_panneau_cm / 100)} m (~${t.commande_mur_m2} m2 avec chute)`, note: "Ame PIR, autoportants (pas d'ossature). Parement mural lisse/micro-nervure, laque 2 faces. Coupes droites + 1 diagonale." },
     { poste: `Panneaux sandwich ${ep} mm - finition TOIT (face T)`, qte: `${t.toit.nb_panneaux} panneaux de ~${f2(t.toit.longueur_panneau_cm / 100)} m (~${t.commande_toit_m2} m2 avec chute)`, note: `Profil TOITURE (nervures hautes), sens de la pente. Portee libre ~${f2(t.toit.portee_cm / 100)} m : verifier le tableau de portees du fabricant.` },
     { poste: "Rail / lambourde de pied", qte: `~${ceil(perim) + 1} m`, note: "U galvanise OU bois traite classe 4, sur bande EPDM. Sureleve les panneaux de la dalle." },
@@ -240,13 +244,17 @@ function shopping(p, g, t, openings) {
     { poste: "Gouttiere + 1 descente", qte: `~${ceil(A / 100) + 1} m + 1 descente`, note: "En bas de pente (face B), descente a un angle arriere." },
     { poste: "Vis autoperceuses tete EPDM", qte: `~${screws} (boite de ${ceil(screws / 100) * 100})`, note: "Longueur = epaisseur panneau + rail. Rondelle d'etancheite obligatoire." },
     { poste: "Chevilles / scellement dalle", qte: `~${anchors}`, note: "Fixation du rail de pied sur la dalle beton (tous les ~50 cm)." },
-    { poste: "Porte vitree alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Seule ouverture : source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints." },
+    { poste: "Porte vitree alu double vitrage", qte: `${portes.length} (${porte_q})`, note: "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints." },
     { poste: "Ventilation (VMC ou aerateurs hygro)", qte: "1 kit", note: "INDISPENSABLE en usage habitable chauffe : evite la condensation (voir vigilance)." },
-    { poste: "Bande comprimee / mousse precomprimee", qte: `~${ceil(perim + open_perim)} m`, note: "Etancheite a l'air au pied et au pourtour de la porte." },
+    { poste: "Bande comprimee / mousse precomprimee", qte: `~${ceil(perim + open_perim)} m`, note: "Etancheite a l'air au pied et au pourtour des ouvertures." },
     { poste: "Bande butyle (joints de panneaux)", qte: `~${ceil(perim * 2)} m`, note: "Joints longitudinaux, joint mur/rehausse et perimetriques." },
     { poste: "Mastic PU + primaire anticorrosion", qte: "~5 cartouches + 1 primaire", note: "Cachetage et protection des chants coupes (anticorrosion)." },
     { poste: "Peinture de retouche (RAL parement)", qte: "1 aerosol", note: "Retouche des rayures et chants." }
   ];
+  if (fenetres.length) {
+    items.splice(10, 0, { poste: "Fenetre(s) double vitrage", qte: `${fenetres.length} : ${fen_q}`, note: "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant. La garder dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints." });
+  }
+  return items;
 }
 function budget(p, g, t, openings) {
   const pr = p.prix_indicatifs_eur || {};
@@ -255,10 +263,12 @@ function budget(p, g, t, openings) {
   const corner_h = g.hauteur_avant_cm / 100;
   const profils_ml = 4 * corner_h * 2 + perim;
   const portes = openings.filter((o) => o.type === "porte").length;
+  const fenetres = openings.filter((o) => o.type === "fenetre").length;
   const src = [
     ["Panneaux sandwich - mur + rehausse (brut)", rnd(t.murs.aire_brute_m2 + t.rehausse.aire_brute_m2, 2), "m\xB2", get("panneau_mur_m2")],
     ["Panneaux sandwich - toit (brut)", t.toit.aire_brute_m2, "m\xB2", get("panneau_toit_m2")],
     ["Porte vitree", portes, "u", get("porte_vitree")],
+    ["Fenetre(s)", fenetres, "u", get("fenetre")],
     ["Profils (angles, rives, rail)", rnd(profils_ml, 1), "ml", get("profils_ml")],
     ["Visserie + etancheite", 1, "forfait", get("visserie_etancheite_forfait")],
     ["Gouttiere + descente", 1, "forfait", get("gouttiere_descente_forfait")],
@@ -383,6 +393,11 @@ function plan_sol_svg(p, g, openings) {
     const q0 = P([v1[0] + ux * s0, v1[1] + uy * s0]);
     const q1 = P([v1[0] + ux * s1, v1[1] + uy * s1]);
     const owx = uy, owy = ux;
+    if (o.type !== "porte") {
+      svg += line(q0[0], q0[1], q1[0], q1[1], "#1b9aa8", 5);
+      svg += text((q0[0] + q1[0]) / 2 + owx * 16, (q0[1] + q1[1]) / 2 + owy * 16 + 4, `fen. ${itr(o.largeur_cm)}`, "middle", "#137", 10);
+      continue;
+    }
     const dwpx = o.largeur_cm * scale;
     const oe = [q0[0] + owx * dwpx, q0[1] + owy * dwpx];
     svg += line(q0[0], q0[1], q1[0], q1[1], "#c0392b", 5);
@@ -501,9 +516,15 @@ function facade_svg(p, g, face, openings) {
     const by = H - pad - o.allege_cm * scale;
     svg += `<rect x="${f1(sx)}" y="${f1(by - oh)}" width="${f1(ow)}" height="${f1(oh)}" fill="#bfe3ef" stroke="#1b6" stroke-width="2"/>
 `;
-    svg += line(sx, by - oh / 2, sx - 16, by - oh / 2, "#1b6", 1, "3 3");
-    svg += text(sx + ow / 2, by - oh / 2 - 6, "porte", "middle", "#178", 11);
-    svg += text(sx + ow / 2, by - oh / 2 + 8, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 10);
+    if (o.type === "porte") {
+      svg += line(sx, by - oh / 2, sx - 16, by - oh / 2, "#1b6", 1, "3 3");
+      svg += text(sx + ow / 2, by - oh / 2 - 6, "porte", "middle", "#178", 11);
+      svg += text(sx + ow / 2, by - oh / 2 + 8, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 10);
+    } else {
+      svg += text(sx + ow / 2, by - oh / 2 - 2, "fen\xEAtre", "middle", "#178", 10);
+      svg += text(sx + ow / 2, by - oh / 2 + 10, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 9);
+      svg += text(sx + ow / 2, by + 12, `all\xE8ge ${itr(o.allege_cm)}`, "middle", "#888", 9);
+    }
   }
   svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm \xB7 ${Math.ceil(L / cover)} panneaux de ${f0(Hm)}`, "middle", "#222", 13, "bold");
   svg += text(pad - 8, P(0, h1)[1], `${f0(h1)}`, "end", "#2b5d8a", 12);
@@ -654,7 +675,7 @@ function addJoints(scene, V, a, b, ha, hb, wallH, cover, mat) {
   if (!pts.length) return;
   scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
 }
-function addDoor(scene, V, a, b, o) {
+function addGlass(scene, V, a, b, o) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
   const P = (s, h2) => V(a[0] + ux * s, a[1] + uy * s, h2);
@@ -666,6 +687,18 @@ function addDoor(scene, V, a, b, o) {
     transmission: 0.6,
     side: THREE.DoubleSide
   });
+  if (o.type !== "porte") {
+    const s0 = o.offset_m, s1 = o.offset_m + o.width_m, y0 = o.sill_m, y1 = o.sill_m + o.height_m;
+    const g = new THREE.BufferGeometry();
+    g.setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y0), P(s1, y1), P(s0, y1)]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, glass));
+    scene.add(new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
+      new THREE.LineBasicMaterial({ color: 5595755 })
+    ));
+    return;
+  }
   const hinge = new THREE.Group();
   hinge.position.copy(P(o.offset_m, 0));
   const dir = new THREE.Vector3().subVectors(P(o.offset_m + o.width_m, 0), P(o.offset_m, 0));
@@ -706,7 +739,7 @@ function populate(group2, m) {
     addWall(group2, V, a, b, ha, hb, holes, panelMat);
     addJoints(group2, V, a, b, ha, hb, m.wall_height_m, m.panel_cover_m || 1, jointMat);
   }
-  for (const o of openings) addDoor(group2, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
+  for (const o of openings) addGlass(group2, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
   const outline = m.roof_outline || offsetRect(fp, 0.15);
   addRoofSlab(group2, V, outline, roofZ, m.thickness_m, roofMat);
   addRoofRibs(group2, V, outline, roofZ, m.thickness_m, ribMat);
@@ -848,6 +881,7 @@ function renderAll(core, p) {
 
 // site/src/controls.ts
 var POSITIONS = [["gauche", "\xE0 gauche"], ["centre", "centr\xE9e"], ["droite", "\xE0 droite"]];
+var FACES = [["A", "A \xB7 avant"], ["D", "D \xB7 droite"], ["B", "B \xB7 arri\xE8re"], ["G", "G \xB7 gauche"]];
 function h(tag, attrs = {}, children = []) {
   const e = document.createElement(tag);
   for (const k in attrs) {
@@ -900,6 +934,51 @@ function buildControls(container, params, onChange) {
     const pr = params.prix_indicatifs_eur || {};
     return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number").map((k) => num(k.replace(/_/g, " "), pr, k, 1, "5.5em"));
   }
+  function windowsGroup() {
+    const list = params.fenetres || (params.fenetres = []);
+    const body = h("div", { class: "openings" });
+    const rerender = () => {
+      renderPanel();
+      onChange();
+    };
+    list.forEach((w, i) => {
+      const faceSel = h(
+        "select",
+        { onchange: () => {
+          w.face = faceSel.value;
+          onChange();
+        } },
+        FACES.map(([v, l]) => {
+          const o = h("option", { value: v }, [l]);
+          if (w.face === v) o.selected = true;
+          return o;
+        })
+      );
+      if (typeof w.position !== "number") {
+        const faceLen = w.face === "A" || w.face === "B" ? +params.emprise_cm.avant_A : +params.emprise_cm.gauche_G;
+        w.position = Math.round(opening_start_cm(w, faceLen));
+      }
+      body.append(h("div", { class: "opening-card" }, [
+        h("div", { class: "ctl-row" }, [
+          h("b", {}, [`Fen\xEAtre ${i + 1}`]),
+          faceSel,
+          h("button", { class: "btn-mini", title: "Supprimer", onclick: () => {
+            list.splice(i, 1);
+            rerender();
+          } }, ["\u2715"])
+        ]),
+        slider("Largeur", w, "largeur_cm", 40, 140),
+        slider("Hauteur", w, "hauteur_cm", 40, 140),
+        slider("All\xE8ge (bas / sol)", w, "allege_cm", 60, 160),
+        slider("Position depuis le d\xE9but de la face", w, "position", 0, 400)
+      ]));
+    });
+    body.append(h("button", { class: "btn btn-ghost btn-add", onclick: () => {
+      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 80, allege_cm: 110, position: 110 });
+      rerender();
+    } }, ["+ Ajouter une fen\xEAtre"]));
+    return body;
+  }
   function renderPanel() {
     container.innerHTML = "";
     const e = params.emprise_cm;
@@ -924,11 +1003,12 @@ function buildControls(container, params, onChange) {
           })
         ])
       ]),
-      group("Porte (seule ouverture)", [
+      group("Porte", [
         slider("Largeur", params.porte, "largeur_cm", 60, 140),
         slider("Hauteur", params.porte, "hauteur_cm", 180, 230),
         select("Position sur la face avant", params.porte, "position", POSITIONS)
       ]),
+      group("Fen\xEAtres", [windowsGroup()], (params.fenetres || []).length > 0),
       group("Panneaux", [
         slider("Largeur utile", params.panneau, "largeur_utile_cm", 80, 120),
         slider("Chute / pertes", params.divers, "facteur_chute_pct", 0, 30, 1, "%")

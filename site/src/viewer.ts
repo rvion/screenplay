@@ -1,7 +1,7 @@
 // Scene Three.js. Reconstruit le batiment a chaque changement de parametres via
 // rebuild(model3d). THREE est externe (importmap CDN). Rendu volontairement
 // simple : dalle reelle (coin coupe), rail, murs rectangulaires + rehausse
-// (joints visibles), porte vitree, toit debordant nervure, gouttiere arriere.
+// (joints visibles), porte + fenetres vitrees, toit debordant nervure, gouttiere arriere.
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -133,13 +133,24 @@ function addJoints(scene: Vec, V: any, a: number[], b: number[], ha: number, hb:
   scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
 }
 
-function addDoor(scene: Vec, V: any, a: number[], b: number[], o: any) {
+function addGlass(scene: Vec, V: any, a: number[], b: number[], o: any) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
   const P = (s: number, h: number) => V(a[0] + ux * s, a[1] + uy * s, h);
   const glass = new THREE.MeshPhysicalMaterial({
     color: 0xbfe3ef, transparent: true, opacity: 0.34, roughness: 0.05, transmission: 0.6, side: THREE.DoubleSide,
   });
+  if (o.type !== "porte") {
+    const s0 = o.offset_m, s1 = o.offset_m + o.width_m, y0 = o.sill_m, y1 = o.sill_m + o.height_m;
+    const g = new THREE.BufferGeometry();
+    g.setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y0), P(s1, y1), P(s0, y1)]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, glass));
+    scene.add(new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
+      new THREE.LineBasicMaterial({ color: 0x55626b })));
+    return;
+  }
   const hinge = new THREE.Group();
   hinge.position.copy(P(o.offset_m, 0));
   const dir = new THREE.Vector3().subVectors(P(o.offset_m + o.width_m, 0), P(o.offset_m, 0));
@@ -181,7 +192,7 @@ function populate(group: Vec, m: Model) {
     addWall(group, V, a, b, ha, hb, holes, panelMat);
     addJoints(group, V, a, b, ha, hb, m.wall_height_m, m.panel_cover_m || 1, jointMat);
   }
-  for (const o of openings) addDoor(group, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
+  for (const o of openings) addGlass(group, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
 
   const outline = m.roof_outline || offsetRect(fp, 0.15);
   addRoofSlab(group, V, outline, roofZ, m.thickness_m, roofMat);

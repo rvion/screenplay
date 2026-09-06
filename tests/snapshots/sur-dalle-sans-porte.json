@@ -233,7 +233,7 @@
   {
    "poste": "Porte vitree alu double vitrage",
    "qte": "0 (-)",
-   "note": "Seule ouverture : source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
+   "note": "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
   },
   {
    "poste": "Ventilation (VMC ou aerateurs hygro)",
@@ -243,7 +243,7 @@
   {
    "poste": "Bande comprimee / mousse precomprimee",
    "qte": "~8 m",
-   "note": "Etancheite a l'air au pied et au pourtour de la porte."
+   "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
   },
   {
    "poste": "Bande butyle (joints de panneaux)",
@@ -282,6 +282,13 @@
     "qte": 0,
     "unite": "u",
     "pu_eur": 700,
+    "montant_eur": 0
+   },
+   {
+    "poste": "Fenetre(s)",
+    "qte": 0,
+    "unite": "u",
+    "pu_eur": 250,
     "montant_eur": 0
    },
    {

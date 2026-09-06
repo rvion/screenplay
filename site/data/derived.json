@@ -1,7 +1,7 @@
 {
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
-    "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, une seule porte vitree, sur dalle beton existante.",
+    "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
     "auteur": "Remi Vion"
   },
   "geometrie": {
@@ -148,8 +148,8 @@
         }
       ],
       "aire_brute_m2": 25.8,
-      "aire_nette_m2": 18.58,
-      "ouvertures_deduites_m2": 1.89,
+      "aire_nette_m2": 17.94,
+      "ouvertures_deduites_m2": 2.53,
       "total_panneaux": 12
     },
     "rehausse": {
@@ -238,7 +238,12 @@
     {
       "poste": "Porte vitree alu double vitrage",
       "qte": "1 (90x210 cm)",
-      "note": "Seule ouverture : source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
+      "note": "Source principale de lumiere. Ouverture vers l'exterieur. Dormant + seuil + joints."
+    },
+    {
+      "poste": "Fenetre(s) double vitrage",
+      "qte": "1 : 80x80 all.110 (face D)",
+      "note": "allege = hauteur sous fenetre (cm). Fixe ou oscillo-battant. La garder dans un seul panneau (pas a cheval sur un joint). Cadre + appui + joints."
     },
     {
       "poste": "Ventilation (VMC ou aerateurs hygro)",
@@ -247,8 +252,8 @@
     },
     {
       "poste": "Bande comprimee / mousse precomprimee",
-      "qte": "~16 m",
-      "note": "Etancheite a l'air au pied et au pourtour de la porte."
+      "qte": "~19 m",
+      "note": "Etancheite a l'air au pied et au pourtour des ouvertures."
     },
     {
       "poste": "Bande butyle (joints de panneaux)",
@@ -290,6 +295,13 @@
         "montant_eur": 700
       },
       {
+        "poste": "Fenetre(s)",
+        "qte": 1,
+        "unite": "u",
+        "pu_eur": 250,
+        "montant_eur": 250
+      },
+      {
         "poste": "Profils (angles, rives, rail)",
         "qte": 28.7,
         "unite": "ml",
@@ -325,10 +337,10 @@
         "montant_eur": 150
       }
     ],
-    "sous_total_eur": 2920,
+    "sous_total_eur": 3170,
     "incertitude_pct": 15,
-    "total_bas_eur": 2482,
-    "total_haut_eur": 3358
+    "total_bas_eur": 2694,
+    "total_haut_eur": 3645
   },
   "ouvertures": [
     {
@@ -342,7 +354,20 @@
       "start_cm": 135,
       "position": "droite",
       "ouverture": "vers l'exterieur",
-      "description": "porte vitree aluminium double vitrage - seule ouverture, source principale de lumiere"
+      "description": "porte vitree aluminium double vitrage - source principale de lumiere"
+    },
+    {
+      "id": "fenetre-droite",
+      "type": "fenetre",
+      "face": "D",
+      "face_index": 1,
+      "largeur_cm": 80,
+      "hauteur_cm": 80,
+      "allege_cm": 110,
+      "start_cm": 110,
+      "position": 110,
+      "ouverture": "",
+      "description": "fenetre PVC double vitrage, face droite, dans le 2e panneau (110-190 cm depuis l'avant)"
     }
   ],
   "panneau": {
@@ -432,6 +457,14 @@
         "width_m": 0.9,
         "height_m": 2.1,
         "sill_m": 0
+      },
+      {
+        "type": "fenetre",
+        "face_index": 1,
+        "offset_m": 1.1,
+        "width_m": 0.8,
+        "height_m": 0.8,
+        "sill_m": 1.1
       }
     ]
   },
