@@ -2,6 +2,8 @@
 <rect width="240" height="249" fill="#fbfbf8"/>
 <polygon points="60.0,189.0 180.0,189.0 180.0,60.0 60.0,60.0" fill="#eef2f6" stroke="#2b5d8a" stroke-width="2"/>
 <line x1="120.0" y1="189.0" x2="120.0" y2="60.0" stroke="#8fa3b8" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="90.0" y="84.1" text-anchor="middle" fill="#9fb0c2" font-size="18" font-weight="bold">B1</text>
+<text x="150.0" y="84.1" text-anchor="middle" fill="#9fb0c2" font-size="18" font-weight="bold">B2</text>
 <text x="120.0" y="215.0" text-anchor="middle" fill="#222" font-size="13" font-weight="bold">200 cm · 2 panneaux de 215</text>
 <text x="52.0" y="60.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>
 <text x="188.0" y="60.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>

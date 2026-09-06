@@ -190,9 +190,11 @@ export function takeoff(p: Params, g: any, openings: any[]) {
     let n_area = (L / 100) * (H / 100);
     if (f.cle in ded) n_area -= ded[f.cle];
     gross += g_area; net += n_area;
+    const pieces = [];
+    for (let i = 0; i < nn; i++) pieces.push({ label: `${f.cle}${i + 1}`, largeur_cm: rnd(Math.min(cover, L - i * cover), 1) });
     rows.push({
       face: f.cle, libelle: f.libelle, longueur_cm: L, hauteur_cm: H,
-      nb_panneaux: nn, aire_brute_m2: rnd(g_area, 2), rehausse: f.rehausse,
+      nb_panneaux: nn, aire_brute_m2: rnd(g_area, 2), rehausse: f.rehausse, pieces,
     });
   }
 
@@ -203,8 +205,8 @@ export function takeoff(p: Params, g: any, openings: any[]) {
   const reh_gross = n_reh * (cover / 100) * (strip_len / 100);
   const rehausse = {
     pieces: [
-      { piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: "rectangle, pose sur le mur A" },
-      { piece: "Triangles lateraux (faces G et D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: "1 bande G x chute coupee en diagonale = 2 triangles (tourner le 2e de 180 deg)" },
+      { label: "R1", piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: "rectangle, pose sur le mur A" },
+      { label: "R2+R3", piece: "Triangles lateraux (R2 face G, R3 face D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: "1 bande G x chute coupee en diagonale = 2 triangles (tourner R3 de 180 deg)" },
     ],
     nb_panneaux: n_reh, longueur_panneau_cm: strip_len, aire_brute_m2: rnd(reh_gross, 2),
     aire_nette_m2: rnd((A * drop + G * drop) / 1e4, 2),
@@ -218,6 +220,8 @@ export function takeoff(p: Params, g: any, openings: any[]) {
   const n_roof = Math.ceil(width_x / cover);
   const roof_gross = n_roof * (cover / 100) * (run_len / 100);
   const roof_real = (width_x / 100) * (len_h / 100);
+  const roof_pieces = [];
+  for (let i = 0; i < n_roof; i++) roof_pieces.push({ label: `T${i + 1}`, largeur_cm: rnd(Math.min(cover, width_x - i * cover), 1) });
 
   return {
     murs: {
@@ -230,7 +234,7 @@ export function takeoff(p: Params, g: any, openings: any[]) {
       face: "T", libelle: "Toiture", nb_panneaux: n_roof,
       largeur_cm: rnd(width_x, 1), longueur_panneau_cm: rnd(run_len, 1),
       aire_brute_m2: rnd(roof_gross, 2), aire_couverte_m2: rnd(roof_real, 2),
-      portee_cm: rnd(len_h, 1),
+      portee_cm: rnd(len_h, 1), pieces: roof_pieces,
     },
     commande_mur_m2: rnd((gross + reh_gross) * waste, 1),
     commande_toit_m2: rnd(roof_gross * waste, 1),
@@ -322,6 +326,25 @@ export function model3d(p: Params, g: any, openings: any[]) {
   const deb = p.toit.debord_cm;
   const m = (v: number) => rnd(v / 100, 3);
   const drop = g.pente.chute_cm;
+  const cover = +p.panneau.largeur_utile_cm;
+  const panels: any[] = [];
+  g.faces.forEach((f: any) => {
+    const n = Math.ceil(f.longueur_cm / cover);
+    for (let i = 0; i < n; i++) panels.push({
+      label: `${f.cle}${i + 1}`, face_index: FACE_INDEX[f.cle],
+      s0_m: m(i * cover), s1_m: m(Math.min((i + 1) * cover, f.longueur_cm)),
+    });
+  });
+  const rehausse_pieces = drop > 0 ? [
+    { label: "R1", face_index: FACE_INDEX.A, kind: "bandeau" },
+    { label: "R2", face_index: FACE_INDEX.G, kind: "triangle" },
+    { label: "R3", face_index: FACE_INDEX.D, kind: "triangle" },
+  ] : [];
+  const roof_w = A + (+deb.gauche) + (+deb.droite);
+  const roof_panels: any[] = [];
+  for (let i = 0, n = Math.ceil(roof_w / cover); i < n; i++) roof_panels.push({
+    label: `T${i + 1}`, x0_m: m(-deb.gauche + i * cover), x1_m: m(-deb.gauche + Math.min((i + 1) * cover, roof_w)),
+  });
   const slab = g.dalle
     ? [[0, 0], [g.dalle.avant, 0], [g.dalle.avant, g.dalle.droite_jusqu_coupe], [g.dalle.arriere_jusqu_coupe, g.dalle.gauche], [0, g.dalle.gauche]]
     : g.verts;
@@ -339,6 +362,7 @@ export function model3d(p: Params, g: any, openings: any[]) {
     roof_slope: rnd(drop / G, 5),
     slab: slab.map((v: number[]) => [m(v[0]), m(v[1])]),
     gutter_face_index: FACE_INDEX.B,
+    panels, rehausse_pieces, roof_panels,
     openings: openings.map((o) => ({
       type: o.type, face_index: o.face_index,
       offset_m: m(o.start_cm), width_m: m(o.largeur_cm), height_m: m(o.hauteur_cm), sill_m: m(o.allege_cm),
@@ -449,6 +473,11 @@ export function plan_toit_svg(p: Params, g: any, t: any): string {
     const a = P(x, miny), b = P(x, maxy);
     svg += line(a[0], a[1], b[0], b[1], "#9aab7a", 1, "3 3");
   }
+  for (let i = 0; i < t.toit.nb_panneaux; i++) {
+    const x0 = minx + i * cover, x1 = Math.min(minx + (i + 1) * cover, maxx);
+    const c = P((x0 + x1) / 2, miny + (maxy - miny) * 0.5);
+    svg += text(c[0], c[1] + 6, `T${i + 1}`, "middle", "#8aa06a", 18, "bold");
+  }
   for (const fx of [0.3, 0.7]) {
     const x = minx + (maxx - minx) * fx;
     const y0 = P(x, miny + 20), y1 = P(x, maxy - 20);
@@ -488,12 +517,12 @@ export function plan_rehausse_svg(p: Params, g: any, t: any): string {
   svg += poly([P(0, 0), P(G, 0), P(G, drop), P(0, drop)], "#fdf6e3", "#a07400", 2);
   const d0 = P(0, drop), d1 = P(G, 0);
   svg += line(d0[0], d0[1], d1[0], d1[1], "#a07400", 2, "6 3");
-  svg += text(P(G * 0.1, 0)[0], P(0, drop)[1] - 4, "G", "middle", "#a07400", 11, "bold");
-  svg += text(P(G * 0.9, 0)[0], P(0, 0)[1] + 12, "D", "middle", "#a07400", 11, "bold");
+  svg += text(P(G * 0.12, 0)[0], P(0, drop)[1] - 4, "R2 (G)", "middle", "#a07400", 11, "bold");
+  svg += text(P(G * 0.88, 0)[0], P(0, 0)[1] + 12, "R3 (D)", "middle", "#a07400", 11, "bold");
   // bande 2 : bandeau avant (A x chute)
   const y2 = drop + 8;
   svg += poly([P(0, y2), P(A, y2), P(A, y2 + drop), P(0, y2 + drop)], "#e3ecf7", "#2b5d8a", 2);
-  svg += text(P(A / 2, 0)[0], P(0, y2 + drop / 2)[1] + 4, "bandeau A", "middle", "#2b5d8a", 11, "bold");
+  svg += text(P(A / 2, 0)[0], P(0, y2 + drop / 2)[1] + 4, "R1 · bandeau A", "middle", "#2b5d8a", 11, "bold");
   // legendes a droite + cotes
   const lx = P(Lp, 0)[0] + 16;
   svg += text(lx, P(0, drop / 2)[1] + 4, lab1, "start", "#a07400", 11);
@@ -529,10 +558,10 @@ export function facade_svg(p: Params, g: any, face: any, openings: any[]): strin
     svg += poly([P(0, Hm), P(L, Hm), P(L, h2), P(0, h1)], "#fdf6e3", "#a07400", 2);
     if (face.rehausse === "bandeau") {
       const mid = P(L / 2, (h1 + Hm) / 2);
-      svg += text(mid[0], mid[1] + 4, `bandeau ${f0(L)} × ${f0(h1 - Hm)}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] + 4, `R1 · bandeau ${f0(L)} × ${f0(h1 - Hm)}`, "middle", "#a07400", 10, "bold");
     } else {
       const mid = P(L / 2, (h1 + h2) / 2);
-      svg += text(mid[0], mid[1] - 8, `triangle ${f0(L)} × ${f0(Math.abs(h1 - h2))}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] - 8, `${face.cle === "G" ? "R2" : "R3"} · triangle ${f0(L)} × ${f0(Math.abs(h1 - h2))}`, "middle", "#a07400", 10, "bold");
     }
   }
   for (const o of openings) {
@@ -550,6 +579,16 @@ export function facade_svg(p: Params, g: any, face: any, openings: any[]): strin
       svg += text(sx + ow / 2, by - oh / 2 + 10, `${itr(o.largeur_cm)}×${itr(o.hauteur_cm)}`, "middle", "#178", 9);
       svg += text(sx + ow / 2, by + 12, `allège ${itr(o.allege_cm)}`, "middle", "#888", 9);
     }
+  }
+  // etiquettes des panneaux (apres les ouvertures : au-dessus si le panneau en porte une)
+  const mine = openings.filter((o) => o.face === face.cle);
+  for (let i = 0, n = Math.ceil(L / cover); i < n; i++) {
+    const x0 = i * cover, x1 = Math.min((i + 1) * cover, L);
+    const over = mine.filter((o) => o.start_cm < x1 && o.start_cm + o.largeur_cm > x0);
+    const topOpen = over.length ? Math.max(...over.map((o) => o.allege_cm + o.hauteur_cm)) : 0;
+    const hy = over.length ? Math.min(Hm - 6, topOpen + (Hm - topOpen) / 2) : Hm * 0.86;
+    const c = P((x0 + x1) / 2, hy);
+    svg += text(c[0], c[1] + 6, `${face.cle}${i + 1}`, "middle", "#9fb0c2", over.length && Hm - topOpen < 30 ? 11 : 18, "bold");
   }
   svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm · ${Math.ceil(L / cover)} panneaux de ${f0(Hm)}`, "middle", "#222", 13, "bold");
   svg += text(pad - 8, P(0, h1)[1], `${f0(h1)}`, "end", "#2b5d8a", 12);

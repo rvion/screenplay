@@ -167,6 +167,8 @@ function takeoff(p, g, openings) {
     if (f.cle in ded) n_area -= ded[f.cle];
     gross += g_area;
     net += n_area;
+    const pieces = [];
+    for (let i = 0; i < nn; i++) pieces.push({ label: `${f.cle}${i + 1}`, largeur_cm: rnd(Math.min(cover, L - i * cover), 1) });
     rows.push({
       face: f.cle,
       libelle: f.libelle,
@@ -174,7 +176,8 @@ function takeoff(p, g, openings) {
       hauteur_cm: H,
       nb_panneaux: nn,
       aire_brute_m2: rnd(g_area, 2),
-      rehausse: f.rehausse
+      rehausse: f.rehausse,
+      pieces
     });
   }
   const strip_len = Math.max(A, G);
@@ -182,8 +185,8 @@ function takeoff(p, g, openings) {
   const reh_gross = n_reh * (cover / 100) * (strip_len / 100);
   const rehausse = {
     pieces: [
-      { piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: "rectangle, pose sur le mur A" },
-      { piece: "Triangles lateraux (faces G et D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: "1 bande G x chute coupee en diagonale = 2 triangles (tourner le 2e de 180 deg)" }
+      { label: "R1", piece: "Bandeau avant (face A)", longueur_cm: A, hauteur_cm: drop, nb: 1, note: "rectangle, pose sur le mur A" },
+      { label: "R2+R3", piece: "Triangles lateraux (R2 face G, R3 face D)", longueur_cm: G, hauteur_cm: drop, nb: 2, note: "1 bande G x chute coupee en diagonale = 2 triangles (tourner R3 de 180 deg)" }
     ],
     nb_panneaux: n_reh,
     longueur_panneau_cm: strip_len,
@@ -197,6 +200,8 @@ function takeoff(p, g, openings) {
   const n_roof = Math.ceil(width_x / cover);
   const roof_gross = n_roof * (cover / 100) * (run_len / 100);
   const roof_real = width_x / 100 * (len_h / 100);
+  const roof_pieces = [];
+  for (let i = 0; i < n_roof; i++) roof_pieces.push({ label: `T${i + 1}`, largeur_cm: rnd(Math.min(cover, width_x - i * cover), 1) });
   return {
     murs: {
       lignes: rows,
@@ -214,7 +219,8 @@ function takeoff(p, g, openings) {
       longueur_panneau_cm: rnd(run_len, 1),
       aire_brute_m2: rnd(roof_gross, 2),
       aire_couverte_m2: rnd(roof_real, 2),
-      portee_cm: rnd(len_h, 1)
+      portee_cm: rnd(len_h, 1),
+      pieces: roof_pieces
     },
     commande_mur_m2: rnd((gross + reh_gross) * waste, 1),
     commande_toit_m2: rnd(roof_gross * waste, 1),
@@ -297,6 +303,29 @@ function model3d(p, g, openings) {
   const deb = p.toit.debord_cm;
   const m = (v) => rnd(v / 100, 3);
   const drop = g.pente.chute_cm;
+  const cover = +p.panneau.largeur_utile_cm;
+  const panels = [];
+  g.faces.forEach((f) => {
+    const n = Math.ceil(f.longueur_cm / cover);
+    for (let i = 0; i < n; i++) panels.push({
+      label: `${f.cle}${i + 1}`,
+      face_index: FACE_INDEX[f.cle],
+      s0_m: m(i * cover),
+      s1_m: m(Math.min((i + 1) * cover, f.longueur_cm))
+    });
+  });
+  const rehausse_pieces = drop > 0 ? [
+    { label: "R1", face_index: FACE_INDEX.A, kind: "bandeau" },
+    { label: "R2", face_index: FACE_INDEX.G, kind: "triangle" },
+    { label: "R3", face_index: FACE_INDEX.D, kind: "triangle" }
+  ] : [];
+  const roof_w = A + +deb.gauche + +deb.droite;
+  const roof_panels = [];
+  for (let i = 0, n = Math.ceil(roof_w / cover); i < n; i++) roof_panels.push({
+    label: `T${i + 1}`,
+    x0_m: m(-deb.gauche + i * cover),
+    x1_m: m(-deb.gauche + Math.min((i + 1) * cover, roof_w))
+  });
   const slab = g.dalle ? [[0, 0], [g.dalle.avant, 0], [g.dalle.avant, g.dalle.droite_jusqu_coupe], [g.dalle.arriere_jusqu_coupe, g.dalle.gauche], [0, g.dalle.gauche]] : g.verts;
   return {
     footprint: g.verts.map((v) => [m(v[0]), m(v[1])]),
@@ -314,6 +343,9 @@ function model3d(p, g, openings) {
     roof_slope: rnd(drop / G, 5),
     slab: slab.map((v) => [m(v[0]), m(v[1])]),
     gutter_face_index: FACE_INDEX.B,
+    panels,
+    rehausse_pieces,
+    roof_panels,
     openings: openings.map((o) => ({
       type: o.type,
       face_index: o.face_index,
@@ -432,6 +464,11 @@ function plan_toit_svg(p, g, t) {
     const a = P(x, miny), b = P(x, maxy);
     svg += line(a[0], a[1], b[0], b[1], "#9aab7a", 1, "3 3");
   }
+  for (let i = 0; i < t.toit.nb_panneaux; i++) {
+    const x0 = minx + i * cover, x1 = Math.min(minx + (i + 1) * cover, maxx);
+    const c = P((x0 + x1) / 2, miny + (maxy - miny) * 0.5);
+    svg += text(c[0], c[1] + 6, `T${i + 1}`, "middle", "#8aa06a", 18, "bold");
+  }
   for (const fx of [0.3, 0.7]) {
     const x = minx + (maxx - minx) * fx;
     const y0 = P(x, miny + 20), y1 = P(x, maxy - 20);
@@ -468,11 +505,11 @@ function plan_rehausse_svg(p, g, t) {
   svg += poly([P(0, 0), P(G, 0), P(G, drop), P(0, drop)], "#fdf6e3", "#a07400", 2);
   const d0 = P(0, drop), d1 = P(G, 0);
   svg += line(d0[0], d0[1], d1[0], d1[1], "#a07400", 2, "6 3");
-  svg += text(P(G * 0.1, 0)[0], P(0, drop)[1] - 4, "G", "middle", "#a07400", 11, "bold");
-  svg += text(P(G * 0.9, 0)[0], P(0, 0)[1] + 12, "D", "middle", "#a07400", 11, "bold");
+  svg += text(P(G * 0.12, 0)[0], P(0, drop)[1] - 4, "R2 (G)", "middle", "#a07400", 11, "bold");
+  svg += text(P(G * 0.88, 0)[0], P(0, 0)[1] + 12, "R3 (D)", "middle", "#a07400", 11, "bold");
   const y2 = drop + 8;
   svg += poly([P(0, y2), P(A, y2), P(A, y2 + drop), P(0, y2 + drop)], "#e3ecf7", "#2b5d8a", 2);
-  svg += text(P(A / 2, 0)[0], P(0, y2 + drop / 2)[1] + 4, "bandeau A", "middle", "#2b5d8a", 11, "bold");
+  svg += text(P(A / 2, 0)[0], P(0, y2 + drop / 2)[1] + 4, "R1 \xB7 bandeau A", "middle", "#2b5d8a", 11, "bold");
   const lx = P(Lp, 0)[0] + 16;
   svg += text(lx, P(0, drop / 2)[1] + 4, lab1, "start", "#a07400", 11);
   svg += text(lx, P(0, y2 + drop / 2)[1] + 4, lab2, "start", "#2b5d8a", 11);
@@ -504,10 +541,10 @@ function facade_svg(p, g, face, openings) {
     svg += poly([P(0, Hm), P(L, Hm), P(L, h2), P(0, h1)], "#fdf6e3", "#a07400", 2);
     if (face.rehausse === "bandeau") {
       const mid = P(L / 2, (h1 + Hm) / 2);
-      svg += text(mid[0], mid[1] + 4, `bandeau ${f0(L)} \xD7 ${f0(h1 - Hm)}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] + 4, `R1 \xB7 bandeau ${f0(L)} \xD7 ${f0(h1 - Hm)}`, "middle", "#a07400", 10, "bold");
     } else {
       const mid = P(L / 2, (h1 + h2) / 2);
-      svg += text(mid[0], mid[1] - 8, `triangle ${f0(L)} \xD7 ${f0(Math.abs(h1 - h2))}`, "middle", "#a07400", 10, "bold");
+      svg += text(mid[0], mid[1] - 8, `${face.cle === "G" ? "R2" : "R3"} \xB7 triangle ${f0(L)} \xD7 ${f0(Math.abs(h1 - h2))}`, "middle", "#a07400", 10, "bold");
     }
   }
   for (const o of openings) {
@@ -526,6 +563,15 @@ function facade_svg(p, g, face, openings) {
       svg += text(sx + ow / 2, by - oh / 2 + 10, `${itr(o.largeur_cm)}\xD7${itr(o.hauteur_cm)}`, "middle", "#178", 9);
       svg += text(sx + ow / 2, by + 12, `all\xE8ge ${itr(o.allege_cm)}`, "middle", "#888", 9);
     }
+  }
+  const mine = openings.filter((o) => o.face === face.cle);
+  for (let i = 0, n = Math.ceil(L / cover); i < n; i++) {
+    const x0 = i * cover, x1 = Math.min((i + 1) * cover, L);
+    const over = mine.filter((o) => o.start_cm < x1 && o.start_cm + o.largeur_cm > x0);
+    const topOpen = over.length ? Math.max(...over.map((o) => o.allege_cm + o.hauteur_cm)) : 0;
+    const hy = over.length ? Math.min(Hm - 6, topOpen + (Hm - topOpen) / 2) : Hm * 0.86;
+    const c = P((x0 + x1) / 2, hy);
+    svg += text(c[0], c[1] + 6, `${face.cle}${i + 1}`, "middle", "#9fb0c2", over.length && Hm - topOpen < 30 ? 11 : 18, "bold");
   }
   svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm \xB7 ${Math.ceil(L / cover)} panneaux de ${f0(Hm)}`, "middle", "#222", 13, "bold");
   svg += text(pad - 8, P(0, h1)[1], `${f0(h1)}`, "end", "#2b5d8a", 12);
@@ -610,7 +656,7 @@ function addRoofSlab(scene, V, outline, roofZ, thk, mat) {
 function addRoofRibs(parent, V, outline, roofZ, thk, mat) {
   const xs = outline.map((p) => p[0]), ys = outline.map((p) => p[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const step = 0.18, ribW = 0.045, eps = 0.012, inset = 0.05;
+  const step = 0.18, ribW = 0.045, eps = 0.016, inset = 0.05;
   const zt = (yy) => roofZ(yy) + thk + eps;
   const y0 = miny + inset, y1 = maxy - inset;
   const pts = [];
@@ -665,16 +711,104 @@ function addWall(scene, V, a, b, ha, hb, holes, mat) {
   mesh.receiveShadow = true;
   scene.add(mesh);
 }
-function addJoints(scene, V, a, b, ha, hb, wallH, cover, mat) {
+function rectMinus(r, h2) {
+  if (h2.s1 <= r.s0 || h2.s0 >= r.s1 || h2.y1 <= r.y0 || h2.y0 >= r.y1) return [r];
+  const out = [];
+  if (h2.s0 > r.s0) out.push({ s0: r.s0, s1: Math.min(h2.s0, r.s1), y0: r.y0, y1: r.y1 });
+  if (h2.s1 < r.s1) out.push({ s0: Math.max(h2.s1, r.s0), s1: r.s1, y0: r.y0, y1: r.y1 });
+  const ms0 = Math.max(r.s0, h2.s0), ms1 = Math.min(r.s1, h2.s1);
+  if (h2.y0 > r.y0) out.push({ s0: ms0, s1: ms1, y0: r.y0, y1: Math.min(h2.y0, r.y1) });
+  if (h2.y1 < r.y1) out.push({ s0: ms0, s1: ms1, y0: Math.max(h2.y1, r.y0), y1: r.y1 });
+  return out.filter((q) => q.s1 - q.s0 > 1e-4 && q.y1 - q.y0 > 1e-4);
+}
+var labelCache = {};
+function labelTexture(txt) {
+  if (labelCache[txt]) return labelCache[txt];
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext("2d");
+  ctx.clearRect(0, 0, 256, 256);
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.beginPath();
+  ctx.arc(128, 128, 112, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#1f2933";
+  ctx.font = `bold ${txt.length > 2 ? 110 : 140}px system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(txt, 128, 136);
+  const tex = new THREE.CanvasTexture(c);
+  if ("colorSpace" in tex) tex.colorSpace = THREE.SRGBColorSpace;
+  return labelCache[txt] = tex;
+}
+function addLabel(scene, pos, size, txt, rotY, rotX = 0) {
+  const mat = new THREE.MeshBasicMaterial({ map: labelTexture(txt), transparent: true, depthWrite: false, side: THREE.DoubleSide });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+  mesh.position.copy(pos);
+  mesh.rotation.set(rotX, rotY, 0, "YXZ");
+  scene.add(mesh);
+}
+function addPanels(scene, V, a, b, ha, hb, wallH, panels, pieces, holes, mat, rehMat) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-  const nx = uy * 4e-3, ny = -ux * 4e-3;
-  const P = (s, h2) => V(a[0] + ux * s + nx, a[1] + uy * s + ny, h2);
-  const pts = [];
-  for (let s = cover; s < len - 1e-4; s += cover) pts.push(P(s, 0), P(s, wallH));
-  if (Math.max(ha, hb) > wallH + 1e-4) pts.push(P(0, wallH), P(len, wallH));
-  if (!pts.length) return;
-  scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  const nx = uy, ny = -ux;
+  const off = 4e-3, ins = 9e-3;
+  const P = (s, h2) => V(a[0] + ux * s + nx * off, a[1] + uy * s + ny * off, h2);
+  const topAt = (s) => ha + (hb - ha) * (s / len);
+  const rotY = Math.atan2(nx, -ny);
+  const bigHoles = holes.map((h2) => ({ s0: h2.s0 - ins, s1: h2.s1 + ins, y0: h2.y0 - ins, y1: h2.y1 + ins }));
+  const quads = (rects, m) => {
+    const pts = [];
+    for (const r of rects) pts.push(P(r.s0, r.y0), P(r.s1, r.y0), P(r.s1, r.y1), P(r.s0, r.y0), P(r.s1, r.y1), P(r.s0, r.y1));
+    if (!pts.length) return;
+    const g = new THREE.BufferGeometry();
+    g.setFromPoints(pts);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, m));
+  };
+  for (const pn of panels) {
+    let rects = [{ s0: pn.s0_m + ins, s1: pn.s1_m - ins, y0: ins, y1: wallH - ins }];
+    for (const h2 of bigHoles) rects = rects.flatMap((r) => rectMinus(r, h2));
+    quads(rects, mat);
+    const w = pn.s1_m - pn.s0_m, cs = (pn.s0_m + pn.s1_m) / 2;
+    const free = holes.filter((h2) => h2.s0 < pn.s1_m && h2.s1 > pn.s0_m);
+    let ch = wallH * 0.72;
+    if (free.length) ch = Math.min(wallH - 0.3, Math.max(...free.map((h2) => h2.y1)) + 0.3);
+    addLabel(scene, P(cs, ch).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.5, w * 0.7), pn.label, rotY);
+  }
+  for (const pc of pieces) {
+    if (pc.kind === "bandeau") {
+      const top = Math.max(ha, hb);
+      quads([{ s0: ins, s1: len - ins, y0: wallH + ins, y1: top - ins }], rehMat);
+      addLabel(scene, P(len / 2, (wallH + top) / 2).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.2, (top - wallH) * 0.85), pc.label, rotY);
+    } else {
+      const tallAtEnd = hb > ha;
+      const sT = tallAtEnd ? len - ins : ins, sS = tallAtEnd ? ins : len - ins;
+      const top = topAt(tallAtEnd ? len : 0) - ins;
+      const pts = tallAtEnd ? [P(sS, wallH + ins), P(sT, wallH + ins), P(sT, top)] : [P(sT, wallH + ins), P(sS, wallH + ins), P(sT, top)];
+      const g = new THREE.BufferGeometry();
+      g.setFromPoints(pts);
+      g.computeVertexNormals();
+      scene.add(new THREE.Mesh(g, rehMat));
+      const sl = tallAtEnd ? len * 0.8 : len * 0.2;
+      addLabel(scene, P(sl, (wallH + topAt(sl)) / 2).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.17, (topAt(sl) - wallH) * 0.85), pc.label, rotY);
+    }
+  }
+}
+function addRoofPanels(scene, V, outline, roofZ, thk, slope, panels, mat) {
+  const ys = outline.map((p) => p[1]);
+  const miny = Math.min(...ys), maxy = Math.max(...ys);
+  const ins = 0.012, z = (yy) => roofZ(yy) + thk + 3e-3;
+  for (const pn of panels) {
+    const x0 = pn.x0_m + ins, x1 = pn.x1_m - ins, y0 = miny + ins, y1 = maxy - ins;
+    const g = new THREE.BufferGeometry();
+    g.setFromPoints([V(x0, y0, z(y0)), V(x1, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y1, z(y1))]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, mat));
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    addLabel(scene, V(cx, cy, roofZ(cy) + thk + 0.03), Math.min(0.5, (x1 - x0) * 0.7), pn.label, 0, -Math.PI / 2 - Math.atan(slope));
+  }
 }
 function addGlass(scene, V, a, b, o) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -720,12 +854,14 @@ function populate(group2, m) {
   const V = (x, y, z) => new THREE.Vector3(x - cx, z, cy - y);
   const roofZ = (ym) => m.roof_front_m - (m.roof_slope || 0) * ym;
   const panelMat = new THREE.MeshStandardMaterial({ color: 15659250, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const rehMat = new THREE.MeshStandardMaterial({ color: 15853256, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const baseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
   const roofMat = new THREE.MeshStandardMaterial({ color: 10135476, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
+  const roofBaseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
   const ribMat = new THREE.MeshStandardMaterial({ color: 8293014, roughness: 0.55, metalness: 0.3, side: THREE.DoubleSide });
   const concreteMat = new THREE.MeshStandardMaterial({ color: 15394783, roughness: 0.95, side: THREE.DoubleSide });
   const railMat = new THREE.MeshStandardMaterial({ color: 7041399, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 11844288, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
-  const jointMat = new THREE.LineBasicMaterial({ color: 9080982 });
   group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.05, -0.12), concreteMat));
   group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.02), 0.1, 0), railMat));
   const openings = m.openings || [];
@@ -737,12 +873,26 @@ function populate(group2, m) {
       y0: o.sill_m,
       y1: o.sill_m + o.height_m
     }));
-    addWall(group2, V, a, b, ha, hb, holes, panelMat);
-    addJoints(group2, V, a, b, ha, hb, m.wall_height_m, m.panel_cover_m || 1, jointMat);
+    addWall(group2, V, a, b, ha, hb, holes, baseMat);
+    addPanels(
+      group2,
+      V,
+      a,
+      b,
+      ha,
+      hb,
+      m.wall_height_m,
+      (m.panels || []).filter((q) => q.face_index === i),
+      (m.rehausse_pieces || []).filter((q) => q.face_index === i),
+      holes,
+      panelMat,
+      rehMat
+    );
   }
   for (const o of openings) addGlass(group2, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
   const outline = m.roof_outline || offsetRect(fp, 0.15);
-  addRoofSlab(group2, V, outline, roofZ, m.thickness_m, roofMat);
+  addRoofSlab(group2, V, outline, roofZ, m.thickness_m, roofBaseMat);
+  addRoofPanels(group2, V, outline, roofZ, m.thickness_m, m.roof_slope || 0, m.roof_panels || [], roofMat);
   addRoofRibs(group2, V, outline, roofZ, m.thickness_m, ribMat);
   const gi = m.gutter_face_index == null ? 2 : m.gutter_face_index;
   addGutter(group2, V, fp[gi], fp[(gi + 1) % n], roofZ, 0.2, metalMat);
@@ -835,9 +985,9 @@ function renderPlans(core) {
 }
 function renderDebit(core, p) {
   const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
-  let rows = t.murs.lignes.map((x) => `<tr><td><b>${x.face}</b> \xB7 ${x.libelle}</td><td><span class="tag">mur</span></td><td>${x.nb_panneaux} \xD7 ${cover} \xD7 ${x.hauteur_cm} cm pour ${x.longueur_cm} cm \u2014 coupes droites</td><td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m\xB2</td></tr>`).join("");
-  rows += `<tr><td><b>R</b> \xB7 Rehausse</td><td><span class="tag rake">mur</span></td><td>${r.pieces.map((q) => `${q.nb} \xD7 ${q.longueur_cm} \xD7 ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tir\xE9es de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td><td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m\xB2</td></tr>`;
-  rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> \xB7 ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td><td>${t.toit.nb_panneaux} \xD7 ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente \xB7 couvre ${t.toit.aire_couverte_m2} m\xB2</td><td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m\xB2</td></tr>`;
+  let rows = t.murs.lignes.map((x) => `<tr><td><b>${x.face}</b> \xB7 ${x.libelle}</td><td><span class="tag">mur</span></td><td>${x.pieces.map((q) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${x.hauteur_cm} cm \u2014 coupes droites</td><td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m\xB2</td></tr>`).join("");
+  rows += `<tr><td><b>R</b> \xB7 Rehausse</td><td><span class="tag rake">mur</span></td><td>${r.pieces.map((q) => `<b>${q.label}</b> ${q.longueur_cm} \xD7 ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tir\xE9es de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td><td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m\xB2</td></tr>`;
+  rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> \xB7 ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td><td>${t.toit.pieces.map((q) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente \xB7 couvre ${t.toit.aire_couverte_m2} m\xB2</td><td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m\xB2</td></tr>`;
   setHTML("#debit tbody", rows);
   setHTML(
     "#debit-resume",

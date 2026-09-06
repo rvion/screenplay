@@ -68,7 +68,7 @@ function addRoofSlab(scene: Vec, V: any, outline: number[][], roofZ: (y: number)
 function addRoofRibs(parent: Vec, V: any, outline: number[][], roofZ: (y: number) => number, thk: number, mat: Vec) {
   const xs = outline.map((p) => p[0]), ys = outline.map((p) => p[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const step = 0.18, ribW = 0.045, eps = 0.012, inset = 0.05;
+  const step = 0.18, ribW = 0.045, eps = 0.016, inset = 0.05;
   const zt = (yy: number) => roofZ(yy) + thk + eps;
   const y0 = miny + inset, y1 = maxy - inset;
   const pts: Vec[] = [];
@@ -120,17 +120,106 @@ function addWall(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: n
   scene.add(mesh);
 }
 
-// Joints de panneaux : verticaux tous les `cover`, + joint mur/rehausse a `wallH`.
-function addJoints(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: number, wallH: number, cover: number, mat: Vec) {
+type Rect = { s0: number; s1: number; y0: number; y1: number };
+function rectMinus(r: Rect, h: Rect): Rect[] {
+  if (h.s1 <= r.s0 || h.s0 >= r.s1 || h.y1 <= r.y0 || h.y0 >= r.y1) return [r];
+  const out: Rect[] = [];
+  if (h.s0 > r.s0) out.push({ s0: r.s0, s1: Math.min(h.s0, r.s1), y0: r.y0, y1: r.y1 });
+  if (h.s1 < r.s1) out.push({ s0: Math.max(h.s1, r.s0), s1: r.s1, y0: r.y0, y1: r.y1 });
+  const ms0 = Math.max(r.s0, h.s0), ms1 = Math.min(r.s1, h.s1);
+  if (h.y0 > r.y0) out.push({ s0: ms0, s1: ms1, y0: r.y0, y1: Math.min(h.y0, r.y1) });
+  if (h.y1 < r.y1) out.push({ s0: ms0, s1: ms1, y0: Math.max(h.y1, r.y0), y1: r.y1 });
+  return out.filter((q) => q.s1 - q.s0 > 1e-4 && q.y1 - q.y0 > 1e-4);
+}
+
+// Etiquette "A1" imprimee au centre d'une piece (texture canvas, plan oriente).
+const labelCache: Record<string, Vec> = {};
+function labelTexture(txt: string): Vec {
+  if (labelCache[txt]) return labelCache[txt];
+  const c = document.createElement("canvas");
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext("2d")!;
+  ctx.clearRect(0, 0, 256, 256);
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.beginPath(); ctx.arc(128, 128, 112, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#1f2933";
+  ctx.font = `bold ${txt.length > 2 ? 110 : 140}px system-ui, sans-serif`;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(txt, 128, 136);
+  const tex = new THREE.CanvasTexture(c);
+  if ("colorSpace" in tex) tex.colorSpace = THREE.SRGBColorSpace;
+  return (labelCache[txt] = tex);
+}
+function addLabel(scene: Vec, pos: Vec, size: number, txt: string, rotY: number, rotX = 0) {
+  const mat = new THREE.MeshBasicMaterial({ map: labelTexture(txt), transparent: true, depthWrite: false, side: THREE.DoubleSide });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+  mesh.position.copy(pos);
+  mesh.rotation.set(rotX, rotY, 0, "YXZ");
+  scene.add(mesh);
+}
+
+// Panneaux d'un mur : quads insets (bords sombres visibles) + etiquettes. Le mur de fond
+// (addWall, materiau sombre) reste visible dans les joints.
+function addPanels(scene: Vec, V: any, a: number[], b: number[], ha: number, hb: number, wallH: number,
+                   panels: any[], pieces: any[], holes: Rect[], mat: Vec, rehMat: Vec) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
   const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-  const nx = uy * 0.004, ny = -ux * 0.004; // legerement devant le mur (exterieur)
-  const P = (s: number, h: number) => V(a[0] + ux * s + nx, a[1] + uy * s + ny, h);
-  const pts: Vec[] = [];
-  for (let s = cover; s < len - 1e-4; s += cover) pts.push(P(s, 0), P(s, wallH));
-  if (Math.max(ha, hb) > wallH + 1e-4) pts.push(P(0, wallH), P(len, wallH));
-  if (!pts.length) return;
-  scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  const nx = uy, ny = -ux;                       // normale exterieure (polygone antihoraire)
+  const off = 0.004, ins = 0.009;
+  const P = (s: number, h: number) => V(a[0] + ux * s + nx * off, a[1] + uy * s + ny * off, h);
+  const topAt = (s: number) => ha + (hb - ha) * (s / len);
+  const rotY = Math.atan2(nx, -ny);
+  const bigHoles = holes.map((h) => ({ s0: h.s0 - ins, s1: h.s1 + ins, y0: h.y0 - ins, y1: h.y1 + ins }));
+  const quads = (rects: Rect[], m: Vec) => {
+    const pts: Vec[] = [];
+    for (const r of rects) pts.push(P(r.s0, r.y0), P(r.s1, r.y0), P(r.s1, r.y1), P(r.s0, r.y0), P(r.s1, r.y1), P(r.s0, r.y1));
+    if (!pts.length) return;
+    const g = new THREE.BufferGeometry(); g.setFromPoints(pts); g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, m));
+  };
+  for (const pn of panels) {
+    let rects: Rect[] = [{ s0: pn.s0_m + ins, s1: pn.s1_m - ins, y0: ins, y1: wallH - ins }];
+    for (const h of bigHoles) rects = rects.flatMap((r) => rectMinus(r, h));
+    quads(rects, mat);
+    const w = pn.s1_m - pn.s0_m, cs = (pn.s0_m + pn.s1_m) / 2;
+    const free = holes.filter((h) => h.s0 < pn.s1_m && h.s1 > pn.s0_m);
+    let ch = wallH * 0.72;                        // etiquette haute si une ouverture occupe le panneau
+    if (free.length) ch = Math.min(wallH - 0.3, Math.max(...free.map((h) => h.y1)) + 0.3);
+    addLabel(scene, P(cs, ch).add(new THREE.Vector3(nx * 0.004, 0, -ny * 0.004)), Math.min(0.5, w * 0.7), pn.label, rotY);
+  }
+  for (const pc of pieces) {
+    if (pc.kind === "bandeau") {
+      const top = Math.max(ha, hb);
+      quads([{ s0: ins, s1: len - ins, y0: wallH + ins, y1: top - ins }], rehMat);
+      addLabel(scene, P(len / 2, (wallH + top) / 2).add(new THREE.Vector3(nx * 0.004, 0, -ny * 0.004)), Math.min(0.2, (top - wallH) * 0.85), pc.label, rotY);
+    } else {
+      const tallAtEnd = hb > ha;
+      const sT = tallAtEnd ? len - ins : ins, sS = tallAtEnd ? ins : len - ins;
+      const top = topAt(tallAtEnd ? len : 0) - ins;
+      const pts = tallAtEnd
+        ? [P(sS, wallH + ins), P(sT, wallH + ins), P(sT, top)]
+        : [P(sT, wallH + ins), P(sS, wallH + ins), P(sT, top)];
+      const g = new THREE.BufferGeometry(); g.setFromPoints(pts); g.computeVertexNormals();
+      scene.add(new THREE.Mesh(g, rehMat));
+      const sl = tallAtEnd ? len * 0.8 : len * 0.2;
+      addLabel(scene, P(sl, (wallH + topAt(sl)) / 2).add(new THREE.Vector3(nx * 0.004, 0, -ny * 0.004)), Math.min(0.17, (topAt(sl) - wallH) * 0.85), pc.label, rotY);
+    }
+  }
+}
+
+function addRoofPanels(scene: Vec, V: any, outline: number[][], roofZ: (y: number) => number, thk: number, slope: number, panels: any[], mat: Vec) {
+  const ys = outline.map((p) => p[1]);
+  const miny = Math.min(...ys), maxy = Math.max(...ys);
+  const ins = 0.012, z = (yy: number) => roofZ(yy) + thk + 0.003;
+  for (const pn of panels) {
+    const x0 = pn.x0_m + ins, x1 = pn.x1_m - ins, y0 = miny + ins, y1 = maxy - ins;
+    const g = new THREE.BufferGeometry();
+    g.setFromPoints([V(x0, y0, z(y0)), V(x1, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y1, z(y1))]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, mat));
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    addLabel(scene, V(cx, cy, roofZ(cy) + thk + 0.03), Math.min(0.5, (x1 - x0) * 0.7), pn.label, 0, -Math.PI / 2 - Math.atan(slope));
+  }
 }
 
 function addGlass(scene: Vec, V: any, a: number[], b: number[], o: any) {
@@ -172,12 +261,14 @@ function populate(group: Vec, m: Model) {
   const roofZ = (ym: number) => m.roof_front_m - (m.roof_slope || 0) * ym;
 
   const panelMat = new THREE.MeshStandardMaterial({ color: 0xeef0f2, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const rehMat = new THREE.MeshStandardMaterial({ color: 0xf1e6c8, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
+  const baseMat = new THREE.MeshStandardMaterial({ color: 0x4a5058, roughness: 0.8, side: THREE.DoubleSide });
   const roofMat = new THREE.MeshStandardMaterial({ color: 0x9aa7b4, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
+  const roofBaseMat = new THREE.MeshStandardMaterial({ color: 0x4a5058, roughness: 0.8, side: THREE.DoubleSide });
   const ribMat = new THREE.MeshStandardMaterial({ color: 0x7e8a96, roughness: 0.55, metalness: 0.3, side: THREE.DoubleSide });
   const concreteMat = new THREE.MeshStandardMaterial({ color: 0xeae7df, roughness: 0.95, side: THREE.DoubleSide });
   const railMat = new THREE.MeshStandardMaterial({ color: 0x6b7177, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 0xb4bac0, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
-  const jointMat = new THREE.LineBasicMaterial({ color: 0x8a9096 });
 
   // Dalle reelle (pentagone si coin coupe) : montre ce qui deborde.
   group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.05, -0.12), concreteMat));
@@ -189,13 +280,16 @@ function populate(group: Vec, m: Model) {
     const holes = openings.filter((o: any) => o.face_index === i).map((o: any) => ({
       s0: o.offset_m, s1: o.offset_m + o.width_m, y0: o.sill_m, y1: o.sill_m + o.height_m,
     }));
-    addWall(group, V, a, b, ha, hb, holes, panelMat);
-    addJoints(group, V, a, b, ha, hb, m.wall_height_m, m.panel_cover_m || 1, jointMat);
+    addWall(group, V, a, b, ha, hb, holes, baseMat);
+    addPanels(group, V, a, b, ha, hb, m.wall_height_m,
+      (m.panels || []).filter((q: any) => q.face_index === i),
+      (m.rehausse_pieces || []).filter((q: any) => q.face_index === i), holes, panelMat, rehMat);
   }
   for (const o of openings) addGlass(group, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
 
   const outline = m.roof_outline || offsetRect(fp, 0.15);
-  addRoofSlab(group, V, outline, roofZ, m.thickness_m, roofMat);
+  addRoofSlab(group, V, outline, roofZ, m.thickness_m, roofBaseMat);
+  addRoofPanels(group, V, outline, roofZ, m.thickness_m, m.roof_slope || 0, m.roof_panels || [], roofMat);
   addRoofRibs(group, V, outline, roofZ, m.thickness_m, ribMat);
   const gi = m.gutter_face_index == null ? 2 : m.gutter_face_index;
   addGutter(group, V, fp[gi], fp[(gi + 1) % n], roofZ, 0.2, metalMat);

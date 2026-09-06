@@ -69,8 +69,12 @@
   (60 mm fixé).
 - Tout est recalculé en direct (pas de chiffre en dur, pas de `fetch`). Dégrade proprement sans
   WebGL (message + plans).
-- 3D : dalle réelle (coin coupé visible), rail, murs percés, **joints de panneaux dessinés**
-  (verticaux + joint mur/rehausse), porte vitrée entrouverte, toit débordant nervuré, gouttière B.
+- 3D : dalle réelle (coin coupé visible), rail, murs percés, **chaque panneau dessiné avec ses
+  bords sombres et son étiquette imprimée au centre** (A1, A2, D1… ; R1 bandeau, R2/R3 triangles ;
+  T1… toiture), porte + fenêtre vitrées, toit débordant nervuré, gouttière B.
+- **Étiquettes de pièces** : les mêmes ids apparaissent sur les élévations, le plan de toiture, le
+  plan de rehausse et dans le tableau de débit (`debit.*.pieces`). Le dernier panneau d'une face
+  est le plus étroit (recoupe).
 
 ## Contraintes techniques
 - Logique **TypeScript pure** dans `compute.ts` ; build esbuild.

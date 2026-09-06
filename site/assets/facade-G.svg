@@ -4,7 +4,10 @@
 <line x1="120.0" y1="204.0" x2="120.0" y2="75.0" stroke="#8fa3b8" stroke-width="1" stroke-dasharray="4 3"/>
 <line x1="180.0" y1="204.0" x2="180.0" y2="75.0" stroke="#8fa3b8" stroke-width="1" stroke-dasharray="4 3"/>
 <polygon points="60.0,75.0 204.0,75.0 204.0,60.0 60.0,75.0" fill="#fdf6e3" stroke="#a07400" stroke-width="2"/>
-<text x="132.0" y="59.5" text-anchor="middle" fill="#a07400" font-size="10" font-weight="bold">triangle 240 × 25</text>
+<text x="132.0" y="59.5" text-anchor="middle" fill="#a07400" font-size="10" font-weight="bold">R2 · triangle 240 × 25</text>
+<text x="90.0" y="99.1" text-anchor="middle" fill="#9fb0c2" font-size="18" font-weight="bold">G1</text>
+<text x="150.0" y="99.1" text-anchor="middle" fill="#9fb0c2" font-size="18" font-weight="bold">G2</text>
+<text x="192.0" y="99.1" text-anchor="middle" fill="#9fb0c2" font-size="18" font-weight="bold">G3</text>
 <text x="132.0" y="230.0" text-anchor="middle" fill="#222" font-size="13" font-weight="bold">240 cm · 3 panneaux de 215</text>
 <text x="52.0" y="75.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="normal">215</text>
 <text x="212.0" y="60.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="normal">240</text>

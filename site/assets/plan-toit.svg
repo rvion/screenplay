@@ -4,6 +4,9 @@
 <polygon points="157.0,175.0 241.1,175.0 241.1,74.2 157.0,74.2" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="6 4"/>
 <line x1="194.8" y1="179.2" x2="194.8" y2="70.0" stroke="#9aab7a" stroke-width="1" stroke-dasharray="3 3"/>
 <line x1="236.8" y1="179.2" x2="236.8" y2="70.0" stroke="#9aab7a" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="173.8" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T1</text>
+<text x="215.8" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T2</text>
+<text x="241.1" y="130.6" text-anchor="middle" fill="#8aa06a" font-size="18" font-weight="bold">T3</text>
 <line x1="180.6" y1="170.8" x2="180.6" y2="78.4" stroke="#2b7" stroke-width="2"/>
 <polygon points="181,78 176,87 186,87" fill="#2b7"/>
 <line x1="217.5" y1="170.8" x2="217.5" y2="78.4" stroke="#2b7" stroke-width="2"/>

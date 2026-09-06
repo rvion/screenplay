@@ -50,13 +50,13 @@ function renderDebit(core: Core, p: Params) {
   const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
   let rows = t.murs.lignes.map((x: any) =>
     `<tr><td><b>${x.face}</b> · ${x.libelle}</td><td><span class="tag">mur</span></td>` +
-    `<td>${x.nb_panneaux} × ${cover} × ${x.hauteur_cm} cm pour ${x.longueur_cm} cm — coupes droites</td>` +
+    `<td>${x.pieces.map((q: any) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${x.hauteur_cm} cm — coupes droites</td>` +
     `<td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m²</td></tr>`).join("");
   rows += `<tr><td><b>R</b> · Rehausse</td><td><span class="tag rake">mur</span></td>` +
-    `<td>${r.pieces.map((q: any) => `${q.nb} × ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td>` +
+    `<td>${r.pieces.map((q: any) => `<b>${q.label}</b> ${q.longueur_cm} × ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, tirées de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m</td>` +
     `<td>${r.nb_panneaux}</td><td>${r.aire_brute_m2} m²</td></tr>`;
   rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> · ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td>` +
-    `<td>${t.toit.nb_panneaux} × ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente · couvre ${t.toit.aire_couverte_m2} m²</td>` +
+    `<td>${t.toit.pieces.map((q: any) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" · ")} × ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente · couvre ${t.toit.aire_couverte_m2} m²</td>` +
     `<td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m²</td></tr>`;
   setHTML("#debit tbody", rows);
   setHTML("#debit-resume",
