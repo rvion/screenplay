@@ -80,7 +80,7 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
   ok(!m.faces.find((x) => x.cle === "A").ouvertures.some((o) => o.type === "lit"), "rien du lit sur la facade");
   const L = [0, 1, 2].map((i) => Math.hypot(lp.polygone[i + 1][0] - lp.polygone[i][0], lp.polygone[i + 1][1] - lp.polygone[i][1]));
   ok(near(L[0], lp.longueur_cm, 0.2) && near(L[1], lp.largeur_cm, 0.2), "lit pliant aux bonnes dimensions");
-  ok(core.svg["modele-sol"].includes("lit pliant"), "plan de sol : lit pliant dessine");
+  ok(core.svg["modele-sol"].includes(`lit ${lp.replie ? "rabattable" : "pliant"} ${lp.largeur_cm} × ${lp.longueur_cm}`), "plan de sol : lit dessine avec sa nature et sa taille");
 }
 
 // why we think it is actually a bug, and not just meaning spec should change: acces_porte_cm is a
