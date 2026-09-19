@@ -40,9 +40,11 @@ window.SHED_PARAMS = {
     }
   },
   "disposition_trapeze": {
-    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : porte sur le cote droit, bureau en L le long de tout le mur gauche et de toute la facade (facade = fenetres seulement). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm.",
+    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm sur le cote droit, bureau en L le long de tout le mur gauche et de toute la facade, facade = fenetres seulement (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
+    "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
+    "porte_largeur_cm": 65,
     "bureaux": [
       {
         "cote": "gauche",
@@ -51,6 +53,24 @@ window.SHED_PARAMS = {
       {
         "cote": "avant",
         "profondeur_cm": 50
+      }
+    ],
+    "fenetres": [
+      {
+        "cote": "avant",
+        "largeur_cm": 80,
+        "hauteur_cm": 110,
+        "allege_cm": 95,
+        "position": 10,
+        "ouvrant": true
+      },
+      {
+        "cote": "avant",
+        "largeur_cm": 80,
+        "hauteur_cm": 110,
+        "allege_cm": 95,
+        "position": 110,
+        "ouvrant": false
       }
     ]
   },

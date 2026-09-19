@@ -38,7 +38,7 @@
 | [10](#option-10) | trapèze plafonné à 5 m² | 5 m² | **4,45 m²** | 4 | 55,4 cm | 12 cm | oui |
 | [11](#option-11) | trapèze pivoté, plafonné à 5 m² | 5 m² | **4,43 m²** | 4 | 95,6 cm | 12 cm | oui |
 | [12](#option-12) | coin coupé au module | 4,81 m² | **4,3 m²** | 5 | 47,2 cm | 119,6 cm | oui |
-| [13](#option-13) | trapèze, 50 cm derrière | 5,83 m² | **5,24 m²** | 4 | 50,2 cm | 12 cm | non |
+| [13](#option-13) | trapèze, 50 cm derrière, ~4.8 m² intérieur | 5,37 m² | **4,81 m²** | 4 | 50,6 cm | 12 cm | non |
 
 ## Option 1
 
@@ -308,23 +308,25 @@
 
 ## Option 13
 
-**trapèze, 50 cm derrière** · pleine largeur, mur arrière du haut du côté gauche jusqu'au mur droit abaissé à 162 : 50 cm de passage derrière l'abri
+**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur
 
 ![option 13](site/assets/variante-13.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5,83 m² | **5,24 m²** |
-| côté avant | 245 cm | 233 cm |
-| côté droite | 162 cm | 152,7 cm |
-| côté fond en biais | 288,4 cm | 274,2 cm |
+| surface | 5,37 m² | **4,81 m²** |
+| côté avant | 218 cm | 206 cm |
+| côté droite | 178,8 cm | 169,4 cm |
+| côté fond en biais | 256,6 cm | 242,5 cm |
 | côté gauche | 314,1 cm | 297,3 cm |
 | angles | 90° · 90° · 121,8° · 58,2° | |
-| passage arrière | grand pan 50,2 cm · petit pan 12 cm | |
-| porte | 100 cm sur le côté droite, de 62 à 162 cm | |
+| passage arrière | grand pan 50,6 cm · petit pan 12 cm | |
+| porte | 65 cm sur le côté droite, de 113,8 à 178,8 cm | |
+| fenêtre ouvrante | 80 × 110 cm sur le côté avant, de 10 à 90 cm, allège 95 cm | |
+| fenêtre fixe | 80 × 110 cm sur le côté avant, de 110 à 190 cm, allège 95 cm | |
 | bureau gauche | | 60 cm de profondeur sur 297,3 cm |
-| bureau avant | | 50 cm de profondeur sur 233 cm |
-| sol libre | | **2,71 m²** (bureaux 2,54 m²) |
+| bureau avant | | 50 cm de profondeur sur 206 cm |
+| sol libre | | **2,41 m²** (bureaux 2,4 m²) |
 
 - ✅ pleine largeur et la plus grande surface des trapèzes, avec le passage voulu derrière
 - ✅ porte sur le côté droit : bureau en L sur tout le mur gauche et toute la façade

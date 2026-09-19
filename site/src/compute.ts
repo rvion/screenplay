@@ -785,8 +785,20 @@ export function variantes(p: Params, g: any) {
       const derriere = (q: Pt[]) => { const w = passages(q).find((x: any) => x.cote === "arriere_droite"); return w ? w.cm : Infinity; };
       lo = 0; hi = HG[1] - Z[1][1];
       for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (derriere(pivot(m)) >= vise) lo = m; else hi = m; }
-      const h13 = Math.floor(lo);
-      out.push(forme(13, `trapèze, ${fz(vise)} cm derrière`, `pleine largeur, mur arrière du haut du côté gauche jusqu'au mur droit abaissé à ${h13} : ${fz(vise)} cm de passage derrière l'abri`, pivot(h13)));
+      const h13 = Math.floor(lo), plein = pivot(h13);
+      // puis le mur droit glisse vers la gauche le long de ce mur arriere jusqu'a l'interieur vise
+      // (le passage ne peut que s'elargir) ; sans cible, pleine largeur
+      const cible = +(p.disposition_trapeze && p.disposition_trapeze.interieur_vise_m2) || 0;
+      const HR = plein[2];
+      const glisse = (w: number): Pt[] => { const x = Z[0][0] + w, t = (x - HG[0]) / (HR[0] - HG[0]); return [Z[0], [x, Z[0][1]], [x, HG[1] + t * (HR[1] - HG[1])], HG]; };
+      const interieur = (q: Pt[]) => poly_area(inset(q, q.map(() => ep))) / 1e4;
+      let w13 = Z[1][0] - Z[0][0];
+      if (cible > 0 && interieur(plein) > cible) {
+        lo = 0; hi = w13;
+        for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (interieur(glisse(m)) <= cible) lo = m; else hi = m; }
+        w13 = Math.round(lo);
+      }
+      out.push(forme(13, `trapèze, ${fz(vise)} cm derrière${cible > 0 ? `, ~${fz(cible)} m² intérieur` : ""}`, `mur arrière du haut du côté gauche, pivoté pour ${fz(vise)} cm de passage derrière, façade ${w13}${cible > 0 ? ` pour ~${fz(cible)} m² intérieur` : ""}`, glisse(w13)));
     }
     out.push(forme(11, `trapèze pivoté, plafonné à ${fz(seuil)} m²`, `le trapèze 9, coin arrière droit abaissé à ${h11} : sous ${fz(seuil)} m², passage arrière élargi`, pivot(h11)));
     // 12. coin coupe au module : mur du fond = i modules, mur gauche = j modules (les deux murs
@@ -806,10 +818,10 @@ export function variantes(p: Params, g: any) {
     if (m12) out.push(forme(12, "coin coupé au module", `l'option 1 élargie à toute la façade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz(mod)} sans recoupe, pan coupé parallèle au grand pan`, m12.q));
   }
   // porte : sur l'avant par defaut, sauf l'option 7 (aucune) ; disposition_trapeze pour l'option 13
-  const place = (v: any, cote: string, position: any) => {
+  const place = (v: any, cote: string, position: any, largeur: number) => {
     const k = v.noms_cotes.indexOf(cote);
     if (k < 0) return null;
-    const L = v.cotes_cm[k], w = Math.min(+p.porte.largeur_cm, L);
+    const L = v.cotes_cm[k], w = Math.min(largeur, L);
     const s0 = typeof position === "number" ? position : position === "gauche" ? 0 : position === "centre" ? (L - w) / 2 : L - w;
     return { cote: k, nom: cote, debut_cm: rnd(s0, 1), largeur_cm: w };
   };
@@ -817,8 +829,16 @@ export function variantes(p: Params, g: any) {
   for (const v of out) {
     if (!p.porte || v.id === 7) { v.porte = null; continue; }
     const perso = v.id === 13 && disp;
-    v.porte = place(v, perso ? disp.porte_cote : "avant", perso ? disp.porte_position : p.porte.position);
+    v.porte = perso ? place(v, disp.porte_cote, disp.porte_position, +(disp.porte_largeur_cm || p.porte.largeur_cm)) : place(v, "avant", p.porte.position, +p.porte.largeur_cm);
     if (!perso) continue;
+    // fenetres : position = distance depuis le debut du cote (coin avant-gauche pour la facade)
+    v.fenetres = (disp.fenetres || []).map((f: any) => {
+      const k = v.noms_cotes.indexOf(f.cote);
+      if (k < 0) return null;
+      const L = v.cotes_cm[k], w = +f.largeur_cm;
+      const s0 = typeof f.position === "number" ? +f.position : f.position === "gauche" ? 0 : f.position === "centre" ? (L - w) / 2 : L - w;
+      return { cote: k, nom: f.cote, debut_cm: rnd(s0, 1), largeur_cm: w, hauteur_cm: +f.hauteur_cm, allege_cm: +f.allege_cm, ouvrant: !!f.ouvrant, tient: s0 >= 0 && s0 + w <= L + 1e-6 };
+    }).filter(Boolean);
     // bureaux : bande de profondeur donnee le long de chaque mur, dans l'interieur ; sol libre = le reste
     const r: Pt[] = v.polygone, inter = inset(r, r.map(() => ep));
     v.bureaux = (disp.bureaux || []).map((b: any) => {
@@ -975,6 +995,14 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number): string {
       svg += text(tp[0], tp[1] + 4, `${f1(v.angles_deg[i])}°`, "middle", ANGLE, 11, "bold");
     }
   });
+  for (const f of v.fenetres || []) {
+    const a = q[f.cote], b = q[(f.cote + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
+    const col = f.tient ? "#1b9aa8" : "#c0392b";
+    const h0 = P([a[0] + ux * f.debut_cm, a[1] + uy * f.debut_cm]), h1 = P([a[0] + ux * (f.debut_cm + f.largeur_cm), a[1] + uy * (f.debut_cm + f.largeur_cm)]);
+    svg += line(h0[0], h0[1], h1[0], h1[1], col, 6);
+    const m = P([a[0] + ux * (f.debut_cm + f.largeur_cm / 2) + uy * 12 / scale, a[1] + uy * (f.debut_cm + f.largeur_cm / 2) - ux * 12 / scale]);
+    svg += text(m[0], m[1] + 4, `fen. ${fz(f.largeur_cm)}×${fz(f.hauteur_cm)}${f.ouvrant ? " ouvr." : " fixe"}`, "middle", col, 10, "bold");
+  }
   if (v.porte) {
     // porte sur le cote v.porte.cote, charniere au bout, vantail ouvert vers l'exterieur
     const k = v.porte.cote, a = q[k], b = q[(k + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = v.porte.largeur_cm, s0 = v.porte.debut_cm;
@@ -1388,6 +1416,7 @@ export function variantes_md(p: Params, core: any): string {
     md += `| angles | ${v.angles_deg.map((a: number) => fr(a) + "°").join(" · ")} | |\n`;
     md += `| passage arrière | grand pan ${pas(v, "arriere_droite")} · petit pan ${pas(v, "arriere_gauche")} | |\n`;
     if (v.porte) md += `| porte | ${fz(v.porte.largeur_cm)} cm sur le côté ${v.porte.nom}, de ${fr(v.porte.debut_cm)} à ${fr(rnd(v.porte.debut_cm + v.porte.largeur_cm, 1))} cm | |\n`;
+    for (const f of v.fenetres || []) md += `| fenêtre ${f.ouvrant ? "ouvrante" : "fixe"} | ${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)} cm sur le côté ${f.nom}, de ${fr(f.debut_cm)} à ${fr(rnd(f.debut_cm + f.largeur_cm, 1))} cm, allège ${fz(f.allege_cm)} cm${f.tient ? "" : " · **NE TIENT PAS**"} | |\n`;
     for (const b of v.bureaux || []) md += `| bureau ${b.cote} | | ${fz(b.profondeur_cm)} cm de profondeur sur ${fr(b.longueur_cm)} cm |\n`;
     if (v.bureaux) md += `| sol libre | | **${fr(v.sol_libre_m2)} m²** (bureaux ${fr(v.bureaux_m2)} m²) |\n`;
     md += `\n`;
