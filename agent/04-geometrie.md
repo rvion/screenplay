@@ -114,11 +114,11 @@ en biais 256,6, **G** gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.
 - **Toit** : contour = murs + débords (avant 10, fond 10, côtés 0) ; panneaux dans le sens de la
   pente : T1 100 × 337,4, T2 100 × 275,1, T3 18 × 212,7 (longueurs = rampant) ; 5,85 m² couverts.
   Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).
-- **Sièges et lit** : fauteuil 70 × 70 contre le bureau gauche (y 109 → 179), tabouret 30 × 30
-  contre le bureau de façade. Sur le sol libre, un lit de 65 de large tient jusqu'à **~165** de long
-  (le fond en biais limite, pas l'accès à la porte) ; le lit est **rabattable contre le mur du fond**
-  (couchette de bateau) : 55 × 170, long bord plaqué sur la face intérieure du fond en biais, replié à
-  plat sur 10 cm, 2 fixations intérieures (rien en façade) ; déplié, son pied glisse sous le bureau
-  gauche, et il laisse 50 cm devant la porte. À 60 cm devant la porte, seul un 55 × 160 tient.
+- **Sièges et lit** : fauteuil 70 × 70 contre le bureau gauche, tabouret 30 × 30 contre le bureau de
+  façade. Lit **75 × 190 rabattable contre le mur du fond** (couchette), replié sur 10 cm, 2 fixations
+  intérieures ; déplié, son pied passe sous le bureau gauche et il va jusque devant la porte (aucun
+  dégagement demandé : elle ouvre dehors). Avec 20 cm devant la porte, il ne tiendrait plus contre le fond.
+- **Fenêtre** : une seule, fixe, 100 × 110, allège 95, de 100 à 200 depuis le coin gauche : elle prend
+  tout le module A2 (allège de 95 et linteau de 10 restent du panneau).
 - **Porte** : ouverture 65 × 205 sur D, de 100,5 à 165,5 ; chambranle 5 ; cadre à 5 cm de la face
   intérieure du mur du fond et 5 cm sous le haut du mur.

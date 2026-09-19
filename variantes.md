@@ -324,8 +324,7 @@
 | angles | 90° · 90° · 121,8° · 58,2° | |
 | passage arrière | grand pan 50,6 cm · petit pan 12 cm | |
 | porte | 65 cm sur le côté droite, de 100,5 à 165,5 cm | |
-| fenêtre ouvrante | 80 × 110 cm sur le côté avant, de 10 à 90 cm, allège 95 cm | |
-| fenêtre fixe | 80 × 110 cm sur le côté avant, de 110 à 190 cm, allège 95 cm | |
+| fenêtre fixe | 100 × 110 cm sur le côté avant, de 100 à 200 cm, allège 95 cm | |
 | bureau gauche | | 60 cm de profondeur sur 297,3 cm |
 | bureau avant | | 50 cm de profondeur sur 206 cm |
 | sol libre | | **2,41 m²** (bureaux 2,4 m²) |

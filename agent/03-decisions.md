@@ -232,3 +232,6 @@ gauche) et **chute 30 cm** (5,5° sur 314 cm ; 22,5 donnait 4,1°, sous le mini 
 75 × 300. *Écarté :* toit perpendiculaire au fond (le plus de coupes), toit vers la droite (côté haut
 contre la propriété). *Reste sur l'ancien rectangle :* débit, achats, budget et 3D (priorité aux
 plans 2D, demande explicite). *Amende* D21 (emprise), D26 (passage).
+*Précisé ensuite :* lit 75 × 190 minimum, rabattable contre le mur du fond, aucun dégagement devant la
+porte (elle ouvre dehors) ; une seule fenêtre de façade, la droite, élargie à 100 (fixe) ; `abri.md`
+devient le document complet de l'abri (implantation sur la dalle, plans, débit, budget).

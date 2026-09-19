@@ -1107,7 +1107,7 @@ function variante_svg(v, P, scale, sobre = false) {
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     const [q0, q1, q2, q3] = lp.polygone;
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
-    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    svg += text(tete[0], tete[1] - 2, `lit ${lp.replie ? "rabattable" : "pliant"} ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
     if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   q.forEach((a, i) => {
@@ -1730,7 +1730,7 @@ function modele_sol_svg(p, v, m) {
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     const [q0, q1, q2, q3] = lp.polygone;
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
-    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    svg += text(tete[0], tete[1] - 2, `lit ${lp.replie ? "rabattable" : "pliant"} ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
     if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   m.faces.forEach((f, i) => {

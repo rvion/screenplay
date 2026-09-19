@@ -10,14 +10,15 @@
 - **4,81 m² intérieur** (5,37 m² de murs), 50,6 cm de passage derrière.
 - **4 murs** en panneaux sandwich 6 cm autoportants : façade 218, droite 178,8, fond en biais 256,6, gauche 314,1 cm.
 - **Toit** mono-pente vers le fond, 5,46° : 245 cm devant, 215 cm au plus bas.
-- **Porte** 65 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Budget indicatif** : 3 638 € à 4 922 € HT (coque 3 684 €, aménagement 596 €).
+- **Porte** 65 × 205 sur le mur droit, **une fenêtre de 100** en façade, **bureau en L** sur la façade et le mur gauche, **lit 75 × 190 rabattable** contre le fond.
+- **Budget indicatif** : 3 366 € à 4 554 € HT (coque 3 364 €, aménagement 596 €).
 
 ## À trancher
 
 - **Toit** : vers l'arrière, chute 30 cm (5,46°) = choix par défaut. Madrier 75 × 300 classe 4 à trouver (sinon deux pièces superposées).
 - **Formalités** : 5,37 m² de murs, au-dessus du seuil de 5 m² : déclaration préalable probable ; distance aux limites du PLU à vérifier en mairie.
-- **Lit 75 × 190** : il ne tient pas en couchette le long du mur du fond sans bloquer la porte ; il se déplie donc au milieu, le long du bureau gauche, le pied sous le bureau de façade (lit plus bas que le plateau, pas de tiroir à cet endroit), fauteuil et tabouret rangés.
+- **Lit 75 × 190 rabattable** contre le mur du fond : déplié, son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).
+- **Fenêtre de 100** : aussi large qu'un module, elle prend tout le panneau A2, qui ne garde qu'une allège de 95 cm et un linteau de 10 cm. Elle est **fixe** : la seule aération est la porte (plus la ventilation prévue) ; une ouvrante coûte ~120 € de plus.
 - **Portée du toit** (~3,1 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (121,8°, 58,2°) : profils d'angle pliés sur mesure.
 
@@ -72,8 +73,8 @@ Murs 5,37 m² · intérieur 4,81 m² (murs de 6 cm retirés) · sol libre hors b
 
 | pièce | largeur | provenance | découpe |
 |---|---|---|---|
-| A1 | 100 cm | panneau entier | fenêtre 80 × 110 |
-| A2 | 100 cm | panneau entier | fenêtre 80 × 110 |
+| A1 | 100 cm | panneau entier | – |
+| A2 | 100 cm | panneau entier | fenêtre 100 × 110 |
 | A3 | 18 cm | chute d'un autre panneau | – |
 | D1 | 100 cm | panneau entier | porte 75 × 210 |
 | D2 | 78,8 cm | panneau recoupé | porte 75 × 210 |
@@ -119,8 +120,7 @@ Débords : 10 cm devant, 10 cm au fond, rives affleurantes sur les côtés. Surf
 | ouverture | taille | où | détail |
 |---|---|---|---|
 | porte vitrée | 65 × 205 (cadre 75 × 210) | face D, de 100,5 à 165,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
-| fenêtre oscillo-battante | 80 × 110 | face A, de 10 à 90 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
-| fenêtre fixe | 80 × 110 | face A, de 110 à 190 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre fixe | 100 × 110 | face A, de 100 à 200 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
 
 ## Aménagement
 
@@ -130,7 +130,7 @@ Débords : 10 cm devant, 10 cm au fond, rives affleurantes sur les côtés. Surf
 | bureau de façade | 50 × 206 cm | tout le mur de façade |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
 | tabouret | 30 × 30 cm | devant le bureau de façade |
-| lit pliant (déplié) | 75 × 190 cm | le long du bureau gauche, pied sous le bureau de façade, sièges rangés, 60 cm libres devant la porte |
+| lit rabattable (déplié) | 75 × 190 cm | contre le mur du fond (replié : 10 cm), pied sous le bureau gauche, sièges rangés |
 
 ## Budget indicatif (HT, fourniture seule)
 
@@ -142,7 +142,7 @@ Débords : 10 cm devant, 10 cm au fond, rives affleurantes sur les côtés. Surf
 | Rehausse bois (madriers 75 × 300) | 9,6 ml | 13 € | 125 € |
 | Porte vitrée + cadre | 1 u | 900 € | 900 € |
 | Fenêtre fixe | 1 u | 200 € | 200 € |
-| Fenêtre ouvrante | 1 u | 320 € | 320 € |
+| Fenêtre ouvrante | 0 u | 320 € | 0 € |
 | Profils (angles int. + ext., rail de pied, rives) | 33,3 ml | 12 € | 400 € |
 | Visserie + étanchéité | 1 forfait | 160 € | 160 € |
 | Gouttière + descente | 1 forfait | 130 € | 130 € |
@@ -153,8 +153,8 @@ Débords : 10 cm devant, 10 cm au fond, rives affleurantes sur les côtés. Surf
 | Chauffage | 1 forfait | 120 € | 120 € |
 | Store | 1 forfait | 60 € | 60 € |
 | Finition intérieure | 1 forfait | 120 € | 120 € |
-| **coque** | | | **3 684 €** |
+| **coque** | | | **3 364 €** |
 | **aménagement** | | | **596 €** |
-| **total** | | | **4 280 €** (3 638 € à 4 922 €, ±15 %) |
+| **total** | | | **3 960 €** (3 366 € à 4 554 €, ±15 %) |
 
 Prix médians du marché, à confirmer par devis (`prix_indicatifs_eur`). Porte et fenêtres au prix des blocs standard.

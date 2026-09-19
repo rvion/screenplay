@@ -73,7 +73,9 @@ window.SHED_PARAMS = {
     "lit_pliant": {
       "largeur_cm": 75,
       "longueur_cm": 190,
-      "acces_porte_cm": 60,
+      "contre": "fond",
+      "epaisseur_replie_cm": 10,
+      "acces_porte_cm": 0,
       "sous_bureau": true
     },
     "rehausse_prix_ml_eur": 13,
@@ -96,18 +98,10 @@ window.SHED_PARAMS = {
     "fenetres": [
       {
         "cote": "avant",
-        "largeur_cm": 80,
+        "largeur_cm": 100,
         "hauteur_cm": 110,
         "allege_cm": 95,
-        "position": 10,
-        "ouvrant": true
-      },
-      {
-        "cote": "avant",
-        "largeur_cm": 80,
-        "hauteur_cm": 110,
-        "allege_cm": 95,
-        "position": 110,
+        "position": 100,
         "ouvrant": false
       }
     ]

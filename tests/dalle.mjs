@@ -67,7 +67,7 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   const dt = base.disposition_trapeze;
   ok(near(v13.aire_interieure_m2, dt.interieur_vise_m2, 0.03), "option 13 : interieur ~ cible (" + v13.aire_interieure_m2 + ")");
   ok(v13.porte.largeur_cm === dt.porte_largeur_cm, "option 13 : porte de la largeur demandee");
-  ok(v13.fenetres.length === 2 && v13.fenetres.every((f) => f.tient && f.nom === "avant"), "option 13 : fenetres de facade dans le mur");
+  ok(v13.fenetres.length === dt.fenetres.length && v13.fenetres.every((f) => f.tient && f.nom === "avant"), "option 13 : fenetres de facade dans le mur");
   ok(v13.fenetres.every((f) => Math.floor(f.debut_cm / base.panneau.largeur_utile_cm) === Math.floor((f.debut_cm + f.largeur_cm - 1e-6) / base.panneau.largeur_utile_cm)), "option 13 : aucune fenetre a cheval sur un joint de panneau");
   ok(v13.fenetres.every((f) => f.allege_cm >= 75), "option 13 : allege au-dessus d'un plan de bureau (75)");
   ok(v13.bureaux.length === 2 && near(v13.sol_libre_m2 + v13.bureaux_m2, v13.aire_interieure_m2, 0.011), "option 13 : bureaux + sol libre = interieur");

@@ -1083,7 +1083,7 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, sobre = fal
     const [q0, q1, q2, q3] = lp.polygone as Pt[];
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
     void q2;
-    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    svg += text(tete[0], tete[1] - 2, `lit ${lp.replie ? "rabattable" : "pliant"} ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
     if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   q.forEach((a, i) => {
@@ -1769,7 +1769,7 @@ export function modele_sol_svg(p: Params, v: any, m: any): string {
     const [q0, q1, q2, q3] = lp.polygone as Pt[];
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
     void q2;
-    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    svg += text(tete[0], tete[1] - 2, `lit ${lp.replie ? "rabattable" : "pliant"} ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
     if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   m.faces.forEach((f: any, i: number) => {
@@ -1949,12 +1949,15 @@ export function abri_md(p: Params, core: any): string {
   md += `- **${fr(v.aire_interieure_m2)} m² intérieur** (${fr(v.aire_m2)} m² de murs), ${fr(derriere.cm)} cm de passage derrière.\n`;
   md += `- **4 murs** en panneaux sandwich ${fz(ep)} cm autoportants : façade ${fr(m.faces[0].longueur_cm)}, droite ${fr(m.faces[1].longueur_cm)}, fond en biais ${fr(m.faces[2].longueur_cm)}, gauche ${fr(m.faces[3].longueur_cm)} cm.\n`;
   md += `- **Toit** mono-pente vers le fond, ${fr(m.pente.degres)}° : ${fr(m.hauteurs_coins_cm[0])} cm devant, ${fr(Math.min(...m.hauteurs_coins_cm))} cm au plus bas.\n`;
-  md += `- **Porte** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.\n`;
+  md += `- **Porte** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **${v.fenetres.length === 1 ? `une fenêtre de ${fz(v.fenetres[0].largeur_cm)}` : `${v.fenetres.length} fenêtres`}** en façade, **bureau en L** sur la façade et le mur gauche${lp && lp.replie ? `, **lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le fond` : ""}.\n`;
   md += `- **Budget indicatif** : ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)} HT (coque ${eur(B.coque_eur)}, aménagement ${eur(B.amenagement_eur)}).\n\n`;
   md += `## À trancher\n\n`;
   md += `- **Toit** : vers l'arrière, chute ${fz(m.chute_cm)} cm (${fr(m.pente.degres)}°) = choix par défaut. Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 à trouver (sinon deux pièces superposées).\n`;
   md += `- **Formalités** : ${fr(v.aire_m2)} m² de murs, au-dessus du seuil de ${fz(seuil)} m² : déclaration préalable probable ; distance aux limites du PLU à vérifier en mairie.\n`;
-  if (lp) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}** : il ne tient pas en couchette le long du mur du fond sans bloquer la porte ; il se déplie donc au milieu, le long du bureau gauche${lp.sous_bureau_cm2 > 0 ? ", le pied sous le bureau de façade (lit plus bas que le plateau, pas de tiroir à cet endroit)" : ""}${lp.gene_sieges_m2 > 0.05 ? ", fauteuil et tabouret rangés" : ""}.\n`;
+  if (lp && lp.replie) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le mur du fond : déplié, ${lp.sous_bureau_cm2 > 0 ? "son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et " : ""}il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).\n`;
+  else if (lp) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}** : déplié au milieu${lp.sous_bureau_cm2 > 0 ? ", le pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", fauteuil et tabouret rangés" : ""}.\n`;
+  const pleine = (v.fenetres || []).filter((f: any) => f.largeur_cm >= +p.panneau.largeur_utile_cm - 0.05);
+  if (pleine.length) md += `- **Fenêtre de ${fz(pleine[0].largeur_cm)}** : aussi large qu'un module, elle prend tout le panneau A2, qui ne garde qu'une allège de ${fz(pleine[0].allege_cm)} cm et un linteau de ${fz(rnd(m.hauteur_mur_cm - pleine[0].allege_cm - pleine[0].hauteur_cm, 1))} cm.${(v.fenetres || []).every((f: any) => !f.ouvrant) ? " Elle est **fixe** : la seule aération est la porte (plus la ventilation prévue) ; une ouvrante coûte ~120 € de plus." : ""}\n`;
   md += `- **Portée du toit** (~${fr(rnd(m.profondeur_cm / 100, 1))} m au plus long) en ${fz(ep)} cm sans panne : à confirmer dans le tableau du fabricant.\n`;
   md += `- **Angles non droits** (${m.angles_deg.filter((a: number) => Math.abs(a - 90) > 0.5).map((a: number) => fr(a) + "°").join(", ")}) : profils d'angle pliés sur mesure.\n\n`;
   md += `## Plans\n\n`;
@@ -1981,7 +1984,7 @@ export function abri_md(p: Params, core: any): string {
   md += `\n## Aménagement\n\n| élément | taille | place |\n|---|---|---|\n`;
   for (const b of v.bureaux) md += `| bureau ${b.cote === "avant" ? "de façade" : b.cote} | ${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)} cm | tout le mur ${b.cote === "avant" ? "de façade" : b.cote} |\n`;
   for (const st of v.sieges || []) md += `| ${st.type} | ${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm | devant le bureau ${st.contre === "avant" ? "de façade" : st.contre} |\n`;
-  if (lp) md += `| lit pliant (déplié) | ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} cm | ${lp.tient ? `le long du bureau gauche${lp.sous_bureau_cm2 > 0 ? ", pied sous le bureau de façade" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}, ${fz(d.lit_pliant.acces_porte_cm)} cm libres devant la porte` : "**NE TIENT PAS**"} |\n`;
+  if (lp) md += `| lit ${lp.replie ? "rabattable" : "pliant"} (déplié) | ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} cm | ${!lp.tient ? "**NE TIENT PAS**" : lp.replie ? `contre le mur du fond (replié : ${fz(lp.epaisseur_replie_cm)} cm), ${lp.sous_bureau_cm2 > 0 ? "pied sous le bureau gauche" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}` : `au milieu${lp.sous_bureau_cm2 > 0 ? ", pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}`} |\n`;
   md += `\n## Budget indicatif (HT, fourniture seule)\n\n| poste | quantité | prix unitaire | montant |\n|---|---|---|---|\n`;
   for (const l of B.lignes) md += `| ${l.poste} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} |\n`;
   md += `| **coque** | | | **${eur(B.coque_eur)}** |\n| **aménagement** | | | **${eur(B.amenagement_eur)}** |\n| **total** | | | **${eur(B.total_eur)}** (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}, ±${B.incertitude_pct} %) |\n\n`;
