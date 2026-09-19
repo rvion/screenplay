@@ -24,6 +24,10 @@
     "bandes_libres_cm": { "_comment": "Bande reservee (laissee libre) le long de chaque cote de la dalle, vers l'interieur. Ce qui reste au centre = zone utile (plan-dalle-bandes.svg).", "avant": 5, "droite": 5, "arriere_droite": 45, "arriere_gauche": 45, "gauche": 12 },
     "decalage_cm": { "x": 2, "y": 2 }
   },
+  "reglementaire": {
+    "seuil_sans_formalite_m2": 5,
+    "_comment": "Emprise au sol et surface de plancher jusqu'a ce seuil : aucune formalite (a confirmer en mairie, et le PLU s'applique quand meme). Sert a l'option 4 des variantes de forme."
+  },
   "panneau": {
     "epaisseur_mm": 60,
     "autoportant": true,

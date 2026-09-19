@@ -44,6 +44,27 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
   ok(near(geometry(zero).dalle.zone_utile.aire_m2, gd.aire_m2, 1e-9), "bandes nulles : zone utile = dalle");
 }
 
+// variantes de forme : toutes dans la zone utile, porte sur le cote avant, aires ordonnees
+{
+  const { variantes, plus_grand_rectangle } = await import(pathToFileURL(out).href);
+  const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
+  const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
+  ok(vs.length === 7, "7 variantes");
+  ok(vs.every((v) => v.polygone.every(dedans)), "chaque variante tient dans la zone utile");
+  ok(vs.slice(0, 6).every((v) => near(v.polygone[0][1], v.polygone[1][1]) && v.polygone[1][0] > v.polygone[0][0]), "options 1 a 6 : cote 0 = avant, pour la porte");
+  ok(vs[6].angles_deg.every((a) => near(a, 90, 0.2)) && vs[6].aire_m2 >= vs[1].aire_m2 - 0.01, "option 7 : rectangle, au moins aussi grand que le meilleur rectangle droit");
+  // un triangle rectangle 100 x 100 : le plus grand rectangle inscrit vaut la moitie de son aire, a plat
+  const tri = plus_grand_rectangle([[0, 0], [100, 0], [0, 100]]);
+  ok(tri && near(tri.w * tri.h, 2500, 30), "triangle rectangle : plus grand rectangle = moitie de l'aire");
+  // un losange (carre tourne de 45) : le plus grand rectangle est le carre lui meme, tourne
+  const los = plus_grand_rectangle([[0, -50], [50, 0], [0, 50], [-50, 0]]);
+  ok(los && near(los.w * los.h, 5000, 60) && near(Math.abs(los.deg), 45, 1), "losange : le rectangle trouve est tourne de 45 degres");
+  ok(vs[0].cotes_cm.every((c) => c % base.panneau.largeur_utile_cm === 0), "option 1 en modules entiers");
+  ok(vs[1].aire_m2 >= vs[0].aire_m2 && vs[1].aire_m2 >= vs[2].aire_m2, "option 2 = le plus grand rectangle");
+  ok(near(vs[3].aire_m2, base.reglementaire.seuil_sans_formalite_m2, 0.011), "option 4 plafonnee au seuil");
+  ok(vs[3].aire_m2 <= vs[4].aire_m2 && vs[4].aire_m2 <= vs[5].aire_m2 && near(vs[5].aire_m2, g.dalle.zone_utile.aire_m2, 1e-9), "4 <= 5 <= 6 = zone utile");
+}
+
 // decoupage : carre 10x10 coupe par un rectangle qui en couvre la moitie
 ok(near(poly_area(clip_convex([[0, 0], [10, 0], [10, 10], [0, 10]], [[5, -1], [20, -1], [20, 20], [5, 20]])), 50, 1e-9), "decoupage : moitie du carre = 50");
 

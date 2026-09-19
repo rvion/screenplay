@@ -39,6 +39,10 @@ window.SHED_PARAMS = {
       "y": 2
     }
   },
+  "reglementaire": {
+    "seuil_sans_formalite_m2": 5,
+    "_comment": "Emprise au sol et surface de plancher jusqu'a ce seuil : aucune formalite (a confirmer en mairie, et le PLU s'applique quand meme). Sert a l'option 4 des variantes de forme."
+  },
   "panneau": {
     "epaisseur_mm": 60,
     "autoportant": true,

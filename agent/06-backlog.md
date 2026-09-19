@@ -1,6 +1,9 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Forme de l'abri dans la zone utile** : 7 options dessinées (`site/assets/variante-{1..7}.svg`,
+      section « Formes » du site). Recommandation : option 5 (coin coupé, 5,94 m²) ou option 1
+      (200 × 200, le plus simple). Le choix remplace l'emprise rectangulaire actuelle.
 - [ ] **Profondeur de l'abri contre passage arrière** (D26) : 200 × 240 ⇒ bande de 27 cm, on ne
       passe pas. 200 × 215 ⇒ 45 cm (mais un module de 15 cm sur D et G). 200 × 200 ⇒ 56 cm, 4 faces
       en panneaux entiers, 4,0 m². À trancher ; le site montre la bande en direct.

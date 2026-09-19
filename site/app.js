@@ -104,6 +104,15 @@ function clip_convex(subject, clipper) {
   for (let i = 0; i < clipper.length && out.length; i++) out = clip_half(out, clipper[i], clipper[(i + 1) % clipper.length], true);
   return out;
 }
+function inset(q, largeurs) {
+  let z = q;
+  q.forEach((a, i) => {
+    const b = q[(i + 1) % q.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    const nx = -(b[1] - a[1]) / l * largeurs[i], ny = (b[0] - a[0]) / l * largeurs[i];
+    if (z.length) z = clip_half(z, [a[0] + nx, a[1] + ny], [b[0] + nx, b[1] + ny], true);
+  });
+  return z;
+}
 function outside_pieces(rect, slab) {
   const pieces = [];
   for (let i = 0; i < slab.length; i++) {
@@ -211,12 +220,7 @@ function geometry(p) {
     const bandes = d.bandes_libres_cm;
     if (bandes) {
       const largeurs = noms.map((nom) => +bandes[nom] || 0);
-      let z = local;
-      local.forEach((a, i) => {
-        const b = local[(i + 1) % local.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-        const nx = -(b[1] - a[1]) / l * largeurs[i], ny = (b[0] - a[0]) / l * largeurs[i];
-        if (z.length) z = clip_half(z, [a[0] + nx, a[1] + ny], [b[0] + nx, b[1] + ny], true);
-      });
+      const z = inset(local, largeurs);
       zone_utile = {
         bandes_cm: largeurs,
         polygone: z.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]),
@@ -571,6 +575,117 @@ function model3d(p, g, openings) {
     }))
   };
 }
+function plus_grand_rectangle(Z) {
+  const essai = (deg2) => {
+    const t = deg2 * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
+    const R = Z.map(([x, y]) => [x * c + y * s, -x * s + y * c]);
+    const ymin = Math.min(...R.map((v) => v[1])), ymax = Math.max(...R.map((v) => v[1]));
+    const N = 240, dy = (ymax - ymin) / N, L = [], D = [];
+    for (let k = 0; k <= N; k++) {
+      const y = ymin + k * dy, xs = [];
+      R.forEach((a, i) => {
+        const b = R[(i + 1) % R.length];
+        if ((a[1] - y) * (b[1] - y) <= 0 && a[1] !== b[1]) xs.push(a[0] + (y - a[1]) / (b[1] - a[1]) * (b[0] - a[0]));
+      });
+      L.push(xs.length ? Math.min(...xs) : Infinity);
+      D.push(xs.length ? Math.max(...xs) : -Infinity);
+    }
+    let best = { aire: 0, w: 0, h: 0, x: 0, y: 0 };
+    for (let i = 0; i <= N; i++) for (let j = i + 1; j <= N; j++) {
+      const w = Math.min(D[i], D[j]) - Math.max(L[i], L[j]), h2 = (j - i) * dy;
+      if (w > 0 && w * h2 > best.aire) best = { aire: w * h2, w, h: h2, x: Math.max(L[i], L[j]), y: ymin + i * dy };
+    }
+    const back = ([x, y]) => [x * c - y * s, x * s + y * c];
+    return { ...best, deg: deg2, pts: [[best.x, best.y], [best.x + best.w, best.y], [best.x + best.w, best.y + best.h], [best.x, best.y + best.h]].map(back) };
+  };
+  let top = essai(0);
+  for (let d = 2; d < 180; d += 2) {
+    const e = essai(d);
+    if (e.aire > top.aire) top = e;
+  }
+  for (let d = top.deg - 2; d <= top.deg + 2; d += 0.25) {
+    const e = essai(d);
+    if (e.aire > top.aire) top = e;
+  }
+  if (!(top.aire > 0)) return null;
+  const deg = top.deg > 90 ? top.deg - 180 : top.deg;
+  return { w: top.w, h: top.h, deg, pts: top.pts };
+}
+function variantes(p, g) {
+  const zu = g.dalle && g.dalle.zone_utile;
+  if (!zu || zu.polygone.length < 3) return [];
+  const Z = zu.polygone;
+  const x0 = Math.min(...Z.map((v) => v[0])), y0 = Math.min(...Z.map((v) => v[1]));
+  const x1 = Math.max(...Z.map((v) => v[0]));
+  const dedans = (q) => Z.every((a, i) => {
+    const b = Z[(i + 1) % Z.length];
+    return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -1e-6 * Math.hypot(b[0] - a[0], b[1] - a[1]);
+  });
+  const rect = (w, h2) => [[x0, y0], [x0 + w, y0], [x0 + w, y0 + h2], [x0, y0 + h2]];
+  const tient = (w, h2) => rect(w, h2).every(dedans);
+  const prof_max = (w) => {
+    if (!tient(w, 0)) return 0;
+    let lo2 = 0, hi2 = 2e3;
+    for (let k = 0; k < 40; k++) {
+      const m = (lo2 + hi2) / 2;
+      if (tient(w, m)) lo2 = m;
+      else hi2 = m;
+    }
+    return lo2;
+  };
+  const sous = (yb2) => {
+    const c = clip_half(Z, [1e4, yb2], [-1e4, yb2], true);
+    return c.filter((v, i) => Math.hypot(v[0] - c[(i + 1) % c.length][0], v[1] - c[(i + 1) % c.length][1]) > 0.05);
+  };
+  const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
+  const forme = (id, titre, note, q) => {
+    const k = q.reduce((m, v, i) => v[1] < q[m][1] - 1e-6 || Math.abs(v[1] - q[m][1]) <= 1e-6 && v[0] < q[m][0] ? i : m, 0);
+    const r = [...q.slice(k), ...q.slice(0, k)];
+    return {
+      id,
+      titre,
+      note,
+      polygone: r.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]),
+      cotes_cm: r.map((a, i) => {
+        const b = r[(i + 1) % r.length];
+        return rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1);
+      }),
+      angles_deg: interior_angles(r).map((a) => rnd(a, 1)),
+      aire_m2: rnd(poly_area(r) / 1e4, 2),
+      aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2)
+    };
+  };
+  const out = [];
+  const mod = +p.panneau.largeur_utile_cm;
+  let best = [0, 0];
+  for (let i = 1; i * mod <= x1 - x0 + 1e-6; i++) for (let j = 1; j < 20 && tient(i * mod, j * mod); j++) if (i * j > best[0] * best[1]) best = [i, j];
+  if (best[0]) out.push(forme(1, "rectangle en panneaux entiers", `${best[0]} \xD7 ${best[1]} modules de ${fz(mod)} : aucune recoupe, angles droits`, rect(best[0] * mod, best[1] * mod)));
+  let bw = 0, bh = 0;
+  for (let w = 1; w <= Math.floor(x1 - x0); w++) {
+    const h2 = Math.floor(prof_max(w));
+    if (w * h2 > bw * bh) {
+      bw = w;
+      bh = h2;
+    }
+  }
+  out.push(forme(2, "plus grand rectangle", "le plus grand rectangle qui tient dans la zone", rect(bw, bh)));
+  const wf = Math.floor(x1 - x0);
+  out.push(forme(3, "rectangle pleine largeur", "toute la largeur de la zone, profondeur limit\xE9e par le grand pan", rect(wf, Math.floor(prof_max(wf)))));
+  const yb = Math.max(...Z.filter((v) => Math.abs(v[0] - x0) < 0.5).map((v) => v[1]));
+  const cinq = sous(yb);
+  let lo = y0, hi = yb;
+  for (let k = 0; k < 50; k++) {
+    const m = (lo + hi) / 2;
+    if (poly_area(sous(m)) <= seuil * 1e4) lo = m;
+    else hi = m;
+  }
+  out.push(forme(4, `coin coup\xE9, plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `mur arri\xE8re recul\xE9 pour ne pas d\xE9passer ${fz(seuil)} m\xB2 de murs`, sous(lo)));
+  out.push(forme(5, "coin coup\xE9, pleine profondeur", "un pan coup\xE9 parall\xE8le au mur du fond, le reste \xE0 angle droit", cinq));
+  out.push(forme(6, "toute la zone utile", "suit toute la zone : 3 angles non droits, pointe \xE0 l'arri\xE8re", Z));
+  const r7 = plus_grand_rectangle(Z);
+  if (r7) out.push(forme(7, "plus grand rectangle, orientation libre", Math.abs(r7.deg) < 0.01 ? `${f1(r7.w)} \xD7 ${f1(r7.h)} : aucune rotation ne fait mieux que le rectangle droit` : `${f1(r7.w)} \xD7 ${f1(r7.h)}, tourn\xE9 de ${f1(r7.deg)}\xB0 : porte sur le c\xF4t\xE9 de son choix`, r7.pts));
+  return out.sort((a, b) => a.id - b.id);
+}
 function svgHeader(w, h2) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h2}" font-family="system-ui,sans-serif" font-size="13">
 <rect width="${w}" height="${h2}" fill="#fbfbf8"/>
@@ -682,27 +797,74 @@ function plan_sol_svg(p, g, openings) {
   svg += "</svg>\n";
   return svg;
 }
-function plan_dalle_svg(g, avecBandes = false) {
+function variante_svg(v, P, scale, porte) {
+  const q = v.polygone, n = q.length, BLEU = "#2b5d8a", ANGLE = "#b0452a";
+  let svg = poly(q.map(P), "#cfe0f1", BLEU, 2.5);
+  q.forEach((a, i) => {
+    const b = q[(i + 1) % n], pa = P(a), pb = P(b);
+    const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
+    const ux = (pb[0] - pa[0]) / len, uy = (pb[1] - pa[1]) / len, nx = uy, ny = -ux;
+    let rot = Math.atan2(uy, ux) * 180 / Math.PI;
+    if (rot > 90) rot -= 180;
+    else if (rot < -90) rot += 180;
+    const m = [(pa[0] + pb[0]) / 2 + nx * 14, (pa[1] + pb[1]) / 2 + ny * 14];
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="${BLEU}" font-size="13" font-weight="bold" transform="rotate(${f1(rot)} ${f1(m[0])} ${f1(m[1])})">${fz(v.cotes_cm[i])}</text>
+`;
+  });
+  q.forEach((b, i) => {
+    const c2 = q[(i + 1) % n], u2 = Math.atan2(c2[1] - b[1], c2[0] - b[0]), ang = v.angles_deg[i] * Math.PI / 180;
+    const r = 16 / scale, pts = [];
+    for (let k = 0; k <= 12; k++) {
+      const t = u2 + ang * k / 12;
+      pts.push(P([b[0] + r * Math.cos(t), b[1] + r * Math.sin(t)]));
+    }
+    svg += `<polyline points="${pts.map((w) => `${f1(w[0])},${f1(w[1])}`).join(" ")}" fill="none" stroke="${ANGLE}" stroke-width="1.2"/>
+`;
+    if (Math.abs(v.angles_deg[i] - 90) > 0.05) {
+      const bis = u2 + ang / 2, tp = P([b[0] + 40 / scale * Math.cos(bis), b[1] + 40 / scale * Math.sin(bis)]);
+      svg += text(tp[0], tp[1] + 4, `${f1(v.angles_deg[i])}\xB0`, "middle", ANGLE, 11, "bold");
+    }
+  });
+  if (porte) {
+    const a = q[0], b = q[1], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = Math.min(+porte.largeur_cm, L);
+    const s0 = typeof porte.position === "number" ? porte.position : porte.position === "gauche" ? 0 : porte.position === "centre" ? (L - w) / 2 : L - w;
+    const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
+    const h0 = P([a[0] + ux * s0, a[1] + uy * s0]), h1 = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w)]);
+    const ext = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w) - w]);
+    svg += line(h0[0], h0[1], h1[0], h1[1], "#c0392b", 5);
+    svg += line(h1[0], h1[1], ext[0], ext[1], "#c0392b", 2);
+    svg += `<path d="M ${f1(h0[0])} ${f1(h0[1])} A ${f1(w * scale)} ${f1(w * scale)} 0 0 0 ${f1(ext[0])} ${f1(ext[1])}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+`;
+    svg += text((h0[0] + h1[0]) / 2, h0[1] - 12, `porte ${fz(w)}`, "middle", "#c0392b", 11, "bold");
+  }
+  const cx = q.reduce((s, w) => s + w[0], 0) / n, cy = q.reduce((s, w) => s + w[1], 0) / n, c = P([cx, cy]);
+  svg += text(c[0], c[1], `${v.aire_m2} m\xB2`, "middle", BLEU, 22, "bold");
+  svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
+  return svg;
+}
+function plan_dalle_svg(g, avecBandes = false, v = null, porte = null) {
   const d = g.dalle;
-  const zu = avecBandes ? d.zone_utile : null;
+  const zu = avecBandes || v ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
   const q = d.polygone.map(([x, y]) => [x + ox, y + oy]);
   const n = q.length, scale = 1.25, pad = 110, top = 90;
-  const xs = q.map((v) => v[0]), ys = q.map((v) => v[1]);
+  const xs = q.map((v2) => v2[0]), ys = q.map((v2) => v2[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + pad + top + 40;
-  const P = (v) => [pad + (v[0] - minx) * scale, top + 40 + (maxy - v[1]) * scale];
+  const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + pad + top + 40 + (v && porte ? Math.max(0, +porte.largeur_cm * scale - 60) : 0);
+  const P = (v2) => [pad + (v2[0] - minx) * scale, top + 40 + (maxy - v2[1]) * scale];
   const mur = new Set(d.murs.map((w) => w.cote));
   const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
   let svg = svgHeader(rnd(W), rnd(H));
   if (zu) svg += `<defs><pattern id="bande" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3e3cf"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e0b98a" stroke-width="2"/></pattern></defs>
 `;
   svg += poly(q.map(P), zu ? "url(#bande)" : "#e9e5da", GRIS, 2);
-  if (zu) svg += poly(zu.polygone.map(P), "#e3efe0", "#2a8a4a", 1.8);
+  if (zu) svg += poly(zu.polygone.map(P), "#e3efe0", "#2a8a4a", 1.8, v ? "5 4" : "");
   const { A, G } = g.cotes;
-  svg += poly([[ox, oy], [ox + A, oy], [ox + A, oy + G], [ox, oy + G]].map(P), "none", "#9bb5cf", 1, "5 4");
-  const c = P([ox + A / 2, oy + G / 2]);
-  svg += text(c[0], c[1] + (zu ? 60 : 0), `abri ${A} \xD7 ${G}`, "middle", "#9bb5cf", 11);
+  if (!v) {
+    svg += poly([[ox, oy], [ox + A, oy], [ox + A, oy + G], [ox, oy + G]].map(P), "none", "#9bb5cf", 1, "5 4");
+    const c = P([ox + A / 2, oy + G / 2]);
+    svg += text(c[0], c[1] + (zu ? 60 : 0), `abri ${A} \xD7 ${G}`, "middle", "#9bb5cf", 11);
+  }
   q.forEach((a, i) => {
     const b = q[(i + 1) % n], pa = P(a), pb = P(b);
     const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
@@ -725,6 +887,7 @@ function plan_dalle_svg(g, avecBandes = false) {
 `;
   });
   q.forEach((b, i) => {
+    if (v && i < 2) return;
     const cc = q[(i + 1) % n];
     const u2 = Math.atan2(cc[1] - b[1], cc[0] - b[0]), ang = d.angles_deg[i] * Math.PI / 180;
     const r = 22 / scale, pts = [];
@@ -732,14 +895,15 @@ function plan_dalle_svg(g, avecBandes = false) {
       const t = u2 + ang * k / 16;
       pts.push(P([b[0] + r * Math.cos(t), b[1] + r * Math.sin(t)]));
     }
-    svg += `<polyline points="${pts.map((v) => `${f1(v[0])},${f1(v[1])}`).join(" ")}" fill="none" stroke="${ANGLE}" stroke-width="1.5"/>
+    svg += `<polyline points="${pts.map((v2) => `${f1(v2[0])},${f1(v2[1])}`).join(" ")}" fill="none" stroke="${ANGLE}" stroke-width="1.5"/>
 `;
     const bis = u2 + ang / 2, rl = 44 / scale;
     const tp = P([b[0] + rl * Math.cos(bis), b[1] + rl * Math.sin(bis)]);
     const suppose = i < 2 ? "*" : "";
     svg += text(tp[0], tp[1] + 4, `${f1(d.angles_deg[i])}\xB0${suppose}`, "middle", ANGLE, 12, "bold");
   });
-  if (d.pointe_cm) {
+  if (v) svg += variante_svg(v, P, scale, porte);
+  if (d.pointe_cm && !v) {
     const pt = d.pointe_cm, pp = P(pt), p0 = P([pt[0], 0]), pl = P([0, pt[1]]);
     svg += line(pp[0], pp[1], p0[0], p0[1], "#aaa", 0.8, "4 4");
     svg += line(pp[0], pp[1], pl[0], pl[1], "#aaa", 0.8, "4 4");
@@ -749,7 +913,7 @@ function plan_dalle_svg(g, avecBandes = false) {
     svg += text(p0[0] + 4, p0[1] - 8, `${f1(pt[0])}`, "start", "#999", 10);
     svg += text(pl[0] + 4, pl[1] - 6, `${f1(pt[1])}`, "start", "#999", 10);
   }
-  if (zu) {
+  if (zu && !v) {
     const m = zu.polygone.length;
     q.forEach((a, i) => {
       const b = q[(i + 1) % n], w = zu.bandes_cm[i];
@@ -765,17 +929,21 @@ function plan_dalle_svg(g, avecBandes = false) {
       const s = P([a[0] + (b[0] - a[0]) * 0.65 + nx * 12 / scale, a[1] + (b[1] - a[1]) * 0.65 + ny * 12 / scale]);
       svg += text(s[0], s[1] + 4, `${f1(zu.cotes_cm[i])}`, "middle", "#2a8a4a", 10);
     });
-    const cx = zu.polygone.reduce((s, v) => s + v[0], 0) / m, cy = zu.polygone.reduce((s, v) => s + v[1], 0) / m;
+    const cx = zu.polygone.reduce((s, v2) => s + v2[0], 0) / m, cy = zu.polygone.reduce((s, v2) => s + v2[1], 0) / m;
     const cz = P([cx, cy]);
     svg += text(cz[0], cz[1], "zone utile", "middle", "#2a8a4a", 13, "bold");
     svg += text(cz[0], cz[1] + 22, `${zu.aire_m2} m\xB2`, "middle", "#2a8a4a", 20, "bold");
     svg += text(cz[0], cz[1] + 38, `bandes libres ${zu.bandes_m2} m\xB2`, "middle", "#b86e1f", 11);
   }
   const somme = d.angles_deg.reduce((s, x) => s + x, 0);
-  svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
-  svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
+  if (v) {
+    svg += text(W / 2, 26, `Option ${v.id} \xB7 ${v.titre}`, "middle", "#222", 15, "bold");
+    svg += text(W / 2, 46, `murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2 \xB7 ${v.polygone.length} c\xF4t\xE9s`, "middle", "#2b5d8a", 13, "bold");
+    svg += text(W / 2, 64, v.note, "middle", "#666", 11);
+  } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
+  if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
+  if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
+  svg += text(W / 2, H - 12, v ? "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9 \xB7 vert pointill\xE9 = zone utile" : "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
@@ -975,8 +1143,10 @@ function buildCore(p) {
   };
   if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
   if (g.dalle && g.dalle.zone_utile) svg["plan-dalle-bandes"] = plan_dalle_svg(g, true);
+  const vars = variantes(p, g);
+  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v, v.id === 7 ? null : p.porte);
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
-  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, svg };
+  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, svg };
 }
 
 // site/src/viewer.ts
@@ -1039,9 +1209,9 @@ function addRoofSlab(scene, V, outline, roofZ, thk, mat) {
 function addRoofRibs(parent, V, outline, roofZ, thk, mat) {
   const xs = outline.map((p) => p[0]), ys = outline.map((p) => p[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const step = 0.18, ribW = 0.045, eps = 0.016, inset = 0.05;
+  const step = 0.18, ribW = 0.045, eps = 0.016, inset2 = 0.05;
   const zt = (yy) => roofZ(yy) + thk + eps;
-  const y0 = miny + inset, y1 = maxy - inset;
+  const y0 = miny + inset2, y1 = maxy - inset2;
   const pts = [];
   for (let x = minx + 0.06; x < maxx - ribW; x += step) {
     pts.push(
