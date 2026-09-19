@@ -113,6 +113,27 @@ function inset(q, largeurs) {
   });
   return z;
 }
+function inset_ordre(q, e) {
+  const n = q.length;
+  const dec = q.map((a, i) => {
+    const b = q[(i + 1) % n], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = -(b[1] - a[1]) / l * e, ny = (b[0] - a[0]) / l * e;
+    return [[a[0] + nx, a[1] + ny], [b[0] + nx, b[1] + ny]];
+  });
+  return q.map((_, i) => {
+    const [p1, p2] = dec[(i + n - 1) % n], [p3, p4] = dec[i];
+    const d = (p1[0] - p2[0]) * (p3[1] - p4[1]) - (p1[1] - p2[1]) * (p3[0] - p4[0]);
+    const u = p1[0] * p2[1] - p1[1] * p2[0], v = p3[0] * p4[1] - p3[1] * p4[0];
+    return [(u * (p3[0] - p4[0]) - (p1[0] - p2[0]) * v) / d, (u * (p3[1] - p4[1]) - (p1[1] - p2[1]) * v) / d];
+  });
+}
+function nom_cote(a, b) {
+  const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / l, uy = (b[1] - a[1]) / l;
+  if (ux > 0.9999) return "avant";
+  if (uy > 0.9999) return "droite";
+  if (ux < -0.9999) return "fond";
+  if (uy < -0.9999) return "gauche";
+  return uy < -0.9 ? "gauche en biais" : uy > 0.9 ? "droite en biais" : "fond en biais";
+}
 function outside_pieces(rect, slab) {
   const pieces = [];
   for (let i = 0; i < slab.length; i++) {
@@ -694,6 +715,14 @@ function variantes(p, g) {
       angles_deg: interior_angles(r).map((a) => rnd(a, 1)),
       aire_m2: rnd(poly_area(r) / 1e4, 2),
       aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2),
+      noms_cotes: r.map((a, i) => nom_cote(a, r[(i + 1) % r.length])),
+      cotes_interieures_cm: (() => {
+        const s = inset_ordre(r, ep);
+        return s.map((a, i) => {
+          const b = s[(i + 1) % s.length];
+          return rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1);
+        });
+      })(),
       passages: passages(r)
     };
   };

@@ -6,6 +6,7 @@ screenplay/
 ├── CLAUDE.md            # 2 lignes : @./CLAUDE.local.md puis @./agent/index.md (cf. D15)
 ├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
 ├── README.md           # cahier lisible sur GitHub (public)
+├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d'abri (SVG inclus)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
 ├── tsconfig.json

@@ -143,6 +143,31 @@ export function inset(q: Pt[], largeurs: number[]): Pt[] {
   return z;
 }
 
+// meme recul, mais sommet par sommet (intersection des cotes decales voisins) : garde l'ordre des cotes
+export function inset_ordre(q: Pt[], e: number): Pt[] {
+  const n = q.length;
+  const dec = q.map((a, i) => {
+    const b = q[(i + 1) % n], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = -(b[1] - a[1]) / l * e, ny = (b[0] - a[0]) / l * e;
+    return [[a[0] + nx, a[1] + ny], [b[0] + nx, b[1] + ny]];
+  });
+  return q.map((_, i) => {
+    const [p1, p2] = dec[(i + n - 1) % n], [p3, p4] = dec[i];
+    const d = (p1[0] - p2[0]) * (p3[1] - p4[1]) - (p1[1] - p2[1]) * (p3[0] - p4[0]);
+    const u = (p1[0] * p2[1] - p1[1] * p2[0]), v = (p3[0] * p4[1] - p3[1] * p4[0]);
+    return [(u * (p3[0] - p4[0]) - (p1[0] - p2[0]) * v) / d, (u * (p3[1] - p4[1]) - (p1[1] - p2[1]) * v) / d];
+  });
+}
+
+// nom d'un cote de forme d'apres sa direction (repere : x a droite, y vers l'arriere)
+function nom_cote(a: Pt, b: Pt): string {
+  const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / l, uy = (b[1] - a[1]) / l;
+  if (ux > 0.9999) return "avant";
+  if (uy > 0.9999) return "droite";
+  if (ux < -0.9999) return "fond";
+  if (uy < -0.9999) return "gauche";
+  return uy < -0.9 ? "gauche en biais" : uy > 0.9 ? "droite en biais" : "fond en biais";
+}
+
 // parties de `rect` au-dela de chaque cote de la dalle (pour le hachurage), avec l'indice du cote
 function outside_pieces(rect: Pt[], slab: Pt[]): { cote: number; pts: Pt[] }[] {
   const pieces: { cote: number; pts: Pt[] }[] = [];
@@ -702,6 +727,8 @@ export function variantes(p: Params, g: any) {
       angles_deg: interior_angles(r).map((a) => rnd(a, 1)),
       aire_m2: rnd(poly_area(r) / 1e4, 2),
       aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2),
+      noms_cotes: r.map((a, i) => nom_cote(a, r[(i + 1) % r.length])),
+      cotes_interieures_cm: (() => { const s = inset_ordre(r, ep); return s.map((a, i) => { const b = s[(i + 1) % s.length]; return rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1); }); })(),
       passages: passages(r),
     };
   };
@@ -1235,4 +1262,65 @@ export function buildCore(p: Params) {
   for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v, v.id === 7 ? null : p.porte);
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, svg };
+}
+
+/* ----------------------------------------------------------------- */
+/* Resume des variantes (markdown, genere par le CLI)                 */
+/* ----------------------------------------------------------------- */
+const AVIS: Record<number, [string[], string[]]> = {
+  1: [["panneaux entiers sur les 4 faces : aucune recoupe", "le plus simple et le moins cher à monter", "sous le seuil même si la mairie compte les débords"], ["le plus petit bureau de la liste", "laisse inutilisée toute la bande de dalle à droite"]],
+  2: [["un peu plus grand que l'option 1, toujours à angles droits"], ["gain minime pour des panneaux à recouper sur les 4 faces"]],
+  3: [["façade la plus large : porte et fenêtre côte à côte", "passage arrière confortable"], ["peu profond : le plus petit intérieur", "panneaux à recouper en largeur"]],
+  4: [["sous le seuil de surface", "pleine largeur et un seul pan coupé, court"], ["5 murs et 2 angles obtus : profils d'angle sur mesure", "le pan coupé rogne un coin pour un petit gain"]],
+  5: [["le plus grand intérieur sans angle aigu : que des angles obtus, faciles à meubler", "le pan coupé suit le mur du fond : passage régulier"], ["au-dessus du seuil : déclaration préalable probable", "5 murs, 2 profils d'angle sur mesure, toit recoupé en biais, gouttière avec un angle"]],
+  6: [["la surface maximale de la zone"], ["la pointe du fond est un coin perdu", "3 angles non droits, toit et gouttière les plus compliqués", "au-dessus du seuil"]],
+  7: [["prouve qu'aucune rotation ne fait mieux qu'un rectangle droit"], ["identique à l'option 2 avec la zone actuelle"]],
+  8: [["la plus grande surface possible avec 4 murs"], ["mur gauche en biais : un coin perdu en long contre le mur de propriété", "deux angles aigus, difficiles à meubler"]],
+  9: [["4 murs, un seul en biais, deux angles droits côté porte", "toit simple : un seul bord en biais"], ["au-dessus du seuil", "angle aigu au fond à gauche"]],
+  10: [["sous le seuil, même forme que l'option 9"], ["façade plus étroite", "aucun gain de passage : même pince que l'option 9"]],
+  11: [["sous le seuil sans perdre de largeur de façade", "le passage arrière le plus large des trapèzes"], ["mur droit court : peu de place pour une fenêtre à droite", "angle aigu au fond à gauche, un peu plus fermé que l'option 9"]],
+};
+
+export function variantes_md(p: Params, core: any): string {
+  const vs = core.variantes, g = core.geometrie, d = g.dalle;
+  const ep = +p.panneau.epaisseur_mm / 10, pl = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
+  const seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
+  const hAv = g.hauteur_avant_cm - pl, hFd = g.hauteur_arriere_cm - pl;
+  const b = d.zone_utile.bandes_cm, noms = d.cotes_noms;
+  const fr = (x: number) => String(x).replace(".", ",");
+  const NOM: Record<string, string> = { avant: "avant", droite: "droite", arriere_droite: "grand pan du fond", arriere_gauche: "petit pan du fond", gauche: "gauche" };
+  const pas = (v: any, c: string) => { const q = v.passages.find((x: any) => x.cote === c); return q ? `${fr(q.cm)} cm` : "–"; };
+  let md = `# Formes d'abri possibles sur la dalle\n\n`;
+  md += `> Généré par \`npm run emit\` depuis \`params.json\` et \`site/src/compute.ts\` : ne pas éditer à la main.\n\n`;
+  md += `## Hypothèses\n\n`;
+  md += `- **Dalle réelle** : ${fr(d.aire_m2)} m², côtés ${noms.map((n: string, i: number) => `${NOM[n] || n} ${fz(d.cotes_cm[i])}`).join(", ")} cm.\n`;
+  md += `- **Bandes libres** laissées le long de chaque côté : ${noms.map((n: string, i: number) => `${NOM[n] || n} ${fz(b[i])}`).join(", ")} cm. Reste la **zone utile** : ${fr(d.zone_utile.aire_m2)} m².\n`;
+  md += `- **Porte** de ${fz(+p.porte.largeur_cm)} cm sur le côté avant (jardin), ouvrant vers l'extérieur : elle ne prend aucune place dedans.\n`;
+  md += `- **Intérieur** = murs en panneaux sandwich de ${fz(ep)} cm retirés sur tout le tour. Les couvre-joints d'angle intérieurs (quelques mm) sont négligés.\n`;
+  md += `- **Hauteur sous plafond** (toutes les options) : ${fr(rnd(hAv / 100, 2))} m à l'avant, ${fr(rnd(hFd / 100, 2))} m au fond = murs ${fz(g.hauteur_arriere_cm)} + rehausse ${fr(g.pente.chute_cm)} à l'avant, moins le plancher isolé de ${fz(pl)} cm.\n`;
+  md += `- **Seuil** : jusqu'à ${fz(seuil)} m² de murs, aucune formalité (à confirmer en mairie, et le PLU s'applique quand même).\n`;
+  md += `- **Passage** : écart réel entre l'abri et chaque mur de propriété du fond (vert ≥ 50, orange 35 à 50, rouge < 35).\n\n`;
+  md += `![dalle et zone utile](site/assets/plan-dalle-bandes.svg)\n\n`;
+  md += `## En bref\n\n`;
+  md += `- **Le plus simple** : option 1, panneaux entiers, angles droits.\n`;
+  md += `- **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.\n`;
+  md += `- **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.\n\n`;
+  md += `## Comparatif\n\n`;
+  md += `| # | forme | murs (ext.) | **intérieur** | côtés | passage grand pan | passage petit pan | ≤ ${fz(seuil)} m² |\n|---|---|---|---|---|---|---|---|\n`;
+  for (const v of vs) md += `| [${v.id}](#option-${v.id}) | ${v.titre} | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** | ${v.polygone.length} | ${pas(v, "arriere_droite")} | ${pas(v, "arriere_gauche")} | ${v.aire_m2 <= seuil ? "oui" : "non"} |\n`;
+  md += `\n`;
+  for (const v of vs) {
+    const [pour, contre] = AVIS[v.id] || [[], []];
+    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}\n\n`;
+    md += `![option ${v.id}](site/assets/variante-${v.id}.svg)\n\n`;
+    md += `| | murs (extérieur) | intérieur |\n|---|---|---|\n`;
+    md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
+    v.noms_cotes.forEach((n: string, i: number) => { md += `| côté ${n} | ${fr(v.cotes_cm[i])} cm | ${fr(v.cotes_interieures_cm[i])} cm |\n`; });
+    md += `| angles | ${v.angles_deg.map((a: number) => fr(a) + "°").join(" · ")} | |\n`;
+    md += `| passage arrière | grand pan ${pas(v, "arriere_droite")} · petit pan ${pas(v, "arriere_gauche")} | |\n\n`;
+    for (const x of pour) md += `- ✅ ${x}\n`;
+    for (const x of contre) md += `- ⚠️ ${x}\n`;
+    md += `\n`;
+  }
+  return md;
 }

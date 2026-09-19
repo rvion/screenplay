@@ -998,6 +998,18 @@
    ],
    "aire_m2": 4,
    "aire_interieure_m2": 3.53,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    188,
+    188,
+    188,
+    188
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1065,6 +1077,18 @@
    ],
    "aire_m2": 4.07,
    "aire_interieure_m2": 3.6,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    202,
+    178,
+    202,
+    178
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1132,6 +1156,18 @@
    ],
    "aire_m2": 3.94,
    "aire_interieure_m2": 3.47,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    149,
+    233,
+    149
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1205,6 +1241,20 @@
    ],
    "aire_m2": 5,
    "aire_interieure_m2": 4.49,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    152.7,
+    65.4,
+    185,
+    197.1
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1278,6 +1328,20 @@
    ],
    "aire_m2": 5.94,
    "aire_interieure_m2": 5.38,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    152.7,
+    150.4,
+    122.7,
+    254.9
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1351,6 +1415,20 @@
    ],
    "aire_m2": 6.35,
    "aire_interieure_m2": 5.76,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "fond en biais",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    152.7,
+    240.6,
+    80.8,
+    258.5
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1418,6 +1496,18 @@
    ],
    "aire_m2": 4.07,
    "aire_interieure_m2": 3.6,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    197.5,
+    182.2,
+    197.5,
+    182.2
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1485,6 +1575,18 @@
    ],
    "aire_m2": 5.52,
    "aire_interieure_m2": 4.94,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "gauche en biais"
+   ],
+   "cotes_interieures_cm": [
+    231.8,
+    152.7,
+    235.6,
+    318.3
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1552,6 +1654,18 @@
    ],
    "aire_m2": 5.25,
    "aire_interieure_m2": 4.7,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    151.4,
+    253.7,
+    251.8
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1619,6 +1733,18 @@
    ],
    "aire_m2": 5,
    "aire_interieure_m2": 4.46,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    218,
+    157.8,
+    237.4,
+    251.8
+   ],
    "passages": [
     {
      "cote": "arriere_droite",
@@ -1686,6 +1812,18 @@
    ],
    "aire_m2": 5,
    "aire_interieure_m2": 4.46,
+   "noms_cotes": [
+    "avant",
+    "droite",
+    "fond en biais",
+    "gauche"
+   ],
+   "cotes_interieures_cm": [
+    233,
+    131.3,
+    262,
+    251.1
+   ],
    "passages": [
     {
      "cote": "arriere_droite",

@@ -50,6 +50,10 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
   const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
   const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
   ok(vs.length === 11, "11 variantes");
+  // interieur cote par cote : l'aire du polygone interieur retrouve aire_interieure_m2
+  const { inset_ordre } = await import(pathToFileURL(out).href);
+  ok(vs.every((v) => near(poly_area(inset_ordre(v.polygone, base.panneau.epaisseur_mm / 10)) / 1e4, v.aire_interieure_m2, 0.011)), "interieur : cotes decalees et aire concordent");
+  ok(near(vs[0].cotes_interieures_cm[0], 200 - 2 * base.panneau.epaisseur_mm / 10, 0.05), "interieur option 1 : 200 moins deux parois");
   ok(vs[10].aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && vs[10].aire_m2 > base.reglementaire.seuil_sans_formalite_m2 - 0.03, "option 11 juste sous le seuil");
   const [v9, v10] = [vs[8], vs[9]];
   ok(v10.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && v10.aire_m2 > base.reglementaire.seuil_sans_formalite_m2 - 0.03, "option 10 juste sous le seuil");
