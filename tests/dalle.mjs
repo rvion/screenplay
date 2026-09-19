@@ -46,12 +46,18 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
 
 // variantes de forme : toutes dans la zone utile, porte sur le cote avant, aires ordonnees
 {
-  const { variantes, plus_grand_rectangle } = await import(pathToFileURL(out).href);
+  const { variantes, plus_grand_rectangle, plus_grand_k_gone } = await import(pathToFileURL(out).href);
   const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
   const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
-  ok(vs.length === 7, "7 variantes");
+  ok(vs.length === 9, "9 variantes");
+  const quads = vs.filter((v) => v.polygone.length === 4);
+  ok(quads.every((v) => v.aire_m2 <= vs[7].aire_m2), "option 8 = la plus grande a 4 murs");
+  ok(vs[8].angles_deg[0] === 90 && vs[8].angles_deg[1] === 90 && vs[8].polygone.length === 4, "option 9 : trapeze d'equerre sur l'avant");
+  // maison a pointe haute : sacrifier le haut droit (5) bat sacrifier la pointe (4)
+  const maison = [[0, 0], [2, 0], [2, 2], [1, 4], [0, 2]];
+  ok(near(poly_area(plus_grand_k_gone(maison, 4, [0, 1])), 5, 1e-9), "plus grand quadrilatere d'une maison a pointe haute = 5");
   ok(vs.every((v) => v.polygone.every(dedans)), "chaque variante tient dans la zone utile");
-  ok(vs.slice(0, 6).every((v) => near(v.polygone[0][1], v.polygone[1][1]) && v.polygone[1][0] > v.polygone[0][0]), "options 1 a 6 : cote 0 = avant, pour la porte");
+  ok(vs.filter((v) => v.id !== 7).every((v) => near(v.polygone[0][1], v.polygone[1][1]) && v.polygone[1][0] > v.polygone[0][0]), "options avec porte : cote 0 = avant");
   ok(vs[6].angles_deg.every((a) => near(a, 90, 0.2)) && vs[6].aire_m2 >= vs[1].aire_m2 - 0.01, "option 7 : rectangle, au moins aussi grand que le meilleur rectangle droit");
   // un triangle rectangle 100 x 100 : le plus grand rectangle inscrit vaut la moitie de son aire, a plat
   const tri = plus_grand_rectangle([[0, 0], [100, 0], [0, 100]]);

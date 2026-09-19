@@ -1,5 +1,5 @@
 // Tests "golden snapshot" : le coeur TS (buildCore) doit produire exactement la
-// sortie figee dans tests/snapshots/*.json (donnees + 16 SVG). Remplace l'ancien
+// sortie figee dans tests/snapshots/*.json (donnees + 18 SVG). Remplace l'ancien
 // oracle Python. Regenerer apres un changement VOULU :  UPDATE=1 node tests/snapshot.mjs
 import * as esbuild from "esbuild";
 import { execFileSync } from "node:child_process";
@@ -35,7 +35,7 @@ for (const c of cases) {
   if (!existsSync(snapFile)) { console.log("✗ snapshot manquant :", c.name, "(lancer UPDATE=1)"); fails++; continue; }
 
   const want = readFileSync(snapFile, "utf8").replace(/\n$/, "");
-  if (want === got) { console.log(`✓ ${c.name} : conforme (data + 16 SVG)`); continue; }
+  if (want === got) { console.log(`✓ ${c.name} : conforme (data + 18 SVG)`); continue; }
   fails++;
   let i = 0; while (i < want.length && i < got.length && want[i] === got[i]) i++;
   console.log(`✗ ${c.name} : 1re diff @${i}`);

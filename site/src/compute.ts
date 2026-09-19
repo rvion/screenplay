@@ -600,6 +600,20 @@ export function model3d(p: Params, g: any, openings: any[]) {
   };
 }
 
+// plus grand k-gone dans un polygone convexe : ses sommets sont des sommets du polygone (l'aire est
+// lineaire en chaque sommet le long d'un cote), donc on enumere les sous-ensembles. garde = indices imposes
+export function plus_grand_k_gone(Z: Pt[], k: number, garde: number[] = []): Pt[] | null {
+  let best: Pt[] | null = null, ba = -1;
+  const rec = (i: number, pris: number[]) => {
+    if (pris.length === k) { const q = pris.map((j) => Z[j]), a = poly_area(q); if (a > ba) { ba = a; best = q; } return; }
+    if (i >= Z.length || Z.length - i < k - pris.length) return;
+    rec(i + 1, [...pris, i]);
+    if (!garde.includes(i)) rec(i + 1, pris);
+  };
+  rec(0, []);
+  return best;
+}
+
 // plus grand rectangle inscrit dans un polygone convexe, toutes orientations.
 // a angle fixe, sur une bande [ya, yb] du polygone tourne, la largeur libre vaut
 // min(droite(ya), droite(yb)) - max(gauche(ya), gauche(yb)) (bords convexes)
@@ -640,7 +654,9 @@ export function plus_grand_rectangle(Z: Pt[]): { w: number; h: number; deg: numb
 export function variantes(p: Params, g: any) {
   const zu = g.dalle && g.dalle.zone_utile;
   if (!zu || zu.polygone.length < 3) return [];
-  const Z: Pt[] = zu.polygone;
+  const Z0: Pt[] = zu.polygone;
+  const k0 = Z0.reduce((m: number, v: Pt, i: number) => (v[1] < Z0[m][1] - 1e-6 || (Math.abs(v[1] - Z0[m][1]) <= 1e-6 && v[0] < Z0[m][0]) ? i : m), 0);
+  const Z: Pt[] = [...Z0.slice(k0), ...Z0.slice(0, k0)];       // Z[0] avant-gauche, Z[1] avant-droit
   const x0 = Math.min(...Z.map((v) => v[0])), y0 = Math.min(...Z.map((v) => v[1]));
   const x1 = Math.max(...Z.map((v) => v[0]));
   const dedans = (q: Pt) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -1e-6 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
@@ -690,6 +706,15 @@ export function variantes(p: Params, g: any) {
   // 7. plus grand rectangle a n'importe quelle orientation (porte sur le cote qu'on veut)
   const r7 = plus_grand_rectangle(Z);
   if (r7) out.push(forme(7, "plus grand rectangle, orientation libre", Math.abs(r7.deg) < 0.01 ? `${f1(r7.w)} × ${f1(r7.h)} : aucune rotation ne fait mieux que le rectangle droit` : `${f1(r7.w)} × ${f1(r7.h)}, tourné de ${f1(r7.deg)}° : porte sur le côté de son choix`, r7.pts));
+  // 8. plus grand quadrilatere qui garde le mur avant (porte) ; 9. trapeze : garde les deux cotes
+  // perpendiculaires a l'avant, le mur arriere joint leurs hauts en biais
+  if (Z.length > 4) {
+    const q8 = plus_grand_k_gone(Z, 4, [0, 1]);
+    const drop = Z.find((v) => !q8!.includes(v))!;
+    const angle_perdu = interior_angles(Z)[Z.indexOf(drop)];
+    if (q8) out.push(forme(8, "plus grand quadrilatère", `4 murs, le coin de ${f1(angle_perdu)}° de la zone est sacrifié : l'aire maximale à 4 murs`, q8));
+    out.push(forme(9, "trapèze, mur arrière en biais", "côtés gauche et droit d'équerre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], Z[2], Z[Z.length - 1]]));
+  }
   return out.sort((a, b) => a.id - b.id);
 }
 

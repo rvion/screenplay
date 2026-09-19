@@ -78,7 +78,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 
 ## Calcul & livrables (`site/src/compute.ts`)
 `buildCore(params)` (pur, sans DOM/Three) produit géométrie + débit + achats + budget + modèle 3D
-**et** les 16 SVG. Consommé en direct par le site et par le CLI Node `site/src/cli.ts --emit` :
+**et** les 18 SVG. Consommé en direct par le site et par le CLI Node `site/src/cli.ts --emit` :
 
 | Sortie | Rôle |
 |---|---|
@@ -87,7 +87,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 | `site/assets/plan-sol.svg` | plan de sol coté, dalle réelle en pointillé avec ses 5 cotes en gris, partie hors dalle hachurée |
 | `site/assets/plan-dalle.svg` | dalle seule vue de dessus : cote de chaque côté, angle intérieur à chaque sommet (`dalle.angles_deg`), position de la pointe, murs de propriété, abri en fantôme |
 | `site/assets/plan-dalle-bandes.svg` | même plan + bande libre le long de chaque côté (`dalle_cm.bandes_libres_cm`), zone utile au centre avec ses cotes et son aire (`dalle.zone_utile`) |
-| `site/assets/variante-{1..7}.svg` | formes d'abri possibles dans la zone utile (`variantes(p, g)`, porte sur le côté avant) : 1 rectangle en modules entiers, 2 plus grand rectangle, 3 rectangle pleine largeur, 4 coin coupé plafonné à `reglementaire.seuil_sans_formalite_m2`, 5 coin coupé pleine profondeur, 6 toute la zone, 7 plus grand rectangle à orientation libre (`plus_grand_rectangle`, sans contrainte de porte ; avec la zone par défaut il retombe sur l'option 2, toute rotation perd de 0,5 à 1,1 m²). Chaque plan garde la dalle entière, les bandes et la zone |
+| `site/assets/variante-{1..9}.svg` | formes d'abri possibles dans la zone utile (`variantes(p, g)`, porte sur le côté avant) : 1 rectangle en modules entiers, 2 plus grand rectangle, 3 rectangle pleine largeur, 4 coin coupé plafonné à `reglementaire.seuil_sans_formalite_m2`, 5 coin coupé pleine profondeur, 6 toute la zone, 7 plus grand rectangle à orientation libre (`plus_grand_rectangle`, sans contrainte de porte ; avec la zone par défaut il retombe sur l'option 2, toute rotation perd de 0,5 à 1,1 m²). 8 plus grand quadrilatère gardant le mur avant (`plus_grand_k_gone` : ses sommets sont des sommets de la zone), 9 trapèze à mur arrière en biais. Chaque plan garde la dalle entière, les bandes et la zone |
 | `site/assets/plan-toit.svg` | plan de toiture (panneaux, sens d'écoulement, rampant) |
 | `site/assets/plan-rehausse.svg` | **plan de coupe de la rehausse** : madrier coupé en diagonale + madrier droit (ou bande de panneau) |
 | `site/assets/facade-{A,D,B,G}.svg` | élévations : rectangles de mur + joints + rehausse + porte |

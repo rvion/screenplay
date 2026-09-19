@@ -575,6 +575,24 @@ function model3d(p, g, openings) {
     }))
   };
 }
+function plus_grand_k_gone(Z, k, garde = []) {
+  let best = null, ba = -1;
+  const rec = (i, pris) => {
+    if (pris.length === k) {
+      const q = pris.map((j) => Z[j]), a = poly_area(q);
+      if (a > ba) {
+        ba = a;
+        best = q;
+      }
+      return;
+    }
+    if (i >= Z.length || Z.length - i < k - pris.length) return;
+    rec(i + 1, [...pris, i]);
+    if (!garde.includes(i)) rec(i + 1, pris);
+  };
+  rec(0, []);
+  return best;
+}
 function plus_grand_rectangle(Z) {
   const essai = (deg2) => {
     const t = deg2 * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
@@ -614,7 +632,9 @@ function plus_grand_rectangle(Z) {
 function variantes(p, g) {
   const zu = g.dalle && g.dalle.zone_utile;
   if (!zu || zu.polygone.length < 3) return [];
-  const Z = zu.polygone;
+  const Z0 = zu.polygone;
+  const k0 = Z0.reduce((m, v, i) => v[1] < Z0[m][1] - 1e-6 || Math.abs(v[1] - Z0[m][1]) <= 1e-6 && v[0] < Z0[m][0] ? i : m, 0);
+  const Z = [...Z0.slice(k0), ...Z0.slice(0, k0)];
   const x0 = Math.min(...Z.map((v) => v[0])), y0 = Math.min(...Z.map((v) => v[1]));
   const x1 = Math.max(...Z.map((v) => v[0]));
   const dedans = (q) => Z.every((a, i) => {
@@ -684,6 +704,13 @@ function variantes(p, g) {
   out.push(forme(6, "toute la zone utile", "suit toute la zone : 3 angles non droits, pointe \xE0 l'arri\xE8re", Z));
   const r7 = plus_grand_rectangle(Z);
   if (r7) out.push(forme(7, "plus grand rectangle, orientation libre", Math.abs(r7.deg) < 0.01 ? `${f1(r7.w)} \xD7 ${f1(r7.h)} : aucune rotation ne fait mieux que le rectangle droit` : `${f1(r7.w)} \xD7 ${f1(r7.h)}, tourn\xE9 de ${f1(r7.deg)}\xB0 : porte sur le c\xF4t\xE9 de son choix`, r7.pts));
+  if (Z.length > 4) {
+    const q8 = plus_grand_k_gone(Z, 4, [0, 1]);
+    const drop = Z.find((v) => !q8.includes(v));
+    const angle_perdu = interior_angles(Z)[Z.indexOf(drop)];
+    if (q8) out.push(forme(8, "plus grand quadrilat\xE8re", `4 murs, le coin de ${f1(angle_perdu)}\xB0 de la zone est sacrifi\xE9 : l'aire maximale \xE0 4 murs`, q8));
+    out.push(forme(9, "trap\xE8ze, mur arri\xE8re en biais", "c\xF4t\xE9s gauche et droit d'\xE9querre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], Z[2], Z[Z.length - 1]]));
+  }
   return out.sort((a, b) => a.id - b.id);
 }
 function svgHeader(w, h2) {
