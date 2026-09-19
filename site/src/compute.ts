@@ -111,7 +111,9 @@ export function geometry(p: Params) {
   let dalle: any = null;
   const d = p.dalle_cm;
   if (d) {
-    const dA = +d.avant, dG = +d.gauche, dD = +d.droite_jusqu_coupe, dB = +d.arriere_jusqu_coupe;
+    const dA = +d.avant, dG = +d.gauche;
+    // coupe bornee : un reglage ne peut pas retourner le polygone
+    const dD = Math.max(0, Math.min(+d.droite_jusqu_coupe, dG)), dB = Math.max(0, Math.min(+d.arriere_jusqu_coupe, dA));
     const ox = d.decalage_cm ? +d.decalage_cm.x : 0, oy = d.decalage_cm ? +d.decalage_cm.y : 0;
     const cw = dA - dB, ch = dG - dD;           // triangle coupe : largeur x profondeur
     const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -483,6 +485,20 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
     svg += poly(tri, "url(#hach)", "#c0392b", 1.5);
     const c = P([A - dx / 3, G - dy / 3]);
     svg += text(c[0] - 10, c[1] + 16, `hors dalle ${f0(dx)}×${f0(dy)}`, "end", "#c0392b", 10, "bold");
+  }
+  if (d) {
+    // cotes de la dalle, en gris, hors des etiquettes de faces
+    const [ox, oy] = d.decalage_cm;
+    const slabLabels: [number, number, string, number, number, number][] = [
+      [d.avant / 8 - ox, -oy, "middle", 0, 34, d.avant],
+      [d.avant - ox, d.droite_jusqu_coupe / 4 - oy, "start", 6, 4, d.droite_jusqu_coupe],
+      [d.arriere_jusqu_coupe / 2 - ox, d.gauche - oy, "middle", 0, -6, d.arriere_jusqu_coupe],
+      [-ox, d.gauche - oy - 24, "end", -6, 4, d.gauche],
+    ];
+    for (const [x, y, anchor, dx, dy, v] of slabLabels) {
+      const q = P([x, y]);
+      svg += text(q[0] + dx, q[1] + dy, `dalle ${f0(v)}`, anchor, "#8a8170", 10);
+    }
   }
   const labels: Record<string, [number, number, string, number, number]> = {
     A: [A / 2, 0, "middle", 0, 18], D: [A, G / 2, "start", 8, 4], B: [A / 2, G, "middle", 0, -8], G: [0, G / 2, "end", -8, 4],

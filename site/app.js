@@ -89,7 +89,8 @@ function geometry(p) {
   let dalle = null;
   const d = p.dalle_cm;
   if (d) {
-    const dA = +d.avant, dG = +d.gauche, dD = +d.droite_jusqu_coupe, dB = +d.arriere_jusqu_coupe;
+    const dA = +d.avant, dG = +d.gauche;
+    const dD = Math.max(0, Math.min(+d.droite_jusqu_coupe, dG)), dB = Math.max(0, Math.min(+d.arriere_jusqu_coupe, dA));
     const ox = d.decalage_cm ? +d.decalage_cm.x : 0, oy = d.decalage_cm ? +d.decalage_cm.y : 0;
     const cw = dA - dB, ch = dG - dD;
     const clamp = (v) => Math.max(0, Math.min(1, v));
@@ -470,6 +471,19 @@ function plan_sol_svg(p, g, openings) {
     svg += poly(tri, "url(#hach)", "#c0392b", 1.5);
     const c = P([A - dx / 3, G - dy / 3]);
     svg += text(c[0] - 10, c[1] + 16, `hors dalle ${f0(dx)}\xD7${f0(dy)}`, "end", "#c0392b", 10, "bold");
+  }
+  if (d) {
+    const [ox, oy] = d.decalage_cm;
+    const slabLabels = [
+      [d.avant / 8 - ox, -oy, "middle", 0, 34, d.avant],
+      [d.avant - ox, d.droite_jusqu_coupe / 4 - oy, "start", 6, 4, d.droite_jusqu_coupe],
+      [d.arriere_jusqu_coupe / 2 - ox, d.gauche - oy, "middle", 0, -6, d.arriere_jusqu_coupe],
+      [-ox, d.gauche - oy - 24, "end", -6, 4, d.gauche]
+    ];
+    for (const [x, y, anchor, dx, dy, v] of slabLabels) {
+      const q = P([x, y]);
+      svg += text(q[0] + dx, q[1] + dy, `dalle ${f0(v)}`, anchor, "#8a8170", 10);
+    }
   }
   const labels = {
     A: [A / 2, 0, "middle", 0, 18],
@@ -1234,6 +1248,18 @@ function buildControls(container, params, onChange) {
     const labels = [["plancher", "Plancher isol\xE9"], ["electricite", "\xC9lectricit\xE9 (multiprise + \xE9clairage)"], ["chauffage", "Chauffage"], ["store", "Store"], ["finition_interieure", "Finition int\xE9rieure"]];
     return labels.filter(([k]) => am[k]).map(([k, l]) => check(l, am[k], "actif"));
   }
+  function dalleGroup() {
+    const d = params.dalle_cm;
+    const off = d.decalage_cm || (d.decalage_cm = { x: 0, y: 0 });
+    return [
+      slider("Largeur \u2014 c\xF4t\xE9 avant", d, "avant", 100, 500),
+      slider("C\xF4t\xE9 droit, jusqu'\xE0 la coupe", d, "droite_jusqu_coupe", 50, 500),
+      slider("C\xF4t\xE9 gauche", d, "gauche", 100, 500),
+      slider("C\xF4t\xE9 arri\xE8re, jusqu'\xE0 la coupe", d, "arriere_jusqu_coupe", 50, 500),
+      slider("Abri : distance au bord gauche de la dalle", off, "x", 0, 150),
+      slider("Abri : distance au bord avant de la dalle", off, "y", 0, 150)
+    ];
+  }
   function priceControls() {
     const pr = params.prix_indicatifs_eur || {};
     return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number").map((k) => num(k.replace(/_/g, " "), pr, k, 1, "5.5em"));
@@ -1294,6 +1320,7 @@ function buildControls(container, params, onChange) {
         slider("Profondeur \u2014 face gauche (G)", e, "gauche_G", 100, 400),
         slider("Hauteur des murs (arri\xE8re)", params.murs, "hauteur_cm", 180, 300)
       ]),
+      ...params.dalle_cm ? [group("Dalle existante (cm)", dalleGroup())] : [],
       group("Toit", [
         slider("Rehausse avant = chute", params.toit, "pente_chute_cm", 5, 60),
         h("div", { class: "ctl-row" }, [

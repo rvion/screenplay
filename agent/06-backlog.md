@@ -1,8 +1,10 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Dalle : saisir le relevé exact** (`dalle_cm`, provisoire depuis le 2026-09-06 : 2 cm de
-      marge, côté droit +20 cm derrière le mur B). Le site calcule et affiche tout débord en direct.
+- [ ] **Dalle : mesurer les deux cotes déduites.** Mesurés (2026-09-19) : avant **260**, droite
+      jusqu'à la coupe **220**. Déduits en gardant la coupe 90 × 86 : gauche **306**, arrière
+      jusqu'à la coupe **170**. Confirmer aussi la position de l'abri sur la dalle (centré en
+      largeur, 2 cm devant par défaut). Tout se règle sur le site (groupe **Dalle**).
 - [ ] **Formalités** : 4,8 m² de murs mais 5,2 m² débords inclus ⇒ vérifier en mairie si une
       déclaration préalable est due (et la distance aux limites du PLU).
 - [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du

@@ -56,5 +56,16 @@ ok(app.changes() > 0, "onChange declenche par le slider");
 ok($("#v-pente").textContent !== penteBefore, "pente recalculee apres slider (" + penteBefore + " -> " + $("#v-pente").textContent + ")");
 ok(/svg/i.test($("#plan-plan-toit").innerHTML), "plan toiture toujours rendu apres recompute");
 
+// dalle reglable : 6 curseurs, et caler l'abri a droite fait sortir un coin de la dalle
+const dalle = [...$("#controls").querySelectorAll("details")].find((g) => /Dalle/.test(g.querySelector("summary").textContent));
+ok(!!dalle, "groupe Dalle present");
+const dalleRanges = dalle ? dalle.querySelectorAll('input[type=range]') : [];
+ok(dalleRanges.length === 6, "6 curseurs de dalle (" + dalleRanges.length + ")");
+ok(dalle && +dalleRanges[0].value === params.dalle_cm.avant, "curseur largeur = params.dalle_cm.avant");
+const solBefore = $("#plan-plan-sol").innerHTML;
+if (dalle) { dalleRanges[4].value = "58"; dalleRanges[4].dispatchEvent(new dom.window.Event("input")); }
+ok($("#v-dalle").hidden === false, "abri cale a droite : vigilance hors dalle affichee");
+ok($("#plan-plan-sol").innerHTML !== solBefore, "plan de sol redessine apres reglage de la dalle");
+
 console.log(fails ? `\n${fails} echec(s) DOM.` : "\nSmoke-test DOM OK ✓");
 process.exit(fails ? 1 : 0);

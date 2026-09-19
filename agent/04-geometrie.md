@@ -27,9 +27,13 @@ profondeur `ch = dG − dD`.
 Avec `uA = clamp((ox+A−dB)/cw)`, `vG = clamp((oy+G−dD)/ch)` et `t = max(0, uA+vG−1)`, le
 triangle de l'emprise hors dalle (au coin arrière-droit de l'abri) a pour côtés `t·cw × t·ch`.
 
-**Valeurs provisoires (2026-09-06, à remplacer par le relevé exact)** : `dA = 204`, `dG = 348`,
-`dD = 262`, `dB = 114`, `(ox, oy) = (2, 2)` ⇒ 2 cm de dalle à gauche, devant et à droite, le côté
-droit dépasse de 20 cm derrière le mur B, coupe 90 × 86 conservée ⇒ `t = 0`, **rien hors dalle**.
+**Valeurs par défaut (2026-09-19)** : mesurés `dA = 260`, `dD = 220` ; déduits en conservant la
+coupe 90 × 86 : `dG = 306`, `dB = 170` (à vérifier au mètre). `(ox, oy) = (30, 2)` ⇒ abri centré
+en largeur (30 cm de dalle de chaque côté), 2 cm devant. `uA = 0,667`, `vG = 0,256` ⇒ `t = 0`,
+**rien hors dalle** ; au droit du mur D la dalle s'arrête à `y = 248,7`, soit 6,7 cm derrière le
+mur B. Calé à droite (`ox = 58`), un triangle de 21 × 20 cm sortirait de la dalle.
+Garde-fous de `compute.ts` : `dB` est borné à `[0, dA]` et `dD` à `[0, dG]` (un curseur du site
+ne peut pas retourner le polygone).
 (Ancien relevé 230 × 246 / 160 / 140 avec l'abri au coin : 54 × 51 cm hors dalle pour 200 × 240.)
 
 ## Hauteurs et rehausse

@@ -32,7 +32,7 @@ Objectif : **simple, abordable, robuste, agréable tous les jours**.
 | **Fenêtres** | **2 × 80 × 110**, allège 95 : ouvrante face D (module D2), fixe face G (module G2) |
 | **Aménagement** | plancher isolé, multiprise + éclairage (câble déjà en place), chauffage, store, finitions : ~570 € |
 | **Budget** | ≈ **3 900 € HT** (coque ~3 340 € + aménagement ~570 €), fourchette 3 300 – 4 500 € |
-| **Dalle** | existante, à **coin coupé** (relevé exact à saisir) ; l'abri est posé avec 2 cm de marge, tout sur la dalle |
+| **Dalle** | existante, à **coin coupé** : 260 de large, 220 à droite (306 à gauche et coupe 90 × 86 à vérifier) ; l'abri est centré en largeur, tout sur la dalle |
 | **Usage** | bureau / pièce à vivre, chauffé toute l'année (ventilation obligatoire) |
 
 ---
@@ -101,8 +101,8 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 ## ⚠️ Points de vigilance (résumé)
 
-- **Dalle** : le relevé exact reste à saisir dans `dalle_cm` ; le site affiche en direct toute
-  partie de l'emprise qui déborderait de la dalle.
+- **Dalle** : 260 × 220 mesurés, côté gauche et coupe à vérifier ; la dalle et la position de
+  l'abri se règlent sur le site, qui affiche en direct toute partie de l'emprise hors dalle.
 - **Seuil des 5 m²** : 4,8 m² de murs, 5,2 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
   (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
 - **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant

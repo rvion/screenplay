@@ -176,3 +176,15 @@ intérieure) : cases à cocher, budget en deux groupes **coque / aménagement**,
 *Écarté :* supprimer la gouttière (le débord de 10 cm goutte sur la dalle qui dépasse) ;
 tableau électrique (câble déjà en place). *Effet :* coque ~3 340 €, aménagement ~570 €, total
 ~3 920 € HT. *Complète* D17 (rehausse), D20 (fenêtres), D22.
+
+## D24 — Dalle mesurée 260 × 220, réglable sur le site
+Deux cotes mesurées : **260** de large vue de face, **220** sur le côté droit (le plus court). Les
+deux autres ne sont pas mesurées : elles sont **déduites en conservant la coupe 90 × 86** du
+premier relevé (gauche 306, arrière jusqu'à la coupe 170), les deux relevés différant exactement
+de +30 en largeur et +60 en profondeur. L'abri est **centré en largeur** (`decalage_cm.x = 30`),
+2 cm devant : rien hors dalle, et 30 cm de dalle de chaque côté pour en faire le tour. Le site
+reçoit un groupe **Dalle** (4 cotes + position de l'abri) : plan de sol, 3D et carte de vigilance
+suivent en direct. `compute.ts` borne `arriere_jusqu_coupe ≤ avant` et `droite_jusqu_coupe ≤
+gauche`. *Pourquoi :* la dalle était la seule donnée du projet non réglable, et c'est celle qui
+reste incertaine. *Écarté :* caler l'abri à droite (`x = 58` ⇒ 21 × 20 cm hors dalle) ; garder
+`x = 2` (58 cm de dalle d'un seul côté). *Remplace* les valeurs provisoires du 2026-09-06.

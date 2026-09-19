@@ -7,18 +7,18 @@ window.SHED_PARAMS = {
     "auteur": "Remi Vion"
   },
   "emprise_cm": {
-    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et seul un petit triangle (~54 x 52 cm) du coin arriere-droit depasse de la dalle (a combler).",
+    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (260 de large, 220 a droite).",
     "avant_A": 200,
     "gauche_G": 240
   },
   "dalle_cm": {
-    "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). PROVISOIRE (2026-09-06) : mesures exactes a saisir. Hypothese : 2 cm de dalle autour de l'abri (gauche, avant, droite), le cote droit (le plus court) depasse de 20 cm derriere le mur arriere, coupe conservee a 90 x 86. decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle.",
-    "gauche": 348,
-    "avant": 204,
-    "droite_jusqu_coupe": 262,
-    "arriere_jusqu_coupe": 114,
+    "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). MESURES : avant = 260 (largeur vue de face), droite_jusqu_coupe = 220 (cote droit, le plus court). DEDUITS en conservant la coupe 90 x 86 de l'ancien releve : gauche = 306, arriere_jusqu_coupe = 170 (a verifier au metre). decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle : abri centre en largeur (30 cm de dalle de chaque cote), 2 cm devant. Tout est reglable sur le site (groupe Dalle).",
+    "gauche": 306,
+    "avant": 260,
+    "droite_jusqu_coupe": 220,
+    "arriere_jusqu_coupe": 170,
     "decalage_cm": {
-      "x": 2,
+      "x": 30,
       "y": 2
     }
   },

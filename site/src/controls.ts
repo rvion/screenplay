@@ -67,6 +67,19 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
     return labels.filter(([k]) => am[k]).map(([k, l]) => check(l, am[k], "actif"));
   }
 
+  function dalleGroup(): HTMLElement[] {
+    const d = params.dalle_cm;
+    const off = d.decalage_cm || (d.decalage_cm = { x: 0, y: 0 });
+    return [
+      slider("Largeur — côté avant", d, "avant", 100, 500),
+      slider("Côté droit, jusqu'à la coupe", d, "droite_jusqu_coupe", 50, 500),
+      slider("Côté gauche", d, "gauche", 100, 500),
+      slider("Côté arrière, jusqu'à la coupe", d, "arriere_jusqu_coupe", 50, 500),
+      slider("Abri : distance au bord gauche de la dalle", off, "x", 0, 150),
+      slider("Abri : distance au bord avant de la dalle", off, "y", 0, 150),
+    ];
+  }
+
   function priceControls(): HTMLElement[] {
     const pr = params.prix_indicatifs_eur || {};
     return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number")
@@ -111,6 +124,7 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
         slider("Profondeur — face gauche (G)", e, "gauche_G", 100, 400),
         slider("Hauteur des murs (arrière)", params.murs, "hauteur_cm", 180, 300),
       ]),
+      ...(params.dalle_cm ? [group("Dalle existante (cm)", dalleGroup())] : []),
       group("Toit", [
         slider("Rehausse avant = chute", params.toit, "pente_chute_cm", 5, 60),
         h("div", { class: "ctl-row" }, [
