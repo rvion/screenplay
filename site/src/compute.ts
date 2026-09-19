@@ -668,6 +668,30 @@ export function variantes(p: Params, g: any) {
     return c.filter((v, i) => Math.hypot(v[0] - c[(i + 1) % c.length][0], v[1] - c[(i + 1) % c.length][1]) > 0.05);
   };
   const ep = (+p.panneau.epaisseur_mm) / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
+  // passages arriere : pour chaque mur du fond, plus petit degagement a la forme, avec le segment a coter
+  const [ox, oy] = g.dalle.decalage_cm;
+  const fond = g.dalle.murs.filter((w: any) => w.cote.startsWith("arriere")).map((w: any) => ({ cote: w.cote, a: [w.de[0] + ox, w.de[1] + oy], b: [w.a[0] + ox, w.a[1] + oy] }));
+  // point de [a, b] le plus proche de q (projection bornee : un mur s'arrete a ses extremites)
+  const pied = (q: Pt, a: Pt, b: Pt): Pt => {
+    const l2 = (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2 || 1;
+    const t = Math.max(0, Math.min(1, ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / l2));
+    return [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
+  };
+  // distance entre deux segments disjoints = min des 4 distances extremite / autre segment
+  const passages = (r: Pt[]) => fond.map(({ cote, a, b }: any) => {
+    let best: any = null;
+    const garde = (forme_pt: Pt, mur_pt: Pt) => {
+      const cm = Math.hypot(forme_pt[0] - mur_pt[0], forme_pt[1] - mur_pt[1]);
+      if (!best || cm < best.cm) best = { cote, cm, segment: [forme_pt, mur_pt] };
+    };
+    r.forEach((p, i) => {
+      const q = r[(i + 1) % r.length];
+      garde(p, pied(p, a, b));
+      garde(pied(a, p, q), a);
+      garde(pied(b, p, q), b);
+    });
+    return { cote, cm: rnd(best.cm, 1), segment: best.segment.map((v: Pt) => [rnd(v[0], 1), rnd(v[1], 1)]) };
+  });
   const forme = (id: number, titre: string, note: string, q: Pt[]) => {
     const k = q.reduce((m, v, i) => (v[1] < q[m][1] - 1e-6 || (Math.abs(v[1] - q[m][1]) <= 1e-6 && v[0] < q[m][0]) ? i : m), 0);
     const r = [...q.slice(k), ...q.slice(0, k)];                // cote 0 = avant (porte)
@@ -678,6 +702,7 @@ export function variantes(p: Params, g: any) {
       angles_deg: interior_angles(r).map((a) => rnd(a, 1)),
       aire_m2: rnd(poly_area(r) / 1e4, 2),
       aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2),
+      passages: passages(r),
     };
   };
   const out: any[] = [];
@@ -713,7 +738,20 @@ export function variantes(p: Params, g: any) {
     const drop = Z.find((v) => !q8!.includes(v))!;
     const angle_perdu = interior_angles(Z)[Z.indexOf(drop)];
     if (q8) out.push(forme(8, "plus grand quadrilatère", `4 murs, le coin de ${f1(angle_perdu)}° de la zone est sacrifié : l'aire maximale à 4 murs`, q8));
-    out.push(forme(9, "trapèze, mur arrière en biais", "côtés gauche et droit d'équerre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], Z[2], Z[Z.length - 1]]));
+    const HG = Z[Z.length - 1], HD = Z[2];
+    out.push(forme(9, "trapèze, mur arrière en biais", "côtés gauche et droit d'équerre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], HD, HG]));
+    // 10. meme trapeze, mur droit glisse vers la gauche le long du mur arriere jusqu'au seuil
+    const trap = (w: number): Pt[] => { const x = Z[0][0] + w, t = (x - HG[0]) / (HD[0] - HG[0]); return [Z[0], [x, Z[0][1]], [x, HG[1] + t * (HD[1] - HG[1])], HG]; };
+    let lo = 0, hi = Z[1][0] - Z[0][0];
+    for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (poly_area(trap(m)) <= seuil * 1e4) lo = m; else hi = m; }
+    const w10 = Math.floor(lo);
+    out.push(forme(10, `trapèze plafonné à ${fz(seuil)} m²`, `le trapèze 9, mur droit reculé à ${w10} de large : sous ${fz(seuil)} m²`, trap(w10)));
+    // 11. meme trapeze, mur arriere pivote vers le bas autour de son coin gauche jusqu'au seuil
+    const pivot = (h: number): Pt[] => [Z[0], Z[1], [Z[1][0], Z[1][1] + h], HG];
+    lo = 0; hi = HD[1] - Z[1][1];
+    for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (poly_area(pivot(m)) <= seuil * 1e4) lo = m; else hi = m; }
+    const h11 = Math.floor(lo);
+    out.push(forme(11, `trapèze pivoté, plafonné à ${fz(seuil)} m²`, `le trapèze 9, coin arrière droit abaissé à ${h11} : sous ${fz(seuil)} m², passage arrière élargi`, pivot(h11)));
   }
   return out.sort((a, b) => a.id - b.id);
 }
@@ -861,6 +899,21 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, porte: any)
     svg += `<path d="M ${f1(h0[0])} ${f1(h0[1])} A ${f1(w * scale)} ${f1(w * scale)} 0 0 0 ${f1(ext[0])} ${f1(ext[1])}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n`;
     svg += text((h0[0] + h1[0]) / 2, h0[1] - 12, `porte ${fz(w)}`, "middle", "#c0392b", 11, "bold");
   }
+  for (const ps of v.passages || []) {
+    const pc = ps.cm, col = pc < 35 ? "#c0392b" : pc < 50 ? "#c77d0a" : "#2a8a4a";
+    if (!(pc > 0) || pc > 150) continue;
+    const [a, b] = ps.segment.map(P);
+    svg += line(a[0], a[1], b[0], b[1], col, 2.5);
+    svg += `<circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="3" fill="${col}"/>\n`;
+    // largeur ecrite le long du segment, du cote avant (vers le bas du plan)
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
+    let nx = -uy, ny = ux;
+    if (ny < 0) { nx = -nx; ny = -ny; }
+    let rot = Math.atan2(uy, ux) * 180 / Math.PI;
+    if (rot > 90) rot -= 180; else if (rot < -90) rot += 180;
+    const m = [(a[0] + b[0]) / 2 + nx * 9, (a[1] + b[1]) / 2 + ny * 9];
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="${col}" font-size="11" font-weight="bold" transform="rotate(${f1(rot)} ${f1(m[0])} ${f1(m[1])})">${fz(pc)}</text>\n`;
+  }
   const cx = q.reduce((s, w) => s + w[0], 0) / n, cy = q.reduce((s, w) => s + w[1], 0) / n, c = P([cx, cy]);
   svg += text(c[0], c[1], `${v.aire_m2} m²`, "middle", BLEU, 22, "bold");
   svg += text(c[0], c[1] + 18, `intérieur ${v.aire_interieure_m2} m²`, "middle", BLEU, 12);
@@ -966,7 +1019,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, porte:
   } else svg += text(W / 2, 26, zu ? `Dalle réelle ${d.aire_m2} m² · zone utile ${zu.aire_m2} m²` : `Dalle réelle · ${n} côtés · ${d.aire_m2} m²`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus · cotes relevées au mètre · somme des angles ${f0(somme)}°`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant supposés droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, v ? "AVANT (jardin) · trait brun = mur de propriété · vert pointillé = zone utile" : "AVANT (jardin) · trait brun = mur de propriété", "middle", "#666", 11);
+  svg += text(W / 2, H - 12, v ? "AVANT (jardin) · brun = mur de propriété · vert pointillé = zone utile · trait coloré = passage (cm)" : "AVANT (jardin) · trait brun = mur de propriété", "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }

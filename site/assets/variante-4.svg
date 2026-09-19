@@ -59,10 +59,16 @@
 <line x1="431.2" y1="621.6" x2="431.2" y2="746.6" stroke="#c0392b" stroke-width="2"/>
 <path d="M 306.2 621.6 A 125.0 125.0 0 0 0 431.2 746.6" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
 <text x="368.8" y="609.6" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">porte 100</text>
+<line x1="366.8" y1="360.2" x2="405.0" y2="319.0" stroke="#c77d0a" stroke-width="2.5"/>
+<circle cx="366.8" cy="360.2" r="3" fill="#c77d0a"/>
+<text x="392.5" y="345.7" text-anchor="middle" dominant-baseline="middle" fill="#c77d0a" font-size="11" font-weight="bold" transform="rotate(-47.2 392.5 345.7)">45</text>
+<line x1="125.0" y1="360.2" x2="110.0" y2="222.9" stroke="#2a8a4a" stroke-width="2.5"/>
+<circle cx="125.0" cy="360.2" r="3" fill="#2a8a4a"/>
+<text x="108.6" y="292.5" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(83.8 108.6 292.5)">110.5</text>
 <text x="295.9" y="476.8" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">5 m²</text>
 <text x="295.9" y="494.8" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 4.49 m²</text>
 <text x="273.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Option 4 · coin coupé, plafonné à 5 m²</text>
 <text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 5 m² · intérieur 4.49 m² · 5 côtés</text>
 <text x="273.8" y="64.0" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">mur arrière reculé pour ne pas dépasser 5 m² de murs</text>
-<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · trait brun = mur de propriété · vert pointillé = zone utile</text>
+<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = mur de propriété · vert pointillé = zone utile · trait coloré = passage (cm)</text>
 </svg>

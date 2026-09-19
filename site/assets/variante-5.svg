@@ -59,10 +59,16 @@
 <line x1="431.2" y1="621.6" x2="431.2" y2="746.6" stroke="#c0392b" stroke-width="2"/>
 <path d="M 306.2 621.6 A 125.0 125.0 0 0 0 431.2 746.6" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
 <text x="368.8" y="609.6" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">porte 100</text>
+<line x1="288.8" y1="288.0" x2="327.0" y2="246.8" stroke="#c77d0a" stroke-width="2.5"/>
+<circle cx="288.8" cy="288.0" r="3" fill="#c77d0a"/>
+<text x="314.5" y="273.5" text-anchor="middle" dominant-baseline="middle" fill="#c77d0a" font-size="11" font-weight="bold" transform="rotate(-47.2 314.5 273.5)">44.9</text>
+<line x1="125.0" y1="288.0" x2="110.0" y2="222.9" stroke="#2a8a4a" stroke-width="2.5"/>
+<circle cx="125.0" cy="288.0" r="3" fill="#2a8a4a"/>
+<text x="108.7" y="257.5" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(77.0 108.7 257.5)">53.5</text>
 <text x="280.2" y="447.9" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">5.94 m²</text>
 <text x="280.2" y="465.9" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 5.38 m²</text>
 <text x="273.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Option 5 · coin coupé, pleine profondeur</text>
 <text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 5.94 m² · intérieur 5.38 m² · 5 côtés</text>
 <text x="273.8" y="64.0" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">un pan coupé parallèle au mur du fond, le reste à angle droit</text>
-<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · trait brun = mur de propriété · vert pointillé = zone utile</text>
+<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = mur de propriété · vert pointillé = zone utile · trait coloré = passage (cm)</text>
 </svg>

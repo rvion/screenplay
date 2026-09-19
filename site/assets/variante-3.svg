@@ -55,10 +55,13 @@
 <line x1="431.2" y1="621.6" x2="431.2" y2="746.6" stroke="#c0392b" stroke-width="2"/>
 <path d="M 306.2 621.6 A 125.0 125.0 0 0 0 431.2 746.6" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
 <text x="368.8" y="609.6" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">porte 100</text>
+<line x1="431.2" y1="420.4" x2="437.5" y2="349.1" stroke="#2a8a4a" stroke-width="2.5"/>
+<circle cx="431.2" cy="420.4" r="3" fill="#2a8a4a"/>
+<text x="443.3" y="385.5" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(-85.0 443.3 385.5)">57.2</text>
 <text x="278.1" y="521.0" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">3.94 m²</text>
 <text x="278.1" y="539.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 3.47 m²</text>
 <text x="273.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Option 3 · rectangle pleine largeur</text>
 <text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 3.94 m² · intérieur 3.47 m² · 4 côtés</text>
 <text x="273.8" y="64.0" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">toute la largeur de la zone, profondeur limitée par le grand pan</text>
-<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · trait brun = mur de propriété · vert pointillé = zone utile</text>
+<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = mur de propriété · vert pointillé = zone utile · trait coloré = passage (cm)</text>
 </svg>

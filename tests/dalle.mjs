@@ -49,7 +49,41 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
   const { variantes, plus_grand_rectangle, plus_grand_k_gone } = await import(pathToFileURL(out).href);
   const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
   const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
-  ok(vs.length === 9, "9 variantes");
+  ok(vs.length === 11, "11 variantes");
+  ok(vs[10].aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && vs[10].aire_m2 > base.reglementaire.seuil_sans_formalite_m2 - 0.03, "option 11 juste sous le seuil");
+  const [v9, v10] = [vs[8], vs[9]];
+  ok(v10.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && v10.aire_m2 > base.reglementaire.seuil_sans_formalite_m2 - 0.03, "option 10 juste sous le seuil");
+  const pas = (v, cote) => v.passages.find((q) => q.cote === cote).cm;
+  // why we think it is actually a bug, and not just meaning spec should change: the passage is the
+  // narrowest gap a person squeezes through, i.e. the true distance between the shed outline and the
+  // wall segment. Measuring from shed corners only misses the wall END facing the middle of a shed wall
+  const brut = (v, cote) => {
+    const w = g.dalle.murs.find((m) => m.cote === cote), [ox, oy] = g.dalle.decalage_cm;
+    const a = [w.de[0] + ox, w.de[1] + oy], b = [w.a[0] + ox, w.a[1] + oy], P = v.polygone, N = 400;
+    let m = Infinity;
+    for (let i = 0; i < P.length; i++) for (let k = 0; k <= N; k++) {
+      const p = P[i], q = P[(i + 1) % P.length], s = [p[0] + (q[0] - p[0]) * k / N, p[1] + (q[1] - p[1]) * k / N];
+      for (let j = 0; j <= N; j++) m = Math.min(m, dist(s, [a[0] + (b[0] - a[0]) * j / N, a[1] + (b[1] - a[1]) * j / N]));
+    }
+    return m;
+  };
+  ok(vs.every((v) => ["arriere_droite", "arriere_gauche"].every((c) => near(pas(v, c), brut(v, c), 0.8))), "chaque passage = vraie distance forme / mur (force brute)");
+  ok(near(pas(vs[3], "arriere_droite"), brut(vs[3], "arriere_droite"), 0.8), "controle : option 4, coin face au milieu du mur, deja juste");
+  ok(near(pas(v10, "arriere_droite"), pas(v9, "arriere_droite"), 0.2), "options 9 et 10 : meme mur arriere, meme pince au bout du grand pan");
+  // why we think it is actually a bug, and not just meaning spec should change: a passage is where a
+  // person walks between the shed and the wall, so its far end must sit on the wall, never on the
+  // wall's line extended past its end (option 1 drew a 91.8 segment leaving the slab)
+  const surMur = (v) => v.passages.every((q) => {
+    const w = g.dalle.murs.find((m) => m.cote === q.cote), [ox, oy] = g.dalle.decalage_cm;
+    const a = [w.de[0] + ox, w.de[1] + oy], b = [w.a[0] + ox, w.a[1] + oy], f = q.segment[1];
+    return near(dist(a, f) + dist(f, b), dist(a, b), 0.3);
+  });
+  ok(vs.every(surMur), "chaque passage aboutit sur le mur, pas sur son prolongement");
+  const pan5 = { ...vs[4], passages: vs[4].passages.filter((q) => q.cote === "arriere_droite") };
+  ok(surMur(pan5), "controle : le pan coupe de l'option 5, parallele au grand pan, a son pied sur le mur");
+  ok(near(pas(v10, "arriere_gauche"), pas(v9, "arriere_gauche"), 0.1), "option 10 : coin arriere gauche inchange");
+  ok(pas(vs[10], "arriere_droite") > pas(v10, "arriere_droite") + 10, "option 11 : pivoter le mur arriere elargit la pince, glisser le mur droit non");
+  ok(near(v10.angles_deg[2], v9.angles_deg[2]) && near(v10.polygone[3][0], v9.polygone[3][0]), "option 10 : meme mur arriere que 9, seul le mur droit bouge");
   const quads = vs.filter((v) => v.polygone.length === 4);
   ok(quads.every((v) => v.aire_m2 <= vs[7].aire_m2), "option 8 = la plus grande a 4 murs");
   ok(vs[8].angles_deg[0] === 90 && vs[8].angles_deg[1] === 90 && vs[8].polygone.length === 4, "option 9 : trapeze d'equerre sur l'avant");

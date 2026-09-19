@@ -658,6 +658,27 @@ function variantes(p, g) {
     return c.filter((v, i) => Math.hypot(v[0] - c[(i + 1) % c.length][0], v[1] - c[(i + 1) % c.length][1]) > 0.05);
   };
   const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
+  const [ox, oy] = g.dalle.decalage_cm;
+  const fond = g.dalle.murs.filter((w) => w.cote.startsWith("arriere")).map((w) => ({ cote: w.cote, a: [w.de[0] + ox, w.de[1] + oy], b: [w.a[0] + ox, w.a[1] + oy] }));
+  const pied = (q, a, b) => {
+    const l2 = (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2 || 1;
+    const t = Math.max(0, Math.min(1, ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / l2));
+    return [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
+  };
+  const passages = (r) => fond.map(({ cote, a, b }) => {
+    let best2 = null;
+    const garde = (forme_pt, mur_pt) => {
+      const cm = Math.hypot(forme_pt[0] - mur_pt[0], forme_pt[1] - mur_pt[1]);
+      if (!best2 || cm < best2.cm) best2 = { cote, cm, segment: [forme_pt, mur_pt] };
+    };
+    r.forEach((p2, i) => {
+      const q = r[(i + 1) % r.length];
+      garde(p2, pied(p2, a, b));
+      garde(pied(a, p2, q), a);
+      garde(pied(b, p2, q), b);
+    });
+    return { cote, cm: rnd(best2.cm, 1), segment: best2.segment.map((v) => [rnd(v[0], 1), rnd(v[1], 1)]) };
+  });
   const forme = (id, titre, note, q) => {
     const k = q.reduce((m, v, i) => v[1] < q[m][1] - 1e-6 || Math.abs(v[1] - q[m][1]) <= 1e-6 && v[0] < q[m][0] ? i : m, 0);
     const r = [...q.slice(k), ...q.slice(0, k)];
@@ -672,7 +693,8 @@ function variantes(p, g) {
       }),
       angles_deg: interior_angles(r).map((a) => rnd(a, 1)),
       aire_m2: rnd(poly_area(r) / 1e4, 2),
-      aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2)
+      aire_interieure_m2: rnd(poly_area(inset(r, r.map(() => ep))) / 1e4, 2),
+      passages: passages(r)
     };
   };
   const out = [];
@@ -709,7 +731,30 @@ function variantes(p, g) {
     const drop = Z.find((v) => !q8.includes(v));
     const angle_perdu = interior_angles(Z)[Z.indexOf(drop)];
     if (q8) out.push(forme(8, "plus grand quadrilat\xE8re", `4 murs, le coin de ${f1(angle_perdu)}\xB0 de la zone est sacrifi\xE9 : l'aire maximale \xE0 4 murs`, q8));
-    out.push(forme(9, "trap\xE8ze, mur arri\xE8re en biais", "c\xF4t\xE9s gauche et droit d'\xE9querre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], Z[2], Z[Z.length - 1]]));
+    const HG = Z[Z.length - 1], HD = Z[2];
+    out.push(forme(9, "trap\xE8ze, mur arri\xE8re en biais", "c\xF4t\xE9s gauche et droit d'\xE9querre sur l'avant, un seul mur en biais au fond", [Z[0], Z[1], HD, HG]));
+    const trap = (w) => {
+      const x = Z[0][0] + w, t = (x - HG[0]) / (HD[0] - HG[0]);
+      return [Z[0], [x, Z[0][1]], [x, HG[1] + t * (HD[1] - HG[1])], HG];
+    };
+    let lo2 = 0, hi2 = Z[1][0] - Z[0][0];
+    for (let k = 0; k < 50; k++) {
+      const m = (lo2 + hi2) / 2;
+      if (poly_area(trap(m)) <= seuil * 1e4) lo2 = m;
+      else hi2 = m;
+    }
+    const w10 = Math.floor(lo2);
+    out.push(forme(10, `trap\xE8ze plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `le trap\xE8ze 9, mur droit recul\xE9 \xE0 ${w10} de large : sous ${fz(seuil)} m\xB2`, trap(w10)));
+    const pivot = (h2) => [Z[0], Z[1], [Z[1][0], Z[1][1] + h2], HG];
+    lo2 = 0;
+    hi2 = HD[1] - Z[1][1];
+    for (let k = 0; k < 50; k++) {
+      const m = (lo2 + hi2) / 2;
+      if (poly_area(pivot(m)) <= seuil * 1e4) lo2 = m;
+      else hi2 = m;
+    }
+    const h11 = Math.floor(lo2);
+    out.push(forme(11, `trap\xE8ze pivot\xE9, plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `le trap\xE8ze 9, coin arri\xE8re droit abaiss\xE9 \xE0 ${h11} : sous ${fz(seuil)} m\xB2, passage arri\xE8re \xE9largi`, pivot(h11)));
   }
   return out.sort((a, b) => a.id - b.id);
 }
@@ -864,6 +909,26 @@ function variante_svg(v, P, scale, porte) {
 `;
     svg += text((h0[0] + h1[0]) / 2, h0[1] - 12, `porte ${fz(w)}`, "middle", "#c0392b", 11, "bold");
   }
+  for (const ps of v.passages || []) {
+    const pc = ps.cm, col = pc < 35 ? "#c0392b" : pc < 50 ? "#c77d0a" : "#2a8a4a";
+    if (!(pc > 0) || pc > 150) continue;
+    const [a, b] = ps.segment.map(P);
+    svg += line(a[0], a[1], b[0], b[1], col, 2.5);
+    svg += `<circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="3" fill="${col}"/>
+`;
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
+    let nx = -uy, ny = ux;
+    if (ny < 0) {
+      nx = -nx;
+      ny = -ny;
+    }
+    let rot = Math.atan2(uy, ux) * 180 / Math.PI;
+    if (rot > 90) rot -= 180;
+    else if (rot < -90) rot += 180;
+    const m = [(a[0] + b[0]) / 2 + nx * 9, (a[1] + b[1]) / 2 + ny * 9];
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="${col}" font-size="11" font-weight="bold" transform="rotate(${f1(rot)} ${f1(m[0])} ${f1(m[1])})">${fz(pc)}</text>
+`;
+  }
   const cx = q.reduce((s, w) => s + w[0], 0) / n, cy = q.reduce((s, w) => s + w[1], 0) / n, c = P([cx, cy]);
   svg += text(c[0], c[1], `${v.aire_m2} m\xB2`, "middle", BLEU, 22, "bold");
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
@@ -970,7 +1035,7 @@ function plan_dalle_svg(g, avecBandes = false, v = null, porte = null) {
   } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, v ? "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9 \xB7 vert pointill\xE9 = zone utile" : "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
+  svg += text(W / 2, H - 12, v ? "AVANT (jardin) \xB7 brun = mur de propri\xE9t\xE9 \xB7 vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)" : "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
