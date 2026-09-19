@@ -216,3 +216,19 @@ la bande fait 26,8 cm, on ne passe pas ; 200 × 215 donne 45 cm, 200 × 200 donn
 en panneaux entiers. **Le choix de la profondeur reste ouvert** (backlog). *Écarté :* abri centré
 (D24 : 31 cm perdus contre un mur, et le coin du toit touchait le pan de 258). *Conséquence à
 traiter :* la fenêtre fixe de la face G regarde désormais un mur à 2 cm. *Amende* D24 (position).
+
+## D27 — Abri retenu : trapèze de l'option 13, plans 2D générés
+Parmi les formes de `variantes(p, g)`, l'utilisateur retient le **trapèze** : façade et mur droit
+d'équerre, un seul mur en biais au fond, et ~50 cm de passage derrière l'abri comme seule contrainte
+du fond (la bande de 45 cm sur le petit pan de 104 était une erreur, ramenée à 12). Le mur droit
+recule jusqu'à ~4,8 m² intérieur (`disposition_trapeze.interieur_vise_m2`) : façade 218, droite
+178,8, fond 256,6, gauche 314,1, 5,37 m² de murs. Porte de 65 sur le **mur droit**, chambranle de
+5, cadre à 5 cm de la face intérieure du mur du fond et 5 cm sous le haut du mur (passage 65 × 205).
+Bureau en L : 60 cm sur tout le mur gauche, 50 cm sur toute la façade, qui ne porte que deux
+fenêtres 80 × 110 (allège 95, une par module). `modele_trapeze(p, v)` en tire faces, panneaux,
+rehausse, toit et gouttière, et 7 plans (`modele-*.svg`). *Choix par défaut, à confirmer :* toit
+**vers l'arrière** (côté haut au jardin, bas contre les murs de propriété, descente au coin arrière
+gauche) et **chute 30 cm** (5,5° sur 314 cm ; 22,5 donnait 4,1°, sous le mini usuel), donc madrier
+75 × 300. *Écarté :* toit perpendiculaire au fond (le plus de coupes), toit vers la droite (côté haut
+contre la propriété). *Reste sur l'ancien rectangle :* débit, achats, budget et 3D (priorité aux
+plans 2D, demande explicite). *Amende* D21 (emprise), D26 (passage).

@@ -1,6 +1,12 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Toit de l'abri retenu** (D27) : sens (vers l'arrière par défaut) et chute (30 cm par défaut,
+      5,5° ; madrier 75 × 300 à trouver en classe 4, sinon deux pièces superposées).
+- [ ] **Débit, achats, budget et 3D** suivent encore le rectangle 200 × 240 : les porter sur
+      `modele_trapeze` (plan : `tmp/20260919-224925-modele-trapeze.md`).
+- [ ] **Bande de 18 cm** en façade (A3) et bande T3 de 18 cm au toit : acceptables, ou décaler les
+      modules ?
 - [ ] **Forme de l'abri dans la zone utile** : 13 options dessinées (`site/assets/variante-{1..13}.svg`,
       section « Formes » du site, résumé dans `variantes.md`). Recommandations : option 12 (coin
       coupé au module, sous le seuil, murs gauche et fond en panneaux entiers), option 5 (coin

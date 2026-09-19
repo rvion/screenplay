@@ -54,7 +54,16 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   const v13 = vs.find((v) => v.id === 13), ep = base.panneau.epaisseur_mm / 10;
   ok(near(v13.passages.find((q) => q.cote === "arriere_droite").cm, base.dalle_cm.passage_souhaite_cm, 1), "option 13 : passage derriere l'abri = passage vise");
   ok(near(v13.polygone[3][1], g.dalle.zone_utile.polygone.reduce((m, q) => (Math.abs(q[0] - v13.polygone[0][0]) < 0.5 ? Math.max(m, q[1]) : m), -1), 0.2), "option 13 : coin arriere gauche au haut du cote gauche de la zone");
-  ok(v13.porte.nom === "droite" && v13.porte.debut_cm >= ep + 50 && v13.porte.debut_cm + v13.porte.largeur_cm <= v13.cotes_cm[1] + 1e-6, "option 13 : porte sur le mur droit, apres le bureau de facade");
+  const pch = v13.porte.chambranle_cm, pmg = v13.porte.marge_cm;
+  ok(v13.porte.nom === "droite" && v13.porte.debut_cm - pch >= ep + 50, "option 13 : cadre de porte sur le mur droit, apres le bureau de facade");
+  // face interieure du mur du fond, ramenee le long du mur droit : le cadre s'arrete a la marge avant
+  {
+    const { inset_ordre } = await import(pathToFileURL(out).href);
+    const r = v13.polygone, I = inset_ordre(r, ep), a = r[1], b = r[2], L = dist(a, b), u = [(b[0] - a[0]) / L, (b[1] - a[1]) / L];
+    const fin_int = (I[2][0] - a[0]) * u[0] + (I[2][1] - a[1]) * u[1];
+    ok(v13.porte.debut_cm + v13.porte.largeur_cm + pch <= fin_int - pmg + 0.1 && v13.porte.debut_cm + v13.porte.largeur_cm + pch >= fin_int - pmg - 0.2, "option 13 : cadre a " + pmg + " cm de la face interieure du mur du fond, pas contre le coin");
+    ok(near(v13.porte.hauteur_cm + pch, base.murs.hauteur_cm - pmg, 0.11), "option 13 : haut du cadre a " + pmg + " cm sous le haut du mur");
+  }
   const dt = base.disposition_trapeze;
   ok(near(v13.aire_interieure_m2, dt.interieur_vise_m2, 0.03), "option 13 : interieur ~ cible (" + v13.aire_interieure_m2 + ")");
   ok(v13.porte.largeur_cm === dt.porte_largeur_cm, "option 13 : porte de la largeur demandee");

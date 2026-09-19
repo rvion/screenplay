@@ -15,6 +15,8 @@ screenplay/
 ├── tests/
 │   ├── snapshot.mjs    # snapshots golden de compute.ts (remplace l'oracle Python)
 │   ├── cases.mjs       # jeux de params partagés
+│   ├── dalle.mjs       # dalle, zone utile, variantes de forme
+│   ├── modele.mjs      # modèle 2D de l'abri retenu (faces, rehausse, toit, plans)
 │   ├── dom.mjs         # smoke-test DOM (jsdom)
 │   └── snapshots/*.json
 └── site/               # GitHub Pages (publié tel quel)

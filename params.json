@@ -25,11 +25,15 @@
     "decalage_cm": { "x": 2, "y": 2 }
   },
   "disposition_trapeze": {
-    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm sur le cote droit, bureau en L le long de tout le mur gauche et de toute la facade, facade = fenetres seulement (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
+    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm (ouverture) sur le cote droit, entouree d'un chambranle de porte_chambranle_cm, le cadre a porte_marge_cm des faces interieures des murs voisins et sous le haut du mur (hauteur de passage = hauteur du mur - marge - chambranle), bureau en L le long de tout le mur gauche et de toute la facade, facade = fenetres seulement (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
     "porte_largeur_cm": 65,
+    "porte_chambranle_cm": 5,
+    "porte_marge_cm": 5,
+    "toit": { "sens": "arriere", "chute_cm": 30, "debord_cm": { "avant": 10, "arriere": 10, "cotes": 0 } },
+    "rehausse_section_mm": [75, 300],
     "bureaux": [{ "cote": "gauche", "profondeur_cm": 60 }, { "cote": "avant", "profondeur_cm": 50 }],
     "fenetres": [
       { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 110, "allege_cm": 95, "position": 10, "ouvrant": true },

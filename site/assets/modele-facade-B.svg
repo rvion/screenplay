@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 501 485" font-family="system-ui,sans-serif" font-size="13">
+<rect width="501" height="485" fill="#fbfbf8"/>
+<polygon points="90.0,394.9 215.0,394.9 215.0,126.1 90.0,126.1" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="152.5" y="148.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B1</text>
+<polygon points="215.0,394.9 340.0,394.9 340.0,126.1 215.0,126.1" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="277.5" y="148.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B2</text>
+<polygon points="340.0,394.9 410.8,394.9 410.8,126.1 340.0,126.1" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="375.4" y="148.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B3</text>
+<text x="375.4" y="162.6" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">56.6</text>
+<polygon points="90.0,126.1 410.8,126.1 410.8,126.1 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="250.4" y="116.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R3 · rehausse 12.9 → 0</text>
+<line x1="90.0" y1="398.9" x2="90.0" y2="418.9" stroke="#aaa" stroke-width="0.7"/>
+<line x1="410.8" y1="398.9" x2="410.8" y2="418.9" stroke="#aaa" stroke-width="0.7"/>
+<line x1="90.0" y1="414.9" x2="410.8" y2="414.9" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="87.0" y1="417.9" x2="93.0" y2="411.9" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="407.8" y1="417.9" x2="413.8" y2="411.9" stroke="#2b5d8a" stroke-width="1"/>
+<text x="250.4" y="422.9" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 250.4 422.9)">256.6 cm</text>
+<text x="82.0" y="114.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="bold">227.9</text>
+<text x="418.8" y="130.1" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="bold">215</text>
+<text x="82.0" y="142.1" text-anchor="end" fill="#888" font-size="10" font-weight="normal">215</text>
+<text x="250.4" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face B · fond en biais · vue de l'extérieur</text>
+<text x="250.4" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">3 panneaux de 215 · hauteurs finies aux deux bouts</text>
+</svg>

@@ -321,7 +321,7 @@
 | côté gauche | 314,1 cm | 297,3 cm |
 | angles | 90° · 90° · 121,8° · 58,2° | |
 | passage arrière | grand pan 50,6 cm · petit pan 12 cm | |
-| porte | 65 cm sur le côté droite, de 113,8 à 178,8 cm | |
+| porte | 65 cm sur le côté droite, de 100,5 à 165,5 cm | |
 | fenêtre ouvrante | 80 × 110 cm sur le côté avant, de 10 à 90 cm, allège 95 cm | |
 | fenêtre fixe | 80 × 110 cm sur le côté avant, de 110 à 190 cm, allège 95 cm | |
 | bureau gauche | | 60 cm de profondeur sur 297,3 cm |

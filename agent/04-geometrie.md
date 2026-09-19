@@ -100,3 +100,19 @@ Murs : A et B = 2 modules, D et G = 3 ; le module A2 est pris par le bloc-porte 
 Le site affiche aire, périmètre, pente, rampant, débit et le triangle hors dalle (recalculés en
 direct par `compute.ts`) ; ces valeurs doivent correspondre au tableau ci-dessus. Les snapshots
 golden (`npm run test:raw`) figent cette sortie.
+
+## Abri retenu : trapèze de l'option 13 (`modele_trapeze`, D27)
+Repère de la dalle. Côtés dans l'ordre du contour : **A** façade 218, **D** droite 178,8, **B** fond
+en biais 256,6, **G** gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.
+- **Toit plan**, pente de l'avant vers le point le plus au fond : `h(y) = H + c·(1 − (y − y0)/D)`,
+  `D` = profondeur au point le plus au fond (314,1), `c = disposition_trapeze.toit.chute_cm` (30)
+  ⇒ 9,6 %, **5,46°**. Hauteurs finies : façade 245, coin arrière droit 227,9, coin arrière gauche 215.
+- **Murs** : panneaux de 215 posés depuis le début de chaque face (sens du contour, vue de
+  l'extérieur de gauche à droite) : A 100+100+18, D 100+78,8, B 100+100+56,6, G 100+100+100+14,1.
+- **Rehausse** (madrier 75 × 300) : R1 façade 30 → 30, R2 droite 30 → 12,9, R3 fond 12,9 → 0,
+  R4 gauche 0 → 30. R3 et R4 partagent une coupe en biais : **2 madriers** de 480.
+- **Toit** : contour = murs + débords (avant 10, fond 10, côtés 0) ; panneaux dans le sens de la
+  pente : T1 100 × 337,4, T2 100 × 275,1, T3 18 × 212,7 (longueurs = rampant) ; 5,85 m² couverts.
+  Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).
+- **Porte** : ouverture 65 × 205 sur D, de 100,5 à 165,5 ; chambranle 5 ; cadre à 5 cm de la face
+  intérieure du mur du fond et 5 cm sous le haut du mur.
