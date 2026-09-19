@@ -113,10 +113,28 @@ function renderVigilance(core: Core, p: Params) {
   if (seuil) seuil.textContent = g.emprise_debords_m2 <= 5 ? "sous le seuil des 5 m² débords inclus : a priori aucune formalité." : g.aire_m2 <= 5 ? "murs sous 5 m² mais débords inclus au-dessus : selon la lecture de la mairie, déclaration préalable possible." : "au-dessus de 5 m² : déclaration préalable à prévoir.";
   const card = document.getElementById("v-dalle");
   if (card && d) {
-    const hors = d.hors_dalle_m2 > 0 || d.depasse_bbox;
-    card.hidden = !hors;
-    setText("v-dalle-tri", `${d.hors_dalle_triangle_cm[0]} × ${d.hors_dalle_triangle_cm[1]} cm (${d.hors_dalle_m2} m²)`);
+    card.hidden = !d.hors_dalle;
+    const worst = Math.min(...Object.values(d.marges_cm).filter((v): v is number => typeof v === "number"));
+    setText("v-dalle-tri", `${d.hors_dalle_m2} m²${worst < 0 ? ` (jusqu'à ${Math.round(-worst)} cm au-delà du bord)` : ""}`);
+    const mur = document.getElementById("v-dalle-mur");
+    if (mur) mur.hidden = !d.hors_dalle_contre_mur;
   } else if (card) card.hidden = true;
+  const pc = document.getElementById("v-passage");
+  if (pc) {
+    const ps = d && d.passage;
+    pc.hidden = !ps;
+    if (ps) {
+      pc.className = "card " + (ps.etat === "praticable" ? "ok" : "warn");
+      setText("v-passage-cm", `${Math.round(ps.cm)} cm`);
+      setText("v-passage-etat", ps.etat === "praticable" ? "on passe normalement" : ps.etat === "de profil" ? "on passe de profil seulement" : ps.cm <= 0 ? "l'abri traverse le mur : impossible" : "on ne passe pas");
+      setText("v-passage-souhaite", String(ps.souhaite_cm));
+      setText("v-passage-gmax", String(ps.profondeur_max_cm));
+      setText("v-passage-g", String(g.cotes.G));
+      const gauche = d.murs.find((w: any) => w.cote === "gauche");
+      setText("v-passage-gauche", gauche ? `${gauche.abri_cm} cm` : "—");
+      setText("v-passage-toit", d.degagement_toit_min_cm == null ? "—" : `${d.degagement_toit_min_cm} cm`);
+    }
+  }
 }
 
 export function renderAll(core: Core, p: Params) {

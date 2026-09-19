@@ -71,11 +71,13 @@ export function buildControls(container: HTMLElement, params: Params, onChange: 
     const d = params.dalle_cm;
     const off = d.decalage_cm || (d.decalage_cm = { x: 0, y: 0 });
     return [
-      slider("Largeur — côté avant", d, "avant", 100, 500),
-      slider("Côté droit, jusqu'à la coupe", d, "droite_jusqu_coupe", 50, 500),
-      slider("Côté gauche", d, "gauche", 100, 500),
-      slider("Côté arrière, jusqu'à la coupe", d, "arriere_jusqu_coupe", 50, 500),
-      slider("Abri : distance au bord gauche de la dalle", off, "x", 0, 150),
+      slider("Côté avant", d, "avant", 100, 500),
+      slider("Côté droit", d, "droite", 50, 500),
+      slider("Côté gauche", d, "gauche", 50, 500),
+      slider("Pan arrière gauche (petit)", d, "arriere_gauche", 0, 500),
+      slider("Pan arrière droit (grand)", d, "arriere_droite", 0, 500),
+      slider("Passage arrière visé (le long du grand pan)", d, "passage_souhaite_cm", 0, 100),
+      slider("Abri : distance au mur gauche", off, "x", 0, 150),
       slider("Abri : distance au bord avant de la dalle", off, "y", 0, 150),
     ];
   }

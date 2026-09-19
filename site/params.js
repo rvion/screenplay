@@ -7,18 +7,27 @@ window.SHED_PARAMS = {
     "auteur": "Remi Vion"
   },
   "emprise_cm": {
-    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (260 de large, 220 a droite).",
+    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (262 de large, 223 a droite, pointe arriere).",
     "avant_A": 200,
     "gauche_G": 240
   },
   "dalle_cm": {
-    "_comment": "Dalle REELLE deja coulee (coin arriere-droit coupe). MESURES : avant = 260 (largeur vue de face), droite_jusqu_coupe = 220 (cote droit, le plus court). DEDUITS en conservant la coupe 90 x 86 de l'ancien releve : gauche = 306, arriere_jusqu_coupe = 170 (a verifier au metre). decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle : abri centre en largeur (30 cm de dalle de chaque cote), 2 cm devant. Tout est reglable sur le site (groupe Dalle).",
-    "gauche": 306,
-    "avant": 260,
-    "droite_jusqu_coupe": 220,
-    "arriere_jusqu_coupe": 170,
+    "_comment": "Dalle REELLE deja coulee, relevee au metre : pentagone a pointe arriere. 5 longueurs : avant, droite, gauche, puis les deux pans arriere qui se rejoignent en pointe (arriere_gauche part du haut du cote gauche, arriere_droite arrive en haut du cote droit). La pointe est calculee par triangulation (~73 ; 398), angles avant supposes droits. Mesure de controle : 260 de large a hauteur du coin droit. murs_mitoyens = cotes longes par le mur de propriete (infranchissables) : gauche et les deux pans arriere ; l'avant et la droite donnent sur le jardin. mur_hauteur_cm / mur_epaisseur_cm : HYPOTHESES pour le dessin 3D, a mesurer. decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle : l'abri LONGE le mur gauche (2 cm), 2 cm devant, pour garder une bande de passage le long du pan de 258 jusqu'a l'arriere de l'abri. passage_souhaite_cm = largeur de bande visee : le site en deduit la profondeur maximale de l'abri. Tout est reglable sur le site (groupe Dalle).",
+    "avant": 262,
+    "droite": 223,
+    "gauche": 324,
+    "arriere_gauche": 104,
+    "arriere_droite": 258,
+    "murs_mitoyens": [
+      "gauche",
+      "arriere_gauche",
+      "arriere_droite"
+    ],
+    "mur_hauteur_cm": 180,
+    "mur_epaisseur_cm": 15,
+    "passage_souhaite_cm": 45,
     "decalage_cm": {
-      "x": 30,
+      "x": 2,
       "y": 2
     }
   },
@@ -43,6 +52,7 @@ window.SHED_PARAMS = {
       "gauche": 0,
       "droite": 0
     },
+    "gouttiere_largeur_cm": 10,
     "_comment": "Debords lateraux a 0 : le toit fait exactement A de large = 2 panneaux de 100, la rive est fermee par une bavette de rive (standard). pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse est en BOIS (voir rehausse) : chute = hauteur de la section du madrier (225 mm)."
   },
   "rehausse": {

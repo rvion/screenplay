@@ -1,10 +1,13 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Dalle : mesurer les deux cotes déduites.** Mesurés (2026-09-19) : avant **260**, droite
-      jusqu'à la coupe **220**. Déduits en gardant la coupe 90 × 86 : gauche **306**, arrière
-      jusqu'à la coupe **170**. Confirmer aussi la position de l'abri sur la dalle (centré en
-      largeur, 2 cm devant par défaut). Tout se règle sur le site (groupe **Dalle**).
+- [ ] **Profondeur de l'abri contre passage arrière** (D26) : 200 × 240 ⇒ bande de 27 cm, on ne
+      passe pas. 200 × 215 ⇒ 45 cm (mais un module de 15 cm sur D et G). 200 × 200 ⇒ 56 cm, 4 faces
+      en panneaux entiers, 4,0 m². À trancher ; le site montre la bande en direct.
+- [ ] **Fenêtre fixe de la face G** : elle regarde le mur de propriété à 2 cm. La déplacer
+      (module A1 côté jardin, ou face B vers l'arrière) ou la supprimer.
+- [ ] **Mur de propriété** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé). S'il dépasse
+      215 cm, le débord de toit arrière doit aussi dégager le mur.
 - [ ] **Formalités** : 4,8 m² de murs mais 5,2 m² débords inclus ⇒ vérifier en mairie si une
       déclaration préalable est due (et la distance aux limites du PLU).
 - [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
@@ -28,6 +31,9 @@
 - [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).
 - [ ] Renommer la branche par défaut (`claude/garden-shed-docs-n7eq2b` → `main`) et mettre à jour
       `pages.yml` (aucune branche `main`/`master` n'existe aujourd'hui).
+
+## Fait (2026-09-19)
+- [x] **Dalle relevée au mètre** (262 / 223 / 324 / 104 / 258) et réglable sur le site (D24, D25).
 
 ## Fait (2026-09-06, simplification)
 - [x] **Rectangle 4 faces** au lieu du pentagone à coin coupé ; dalle réelle conservée en

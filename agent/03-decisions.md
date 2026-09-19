@@ -188,3 +188,31 @@ suivent en direct. `compute.ts` borne `arriere_jusqu_coupe ≤ avant` et `droite
 gauche`. *Pourquoi :* la dalle était la seule donnée du projet non réglable, et c'est celle qui
 reste incertaine. *Écarté :* caler l'abri à droite (`x = 58` ⇒ 21 × 20 cm hors dalle) ; garder
 `x = 2` (58 cm de dalle d'un seul côté). *Remplace* les valeurs provisoires du 2026-09-06.
+
+## D25 — Dalle décrite par ses 5 longueurs relevées, pointe trouvée par triangulation
+Le relevé au mètre (croquis du 2026-09-19 : 262 / 223 / 324 / 104 / 258, contrôle 260) montre que
+la dalle n'est **pas** un rectangle à coin coupé : l'arrière est fait de **deux pans obliques** qui
+se rejoignent en pointe. `dalle_cm` passe de 4 cotes (`avant`, `gauche`, `droite_jusqu_coupe`,
+`arriere_jusqu_coupe`) à **5 longueurs mesurables** (`avant`, `droite`, `gauche`,
+`arriere_gauche`, `arriere_droite`) ; la pointe est calculée par triangulation depuis les hauts
+des deux côtés. La partie hors dalle n'est plus une formule de triangle mais un **découpage de
+polygone** (emprise − emprise ∩ dalle), valable quel que soit le côté qui déborde.
+*Pourquoi :* les paramètres sont ce qu'un mètre ruban mesure ; aucune coordonnée à calculer à la
+main, aucun angle à relever. *Hypothèse :* angles avant droits (le contrôle 260 contre 262 le
+confirme à 2 cm près). *Écarté :* liste libre de sommets (x, y) (illisible, non mesurable) ;
+garder l'ancien modèle avec un arrière horizontal (faux de 74 cm à la pointe). *Remplace* les
+cotes déduites de D24 (gauche 306, coupe 90 × 86 : fausses) ; le groupe **Dalle** du site et le
+centrage de l'abri restent.
+
+## D26 — Murs de propriété, abri le long du mur gauche, passage arrière mesuré
+Le côté gauche et les deux pans du fond de la dalle **sont** le mur de propriété. L'abri
+**longe le mur gauche** (`decalage_cm.x = 2`) : tout l'espace libre va à droite (60 cm de dalle,
+puis le jardin), et l'accès à l'arrière se fait par une **bande le long du pan de 258**. Cette
+bande devient une grandeur calculée (`dalle.passage`), cotée sur le plan, affichée en vigilance,
+avec la profondeur maximale qui garde le passage visé (`passage_souhaite_cm`, 45). *Pourquoi :*
+« optimiser pour la dalle qu'on a » : la contrainte réelle n'est pas de tenir sur la dalle mais de
+garder l'arrière accessible (gouttière et descente sont sur la face B). *Constat :* à 200 × 240
+la bande fait 26,8 cm, on ne passe pas ; 200 × 215 donne 45 cm, 200 × 200 donne 56 cm avec 4 faces
+en panneaux entiers. **Le choix de la profondeur reste ouvert** (backlog). *Écarté :* abri centré
+(D24 : 31 cm perdus contre un mur, et le coin du toit touchait le pan de 258). *Conséquence à
+traiter :* la fenêtre fixe de la face G regarde désormais un mur à 2 cm. *Amende* D24 (position).

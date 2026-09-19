@@ -12,13 +12,16 @@ bureau qu'on aime, pas un abri.
   « un carré est mieux, faisons plus simple »). Nommage :
   **A** = avant, **D** = droite, **B** = arrière, **G** = gauche, **T** = toiture.
 - **B2 — Surface.** Environ **5 m²** au sol.
-- **B3 — Dalle réelle** (déjà coulée), mesurée le 2026-09-19 : Avant **260** (largeur vue de
-  face), Droite jusqu'à la coupe **220** (le côté le plus court). Gauche **306** et Arrière
-  jusqu'à la coupe **170** sont déduits en gardant la coupe 90 × 86 du premier relevé
-  (246 / 230 / 160 / 140). Le coin arrière-droit est coupé. **Emprise
+- **B3 — Dalle réelle** (déjà coulée), relevée au mètre le 2026-09-19 : Avant **262**, Droite
+  **223**, Gauche **324**, puis deux pans à l'arrière qui se rejoignent en pointe : **104** (depuis
+  le haut du côté gauche) et **258** (jusqu'au haut du côté droit). Contrôle : **260** de large à
+  hauteur du coin droit. Pentagone à pointe arrière, profond de ~398 cm à la pointe. **Emprise
   retenue : 200 × 240** (4,8 m²) : on peut **en faire le tour** (contrainte du terrain), on
-  reste sous 5 m² de murs. L'abri est centré en largeur sur la dalle (30 cm de chaque côté, 2 cm
-  devant) et tient entièrement dessus ; la dalle se règle sur le site. L'angle coupé pour atteindre
+  reste sous 5 m² de murs. Le côté gauche (324) et les deux pans du fond (104, 258)
+  **longent le mur de propriété** : on ne passe pas derrière. L'abri **longe le mur gauche** pour
+  garder une **bande de passage le long du pan de 258** vers l'arrière de l'abri (on n'ira presque
+  jamais, mais l'endroit doit rester accessible). **Optimiser pour cette dalle** est la priorité ;
+  la dalle, la position et le passage visé se règlent sur le site. L'angle coupé pour atteindre
   5,3 m² a été jugé non rentable (+0,4 m² intérieur contre 2 angles obtus et pas de tour).
 - **B4 — Murs & toit** en **panneaux sandwich 60 mm autoportants** : pas d'ossature secondaire
   (« on m'a dit que 6 cm est autoportant »). Seulement rail de pied + profils d'angle.

@@ -54,6 +54,69 @@ var f1 = (x) => pyfix(x, 1);
 var f2 = (x) => pyfix(x, 2);
 var itr = (x) => Math.trunc(x);
 var fz = (x) => Number.isInteger(x) ? f0(x) : f1(x);
+function slab_apex(L, R, ag, ad) {
+  const dx = R[0] - L[0], dy = R[1] - L[1], dist = Math.hypot(dx, dy);
+  if (!(dist > 0) || !(ag > 0) || !(ad > 0)) return null;
+  const a = (ag * ag - ad * ad + dist * dist) / (2 * dist);
+  const h2 = ag * ag - a * a;
+  if (a < 0 || a > dist || h2 <= 1e-9) return null;
+  const h3 = Math.sqrt(h2), ux = dx / dist, uy = dy / dist;
+  let nx = -uy, ny = ux;
+  if (ny < 0) {
+    nx = -nx;
+    ny = -ny;
+  }
+  return [L[0] + a * ux + h3 * nx, L[1] + a * uy + h3 * ny];
+}
+function poly_area(q) {
+  let s = 0;
+  for (let i = 0; i < q.length; i++) {
+    const a = q[i], b = q[(i + 1) % q.length];
+    s += a[0] * b[1] - b[0] * a[1];
+  }
+  return Math.abs(s) / 2;
+}
+function clip_half(subject, a, b, keepLeft) {
+  const side = (q) => ((b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0])) * (keepLeft ? 1 : -1);
+  const out = [];
+  for (let i = 0; i < subject.length; i++) {
+    const cur = subject[i], nxt = subject[(i + 1) % subject.length];
+    const sc = side(cur), sn = side(nxt);
+    if (sc >= 0) out.push(cur);
+    if (sc > 0 && sn < 0 || sc < 0 && sn > 0) {
+      const t = sc / (sc - sn);
+      out.push([cur[0] + t * (nxt[0] - cur[0]), cur[1] + t * (nxt[1] - cur[1])]);
+    }
+  }
+  return out;
+}
+function clip_convex(subject, clipper) {
+  let out = subject;
+  for (let i = 0; i < clipper.length && out.length; i++) out = clip_half(out, clipper[i], clipper[(i + 1) % clipper.length], true);
+  return out;
+}
+function outside_pieces(rect, slab) {
+  const pieces = [];
+  for (let i = 0; i < slab.length; i++) {
+    const pts = clip_half(rect, slab[i], slab[(i + 1) % slab.length], false);
+    if (pts.length >= 3 && poly_area(pts) > 1) pieces.push({ cote: i, pts });
+  }
+  return pieces;
+}
+function clearance(rect, a, b) {
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+  return Math.min(...rect.map((q) => ((b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0])) / len));
+}
+function rear_edge_y(slab, x) {
+  let best = -Infinity;
+  for (let i = 0; i < slab.length; i++) {
+    const a = slab[i], b = slab[(i + 1) % slab.length];
+    if (x < Math.min(a[0], b[0]) - 1e-9 || x > Math.max(a[0], b[0]) + 1e-9) continue;
+    const y = Math.abs(b[0] - a[0]) < 1e-9 ? Math.max(a[1], b[1]) : a[1] + (x - a[0]) / (b[0] - a[0]) * (b[1] - a[1]);
+    best = Math.max(best, y);
+  }
+  return best;
+}
 function geometry(p) {
   const A = +p.emprise_cm.avant_A, G = +p.emprise_cm.gauche_G;
   const FL = [0, 0], FR = [A, 0], BR = [A, G], BL = [0, G];
@@ -89,28 +152,75 @@ function geometry(p) {
   let dalle = null;
   const d = p.dalle_cm;
   if (d) {
-    const dA = +d.avant, dG = +d.gauche;
-    const dD = Math.max(0, Math.min(+d.droite_jusqu_coupe, dG)), dB = Math.max(0, Math.min(+d.arriere_jusqu_coupe, dA));
+    const dA = +d.avant, dD = +d.droite, dG = +d.gauche, ag = +d.arriere_gauche, ad = +d.arriere_droite;
     const ox = d.decalage_cm ? +d.decalage_cm.x : 0, oy = d.decalage_cm ? +d.decalage_cm.y : 0;
-    const cw = dA - dB, ch = dG - dD;
-    const clamp = (v) => Math.max(0, Math.min(1, v));
-    const uA = cw > 0 ? clamp((ox + A - dB) / cw) : 0;
-    const vG = ch > 0 ? clamp((oy + G - dD) / ch) : 0;
-    const t = Math.max(0, uA + vG - 1);
-    const dx = t * cw, dy = t * ch;
+    const apex = slab_apex([0, dG], [dA, dD], ag, ad);
+    const local = [[0, 0], [dA, 0], [dA, dD], ...apex ? [apex] : [], [0, dG]];
+    const poly2 = local.map(([x, y]) => [x - ox, y - oy]);
+    const noms = apex ? ["avant", "droite", "arriere_droite", "arriere_gauche", "gauche"] : ["avant", "droite", "arriere", "gauche"];
+    const rect = [[0, 0], [A, 0], [A, G], [0, G]];
+    const mitoyens = d.murs_mitoyens || [];
+    const est_mur = (nom) => mitoyens.includes(nom) || nom === "arriere" && mitoyens.some((k) => k.startsWith("arriere"));
+    const deb = p.toit.debord_cm, gout = +p.toit.gouttiere_largeur_cm || 0;
+    const toit = [[-deb.gauche, -deb.avant], [A + +deb.droite, -deb.avant], [A + +deb.droite, G + +deb.arriere + gout], [-deb.gauche, G + +deb.arriere + gout]];
+    const murs = noms.map((nom, i) => ({ nom, i })).filter(({ nom }) => est_mur(nom)).map(({ nom, i }) => {
+      const a = poly2[i], b = poly2[(i + 1) % poly2.length];
+      return { cote: nom, de: [rnd(a[0], 1), rnd(a[1], 1)], a: [rnd(b[0], 1), rnd(b[1], 1)], abri_cm: rnd(clearance(rect, a, b), 1), toit_cm: rnd(clearance(toit, a, b), 1) };
+    });
+    const hors_cm2 = Math.max(0, A * G - poly_area(clip_convex(poly2, rect)));
+    const pieces = hors_cm2 > 1 ? outside_pieces(rect, poly2) : [];
+    const rear = (x) => {
+      const y = rear_edge_y(poly2, x);
+      return Number.isFinite(y) ? rnd(y - G, 1) : null;
+    };
+    const fond = murs.filter((w) => w.cote !== "gauche");
+    let passage = null;
+    if (fond.length) {
+      const pince = fond.reduce((m, w) => w.abri_cm < m.abri_cm ? w : m);
+      const souhaite = +d.passage_souhaite_cm || 0;
+      const libre = (depth) => Math.min(...fond.map((w) => clearance([[0, 0], [A, 0], [A, depth], [0, depth]], w.de, w.a)));
+      let lo = 0, hi = 2e3;
+      for (let k = 0; k < 40; k++) {
+        const mid = (lo + hi) / 2;
+        if (libre(mid) >= souhaite) lo = mid;
+        else hi = mid;
+      }
+      const [wa, wb] = [pince.de, pince.a], wl = Math.hypot(wb[0] - wa[0], wb[1] - wa[1]) || 1;
+      const sd = (q) => ((wb[0] - wa[0]) * (q[1] - wa[1]) - (wb[1] - wa[1]) * (q[0] - wa[0])) / wl;
+      const coin = rect.reduce((m, q) => sd(q) < sd(m) ? q : m);
+      const nx = (wb[1] - wa[1]) / wl, ny = -(wb[0] - wa[0]) / wl, s = sd(coin);
+      passage = {
+        cm: pince.abri_cm,
+        cote: pince.cote,
+        souhaite_cm: souhaite,
+        etat: pince.abri_cm < 35 ? "impraticable" : pince.abri_cm < 50 ? "de profil" : "praticable",
+        profondeur_max_cm: rnd(lo, 0),
+        segment: [[rnd(coin[0], 1), rnd(coin[1], 1)], [rnd(coin[0] + nx * s, 1), rnd(coin[1] + ny * s, 1)]]
+      };
+    }
     dalle = {
       avant: dA,
+      droite: dD,
       gauche: dG,
-      droite_jusqu_coupe: dD,
-      arriere_jusqu_coupe: dB,
+      arriere_gauche: ag,
+      arriere_droite: ad,
       decalage_cm: [ox, oy],
+      pointe_cm: apex ? [rnd(apex[0], 1), rnd(apex[1], 1)] : null,
       // polygone de la dalle dans le repere de l'abri (origine = coin avant-gauche de l'abri)
-      polygone: [[0, 0], [dA, 0], [dA, dD], [dB, dG], [0, dG]].map(([x, y]) => [rnd(x - ox, 1), rnd(y - oy, 1)]),
-      coupe_cm: rnd(Math.hypot(cw, ch), 1),
-      marges_cm: { gauche: ox, avant: oy, droite: rnd(dA - ox - A, 1), arriere_droite: rnd(dD - oy - G, 1), arriere_gauche: rnd(dG - oy - G, 1) },
-      hors_dalle_m2: rnd(dx * dy / 2 / 1e4, 2),
-      hors_dalle_triangle_cm: [rnd(dx, 1), rnd(dy, 1)],
-      depasse_bbox: ox < 0 || oy < 0 || ox + A > dA + 1e-9 || oy + G > dG + 1e-9
+      polygone: poly2.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]),
+      cotes_cm: [dA, dD, ...apex ? [ad, ag] : [rnd(Math.hypot(dA, dD - dG), 1)], dG],
+      cotes_noms: noms,
+      murs,
+      mur_hauteur_cm: +d.mur_hauteur_cm || 0,
+      mur_epaisseur_cm: +d.mur_epaisseur_cm || 15,
+      passage,
+      toit_touche_mur: murs.some((w) => w.toit_cm < 0),
+      degagement_toit_min_cm: murs.length ? Math.min(...murs.map((w) => w.toit_cm)) : null,
+      marges_cm: { gauche: ox, avant: oy, droite: rnd(dA - ox - A, 1), arriere_droite: rear(A), arriere_gauche: rear(0) },
+      hors_dalle: hors_cm2 > 1,
+      hors_dalle_m2: rnd(hors_cm2 / 1e4, 2),
+      hors_dalle_polygones: pieces.map((q) => q.pts.map(([x, y]) => [rnd(x, 1), rnd(y, 1)])),
+      hors_dalle_contre_mur: pieces.some((q) => est_mur(noms[q.cote]))
     };
   }
   return {
@@ -408,6 +518,7 @@ function model3d(p, g, openings) {
     roof_front_m: m(g.hauteur_avant_cm),
     roof_slope: rnd(drop / G, 5),
     slab: slab.map((v) => [m(v[0]), m(v[1])]),
+    walls: g.dalle && g.dalle.mur_hauteur_cm > 0 ? g.dalle.murs.map((w) => ({ a: [m(w.de[0]), m(w.de[1])], b: [m(w.a[0]), m(w.a[1])], h_m: m(g.dalle.mur_hauteur_cm), ep_m: m(g.dalle.mur_epaisseur_cm) })) : [],
     gutter_face_index: FACE_INDEX.B,
     panels,
     rehausse_pieces,
@@ -463,27 +574,37 @@ function plan_sol_svg(p, g, openings) {
   let svg = svgHeader(rnd(W), rnd(H));
   if (d) svg += poly(d.polygone.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
   svg += poly(g.verts.map(P), "#dce8f5", "#2b5d8a", 2);
-  if (d && d.hors_dalle_m2 > 0) {
-    const [dx, dy] = d.hors_dalle_triangle_cm;
-    const tri = [[A, G], [A - dx, G], [A, G - dy]].map(P);
+  if (d) for (const w of d.murs) {
+    const a = P(w.de), b = P(w.a), wl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    const ex = -(b[1] - a[1]) / wl * 2.5, ey = (b[0] - a[0]) / wl * 2.5;
+    svg += line(a[0] + ex, a[1] + ey, b[0] + ex, b[1] + ey, "#5b4a3a", 5);
+  }
+  if (d && d.murs.length) svg += text(W / 2, 60, "trait brun \xE9pais = mur de propri\xE9t\xE9 (infranchissable)", "middle", "#5b4a3a", 10);
+  if (d && d.passage && d.passage.cm > 0 && d.passage.cm < 200) {
+    const col = d.passage.etat === "praticable" ? "#2a8a4a" : d.passage.etat === "de profil" ? "#c77d0a" : "#c0392b";
+    const [a, b] = d.passage.segment.map(P);
+    svg += line(a[0], a[1], b[0], b[1], col, 2.5);
+    svg += text(b[0] + 8, b[1] - 6, `passage ${f0(d.passage.cm)} cm`, "start", col, 11, "bold");
+  }
+  if (d && d.hors_dalle) {
     svg += `<defs><pattern id="hach" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#c0392b" stroke-width="2"/></pattern></defs>
 `;
-    svg += poly(tri, "url(#hach)", "#c0392b", 1.5);
-    const c = P([A - dx / 3, G - dy / 3]);
-    svg += text(c[0] - 10, c[1] + 16, `hors dalle ${f0(dx)}\xD7${f0(dy)}`, "end", "#c0392b", 10, "bold");
+    for (const piece of d.hors_dalle_polygones) svg += poly(piece.map(P), "url(#hach)", "#c0392b", 1.5);
+    const c = P([A / 2, G / 2]);
+    svg += text(c[0], c[1] + 4, `hors dalle ${d.hors_dalle_m2} m\xB2`, "middle", "#c0392b", 11, "bold");
   }
   if (d) {
-    const [ox, oy] = d.decalage_cm;
-    const slabLabels = [
-      [d.avant / 8 - ox, -oy, "middle", 0, 34, d.avant],
-      [d.avant - ox, d.droite_jusqu_coupe / 4 - oy, "start", 6, 4, d.droite_jusqu_coupe],
-      [d.arriere_jusqu_coupe / 2 - ox, d.gauche - oy, "middle", 0, -6, d.arriere_jusqu_coupe],
-      [-ox, d.gauche - oy - 24, "end", -6, 4, d.gauche]
-    ];
-    for (const [x, y, anchor, dx, dy, v] of slabLabels) {
-      const q = P([x, y]);
-      svg += text(q[0] + dx, q[1] + dy, `dalle ${f0(v)}`, anchor, "#8a8170", 10);
-    }
+    const n = d.polygone.length;
+    d.polygone.forEach((a, i) => {
+      const b = d.polygone[(i + 1) % n];
+      const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+      const nx = (b[1] - a[1]) / len, ny = -(b[0] - a[0]) / len;
+      const along = i === 0 ? 0.12 : i === 1 ? 0.25 : i === n - 1 ? 0.08 : 0.5;
+      const off = i === 0 ? 34 : 12;
+      const q = P([a[0] + (b[0] - a[0]) * along, a[1] + (b[1] - a[1]) * along]);
+      const anchor = nx > 0.3 ? "start" : nx < -0.3 ? "end" : "middle";
+      svg += text(q[0] + nx * off, q[1] - ny * off + 4, `dalle ${f0(d.cotes_cm[i])}`, anchor, "#8a8170", 10);
+    });
   }
   const labels = {
     A: [A / 2, 0, "middle", 0, 18],
@@ -995,6 +1116,15 @@ function populate(group2, m) {
   const railMat = new THREE.MeshStandardMaterial({ color: 7041399, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const metalMat = new THREE.MeshStandardMaterial({ color: 11844288, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
   group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0, -0.14), concreteMat));
+  const wallMat = new THREE.MeshStandardMaterial({ color: 12168087, roughness: 0.95, side: THREE.DoubleSide });
+  for (const w of m.walls || []) {
+    const len = Math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1]) || 1;
+    const nx = (w.b[1] - w.a[1]) / len * w.ep_m, ny = -(w.b[0] - w.a[0]) / len * w.ep_m;
+    const wall = new THREE.Mesh(prismGeo(V, [w.a, w.b, [w.b[0] + nx, w.b[1] + ny], [w.a[0] + nx, w.a[1] + ny]], w.h_m, -0.14), wallMat);
+    wall.castShadow = true;
+    wall.receiveShadow = true;
+    group2.add(wall);
+  }
   group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 5e-3), 0.06, 1e-3), railMat));
   if (m.floor_m > 0) group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, -(m.thickness_m || 0.06)), m.floor_m + 5e-3, 2e-3), floorMat));
   const openings = m.openings || [];
@@ -1167,10 +1297,28 @@ function renderVigilance(core, p) {
   if (seuil) seuil.textContent = g.emprise_debords_m2 <= 5 ? "sous le seuil des 5 m\xB2 d\xE9bords inclus : a priori aucune formalit\xE9." : g.aire_m2 <= 5 ? "murs sous 5 m\xB2 mais d\xE9bords inclus au-dessus : selon la lecture de la mairie, d\xE9claration pr\xE9alable possible." : "au-dessus de 5 m\xB2 : d\xE9claration pr\xE9alable \xE0 pr\xE9voir.";
   const card = document.getElementById("v-dalle");
   if (card && d) {
-    const hors = d.hors_dalle_m2 > 0 || d.depasse_bbox;
-    card.hidden = !hors;
-    setText("v-dalle-tri", `${d.hors_dalle_triangle_cm[0]} \xD7 ${d.hors_dalle_triangle_cm[1]} cm (${d.hors_dalle_m2} m\xB2)`);
+    card.hidden = !d.hors_dalle;
+    const worst = Math.min(...Object.values(d.marges_cm).filter((v) => typeof v === "number"));
+    setText("v-dalle-tri", `${d.hors_dalle_m2} m\xB2${worst < 0 ? ` (jusqu'\xE0 ${Math.round(-worst)} cm au-del\xE0 du bord)` : ""}`);
+    const mur = document.getElementById("v-dalle-mur");
+    if (mur) mur.hidden = !d.hors_dalle_contre_mur;
   } else if (card) card.hidden = true;
+  const pc = document.getElementById("v-passage");
+  if (pc) {
+    const ps = d && d.passage;
+    pc.hidden = !ps;
+    if (ps) {
+      pc.className = "card " + (ps.etat === "praticable" ? "ok" : "warn");
+      setText("v-passage-cm", `${Math.round(ps.cm)} cm`);
+      setText("v-passage-etat", ps.etat === "praticable" ? "on passe normalement" : ps.etat === "de profil" ? "on passe de profil seulement" : ps.cm <= 0 ? "l'abri traverse le mur : impossible" : "on ne passe pas");
+      setText("v-passage-souhaite", String(ps.souhaite_cm));
+      setText("v-passage-gmax", String(ps.profondeur_max_cm));
+      setText("v-passage-g", String(g.cotes.G));
+      const gauche = d.murs.find((w) => w.cote === "gauche");
+      setText("v-passage-gauche", gauche ? `${gauche.abri_cm} cm` : "\u2014");
+      setText("v-passage-toit", d.degagement_toit_min_cm == null ? "\u2014" : `${d.degagement_toit_min_cm} cm`);
+    }
+  }
 }
 function renderAll(core, p) {
   renderKpis(core, p);
@@ -1252,11 +1400,13 @@ function buildControls(container, params, onChange) {
     const d = params.dalle_cm;
     const off = d.decalage_cm || (d.decalage_cm = { x: 0, y: 0 });
     return [
-      slider("Largeur \u2014 c\xF4t\xE9 avant", d, "avant", 100, 500),
-      slider("C\xF4t\xE9 droit, jusqu'\xE0 la coupe", d, "droite_jusqu_coupe", 50, 500),
-      slider("C\xF4t\xE9 gauche", d, "gauche", 100, 500),
-      slider("C\xF4t\xE9 arri\xE8re, jusqu'\xE0 la coupe", d, "arriere_jusqu_coupe", 50, 500),
-      slider("Abri : distance au bord gauche de la dalle", off, "x", 0, 150),
+      slider("C\xF4t\xE9 avant", d, "avant", 100, 500),
+      slider("C\xF4t\xE9 droit", d, "droite", 50, 500),
+      slider("C\xF4t\xE9 gauche", d, "gauche", 50, 500),
+      slider("Pan arri\xE8re gauche (petit)", d, "arriere_gauche", 0, 500),
+      slider("Pan arri\xE8re droit (grand)", d, "arriere_droite", 0, 500),
+      slider("Passage arri\xE8re vis\xE9 (le long du grand pan)", d, "passage_souhaite_cm", 0, 100),
+      slider("Abri : distance au mur gauche", off, "x", 0, 150),
       slider("Abri : distance au bord avant de la dalle", off, "y", 0, 150)
     ];
   }

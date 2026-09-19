@@ -68,6 +68,10 @@ figure figcaption { font-size: .85rem; color: var(--muted); margin-top: .4rem; o
 .warn { border-left: 4px solid var(--warn); background: #fdf3f2; }
 .warn h3 { color: var(--warn); margin-top: 0; }
 .warn p { margin-bottom: 0; }
+.warn p + p, .ok p + p { margin-top: .6em; }
+.ok { border-left: 4px solid #2a8a4a; background: #f1f9f3; }
+.ok h3 { color: #2a8a4a; margin-top: 0; }
+.ok p { margin-bottom: 0; }
 ol.steps { padding-left: 1.2rem; }
 ol.steps li { margin: .6rem 0; }
 #viewer { width: 100%; height: 460px; border-radius: var(--radius);

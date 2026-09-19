@@ -60,11 +60,13 @@ ok(/svg/i.test($("#plan-plan-toit").innerHTML), "plan toiture toujours rendu apr
 const dalle = [...$("#controls").querySelectorAll("details")].find((g) => /Dalle/.test(g.querySelector("summary").textContent));
 ok(!!dalle, "groupe Dalle present");
 const dalleRanges = dalle ? dalle.querySelectorAll('input[type=range]') : [];
-ok(dalleRanges.length === 6, "6 curseurs de dalle (" + dalleRanges.length + ")");
+ok(dalleRanges.length === 8, "8 curseurs de dalle : 5 longueurs + passage vise + position (" + dalleRanges.length + ")");
+ok($("#v-passage").hidden === false && /27 cm/.test($("#v-passage-cm").textContent), "carte passage arriere : " + $("#v-passage-cm").textContent);
 ok(dalle && +dalleRanges[0].value === params.dalle_cm.avant, "curseur largeur = params.dalle_cm.avant");
 const solBefore = $("#plan-plan-sol").innerHTML;
-if (dalle) { dalleRanges[4].value = "58"; dalleRanges[4].dispatchEvent(new dom.window.Event("input")); }
+if (dalle) { dalleRanges[6].value = "62"; dalleRanges[6].dispatchEvent(new dom.window.Event("input")); }
 ok($("#v-dalle").hidden === false, "abri cale a droite : vigilance hors dalle affichee");
+ok($("#v-dalle-mur").hidden === false, "et le debord est signale contre un mur");
 ok($("#plan-plan-sol").innerHTML !== solBefore, "plan de sol redessine apres reglage de la dalle");
 
 console.log(fails ? `\n${fails} echec(s) DOM.` : "\nSmoke-test DOM OK ✓");

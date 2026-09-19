@@ -277,6 +277,15 @@ function populate(group: Vec, m: Model) {
   // Dalle reelle (pentagone si coin coupe), dessus a z=0 ; rail de pied sous les panneaux
   // (0,5 cm hors du nu exterieur : jamais coplanaire avec le bord de dalle).
   group.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0.0, -0.14), concreteMat));
+  // murs de propriete : a l'exterieur du cote de dalle (contour antihoraire -> normale exterieure a droite)
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xb9ab97, roughness: 0.95, side: THREE.DoubleSide });
+  for (const w of m.walls || []) {
+    const len = Math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1]) || 1;
+    const nx = (w.b[1] - w.a[1]) / len * w.ep_m, ny = -(w.b[0] - w.a[0]) / len * w.ep_m;
+    const wall = new THREE.Mesh(prismGeo(V, [w.a, w.b, [w.b[0] + nx, w.b[1] + ny], [w.a[0] + nx, w.a[1] + ny]], w.h_m, -0.14), wallMat);
+    wall.castShadow = true; wall.receiveShadow = true;
+    group.add(wall);
+  }
   group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 0.005), 0.06, 0.001), railMat));
   if (m.floor_m > 0) group.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, -(m.thickness_m || 0.06)), m.floor_m + 0.005, 0.002), floorMat));
 

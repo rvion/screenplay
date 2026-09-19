@@ -96,50 +96,128 @@
       }
     ],
     "dalle": {
-      "avant": 260,
-      "gauche": 306,
-      "droite_jusqu_coupe": 220,
-      "arriere_jusqu_coupe": 170,
+      "avant": 262,
+      "droite": 223,
+      "gauche": 324,
+      "arriere_gauche": 104,
+      "arriere_droite": 258,
       "decalage_cm": [
-        30,
+        2,
         2
+      ],
+      "pointe_cm": [
+        72.7,
+        398.3
       ],
       "polygone": [
         [
-          -30,
+          -2,
           -2
         ],
         [
-          230,
+          260,
           -2
         ],
         [
-          230,
-          218
+          260,
+          221
         ],
         [
-          140,
-          304
+          70.7,
+          396.3
         ],
         [
-          -30,
-          304
+          -2,
+          322
         ]
       ],
-      "coupe_cm": 124.5,
-      "marges_cm": {
-        "gauche": 30,
-        "avant": 2,
-        "droite": 30,
-        "arriere_droite": -22,
-        "arriere_gauche": 64
-      },
-      "hors_dalle_m2": 0,
-      "hors_dalle_triangle_cm": [
-        0,
-        0
+      "cotes_cm": [
+        262,
+        223,
+        258,
+        104,
+        324
       ],
-      "depasse_bbox": false
+      "cotes_noms": [
+        "avant",
+        "droite",
+        "arriere_droite",
+        "arriere_gauche",
+        "gauche"
+      ],
+      "murs": [
+        {
+          "cote": "arriere_droite",
+          "de": [
+            260,
+            221
+          ],
+          "a": [
+            70.7,
+            396.3
+          ],
+          "abri_cm": 26.8,
+          "toit_cm": 12.2
+        },
+        {
+          "cote": "arriere_gauche",
+          "de": [
+            70.7,
+            396.3
+          ],
+          "a": [
+            -2,
+            322
+          ],
+          "abri_cm": 58.8,
+          "toit_cm": 44.8
+        },
+        {
+          "cote": "gauche",
+          "de": [
+            -2,
+            322
+          ],
+          "a": [
+            -2,
+            -2
+          ],
+          "abri_cm": 2,
+          "toit_cm": 2
+        }
+      ],
+      "mur_hauteur_cm": 180,
+      "mur_epaisseur_cm": 15,
+      "passage": {
+        "cm": 26.8,
+        "cote": "arriere_droite",
+        "souhaite_cm": 45,
+        "etat": "impraticable",
+        "profondeur_max_cm": 215,
+        "segment": [
+          [
+            200,
+            240
+          ],
+          [
+            218.2,
+            259.7
+          ]
+        ]
+      },
+      "toit_touche_mur": false,
+      "degagement_toit_min_cm": 2,
+      "marges_cm": {
+        "gauche": 2,
+        "avant": 2,
+        "droite": 60,
+        "arriere_droite": 36.6,
+        "arriere_gauche": 84
+      },
+      "hors_dalle": false,
+      "hors_dalle_m2": 0,
+      "hors_dalle_polygones": [],
+      "hors_dalle_contre_mur": false
     }
   },
   "debit": {
@@ -662,25 +740,63 @@
     "roof_slope": 0.09375,
     "slab": [
       [
-        -0.3,
+        -0.02,
         -0.02
       ],
       [
-        2.3,
+        2.6,
         -0.02
       ],
       [
-        2.3,
-        2.18
+        2.6,
+        2.21
       ],
       [
-        1.4,
-        3.04
+        0.707,
+        3.963
       ],
       [
-        -0.3,
-        3.04
+        -0.02,
+        3.22
       ]
+    ],
+    "walls": [
+      {
+        "a": [
+          2.6,
+          2.21
+        ],
+        "b": [
+          0.707,
+          3.963
+        ],
+        "h_m": 1.8,
+        "ep_m": 0.15
+      },
+      {
+        "a": [
+          0.707,
+          3.963
+        ],
+        "b": [
+          -0.02,
+          3.22
+        ],
+        "h_m": 1.8,
+        "ep_m": 0.15
+      },
+      {
+        "a": [
+          -0.02,
+          3.22
+        ],
+        "b": [
+          -0.02,
+          -0.02
+        ],
+        "h_m": 1.8,
+        "ep_m": 0.15
+      }
     ],
     "gutter_face_index": 2,
     "panels": [

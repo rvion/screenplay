@@ -21,20 +21,45 @@ Emprise débords inclus (10 cm devant/derrière, 0 sur les côtés) : 200 × 260
 (`emprise_debords_m2`).
 
 ## Dalle réelle (`dalle_cm`) et partie hors dalle
-Dalle = pentagone `(0,0) (dA,0) (dA,dD) (dB,dG) (0,dG)` dans son propre repère ; l'abri est posé
-avec son coin avant-gauche en `decalage_cm = (ox, oy)`. Coin coupé de largeur `cw = dA − dB` et
-profondeur `ch = dG − dD`.
-Avec `uA = clamp((ox+A−dB)/cw)`, `vG = clamp((oy+G−dD)/ch)` et `t = max(0, uA+vG−1)`, le
-triangle de l'emprise hors dalle (au coin arrière-droit de l'abri) a pour côtés `t·cw × t·ch`.
+La dalle est un **pentagone à pointe arrière**, décrit par les **5 longueurs relevées au mètre** :
+`avant`, `droite`, `gauche`, `arriere_gauche` (petit pan, du haut du côté gauche à la pointe),
+`arriere_droite` (grand pan, de la pointe au haut du côté droit). Hypothèse : les deux angles
+avant sont droits. Dans le repère de la dalle :
+```
+(0,0) → (avant,0) → R = (avant, droite) → P (pointe) → L = (0, gauche)
+```
+La pointe `P` se trouve par **triangulation** depuis `L` et `R` : avec `d = |LR|`,
+`a = (ag² − ad² + d²) / 2d`, `h = √(ag² − a²)`, `P = L + a·u + h·n` (`u` = unitaire `L→R`,
+`n` = normale côté arrière). Si les longueurs ne ferment pas le triangle (`ag + ad < d` ou
+`|ag − ad| > d`), `a` est borné à `[0, d]` et `h = 0` : la dalle devient un quadrilatère, jamais
+une erreur. L'abri est posé avec son coin avant-gauche en `decalage_cm = (ox, oy)`.
 
-**Valeurs par défaut (2026-09-19)** : mesurés `dA = 260`, `dD = 220` ; déduits en conservant la
-coupe 90 × 86 : `dG = 306`, `dB = 170` (à vérifier au mètre). `(ox, oy) = (30, 2)` ⇒ abri centré
-en largeur (30 cm de dalle de chaque côté), 2 cm devant. `uA = 0,667`, `vG = 0,256` ⇒ `t = 0`,
-**rien hors dalle** ; au droit du mur D la dalle s'arrête à `y = 248,7`, soit 6,7 cm derrière le
-mur B. Calé à droite (`ox = 58`), un triangle de 21 × 20 cm sortirait de la dalle.
-Garde-fous de `compute.ts` : `dB` est borné à `[0, dA]` et `dD` à `[0, dG]` (un curseur du site
-ne peut pas retourner le polygone).
-(Ancien relevé 230 × 246 / 160 / 140 avec l'abri au coin : 54 × 51 cm hors dalle pour 200 × 240.)
+**Hors dalle** = aire de l'emprise − aire de (emprise ∩ dalle), par découpage de polygone
+(Sutherland–Hodgman), valable pour tout débord (arrière, côtés, avant). Pour le dessin, chaque
+côté de la dalle donne la partie de l'emprise située au-delà (`hors_dalle_polygones`).
+`marges_cm` : gauche, avant, droite, et derrière chacun des deux coins arrière de l'abri
+(distance jusqu'au bord de dalle, négative = hors dalle).
+
+**Relevé du 2026-09-19** : avant **262**, droite **223**, gauche **324**, petit pan **104**,
+grand pan **258** ⇒ pointe `P ≈ (72,7 ; 398,3)`. Mesure de contrôle : **260** de large à hauteur
+du coin droit (2 cm de moins que devant : côtés quasi parallèles, négligé).
+`(ox, oy) = (2, 2)` ⇒ l'abri **longe le mur gauche** (2 cm), 2 cm devant ; **rien hors dalle**.
+Calé à droite (`ox = 62`), le coin arrière-droit traverserait le mur du fond de ~19 cm.
+
+### Murs de propriété et passage arrière
+`murs_mitoyens = [gauche, arriere_gauche, arriere_droite]` : ces côtés de la dalle **sont** le mur
+de propriété, infranchissables. L'avant et la droite donnent sur le jardin. Pour chaque mur,
+`abri_cm` / `toit_cm` = distance (perpendiculaire à la droite du mur) du coin le plus proche de
+l'abri / du toit (débords + `toit.gouttiere_largeur_cm` à l'arrière) ; négatif = ça traverse.
+
+**Passage arrière** (`dalle.passage`) : on atteint l'arrière de l'abri par la droite, en longeant
+le grand pan (258). La pince est au coin arrière-droit de l'abri `(ox+A, oy+G)`. Le grand pan a
+pour pente `175,3 / 189,3` ; au droit de `x = 202` il passe à `y = 278,6`, soit 36,6 cm derrière
+le coin, × `189,3/258` ⇒ **26,8 cm** pour 200 × 240 : *impraticable* (< 35 ; 35–50 = de profil ;
+≥ 50 = praticable). `profondeur_max_cm` = plus grand `G` qui garde `passage_souhaite_cm` (45 par
+défaut) à largeur `A` donnée, par dichotomie : **215** pour A = 200. Repères : 200 × 215 ⇒ 45 cm ;
+200 × 200 ⇒ 56 cm (et 4 faces en panneaux entiers). Derrière l'abri, côté gauche, il reste
+324 − 242 = 82 cm jusqu'au haut du côté gauche, puis la pointe.
 
 ## Hauteurs et rehausse
 - `h(y) = H + c·(1 − y/G) = 215 + 22,5·(1 − y/240)` : avant **237,5**, arrière **215**.

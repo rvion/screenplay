@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin rectangulaire en panneaux sandwich 60 mm autoportants." />
-  <link rel="stylesheet" href="style.css?v=0e3a5a02" />
+  <link rel="stylesheet" href="style.css?v=a5c4cf34" />
   <script type="importmap">
   {
     "imports": {
@@ -64,7 +64,7 @@
     <section id="modele">
       <h2>Modèle 3D</h2>
       <div id="viewer"></div>
-      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer. Les traits gris sont les joints de panneaux ; la dalle dessinée est la vraie (coin coupé).</p>
+      <p class="viewer-hint">Glissez pour pivoter · molette pour zoomer · clic droit pour déplacer. Les traits gris sont les joints de panneaux ; la dalle dessinée est la vraie (pointe arrière).</p>
     </section>
 
     <section id="config">
@@ -173,11 +173,25 @@
     <section id="vigilance">
       <h2>Points de vigilance</h2>
       <div class="card warn" id="v-dalle" hidden>
-        <h3>🧱 Coin arrière-droit hors dalle</h3>
-        <p>La dalle réelle a un coin coupé : avec cette emprise, un triangle de
-        <b><span id="v-dalle-tri"></span></b> déborde de la dalle au coin arrière-droit. Deux options :
-        <b>compléter la dalle</b> (petit coulage ou plots) sous ce coin, ou <b>réduire la profondeur</b>
-        (G) pour tenir sur la partie pleine. Avec 200 × 240 le triangle est petit : le combler.</p>
+        <h3>🧱 L'abri dépasse de la dalle</h3>
+        <p>La dalle réelle se termine en pointe à l'arrière : avec cette emprise et cette position,
+        <b><span id="v-dalle-tri"></span></b> de l'abri repose hors de la dalle (hachuré en rouge sur le
+        plan de sol). Trois options : <b>déplacer l'abri</b> sur la dalle (réglages « Dalle »),
+        <b>réduire la profondeur</b> (G), ou <b>compléter la dalle</b> (petit coulage ou plots) sous
+        la partie qui dépasse.</p>
+        <p id="v-dalle-mur" hidden><b>Attention :</b> ce côté de la dalle longe le mur de propriété.
+        Compléter la dalle y est impossible : il faut déplacer ou réduire l'abri.</p>
+      </div>
+      <div class="card warn" id="v-passage" hidden>
+        <h3>🚶 Passage derrière l'abri</h3>
+        <p>La dalle longe le mur de propriété à gauche et au fond. L'abri longe le mur gauche
+        (<b><span id="v-passage-gauche"></span></b>) ; pour atteindre l'arrière il reste une bande le
+        long du grand pan du fond, large de <b><span id="v-passage-cm"></span></b> au point le plus
+        étroit (coin arrière-droit de l'abri) : <b><span id="v-passage-etat"></span></b>.</p>
+        <p>Pour garder <b><span id="v-passage-souhaite"></span> cm</b> de passage avec cette largeur
+        d'abri, la profondeur maximale est <b><span id="v-passage-gmax"></span> cm</b> (actuelle :
+        <span id="v-passage-g"></span> cm). Débord de toit et gouttière arrière compris, il reste
+        <b><span id="v-passage-toit"></span></b> entre le toit et le mur.</p>
       </div>
       <div class="card warn">
         <h3>📐 Seuil des 5 m² (formalités)</h3>
@@ -227,7 +241,7 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="params.js?v=0e3a5a02"></script>
-  <script type="module" src="app.js?v=0e3a5a02"></script>
+  <script src="params.js?v=a5c4cf34"></script>
+  <script type="module" src="app.js?v=a5c4cf34"></script>
 </body>
 </html>

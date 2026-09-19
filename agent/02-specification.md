@@ -10,12 +10,18 @@
 ## Géométrie (voir `04-geometrie.md`)
 - Emprise **rectangulaire** `A × G` (`emprise_cm.avant_A`, `emprise_cm.gauche_G`).
 - Sommets : `FL=(0,0)`, `FR=(A,0)`, `BR=(A,G)`, `BL=(0,G)`.
-- `dalle_cm` décrit la dalle **réelle** (pentagone à coin coupé). Elle ne pilote pas le bâtiment :
-  elle sert à calculer la **partie de l'emprise hors dalle** (triangle au coin arrière-droit),
-  affichée sur le plan de sol, en 3D et en vigilance. Quatre cotes (`avant`, `gauche`,
-  `droite_jusqu_coupe`, `arriere_jusqu_coupe`) + `decalage_cm` (position de l'abri sur la dalle),
-  toutes réglables sur le site. `compute.ts` borne la coupe (`arriere ≤ avant`,
-  `droite ≤ gauche`) pour qu'aucun réglage ne retourne le polygone.
+- `dalle_cm` décrit la dalle **réelle** par les **5 longueurs relevées au mètre** (`avant`,
+  `droite`, `gauche`, `arriere_gauche`, `arriere_droite`) + `decalage_cm` (position de l'abri sur
+  la dalle). La pointe arrière est trouvée par triangulation. Elle ne pilote pas le bâtiment :
+  elle sert à calculer la **partie de l'emprise hors dalle** (découpage de polygone, tout débord
+  compte), affichée sur le plan de sol, en 3D et en vigilance. Tout est réglable sur le site ;
+  des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.
+- `dalle_cm.murs_mitoyens` : côtés qui sont le **mur de propriété** (gauche + les deux pans du
+  fond). Dessinés en trait brun épais sur le plan et en volume en 3D (`mur_hauteur_cm`,
+  hypothèse à mesurer). `dalle.passage` = largeur de la bande entre l'abri et le mur du fond au
+  point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
+  garde `passage_souhaite_cm`. Carte **Passage derrière l'abri** en vigilance. Un débord hors
+  dalle contre un mur est signalé comme impossible à combler.
 
 ## Murs — tous rectangulaires
 - Panneaux sandwich **verticaux**, largeur utile `panneau.largeur_utile_cm`, hauteur unique
@@ -78,7 +84,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 |---|---|
 | `site/params.js` | `window.SHED_PARAMS` : cotes par défaut (marche en `file://`) |
 | `site/data/derived.json` | géométrie + débit + achats + budget + modèle 3D en JSON |
-| `site/assets/plan-sol.svg` | plan de sol coté, dalle réelle en pointillé avec ses 4 cotes en gris, triangle hors dalle hachuré |
+| `site/assets/plan-sol.svg` | plan de sol coté, dalle réelle en pointillé avec ses 5 cotes en gris, partie hors dalle hachurée |
 | `site/assets/plan-toit.svg` | plan de toiture (panneaux, sens d'écoulement, rampant) |
 | `site/assets/plan-rehausse.svg` | **plan de coupe de la rehausse** : madrier coupé en diagonale + madrier droit (ou bande de panneau) |
 | `site/assets/facade-{A,D,B,G}.svg` | élévations : rectangles de mur + joints + rehausse + porte |
@@ -92,7 +98,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
   (60 mm fixé).
 - Tout est recalculé en direct (pas de chiffre en dur, pas de `fetch`). Dégrade proprement sans
   WebGL (message + plans).
-- 3D : dalle réelle (coin coupé visible), rail, murs percés, **chaque panneau dessiné avec ses
+- 3D : dalle réelle (pointe arrière visible), rail, murs percés, **chaque panneau dessiné avec ses
   bords sombres et son étiquette imprimée au centre** (A1, A2, D1… ; R1 bandeau, R2/R3 triangles ;
   T1… toiture), porte + fenêtre vitrées, toit débordant nervuré, gouttière B.
 - **Étiquettes de pièces** : les mêmes ids apparaissent sur les élévations, le plan de toiture, le
