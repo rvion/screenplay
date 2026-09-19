@@ -38,6 +38,37 @@ ok(m.toit.gouttiere.descente[1] === Math.max(m.toit.gouttiere.de[1], m.toit.gout
 ok(["modele-sol", "modele-toit", "modele-rehausse", "modele-facade-A", "modele-facade-D", "modele-facade-B", "modele-facade-G"].every((k) => core.svg[k] && core.svg[k].startsWith("<svg")), "7 plans du modele generes");
 ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol : interieur = aire interieure de l'option");
 
+// sieges : chacun touche son bureau, reste dans l'interieur, ne chevauche ni bureau ni autre siege
+{
+  const { clip_convex, inset_ordre } = await import(pathToFileURL(out).href);
+  const ep = base.panneau.epaisseur_mm / 10, I = inset_ordre(v.polygone, ep);
+  const dedans = (z) => I.every((a, i) => { const b = I[(i + 1) % I.length]; return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -0.2 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
+  ok(v.sieges.length === base.disposition_trapeze.sieges.length && v.sieges.every((s) => s.tient), "tous les sieges trouvent leur place");
+  ok(v.sieges.every((s) => s.polygone.every(dedans)), "sieges dans l'interieur");
+  ok(v.sieges.every((s) => v.bureaux.every((b) => poly_area(clip_convex(s.polygone, b.polygone)) < 2)), "aucun siege sur un bureau");
+  ok(poly_area(clip_convex(v.sieges[0].polygone, v.sieges[1].polygone)) < 1, "les sieges ne se chevauchent pas");
+  ok(v.sieges.every((s) => { const b = v.bureaux.find((x) => x.cote === s.contre); return s.polygone.slice(0, 2).every((z) => b.polygone.some((w, i) => { const u = b.polygone[(i + 1) % b.polygone.length], L = Math.hypot(u[0] - w[0], u[1] - w[1]); return Math.abs((u[0] - w[0]) * (z[1] - w[1]) - (u[1] - w[1]) * (z[0] - w[0])) / L < 0.3; })); }), "chaque siege touche le bord de son bureau");
+  ok(core.svg["modele-sol"].includes("fauteuil de bureau") && core.svg["modele-sol"].includes("tab."), "plan de sol : fauteuil et tabouret dessines");
+}
+
+// lit pliant : dans l'interieur, hors des bureaux et de l'acces a la porte
+{
+  const { clip_convex, inset_ordre } = await import(pathToFileURL(out).href);
+  const lp = v.lit_pliant, I = inset_ordre(v.polygone, base.panneau.epaisseur_mm / 10);
+  const dedans = (z) => I.every((a, i) => { const b = I[(i + 1) % I.length]; return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -0.2 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
+  ok(lp && lp.tient && lp.polygone.every(dedans), "lit pliant dans l'interieur");
+  ok(base.disposition_trapeze.lit_pliant.sous_bureau || v.bureaux.every((b) => poly_area(clip_convex(lp.polygone, b.polygone)) < 2), "lit pliant hors des bureaux, sauf sous_bureau");
+  // controle : un lit court tient sur le sol libre, sans passer sous un bureau
+  const court = JSON.parse(JSON.stringify(base)); court.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 150, acces_porte_cm: 60, sous_bureau: true };
+  const lc = buildCore(court).variantes.find((x) => x.id === 13).lit_pliant;
+  ok(lc.tient && lc.sous_bureau_cm2 === 0, "lit de 150 : sur le sol libre, rien sous les bureaux");
+  const sans = JSON.parse(JSON.stringify(base)); sans.disposition_trapeze.lit_pliant.sous_bureau = false;
+  ok(!buildCore(sans).variantes.find((x) => x.id === 13).lit_pliant.tient, "lit de 180 sans passer sous un bureau : ne tient pas (signale)");
+  const L = [0, 1, 2].map((i) => Math.hypot(lp.polygone[i + 1][0] - lp.polygone[i][0], lp.polygone[i + 1][1] - lp.polygone[i][1]));
+  ok(near(L[0], lp.longueur_cm, 0.2) && near(L[1], lp.largeur_cm, 0.2), "lit pliant aux bonnes dimensions");
+  ok(core.svg["modele-sol"].includes("lit pliant"), "plan de sol : lit pliant dessine");
+}
+
 const { abri_md } = await import(pathToFileURL(out).href);
 const page = abri_md(base, core);
 ok(["modele-sol", "modele-toit", "modele-rehausse", "modele-facade-A", "modele-facade-D", "modele-facade-B", "modele-facade-G"].every((k) => page.includes(`site/assets/${k}.svg`)), "abri.md inclut les 7 plans");

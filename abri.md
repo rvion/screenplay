@@ -18,6 +18,9 @@
 | fenêtre fixe | 80 × 110, allège 95, face A de 110 à 190 cm |
 | bureau gauche | 60 × 297,3 cm |
 | bureau avant | 50 × 206 cm |
+| fauteuil de bureau | 70 × 70 cm, devant le bureau gauche |
+| tabouret | 30 × 30 cm, devant le bureau avant |
+| lit pliant (déplié, pointillé) | 65 × 180 cm, le pied passe sous le bureau (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit), on range les sièges pour le déplier |
 | rehausse | 4 pièces, 2 madriers 75 × 300 |
 
 > Toit **vers l'arrière**, chute **30 cm** : choix par défaut, à confirmer (`disposition_trapeze.toit`).

@@ -329,6 +329,8 @@
 | bureau gauche | | 60 cm de profondeur sur 297,3 cm |
 | bureau avant | | 50 cm de profondeur sur 206 cm |
 | sol libre | | **2,41 m²** (bureaux 2,4 m²) |
+| fauteuil de bureau | | 70 × 70 cm devant le bureau gauche |
+| tabouret | | 30 × 30 cm devant le bureau avant |
 
 - ✅ pleine largeur et la plus grande surface des trapèzes, avec le passage voulu derrière
 - ✅ porte sur le côté droit : bureau en L sur tout le mur gauche et toute la façade

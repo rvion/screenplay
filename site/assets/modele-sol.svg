@@ -6,6 +6,14 @@
 <text x="177.6" y="440.0" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold" transform="rotate(-90 177.6 440.0)">bureau 60 × 297.3</text>
 <polygon points="129.6,663.0 459.2,663.0 459.2,583.0 129.6,583.0" fill="#e6c79c" stroke="#9a7040" stroke-width="1"/>
 <text x="294.4" y="623.0" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold">bureau 50 × 206</text>
+<polygon points="225.6,394.0 225.6,506.0 337.6,506.0 337.6,394.0" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
+<text x="281.6" y="446.0" text-anchor="middle" fill="#44445a" font-size="10" font-weight="bold">fauteuil de bureau</text>
+<text x="281.6" y="460.0" text-anchor="middle" fill="#44445a" font-size="9" font-weight="normal">70 × 70</text>
+<polygon points="318.4,583.0 366.4,583.0 366.4,535.0 318.4,535.0" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
+<text x="342.4" y="562.0" text-anchor="middle" fill="#44445a" font-size="8" font-weight="bold">tab.</text>
+<polygon points="225.6,314.2 225.6,602.2 329.6,602.2 329.6,314.2" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
+<text x="277.6" y="346.7" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit pliant 65 × 180</text>
+<text x="277.6" y="359.7" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
 <polygon points="136.0,672.6 264.0,672.6 264.0,663.0 136.0,663.0" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <polygon points="296.0,672.6 424.0,672.6 424.0,663.0 296.0,663.0" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <line x1="120.0" y1="676.6" x2="120.0" y2="704.6" stroke="#aaa" stroke-width="0.7"/>
@@ -101,9 +109,8 @@
 <text x="447.2" y="581.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(-90.0 447.2 581.6)">int. 169.5</text>
 <text x="354.0" y="340.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(31.8 354.0 340.6)">int. 242.4</text>
 <text x="141.6" y="591.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(90.0 141.6 591.6)">int. 297.3</text>
-<text x="324.4" y="465.4" text-anchor="middle" fill="#2b5d8a" font-size="14" font-weight="bold">intérieur 4.81 m²</text>
-<text x="324.4" y="483.4" text-anchor="middle" fill="#2a8a4a" font-size="12" font-weight="bold">sol libre 2.41 m²</text>
 <text x="294.4" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · murs 5.37 m² · intérieur 4.81 m²</text>
-<text x="294.4" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 65 ouvrant dehors · fenêtres en façade (bleu)</text>
+<text x="294.4" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 65 ouvrant dehors · fenêtres en façade (bleu) · sol libre hors bureaux 2.41 m²</text>
+<text x="294.4" y="60.0" text-anchor="middle" fill="#6a3d9a" font-size="11" font-weight="normal">violet pointillé = lit pliant déplié (on range fauteuil et tabouret)</text>
 <text x="294.4" y="780.6" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (jardin)</text>
 </svg>

@@ -114,5 +114,9 @@ en biais 256,6, **G** gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.
 - **Toit** : contour = murs + débords (avant 10, fond 10, côtés 0) ; panneaux dans le sens de la
   pente : T1 100 × 337,4, T2 100 × 275,1, T3 18 × 212,7 (longueurs = rampant) ; 5,85 m² couverts.
   Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).
+- **Sièges et lit** : fauteuil 70 × 70 contre le bureau gauche (y 109 → 179), tabouret 30 × 30
+  contre le bureau de façade. Sur le sol libre, un lit de 65 de large tient jusqu'à **~165** de long
+  (le fond en biais limite, pas l'accès à la porte) ; le lit pliant 65 × 180 tient le long du
+  bureau gauche, le pied **12 cm sous le bureau de façade**, fauteuil et tabouret rangés.
 - **Porte** : ouverture 65 × 205 sur D, de 100,5 à 165,5 ; chambranle 5 ; cadre à 5 cm de la face
   intérieure du mur du fond et 5 cm sous le haut du mur.

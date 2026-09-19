@@ -877,6 +877,64 @@ function variantes(p, g) {
     }).filter(Boolean);
     let occ = v.bureaux.reduce((s, b) => s + poly_area(b.brut), 0);
     for (let i = 0; i < v.bureaux.length; i++) for (let j = i + 1; j < v.bureaux.length; j++) occ -= poly_area(clip_convex(v.bureaux[i].brut, v.bureaux[j].brut));
+    const dedans_int = (z) => inter.every((a, i) => {
+      const b = inter[(i + 1) % inter.length];
+      return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -1e-6;
+    });
+    const poses = [];
+    v.sieges = (disp.sieges || []).map((st) => {
+      const bu = v.bureaux.find((b) => b.cote === st.contre);
+      if (!bu) return null;
+      const i = v.noms_cotes.indexOf(bu.cote), a = r[i], c = r[(i + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]);
+      const ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux, e = ep + bu.profondeur_cm, W = +st.largeur_cm, Dp = +st.profondeur_cm;
+      const carre = (s) => [[a[0] + ux * s + nx * e, a[1] + uy * s + ny * e], [a[0] + ux * (s + W) + nx * e, a[1] + uy * (s + W) + ny * e], [a[0] + ux * (s + W) + nx * (e + Dp), a[1] + uy * (s + W) + ny * (e + Dp)], [a[0] + ux * s + nx * (e + Dp), a[1] + uy * s + ny * (e + Dp)]];
+      const libre = (s) => {
+        const q2 = carre(s);
+        return q2.every(dedans_int) && [...v.bureaux.filter((b) => b !== bu).map((b) => b.brut), ...poses].every((o) => poly_area(clip_convex(q2, o)) < 1);
+      };
+      let run = null, cur = null;
+      for (let s = 0; s <= l; s += 1) {
+        if (libre(s)) {
+          cur = cur ? [cur[0], s] : [s, s];
+          if (!run || cur[1] - cur[0] > run[1] - run[0]) run = [...cur];
+        } else cur = null;
+      }
+      if (!run) return { type: st.type, largeur_cm: W, profondeur_cm: Dp, contre: st.contre, tient: false, polygone: [] };
+      const s0 = typeof st.position === "number" ? Math.min(run[0] + +st.position, run[1]) : st.position === "debut" ? run[0] : st.position === "fin" ? run[1] : (run[0] + run[1]) / 2;
+      const q = carre(Math.round(s0));
+      poses.push(q);
+      return { type: st.type, largeur_cm: W, profondeur_cm: Dp, contre: st.contre, tient: true, debut_cm: Math.round(s0), polygone: q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+    }).filter(Boolean);
+    if (disp.lit_pliant) {
+      const LW = +disp.lit_pliant.largeur_cm, LL = +disp.lit_pliant.longueur_cm;
+      const acces = [];
+      if (v.porte) {
+        const k = v.porte.cote, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
+        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm || 60);
+        acces.push([[a[0] + ux * s0, a[1] + uy * s0], [a[0] + ux * s1, a[1] + uy * s1], [a[0] + ux * s1 + nx * pr, a[1] + uy * s1 + ny * pr], [a[0] + ux * s0 + nx * pr, a[1] + uy * s0 + ny * pr]]);
+      }
+      const sous2 = !!disp.lit_pliant.sous_bureau;
+      const fixes = sous2 ? acces : [...v.bureaux.map((b) => b.brut), ...acces];
+      const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
+      const angles = [0, 90, ...r.map((a, i) => {
+        const c = r[(i + 1) % r.length];
+        return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI;
+      })];
+      let best2 = null;
+      for (const deg of angles) {
+        const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
+        for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2) {
+          const q = [[x, y], [x + ca * LL, y + sa * LL], [x + ca * LL - sa * LW, y + sa * LL + ca * LW], [x - sa * LW, y + ca * LW]];
+          if (!q.every(dedans_int)) continue;
+          if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
+          const dessous = sous2 ? v.bureaux.reduce((s, b) => s + poly_area(clip_convex(q, b.brut)), 0) : 0;
+          const gene = poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
+          const cout = dessous * 1e3 + gene;
+          if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, deg };
+        }
+      }
+      v.lit_pliant = best2 ? { largeur_cm: LW, longueur_cm: LL, tient: true, gene_sieges_m2: rnd(best2.gene / 1e4, 2), sous_bureau_cm2: rnd(best2.dessous, 0), polygone: best2.q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) } : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
+    }
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd(occ / 1e4, 2);
     v.sol_libre_m2 = rnd((poly_area(inter) - occ) / 1e4, 2);
@@ -1003,6 +1061,21 @@ function variante_svg(v, P, scale) {
     const vertical = bu.cote.startsWith("gauche") || bu.cote.startsWith("droite");
     svg += `<text x="${f1(pc[0])}" y="${f1(pc[1])}" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="11" font-weight="bold"${vertical ? ` transform="rotate(-90 ${f1(pc[0])} ${f1(pc[1])})"` : ""}>bureau ${fz(bu.profondeur_cm)} \xD7 ${fz(bu.longueur_cm)}</text>
 `;
+  }
+  for (const st of v.sieges || []) {
+    if (!st.tient) continue;
+    svg += poly(st.polygone.map(P), "#dcdce6", "#55556a", 1.2);
+    const c2 = P([st.polygone.reduce((s, z) => s + z[0], 0) / 4, st.polygone.reduce((s, z) => s + z[1], 0) / 4]);
+    svg += text(c2[0], c2[1] - (st.largeur_cm >= 50 ? 4 : -3), st.largeur_cm >= 50 ? st.type : "tab.", "middle", "#44445a", st.largeur_cm >= 50 ? 10 : 8, "bold");
+    if (st.largeur_cm >= 50) svg += text(c2[0], c2[1] + 10, `${fz(st.largeur_cm)} \xD7 ${fz(st.profondeur_cm)}`, "middle", "#44445a", 9);
+  }
+  if (v.lit_pliant && v.lit_pliant.tient) {
+    const lp = v.lit_pliant;
+    svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
+    const [q0, q1, q2, q3] = lp.polygone;
+    const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
+    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   q.forEach((a, i) => {
     const b = q[(i + 1) % n], pa = P(a), pb = P(b);
@@ -1514,10 +1587,25 @@ function modele_sol_svg(p, v, m) {
   svg += poly(m.interieur.map(P), "#fbfbf8", "#2b5d8a", 1.2);
   for (const b of v.bureaux || []) {
     svg += poly(b.polygone.map(P), "#e6c79c", "#9a7040", 1);
-    const c2 = b.polygone.reduce((s, z) => [s[0] + z[0] / b.polygone.length, s[1] + z[1] / b.polygone.length], [0, 0]), pc = P(c2);
+    const c = b.polygone.reduce((s, z) => [s[0] + z[0] / b.polygone.length, s[1] + z[1] / b.polygone.length], [0, 0]), pc = P(c);
     const vert = b.cote.startsWith("gauche");
     svg += `<text x="${f1(pc[0])}" y="${f1(pc[1])}" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold"${vert ? ` transform="rotate(-90 ${f1(pc[0])} ${f1(pc[1])})"` : ""}>bureau ${fz(b.profondeur_cm)} \xD7 ${fz(b.longueur_cm)}</text>
 `;
+  }
+  for (const st of v.sieges || []) {
+    if (!st.tient) continue;
+    svg += poly(st.polygone.map(P), "#dcdce6", "#55556a", 1.2);
+    const c = P([st.polygone.reduce((s, z) => s + z[0], 0) / 4, st.polygone.reduce((s, z) => s + z[1], 0) / 4]);
+    svg += text(c[0], c[1] - (st.largeur_cm >= 50 ? 4 : -3), st.largeur_cm >= 50 ? st.type : "tab.", "middle", "#44445a", st.largeur_cm >= 50 ? 10 : 8, "bold");
+    if (st.largeur_cm >= 50) svg += text(c[0], c[1] + 10, `${fz(st.largeur_cm)} \xD7 ${fz(st.profondeur_cm)}`, "middle", "#44445a", 9);
+  }
+  if (v.lit_pliant && v.lit_pliant.tient) {
+    const lp = v.lit_pliant;
+    svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
+    const [q0, q1, q2, q3] = lp.polygone;
+    const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
+    svg += text(tete[0], tete[1] - 2, `lit pliant ${fz(lp.largeur_cm)} \xD7 ${fz(lp.longueur_cm)}`, "middle", "#6a3d9a", 10, "bold");
+    if (lp.sous_bureau_cm2 > 0) svg += text(tete[0], tete[1] + 11, "pied sous le bureau", "middle", "#6a3d9a", 9);
   }
   m.faces.forEach((f, i) => {
     const a = q[i], b = q[(i + 1) % n], L = f.longueur_cm, ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
@@ -1564,11 +1652,9 @@ function modele_sol_svg(p, v, m) {
     svg += `<text x="${f1(mpt[0])}" y="${f1(mpt[1])}" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(${f1(rot)} ${f1(mpt[0])} ${f1(mpt[1])})">int. ${fz(rnd(L, 1))}</text>
 `;
   });
-  const c = P([q.reduce((s, z) => s + z[0], 0) / n, q.reduce((s, z) => s + z[1], 0) / n]);
-  svg += text(c[0] + 30, c[1] - 10, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", "#2b5d8a", 14, "bold");
-  if (v.sol_libre_m2 != null) svg += text(c[0] + 30, c[1] + 8, `sol libre ${v.sol_libre_m2} m\xB2`, "middle", "#2a8a4a", 12, "bold");
   svg += text(W / 2, 26, `Plan de sol \xB7 murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `murs ${fz(+p.panneau.epaisseur_mm / 10)} cm \xB7 porte ${fz(v.porte.largeur_cm)} ouvrant dehors \xB7 fen\xEAtres en fa\xE7ade (bleu)`, "middle", "#888", 11);
+  svg += text(W / 2, 44, `murs ${fz(+p.panneau.epaisseur_mm / 10)} cm \xB7 porte ${fz(v.porte.largeur_cm)} ouvrant dehors \xB7 fen\xEAtres en fa\xE7ade (bleu)${v.sol_libre_m2 != null ? ` \xB7 sol libre hors bureaux ${v.sol_libre_m2} m\xB2` : ""}`, "middle", "#888", 11);
+  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, "violet pointill\xE9 = lit pliant d\xE9pli\xE9 (on range fauteuil et tabouret)", "middle", "#6a3d9a", 11);
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
