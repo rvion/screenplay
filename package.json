@@ -22,7 +22,7 @@
     "@types/node": "^22.20.0",
     "esbuild": "^0.23.1",
     "jsdom": "^25.0.1",
-    "rvlib-shipkit": "^0.36.0",
+    "rvlib-shipkit": "^0.38.1",
     "typescript": "^5.5.4"
   },
   "rvt": {

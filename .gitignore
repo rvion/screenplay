@@ -1,6 +1,9 @@
 node_modules/
 scripts/build.mjs
 build/
+tsconfig.tsbuildinfo
+# npm repo (package-lock.json is the lock), bun only runs the toolkit
+bun.lock
 # machine-local permission allowlist (CLAUDE.local.md is in the shipkit block below)
 .claude/settings.local.json
 
