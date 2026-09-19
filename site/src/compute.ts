@@ -779,6 +779,21 @@ export function variantes(p: Params, g: any) {
     for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (poly_area(pivot(m)) <= seuil * 1e4) lo = m; else hi = m; }
     const h11 = Math.floor(lo);
     out.push(forme(11, `trapèze pivoté, plafonné à ${fz(seuil)} m²`, `le trapèze 9, coin arrière droit abaissé à ${h11} : sous ${fz(seuil)} m², passage arrière élargi`, pivot(h11)));
+    // 12. coin coupe au module : mur du fond = i modules, mur gauche = j modules (les deux murs
+    // contre la propriete, sans recoupe), facade pleine largeur, pan coupe parallele au grand pan
+    const pente_pan = (Z[3][1] - HD[1]) / (HD[0] - Z[3][0]);      // montee du grand pan vers la gauche
+    const au_module = (i: number, j: number): Pt[] | null => {
+      const C: Pt = [x0 + i * mod, y0 + j * mod];
+      if (C[0] >= x1 - 1e-6 || !dedans(C)) return null;
+      const yd = C[1] - (x1 - C[0]) * pente_pan;                  // ou le pan coupe rejoint le mur droit
+      return yd > y0 + 1 ? [[x0, y0], [x1, y0], [x1, yd], C, [x0, C[1]]] : null;
+    };
+    let m12: { q: Pt[]; i: number; j: number } | null = null;
+    for (let i = 1; i * mod < x1 - x0; i++) for (let j = 1; j < 20; j++) {
+      const q = au_module(i, j);
+      if (q && poly_area(q) <= seuil * 1e4 && (!m12 || poly_area(q) > poly_area(m12.q))) m12 = { q, i, j };
+    }
+    if (m12) out.push(forme(12, "coin coupé au module", `l'option 1 élargie à toute la façade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz(mod)} sans recoupe, pan coupé parallèle au grand pan`, m12.q));
   }
   return out.sort((a, b) => a.id - b.id);
 }
@@ -1278,6 +1293,7 @@ const AVIS: Record<number, [string[], string[]]> = {
   8: [["la plus grande surface possible avec 4 murs"], ["mur gauche en biais : un coin perdu en long contre le mur de propriété", "deux angles aigus, difficiles à meubler"]],
   9: [["4 murs, un seul en biais, deux angles droits côté porte", "toit simple : un seul bord en biais"], ["au-dessus du seuil", "angle aigu au fond à gauche"]],
   10: [["sous le seuil, même forme que l'option 9"], ["façade plus étroite", "aucun gain de passage : même pince que l'option 9"]],
+  12: [["mur gauche et mur du fond en panneaux entiers : aucune recoupe sur les deux murs contre la propriété, inaccessibles après montage", "sous le seuil, même intérieur que le 200 × 240 d'origine", "façade pleine largeur : porte et fenêtre côté jardin", "que des angles droits ou obtus, pan coupé court", "le pan coupé tombe sous la bande de toit déjà recoupée : une seule coupe de toit en biais"], ["5 murs et 2 angles obtus : profils d'angle pliés sur mesure", "3 bandes de panneau à recouper (façade, mur droit, pan coupé), tirées de 2 panneaux", "gouttière arrière arrêtée avant le pan coupé"]],
   11: [["sous le seuil sans perdre de largeur de façade", "le passage arrière le plus large des trapèzes"], ["mur droit court : peu de place pour une fenêtre à droite", "angle aigu au fond à gauche, un peu plus fermé que l'option 9"]],
 };
 
@@ -1303,6 +1319,7 @@ export function variantes_md(p: Params, core: any): string {
   md += `![dalle et zone utile](site/assets/plan-dalle-bandes.svg)\n\n`;
   md += `## En bref\n\n`;
   md += `- **Le plus simple** : option 1, panneaux entiers, angles droits.\n`;
+  if (vs.some((v: any) => v.id === 12)) md += `- **Le meilleur compromis sous le seuil** : option 12, l'option 1 élargie à toute la façade avec un seul coin coupé.\n`;
   md += `- **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.\n`;
   md += `- **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.\n\n`;
   md += `## Comparatif\n\n`;

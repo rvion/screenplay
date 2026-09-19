@@ -17,6 +17,7 @@
 ## En bref
 
 - **Le plus simple** : option 1, panneaux entiers, angles droits.
+- **Le meilleur compromis sous le seuil** : option 12, l'option 1 élargie à toute la façade avec un seul coin coupé.
 - **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.
 - **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.
 
@@ -35,6 +36,7 @@
 | [9](#option-9) | trapèze, mur arrière en biais | 5,25 m² | **4,7 m²** | 4 | 54 cm | 53,5 cm | non |
 | [10](#option-10) | trapèze plafonné à 5 m² | 5 m² | **4,46 m²** | 4 | 54 cm | 53,5 cm | oui |
 | [11](#option-11) | trapèze pivoté, plafonné à 5 m² | 5 m² | **4,46 m²** | 4 | 70,8 cm | 53,5 cm | oui |
+| [12](#option-12) | coin coupé au module | 4,81 m² | **4,3 m²** | 5 | 47,2 cm | 119,6 cm | oui |
 
 ## Option 1
 
@@ -264,4 +266,30 @@
 - ✅ le passage arrière le plus large des trapèzes
 - ⚠️ mur droit court : peu de place pour une fenêtre à droite
 - ⚠️ angle aigu au fond à gauche, un peu plus fermé que l'option 9
+
+## Option 12
+
+**coin coupé au module** · l'option 1 élargie à toute la façade : mur du fond 2 et mur gauche 2 modules de 100 sans recoupe, pan coupé parallèle au grand pan
+
+![option 12](site/assets/variante-12.svg)
+
+| | murs (extérieur) | intérieur |
+|---|---|---|
+| surface | 4,81 m² | **4,3 m²** |
+| côté avant | 245 cm | 233 cm |
+| côté droite | 158,3 cm | 149,7 cm |
+| côté fond en biais | 61,4 cm | 56,4 cm |
+| côté fond | 200 cm | 191,6 cm |
+| côté gauche | 200 cm | 188 cm |
+| angles | 90° · 90° · 132,8° · 137,2° · 90° | |
+| passage arrière | grand pan 47,2 cm · petit pan 119,6 cm | |
+
+- ✅ mur gauche et mur du fond en panneaux entiers : aucune recoupe sur les deux murs contre la propriété, inaccessibles après montage
+- ✅ sous le seuil, même intérieur que le 200 × 240 d'origine
+- ✅ façade pleine largeur : porte et fenêtre côté jardin
+- ✅ que des angles droits ou obtus, pan coupé court
+- ✅ le pan coupé tombe sous la bande de toit déjà recoupée : une seule coupe de toit en biais
+- ⚠️ 5 murs et 2 angles obtus : profils d'angle pliés sur mesure
+- ⚠️ 3 bandes de panneau à recouper (façade, mur droit, pan coupé), tirées de 2 panneaux
+- ⚠️ gouttière arrière arrêtée avant le pan coupé
 

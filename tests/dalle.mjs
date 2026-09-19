@@ -44,12 +44,26 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
   ok(near(geometry(zero).dalle.zone_utile.aire_m2, gd.aire_m2, 1e-9), "bandes nulles : zone utile = dalle");
 }
 
+const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
 // variantes de forme : toutes dans la zone utile, porte sur le cote avant, aires ordonnees
 {
   const { variantes, plus_grand_rectangle, plus_grand_k_gone } = await import(pathToFileURL(out).href);
   const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
   const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
-  ok(vs.length === 11, "11 variantes");
+  ok(vs.length === 12, "12 variantes");
+  {
+    // option 12 : murs gauche et fond en modules entiers, facade pleine largeur, pan coupe parallele au grand pan
+    const v = vs[11], mod = base.panneau.largeur_utile_cm, q = v.polygone;
+    ok(v.id === 12 && q.length === 5, "option 12 : 5 cotes");
+    ok(near(v.cotes_cm[3] % mod, 0, 0.05) && near(v.cotes_cm[4] % mod, 0, 0.05), "option 12 : mur du fond (" + v.cotes_cm[3] + ") et mur gauche (" + v.cotes_cm[4] + ") en modules entiers");
+    ok(near(v.cotes_cm[0], vs[2].cotes_cm[0], 0.05), "option 12 : facade = toute la largeur de la zone (" + v.cotes_cm[0] + ")");
+    ok(near(v.angles_deg[2], vs[3].angles_deg[2], 0.1) && near(v.angles_deg[3], vs[3].angles_deg[3], 0.1), "option 12 : pan coupe parallele au grand pan (memes angles que l'option 4)");
+    ok(v.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2, "option 12 sous le seuil (" + v.aire_m2 + " m²)");
+    // a la main : 245 x 200 moins le triangle 45 x 41.7 = 4.81 m² ; coin arriere a 47.2 cm du grand pan
+    ok(near(v.aire_m2, 4.81, 0.011), "option 12 : 4.81 m² calcules a la main");
+    ok(near(pas12(v), 47.2, 0.2), "option 12 : passage 47.2 cm le long du grand pan (" + pas12(v) + ")");
+    ok(v.aire_interieure_m2 > vs[0].aire_interieure_m2 + 0.7, "option 12 : +" + (v.aire_interieure_m2 - vs[0].aire_interieure_m2).toFixed(2) + " m² d'interieur sur l'option 1");
+  }
   // interieur cote par cote : l'aire du polygone interieur retrouve aire_interieure_m2
   const { inset_ordre } = await import(pathToFileURL(out).href);
   ok(vs.every((v) => near(poly_area(inset_ordre(v.polygone, base.panneau.epaisseur_mm / 10)) / 1e4, v.aire_interieure_m2, 0.011)), "interieur : cotes decalees et aire concordent");

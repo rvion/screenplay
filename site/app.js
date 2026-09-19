@@ -784,6 +784,19 @@ function variantes(p, g) {
     }
     const h11 = Math.floor(lo2);
     out.push(forme(11, `trap\xE8ze pivot\xE9, plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `le trap\xE8ze 9, coin arri\xE8re droit abaiss\xE9 \xE0 ${h11} : sous ${fz(seuil)} m\xB2, passage arri\xE8re \xE9largi`, pivot(h11)));
+    const pente_pan = (Z[3][1] - HD[1]) / (HD[0] - Z[3][0]);
+    const au_module = (i, j) => {
+      const C = [x0 + i * mod, y0 + j * mod];
+      if (C[0] >= x1 - 1e-6 || !dedans(C)) return null;
+      const yd = C[1] - (x1 - C[0]) * pente_pan;
+      return yd > y0 + 1 ? [[x0, y0], [x1, y0], [x1, yd], C, [x0, C[1]]] : null;
+    };
+    let m12 = null;
+    for (let i = 1; i * mod < x1 - x0; i++) for (let j = 1; j < 20; j++) {
+      const q = au_module(i, j);
+      if (q && poly_area(q) <= seuil * 1e4 && (!m12 || poly_area(q) > poly_area(m12.q))) m12 = { q, i, j };
+    }
+    if (m12) out.push(forme(12, "coin coup\xE9 au module", `l'option 1 \xE9largie \xE0 toute la fa\xE7ade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz(mod)} sans recoupe, pan coup\xE9 parall\xE8le au grand pan`, m12.q));
   }
   return out.sort((a, b) => a.id - b.id);
 }
