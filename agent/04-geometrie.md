@@ -43,6 +43,8 @@ côté de la dalle donne la partie de l'emprise située au-delà (`hors_dalle_po
 **Relevé du 2026-09-19** : avant **262**, droite **223**, gauche **324**, petit pan **104**,
 grand pan **258** ⇒ pointe `P ≈ (72,7 ; 398,3)`. Mesure de contrôle : **260** de large à hauteur
 du coin droit (2 cm de moins que devant : côtés quasi parallèles, négligé).
+Angles intérieurs (`dalle.angles_deg`, plan `plan-dalle.svg`) : **90 / 90 / 132,8 / 91,6 / 135,6**
+(avant-gauche, avant-droit, haut droit, pointe, haut gauche ; somme 540°). Aire **8,51 m²**.
 `(ox, oy) = (2, 2)` ⇒ l'abri **longe le mur gauche** (2 cm), 2 cm devant ; **rien hors dalle**.
 Calé à droite (`ox = 62`), le coin arrière-droit traverserait le mur du fond de ~19 cm.
 

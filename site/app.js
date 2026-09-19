@@ -68,6 +68,15 @@ function slab_apex(L, R, ag, ad) {
   }
   return [L[0] + a * ux + h3 * nx, L[1] + a * uy + h3 * ny];
 }
+function interior_angles(q) {
+  return q.map((b, i) => {
+    const a = q[(i + q.length - 1) % q.length], c = q[(i + 1) % q.length];
+    const v1 = [a[0] - b[0], a[1] - b[1]], v2 = [c[0] - b[0], c[1] - b[1]];
+    let t = Math.atan2(v2[0] * v1[1] - v2[1] * v1[0], v2[0] * v1[0] + v2[1] * v1[1]);
+    if (t < 0) t += 2 * Math.PI;
+    return t * 180 / Math.PI;
+  });
+}
 function poly_area(q) {
   let s = 0;
   for (let i = 0; i < q.length; i++) {
@@ -208,6 +217,9 @@ function geometry(p) {
       pointe_cm: apex ? [rnd(apex[0], 1), rnd(apex[1], 1)] : null,
       // polygone de la dalle dans le repere de l'abri (origine = coin avant-gauche de l'abri)
       polygone: poly2.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]),
+      // angles interieurs, dans l'ordre du polygone (coin avant-gauche d'abord)
+      angles_deg: interior_angles(local).map((a) => rnd(a, 1)),
+      aire_m2: rnd(poly_area(local) / 1e4, 2),
       cotes_cm: [dA, dD, ...apex ? [ad, ag] : [rnd(Math.hypot(dA, dD - dG), 1)], dG],
       cotes_noms: noms,
       murs,
@@ -647,6 +659,77 @@ function plan_sol_svg(p, g, openings) {
   svg += "</svg>\n";
   return svg;
 }
+function plan_dalle_svg(g) {
+  const d = g.dalle;
+  const [ox, oy] = d.decalage_cm;
+  const q = d.polygone.map(([x, y]) => [x + ox, y + oy]);
+  const n = q.length, scale = 1.25, pad = 110, top = 90;
+  const xs = q.map((v) => v[0]), ys = q.map((v) => v[1]);
+  const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
+  const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + pad + top + 40;
+  const P = (v) => [pad + (v[0] - minx) * scale, top + 40 + (maxy - v[1]) * scale];
+  const mur = new Set(d.murs.map((w) => w.cote));
+  const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
+  let svg = svgHeader(rnd(W), rnd(H));
+  svg += poly(q.map(P), "#e9e5da", GRIS, 2);
+  const { A, G } = g.cotes;
+  svg += poly([[ox, oy], [ox + A, oy], [ox + A, oy + G], [ox, oy + G]].map(P), "none", "#9bb5cf", 1, "5 4");
+  const c = P([ox + A / 2, oy + G / 2]);
+  svg += text(c[0], c[1], `abri ${A} \xD7 ${G}`, "middle", "#9bb5cf", 11);
+  q.forEach((a, i) => {
+    const b = q[(i + 1) % n], pa = P(a), pb = P(b);
+    const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
+    const ux = (pb[0] - pa[0]) / len, uy = (pb[1] - pa[1]) / len;
+    const nx = -uy, ny = ux;
+    const est_mur = mur.has(d.cotes_noms[i]);
+    if (est_mur) svg += line(pa[0] + nx * 4, pa[1] + ny * 4, pb[0] + nx * 4, pb[1] + ny * 4, BRUN, 6);
+    const off = 30;
+    const a2 = [pa[0] + nx * off, pa[1] + ny * off], b2 = [pb[0] + nx * off, pb[1] + ny * off];
+    svg += line(pa[0] + nx * 8, pa[1] + ny * 8, pa[0] + nx * (off + 5), pa[1] + ny * (off + 5), "#999", 0.8);
+    svg += line(pb[0] + nx * 8, pb[1] + ny * 8, pb[0] + nx * (off + 5), pb[1] + ny * (off + 5), "#999", 0.8);
+    svg += line(a2[0], a2[1], b2[0], b2[1], COTE, 1.2);
+    for (const e of [a2, b2]) svg += line(e[0] - (ux - nx) * 4, e[1] - (uy - ny) * 4, e[0] + (ux - nx) * 4, e[1] + (uy - ny) * 4, COTE, 1.2);
+    let rot = Math.atan2(uy, ux) * 180 / Math.PI;
+    if (rot > 90) rot -= 180;
+    else if (rot < -90) rot += 180;
+    const m = [(a2[0] + b2[0]) / 2 + nx * 8, (a2[1] + b2[1]) / 2 + ny * 8];
+    const lbl = `${fz(d.cotes_cm[i])} cm${est_mur ? " \xB7 mur" : ""}`;
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="${COTE}" font-size="13" font-weight="bold" transform="rotate(${f1(rot)} ${f1(m[0])} ${f1(m[1])})">${lbl}</text>
+`;
+  });
+  q.forEach((b, i) => {
+    const cc = q[(i + 1) % n];
+    const u2 = Math.atan2(cc[1] - b[1], cc[0] - b[0]), ang = d.angles_deg[i] * Math.PI / 180;
+    const r = 22 / scale, pts = [];
+    for (let k = 0; k <= 16; k++) {
+      const t = u2 + ang * k / 16;
+      pts.push(P([b[0] + r * Math.cos(t), b[1] + r * Math.sin(t)]));
+    }
+    svg += `<polyline points="${pts.map((v) => `${f1(v[0])},${f1(v[1])}`).join(" ")}" fill="none" stroke="${ANGLE}" stroke-width="1.5"/>
+`;
+    const bis = u2 + ang / 2, rl = 44 / scale;
+    const tp = P([b[0] + rl * Math.cos(bis), b[1] + rl * Math.sin(bis)]);
+    const suppose = i < 2 ? "*" : "";
+    svg += text(tp[0], tp[1] + 4, `${f1(d.angles_deg[i])}\xB0${suppose}`, "middle", ANGLE, 12, "bold");
+  });
+  if (d.pointe_cm) {
+    const pt = d.pointe_cm, pp = P(pt), p0 = P([pt[0], 0]), pl = P([0, pt[1]]);
+    svg += line(pp[0], pp[1], p0[0], p0[1], "#aaa", 0.8, "4 4");
+    svg += line(pp[0], pp[1], pl[0], pl[1], "#aaa", 0.8, "4 4");
+    svg += `<circle cx="${f1(pp[0])}" cy="${f1(pp[1])}" r="3" fill="${GRIS}"/>
+`;
+    svg += text(W / 2, 62, `pointe : ${f1(pt[0])} depuis la gauche, ${f1(pt[1])} depuis l'avant`, "middle", GRIS, 11);
+    svg += text(p0[0] + 4, p0[1] - 8, `${f1(pt[0])}`, "start", "#999", 10);
+    svg += text(pl[0] + 4, pl[1] - 6, `${f1(pt[1])}`, "start", "#999", 10);
+  }
+  const somme = d.angles_deg.reduce((s, x) => s + x, 0);
+  svg += text(W / 2, 26, `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
+  svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
+  svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
+  svg += text(W / 2, H - 12, "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
+  svg += "</svg>\n";
+  return svg;
+}
 function plan_toit_svg(p, g, t) {
   const pad = 70, scale = 0.42;
   const deb = p.toit.debord_cm;
@@ -841,6 +924,7 @@ function buildCore(p) {
     "plan-toit": plan_toit_svg(p, g, t),
     "plan-rehausse": plan_rehausse_svg(p, g, t)
   };
+  if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, svg };
 }

@@ -25,6 +25,13 @@ ok(t && near(t[0], 1.8, 1e-9) && near(t[1], 2.4, 1e-9), "triangulation 3-4-5 -> 
 ok(slab_apex([0, 0], [5, 0], 1, 2) === null, "pans trop courts pour fermer -> pas de pointe");
 ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d) -> pas de pointe");
 
+// angles de la dalle relevee : avant droits, somme d'un pentagone, plan dessine
+{
+  const gd = geometry(base).dalle;
+  ok(gd.angles_deg.length === 5 && near(gd.angles_deg[0], 90) && near(gd.angles_deg[1], 90), "angles avant droits");
+  ok(near(gd.angles_deg.reduce((s, x) => s + x, 0), 540, 0.3), "somme des angles du pentagone = 540");
+}
+
 // decoupage : carre 10x10 coupe par un rectangle qui en couvre la moitie
 ok(near(poly_area(clip_convex([[0, 0], [10, 0], [10, 10], [0, 10]], [[5, -1], [20, -1], [20, 20], [5, 20]])), 50, 1e-9), "decoupage : moitie du carre = 50");
 

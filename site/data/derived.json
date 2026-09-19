@@ -131,6 +131,14 @@
           322
         ]
       ],
+      "angles_deg": [
+        90,
+        90,
+        132.8,
+        91.6,
+        135.6
+      ],
+      "aire_m2": 8.51,
       "cotes_cm": [
         262,
         223,
@@ -923,6 +931,7 @@
     "plan-sol.svg",
     "plan-toit.svg",
     "plan-rehausse.svg",
+    "plan-dalle.svg",
     "facade-A.svg",
     "facade-D.svg",
     "facade-B.svg",
