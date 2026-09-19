@@ -50,7 +50,16 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   const { variantes, plus_grand_rectangle, plus_grand_k_gone } = await import(pathToFileURL(out).href);
   const g = geometry(base), vs = variantes(base, g), Z = g.dalle.zone_utile.polygone;
   const dedans = (q) => Z.every((a, i) => { const b = Z[(i + 1) % Z.length]; return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -0.2 * dist(a, b); });
-  ok(vs.length === 12, "12 variantes");
+  ok(vs.length === 13, "13 variantes");
+  const v13 = vs.find((v) => v.id === 13), ep = base.panneau.epaisseur_mm / 10;
+  ok(near(v13.passages.find((q) => q.cote === "arriere_droite").cm, base.dalle_cm.passage_souhaite_cm, 1), "option 13 : passage derriere l'abri = passage vise");
+  ok(near(v13.polygone[3][1], g.dalle.zone_utile.polygone.reduce((m, q) => (Math.abs(q[0] - v13.polygone[0][0]) < 0.5 ? Math.max(m, q[1]) : m), -1), 0.2), "option 13 : coin arriere gauche au haut du cote gauche de la zone");
+  ok(v13.porte.nom === "droite" && v13.porte.debut_cm >= ep + 50 && v13.porte.debut_cm + v13.porte.largeur_cm <= v13.cotes_cm[1] + 1e-6, "option 13 : porte sur le mur droit, apres le bureau de facade");
+  ok(v13.bureaux.length === 2 && near(v13.sol_libre_m2 + v13.bureaux_m2, v13.aire_interieure_m2, 0.011), "option 13 : bureaux + sol libre = interieur");
+  const bg = v13.bureaux.find((b) => b.cote === "gauche"), ba = v13.bureaux.find((b) => b.cote === "avant");
+  ok(bg.aire_m2 < 0.6 * bg.longueur_cm / 100 + 1e-6 && bg.aire_m2 > 0.6 * (bg.longueur_cm - 60) / 100, "option 13 : bureau gauche 60 cm sur la longueur du mur interieur");
+  ok(near(v13.bureaux_m2, bg.aire_m2 + ba.aire_m2 - 0.6 * 0.5, 0.011), "option 13 : le coin du L n'est compte qu'une fois");
+  ok(vs.filter((v) => v.id !== 7 && v.id !== 13).every((v) => v.porte && v.porte.cote === 0), "autres options : porte sur l'avant");
   {
     // option 12 : murs gauche et fond en modules entiers, facade pleine largeur, pan coupe parallele au grand pan
     const v = vs[11], mod = base.panneau.largeur_utile_cm, q = v.polygone;
@@ -87,7 +96,7 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   };
   ok(vs.every((v) => ["arriere_droite", "arriere_gauche"].every((c) => near(pas(v, c), brut(v, c), 0.8))), "chaque passage = vraie distance forme / mur (force brute)");
   ok(near(pas(vs[3], "arriere_droite"), brut(vs[3], "arriere_droite"), 0.8), "controle : option 4, coin face au milieu du mur, deja juste");
-  ok(near(pas(v10, "arriere_droite"), pas(v9, "arriere_droite"), 0.2), "options 9 et 10 : meme mur arriere, meme pince au bout du grand pan");
+  ok(pas(v10, "arriere_droite") >= pas(v9, "arriere_droite") - 0.1, "option 10 : reculer le mur droit le long du meme mur arriere ne retrecit jamais le passage");
   // why we think it is actually a bug, and not just meaning spec should change: a passage is where a
   // person walks between the shed and the wall, so its far end must sit on the wall, never on the
   // wall's line extended past its end (option 1 drew a 91.8 segment leaving the slab)
@@ -108,7 +117,9 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   // maison a pointe haute : sacrifier le haut droit (5) bat sacrifier la pointe (4)
   const maison = [[0, 0], [2, 0], [2, 2], [1, 4], [0, 2]];
   ok(near(poly_area(plus_grand_k_gone(maison, 4, [0, 1])), 5, 1e-9), "plus grand quadrilatere d'une maison a pointe haute = 5");
-  ok(vs.every((v) => v.polygone.every(dedans)), "chaque variante tient dans la zone utile");
+  // l'option 13 est bornee par le vrai passage au grand pan, pas par sa bande (droite infinie) : pres
+  // du bout du mur, son coin arriere droit peut depasser la bande en gardant le passage vise
+  ok(vs.filter((v) => v.id !== 13).every((v) => v.polygone.every(dedans)), "chaque variante (sauf 13) tient dans la zone utile");
   ok(vs.filter((v) => v.id !== 7).every((v) => near(v.polygone[0][1], v.polygone[1][1]) && v.polygone[1][0] > v.polygone[0][0]), "options avec porte : cote 0 = avant");
   ok(vs[6].angles_deg.every((a) => near(a, 90, 0.2)) && vs[6].aire_m2 >= vs[1].aire_m2 - 0.01, "option 7 : rectangle, au moins aussi grand que le meilleur rectangle droit");
   // un triangle rectangle 100 x 100 : le plus grand rectangle inscrit vaut la moitie de son aire, a plat

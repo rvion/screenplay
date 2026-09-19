@@ -101,7 +101,7 @@
           5,
           5,
           45,
-          45,
+          12,
           12
         ],
         "polygone": [
@@ -118,20 +118,20 @@
             166.3
           ],
           [
-            74.3,
-            335.6
+            50.1,
+            358
           ],
           [
             12,
-            271.9
+            319.1
           ]
         ],
         "cotes_cm": [
           245,
           161.3,
-          249.1,
-          89,
-          266.9
+          282.1,
+          54.4,
+          314.1
         ],
         "angles_deg": [
           90,
@@ -140,8 +140,8 @@
           91.6,
           135.6
         ],
-        "aire_m2": 6.35,
-        "bandes_m2": 2.15
+        "aire_m2": 6.59,
+        "bandes_m2": 1.92
       },
       "avant": 262,
       "droite": 223,
@@ -246,9 +246,9 @@
       "passage": {
         "cm": 26.8,
         "cote": "arriere_droite",
-        "souhaite_cm": 45,
+        "souhaite_cm": 50,
         "etat": "impraticable",
-        "profondeur_max_cm": 215,
+        "profondeur_max_cm": 208,
         "segment": [
           [
             200,
@@ -992,6 +992,7 @@
     "variante-10.svg",
     "variante-11.svg",
     "variante-12.svg",
+    "variante-13.svg",
     "facade-A.svg",
     "facade-D.svg",
     "facade-B.svg",

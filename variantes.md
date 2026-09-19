@@ -5,7 +5,7 @@
 ## Hypothèses
 
 - **Dalle réelle** : 8,51 m², côtés avant 262, droite 223, grand pan du fond 258, petit pan du fond 104, gauche 324 cm.
-- **Bandes libres** laissées le long de chaque côté : avant 5, droite 5, grand pan du fond 45, petit pan du fond 45, gauche 12 cm. Reste la **zone utile** : 6,35 m².
+- **Bandes libres** laissées le long de chaque côté : avant 5, droite 5, grand pan du fond 45, petit pan du fond 12, gauche 12 cm. Reste la **zone utile** : 6,59 m².
 - **Porte** de 100 cm sur le côté avant (jardin), ouvrant vers l'extérieur : elle ne prend aucune place dedans.
 - **Intérieur** = murs en panneaux sandwich de 6 cm retirés sur tout le tour. Les couvre-joints d'angle intérieurs (quelques mm) sont négligés.
 - **Hauteur sous plafond** (toutes les options) : 2,32 m à l'avant, 2,09 m au fond = murs 215 + rehausse 22,5 à l'avant, moins le plancher isolé de 6 cm.
@@ -19,6 +19,7 @@
 - **Le plus simple** : option 1, panneaux entiers, angles droits.
 - **Le meilleur compromis sous le seuil** : option 12, l'option 1 élargie à toute la façade avec un seul coin coupé.
 - **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.
+- **Bureau en L, passage visé derrière** : option 13, porte à droite, bureau sur tout le mur gauche et toute la façade.
 - **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.
 
 ## Comparatif
@@ -29,14 +30,15 @@
 | [2](#option-2) | plus grand rectangle | 4,07 m² | **3,6 m²** | 4 | 45 cm | 129,6 cm | oui |
 | [3](#option-3) | rectangle pleine largeur | 3,94 m² | **3,47 m²** | 4 | 57,2 cm | 158,5 cm | oui |
 | [4](#option-4) | coin coupé, plafonné à 5 m² | 5 m² | **4,49 m²** | 5 | 45 cm | 110,5 cm | oui |
-| [5](#option-5) | coin coupé, pleine profondeur | 5,94 m² | **5,38 m²** | 5 | 44,9 cm | 53,5 cm | non |
-| [6](#option-6) | toute la zone utile | 6,35 m² | **5,76 m²** | 5 | 44,9 cm | 45 cm | non |
-| [7](#option-7) | plus grand rectangle, orientation libre | 4,07 m² | **3,6 m²** | 4 | 45 cm | 125,3 cm | oui |
-| [8](#option-8) | plus grand quadrilatère | 5,52 m² | **4,94 m²** | 4 | 44,9 cm | 45 cm | non |
-| [9](#option-9) | trapèze, mur arrière en biais | 5,25 m² | **4,7 m²** | 4 | 54 cm | 53,5 cm | non |
-| [10](#option-10) | trapèze plafonné à 5 m² | 5 m² | **4,46 m²** | 4 | 54 cm | 53,5 cm | oui |
-| [11](#option-11) | trapèze pivoté, plafonné à 5 m² | 5 m² | **4,46 m²** | 4 | 70,8 cm | 53,5 cm | oui |
+| [5](#option-5) | coin coupé, pleine profondeur | 6,44 m² | **5,83 m²** | 5 | 44,9 cm | 12 cm | non |
+| [6](#option-6) | toute la zone utile | 6,59 m² | **5,97 m²** | 5 | 44,9 cm | 12 cm | non |
+| [7](#option-7) | plus grand rectangle, orientation libre | 4,07 m² | **3,6 m²** | 4 | 45 cm | 125,4 cm | oui |
+| [8](#option-8) | plus grand quadrilatère | 5,99 m² | **5,38 m²** | 4 | 44,9 cm | 12 cm | non |
+| [9](#option-9) | trapèze, mur arrière en biais | 5,82 m² | **5,23 m²** | 4 | 50,8 cm | 12 cm | non |
+| [10](#option-10) | trapèze plafonné à 5 m² | 5 m² | **4,45 m²** | 4 | 55,4 cm | 12 cm | oui |
+| [11](#option-11) | trapèze pivoté, plafonné à 5 m² | 5 m² | **4,43 m²** | 4 | 95,6 cm | 12 cm | oui |
 | [12](#option-12) | coin coupé au module | 4,81 m² | **4,3 m²** | 5 | 47,2 cm | 119,6 cm | oui |
+| [13](#option-13) | trapèze, 50 cm derrière | 5,83 m² | **5,24 m²** | 4 | 50,2 cm | 12 cm | non |
 
 ## Option 1
 
@@ -53,6 +55,7 @@
 | côté gauche | 200 cm | 188 cm |
 | angles | 90° · 90° · 90° · 90° | |
 | passage arrière | grand pan 47,2 cm · petit pan 119,6 cm | |
+| porte | 100 cm sur le côté avant, de 100 à 200 cm | |
 
 - ✅ panneaux entiers sur les 4 faces : aucune recoupe
 - ✅ le plus simple et le moins cher à monter
@@ -75,6 +78,7 @@
 | côté gauche | 190 cm | 178 cm |
 | angles | 90° · 90° · 90° · 90° | |
 | passage arrière | grand pan 45 cm · petit pan 129,6 cm | |
+| porte | 100 cm sur le côté avant, de 114 à 214 cm | |
 
 - ✅ un peu plus grand que l'option 1, toujours à angles droits
 - ⚠️ gain minime pour des panneaux à recouper sur les 4 faces
@@ -94,6 +98,7 @@
 | côté gauche | 161 cm | 149 cm |
 | angles | 90° · 90° · 90° · 90° | |
 | passage arrière | grand pan 57,2 cm · petit pan 158,5 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ façade la plus large : porte et fenêtre côte à côte
 - ✅ passage arrière confortable
@@ -116,6 +121,7 @@
 | côté gauche | 209,1 cm | 197,1 cm |
 | angles | 90° · 90° · 132,8° · 137,2° · 90° | |
 | passage arrière | grand pan 45 cm · petit pan 110,5 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ sous le seuil de surface
 - ✅ pleine largeur et un seul pan coupé, court
@@ -130,14 +136,15 @@
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5,94 m² | **5,38 m²** |
+| surface | 6,44 m² | **5,83 m²** |
 | côté avant | 245 cm | 233 cm |
 | côté droite | 161,3 cm | 152,7 cm |
-| côté fond en biais | 155,4 cm | 150,4 cm |
-| côté fond | 131 cm | 122,7 cm |
-| côté gauche | 266,9 cm | 254,9 cm |
+| côté fond en biais | 224,8 cm | 219,8 cm |
+| côté fond | 80,1 cm | 71,7 cm |
+| côté gauche | 314,1 cm | 302,1 cm |
 | angles | 90° · 90° · 132,8° · 137,2° · 90° | |
-| passage arrière | grand pan 44,9 cm · petit pan 53,5 cm | |
+| passage arrière | grand pan 44,9 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ le plus grand intérieur sans angle aigu : que des angles obtus, faciles à meubler
 - ✅ le pan coupé suit le mur du fond : passage régulier
@@ -152,14 +159,15 @@
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 6,35 m² | **5,76 m²** |
+| surface | 6,59 m² | **5,97 m²** |
 | côté avant | 245 cm | 233 cm |
 | côté droite | 161,3 cm | 152,7 cm |
-| côté fond en biais | 249,1 cm | 240,6 cm |
-| côté fond en biais | 89,1 cm | 80,8 cm |
-| côté gauche | 266,9 cm | 258,5 cm |
-| angles | 90° · 90° · 132,8° · 91,5° · 135,6° | |
-| passage arrière | grand pan 44,9 cm · petit pan 45 cm | |
+| côté fond en biais | 282,1 cm | 273,6 cm |
+| côté fond en biais | 54,5 cm | 46,2 cm |
+| côté gauche | 314,1 cm | 305,7 cm |
+| angles | 90° · 90° · 132,8° · 91,6° · 135,6° | |
+| passage arrière | grand pan 44,9 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ la surface maximale de la zone
 - ⚠️ la pointe du fond est un coin perdu
@@ -176,11 +184,11 @@
 |---|---|---|
 | surface | 4,07 m² | **3,6 m²** |
 | côté avant | 209,5 cm | 197,5 cm |
-| côté droite | 194,2 cm | 182,2 cm |
+| côté droite | 194,2 cm | 182,1 cm |
 | côté fond | 209,5 cm | 197,5 cm |
-| côté gauche | 194,2 cm | 182,2 cm |
+| côté gauche | 194,2 cm | 182,1 cm |
 | angles | 90° · 90° · 90° · 90° | |
-| passage arrière | grand pan 45 cm · petit pan 125,3 cm | |
+| passage arrière | grand pan 45 cm · petit pan 125,4 cm | |
 
 - ✅ prouve qu'aucune rotation ne fait mieux qu'un rectangle droit
 - ⚠️ identique à l'option 2 avec la zone actuelle
@@ -193,13 +201,14 @@
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5,52 m² | **4,94 m²** |
-| côté avant | 245 cm | 231,8 cm |
+| surface | 5,99 m² | **5,38 m²** |
+| côté avant | 245 cm | 232,3 cm |
 | côté droite | 161,3 cm | 152,7 cm |
-| côté fond en biais | 249,1 cm | 235,6 cm |
-| côté gauche en biais | 336,4 cm | 318,3 cm |
-| angles | 79,3° · 90° · 132,8° · 57,9° | |
-| passage arrière | grand pan 44,9 cm · petit pan 45 cm | |
+| côté fond en biais | 282,1 cm | 267,5 cm |
+| côté gauche en biais | 355,1 cm | 336,4 cm |
+| angles | 83,8° · 90° · 132,8° · 53,3° | |
+| passage arrière | grand pan 44,9 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ la plus grande surface possible avec 4 murs
 - ⚠️ mur gauche en biais : un coin perdu en long contre le mur de propriété
@@ -213,13 +222,14 @@
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5,25 m² | **4,7 m²** |
+| surface | 5,82 m² | **5,23 m²** |
 | côté avant | 245 cm | 233 cm |
-| côté droite | 161,3 cm | 151,4 cm |
-| côté fond en biais | 266,8 cm | 253,7 cm |
-| côté gauche | 266,9 cm | 251,8 cm |
-| angles | 90° · 90° · 113,3° · 66,7° | |
-| passage arrière | grand pan 54 cm · petit pan 53,5 cm | |
+| côté droite | 161,3 cm | 152 cm |
+| côté fond en biais | 288,7 cm | 274,6 cm |
+| côté gauche | 314,1 cm | 297,3 cm |
+| angles | 90° · 90° · 122° · 58° | |
+| passage arrière | grand pan 50,8 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ 4 murs, un seul en biais, deux angles droits côté porte
 - ✅ toit simple : un seul bord en biais
@@ -228,44 +238,46 @@
 
 ## Option 10
 
-**trapèze plafonné à 5 m²** · le trapèze 9, mur droit reculé à 230 de large : sous 5 m²
+**trapèze plafonné à 5 m²** · le trapèze 9, mur droit reculé à 198 de large : sous 5 m²
 
 ![option 10](site/assets/variante-10.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5 m² | **4,46 m²** |
-| côté avant | 230 cm | 218 cm |
-| côté droite | 167,8 cm | 157,8 cm |
-| côté fond en biais | 250,5 cm | 237,4 cm |
-| côté gauche | 266,9 cm | 251,8 cm |
-| angles | 90° · 90° · 113,3° · 66,7° | |
-| passage arrière | grand pan 54 cm · petit pan 53,5 cm | |
+| surface | 5 m² | **4,45 m²** |
+| côté avant | 198 cm | 186 cm |
+| côté droite | 190,6 cm | 181,3 cm |
+| côté fond en biais | 233,4 cm | 219,2 cm |
+| côté gauche | 314,1 cm | 297,3 cm |
+| angles | 90° · 90° · 122° · 58° | |
+| passage arrière | grand pan 55,4 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 98 à 198 cm | |
 
 - ✅ sous le seuil, même forme que l'option 9
+- ✅ passage arrière un peu élargi
 - ⚠️ façade plus étroite
-- ⚠️ aucun gain de passage : même pince que l'option 9
 
 ## Option 11
 
-**trapèze pivoté, plafonné à 5 m²** · le trapèze 9, coin arrière droit abaissé à 141 : sous 5 m², passage arrière élargi
+**trapèze pivoté, plafonné à 5 m²** · le trapèze 9, coin arrière droit abaissé à 94 : sous 5 m², passage arrière élargi
 
 ![option 11](site/assets/variante-11.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
-| surface | 5 m² | **4,46 m²** |
+| surface | 5 m² | **4,43 m²** |
 | côté avant | 245 cm | 233 cm |
-| côté droite | 141 cm | 131,3 cm |
-| côté fond en biais | 275,5 cm | 262 cm |
-| côté gauche | 266,9 cm | 251,1 cm |
-| angles | 90° · 90° · 117,2° · 62,8° | |
-| passage arrière | grand pan 70,8 cm · petit pan 53,5 cm | |
+| côté droite | 94 cm | 85,3 cm |
+| côté fond en biais | 329,3 cm | 313,2 cm |
+| côté gauche | 314,1 cm | 294,6 cm |
+| angles | 90° · 90° · 131,9° · 48,1° | |
+| passage arrière | grand pan 95,6 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ sous le seuil sans perdre de largeur de façade
 - ✅ le passage arrière le plus large des trapèzes
-- ⚠️ mur droit court : peu de place pour une fenêtre à droite
-- ⚠️ angle aigu au fond à gauche, un peu plus fermé que l'option 9
+- ⚠️ mur droit court : peu de place pour une porte ou une fenêtre à droite
+- ⚠️ angle aigu au fond à gauche, plus fermé que l'option 9
 
 ## Option 12
 
@@ -278,11 +290,12 @@
 | surface | 4,81 m² | **4,3 m²** |
 | côté avant | 245 cm | 233 cm |
 | côté droite | 158,3 cm | 149,7 cm |
-| côté fond en biais | 61,4 cm | 56,4 cm |
+| côté fond en biais | 61,3 cm | 56,4 cm |
 | côté fond | 200 cm | 191,6 cm |
 | côté gauche | 200 cm | 188 cm |
 | angles | 90° · 90° · 132,8° · 137,2° · 90° | |
 | passage arrière | grand pan 47,2 cm · petit pan 119,6 cm | |
+| porte | 100 cm sur le côté avant, de 145 à 245 cm | |
 
 - ✅ mur gauche et mur du fond en panneaux entiers : aucune recoupe sur les deux murs contre la propriété, inaccessibles après montage
 - ✅ sous le seuil, même intérieur que le 200 × 240 d'origine
@@ -292,4 +305,31 @@
 - ⚠️ 5 murs et 2 angles obtus : profils d'angle pliés sur mesure
 - ⚠️ 3 bandes de panneau à recouper (façade, mur droit, pan coupé), tirées de 2 panneaux
 - ⚠️ gouttière arrière arrêtée avant le pan coupé
+
+## Option 13
+
+**trapèze, 50 cm derrière** · pleine largeur, mur arrière du haut du côté gauche jusqu'au mur droit abaissé à 162 : 50 cm de passage derrière l'abri
+
+![option 13](site/assets/variante-13.svg)
+
+| | murs (extérieur) | intérieur |
+|---|---|---|
+| surface | 5,83 m² | **5,24 m²** |
+| côté avant | 245 cm | 233 cm |
+| côté droite | 162 cm | 152,7 cm |
+| côté fond en biais | 288,4 cm | 274,2 cm |
+| côté gauche | 314,1 cm | 297,3 cm |
+| angles | 90° · 90° · 121,8° · 58,2° | |
+| passage arrière | grand pan 50,2 cm · petit pan 12 cm | |
+| porte | 100 cm sur le côté droite, de 62 à 162 cm | |
+| bureau gauche | | 60 cm de profondeur sur 297,3 cm |
+| bureau avant | | 50 cm de profondeur sur 233 cm |
+| sol libre | | **2,71 m²** (bureaux 2,54 m²) |
+
+- ✅ pleine largeur et la plus grande surface des trapèzes, avec le passage voulu derrière
+- ✅ porte sur le côté droit : bureau en L sur tout le mur gauche et toute la façade
+- ✅ façade libre pour des fenêtres, lumière sur le bureau
+- ⚠️ au-dessus du seuil : déclaration préalable probable
+- ⚠️ angle aigu au fond à gauche, occupé par le bout du bureau
+- ⚠️ mur gauche très haut contre la propriété : panneau long, inaccessible après montage
 

@@ -47,8 +47,10 @@ Angles intérieurs (`dalle.angles_deg`, plan `plan-dalle.svg`) : **90 / 90 / 132
 (avant-gauche, avant-droit, haut droit, pointe, haut gauche ; somme 540°). Aire **8,51 m²**.
 **Bandes libres et zone utile** (`bandes_libres_cm`, `dalle.zone_utile`) : chaque côté est
 décalé vers l'intérieur de sa bande, la zone utile est l'intersection des demi-plans (découpage
-de la dalle par chaque droite décalée). Défaut : gauche 12, les deux pans du fond 45, droite 5,
-avant 5 ⇒ zone utile pentagonale 245 / 161,3 / 249,1 / 89 / 266,9, **6,35 m²** (bandes 2,15 m²).
+de la dalle par chaque droite décalée). Défaut : gauche 12, grand pan 45, petit pan 12 (le 45
+y était une erreur : le fond gauche est un cul-de-sac, seul compte le passage derrière l'abri),
+droite 5, avant 5 ⇒ zone utile pentagonale 245 / 161,3 / 282,1 / 54,4 / 314,1, **6,59 m²**
+(bandes 1,92 m²).
 `(ox, oy) = (2, 2)` ⇒ l'abri **longe le mur gauche** (2 cm), 2 cm devant ; **rien hors dalle**.
 Calé à droite (`ox = 62`), le coin arrière-droit traverserait le mur du fond de ~19 cm.
 
@@ -62,8 +64,8 @@ l'abri / du toit (débords + `toit.gouttiere_largeur_cm` à l'arrière) ; négat
 le grand pan (258). La pince est au coin arrière-droit de l'abri `(ox+A, oy+G)`. Le grand pan a
 pour pente `175,3 / 189,3` ; au droit de `x = 202` il passe à `y = 278,6`, soit 36,6 cm derrière
 le coin, × `189,3/258` ⇒ **26,8 cm** pour 200 × 240 : *impraticable* (< 35 ; 35–50 = de profil ;
-≥ 50 = praticable). `profondeur_max_cm` = plus grand `G` qui garde `passage_souhaite_cm` (45 par
-défaut) à largeur `A` donnée, par dichotomie : **215** pour A = 200. Repères : 200 × 215 ⇒ 45 cm ;
+≥ 50 = praticable). `profondeur_max_cm` = plus grand `G` qui garde `passage_souhaite_cm` (50 par
+défaut) à largeur `A` donnée, par dichotomie : **208** pour A = 200. Repères : 200 × 215 ⇒ 45 cm ;
 200 × 200 ⇒ 56 cm (et 4 faces en panneaux entiers). Derrière l'abri, côté gauche, il reste
 324 − 242 = 82 cm jusqu'au haut du côté gauche, puis la pointe.
 

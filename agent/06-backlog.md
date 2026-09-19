@@ -1,7 +1,7 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Forme de l'abri dans la zone utile** : 12 options dessinées (`site/assets/variante-{1..12}.svg`,
+- [ ] **Forme de l'abri dans la zone utile** : 13 options dessinées (`site/assets/variante-{1..13}.svg`,
       section « Formes » du site, résumé dans `variantes.md`). Recommandations : option 12 (coin
       coupé au module, sous le seuil, murs gauche et fond en panneaux entiers), option 5 (coin
       coupé, 5,94 m², avec déclaration) ou option 1 (200 × 200, le plus simple). Le choix remplace l'emprise rectangulaire actuelle.

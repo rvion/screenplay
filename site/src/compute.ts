@@ -778,6 +778,16 @@ export function variantes(p: Params, g: any) {
     lo = 0; hi = HD[1] - Z[1][1];
     for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (poly_area(pivot(m)) <= seuil * 1e4) lo = m; else hi = m; }
     const h11 = Math.floor(lo);
+    // 13. trapeze pleine largeur, coin arriere gauche au haut du cote gauche, mur arriere pivote
+    // vers le bas jusqu'a garder le passage vise derriere l'abri (vraie distance au grand pan)
+    const vise = +p.dalle_cm.passage_souhaite_cm || 0;
+    if (vise > 0) {
+      const derriere = (q: Pt[]) => { const w = passages(q).find((x: any) => x.cote === "arriere_droite"); return w ? w.cm : Infinity; };
+      lo = 0; hi = HG[1] - Z[1][1];
+      for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (derriere(pivot(m)) >= vise) lo = m; else hi = m; }
+      const h13 = Math.floor(lo);
+      out.push(forme(13, `trapèze, ${fz(vise)} cm derrière`, `pleine largeur, mur arrière du haut du côté gauche jusqu'au mur droit abaissé à ${h13} : ${fz(vise)} cm de passage derrière l'abri`, pivot(h13)));
+    }
     out.push(forme(11, `trapèze pivoté, plafonné à ${fz(seuil)} m²`, `le trapèze 9, coin arrière droit abaissé à ${h11} : sous ${fz(seuil)} m², passage arrière élargi`, pivot(h11)));
     // 12. coin coupe au module : mur du fond = i modules, mur gauche = j modules (les deux murs
     // contre la propriete, sans recoupe), facade pleine largeur, pan coupe parallele au grand pan
@@ -794,6 +804,36 @@ export function variantes(p: Params, g: any) {
       if (q && poly_area(q) <= seuil * 1e4 && (!m12 || poly_area(q) > poly_area(m12.q))) m12 = { q, i, j };
     }
     if (m12) out.push(forme(12, "coin coupé au module", `l'option 1 élargie à toute la façade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz(mod)} sans recoupe, pan coupé parallèle au grand pan`, m12.q));
+  }
+  // porte : sur l'avant par defaut, sauf l'option 7 (aucune) ; disposition_trapeze pour l'option 13
+  const place = (v: any, cote: string, position: any) => {
+    const k = v.noms_cotes.indexOf(cote);
+    if (k < 0) return null;
+    const L = v.cotes_cm[k], w = Math.min(+p.porte.largeur_cm, L);
+    const s0 = typeof position === "number" ? position : position === "gauche" ? 0 : position === "centre" ? (L - w) / 2 : L - w;
+    return { cote: k, nom: cote, debut_cm: rnd(s0, 1), largeur_cm: w };
+  };
+  const disp = p.disposition_trapeze;
+  for (const v of out) {
+    if (!p.porte || v.id === 7) { v.porte = null; continue; }
+    const perso = v.id === 13 && disp;
+    v.porte = place(v, perso ? disp.porte_cote : "avant", perso ? disp.porte_position : p.porte.position);
+    if (!perso) continue;
+    // bureaux : bande de profondeur donnee le long de chaque mur, dans l'interieur ; sol libre = le reste
+    const r: Pt[] = v.polygone, inter = inset(r, r.map(() => ep));
+    v.bureaux = (disp.bureaux || []).map((b: any) => {
+      const i = v.noms_cotes.indexOf(b.cote);
+      if (i < 0) return null;
+      const a = r[i], c = r[(i + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, e = ep + +b.profondeur_cm;
+      const nx = -(c[1] - a[1]) / l * e, ny = (c[0] - a[0]) / l * e;
+      const q = clip_half(inter, [a[0] + nx, a[1] + ny], [c[0] + nx, c[1] + ny], false);
+      return { cote: b.cote, profondeur_cm: +b.profondeur_cm, longueur_cm: v.cotes_interieures_cm[i], aire_m2: rnd(poly_area(q) / 1e4, 2), polygone: q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]), brut: q };
+    }).filter(Boolean);
+    let occ = v.bureaux.reduce((s: number, b: any) => s + poly_area(b.brut), 0);
+    for (let i = 0; i < v.bureaux.length; i++) for (let j = i + 1; j < v.bureaux.length; j++) occ -= poly_area(clip_convex(v.bureaux[i].brut, v.bureaux[j].brut));
+    for (const b of v.bureaux) delete b.brut;
+    v.bureaux_m2 = rnd(occ / 1e4, 2);
+    v.sol_libre_m2 = rnd((poly_area(inter) - occ) / 1e4, 2);
   }
   return out.sort((a, b) => a.id - b.id);
 }
@@ -907,9 +947,15 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
 }
 
 // forme d'abri dessinee sur la dalle : cotes a l'interieur, angle a chaque coin, porte sur le cote avant
-function variante_svg(v: any, P: (q: Pt) => number[], scale: number, porte: any): string {
+function variante_svg(v: any, P: (q: Pt) => number[], scale: number): string {
   const q: Pt[] = v.polygone, n = q.length, BLEU = "#2b5d8a", ANGLE = "#b0452a";
   let svg = poly(q.map(P), "#cfe0f1", BLEU, 2.5);
+  for (const bu of v.bureaux || []) {
+    svg += poly(bu.polygone.map(P), "#e6c79c", "#9a7040", 1.2);
+    const c = bu.polygone.reduce((s: number[], w: Pt) => [s[0] + w[0] / bu.polygone.length, s[1] + w[1] / bu.polygone.length], [0, 0]), pc = P(c);
+    const vertical = bu.cote.startsWith("gauche") || bu.cote.startsWith("droite");
+    svg += `<text x="${f1(pc[0])}" y="${f1(pc[1])}" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="11" font-weight="bold"${vertical ? ` transform="rotate(-90 ${f1(pc[0])} ${f1(pc[1])})"` : ""}>bureau ${fz(bu.profondeur_cm)} × ${fz(bu.longueur_cm)}</text>\n`;
+  }
   q.forEach((a, i) => {
     const b = q[(i + 1) % n], pa = P(a), pb = P(b);
     const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
@@ -929,17 +975,19 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, porte: any)
       svg += text(tp[0], tp[1] + 4, `${f1(v.angles_deg[i])}°`, "middle", ANGLE, 11, "bold");
     }
   });
-  if (porte) {
-    // cote 0 = avant ; porte calee selon sa position, ouvre vers l'exterieur (jardin)
-    const a = q[0], b = q[1], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = Math.min(+porte.largeur_cm, L);
-    const s0 = typeof porte.position === "number" ? porte.position : porte.position === "gauche" ? 0 : porte.position === "centre" ? (L - w) / 2 : L - w;
-    const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
-    const h0 = P([a[0] + ux * s0, a[1] + uy * s0]), h1 = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w)]);
-    const ext = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w) - w]);
+  if (v.porte) {
+    // porte sur le cote v.porte.cote, charniere au bout, vantail ouvert vers l'exterieur
+    const k = v.porte.cote, a = q[k], b = q[(k + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = v.porte.largeur_cm, s0 = v.porte.debut_cm;
+    const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, ox = uy, oy = -ux;       // exterieur (polygone antihoraire)
+    const f0w = [a[0] + ux * s0, a[1] + uy * s0], hw = [a[0] + ux * (s0 + w), a[1] + uy * (s0 + w)];
+    const h0 = P(f0w), h1 = P(hw), ext = P([hw[0] + ox * w, hw[1] + oy * w]);
     svg += line(h0[0], h0[1], h1[0], h1[1], "#c0392b", 5);
     svg += line(h1[0], h1[1], ext[0], ext[1], "#c0392b", 2);
-    svg += `<path d="M ${f1(h0[0])} ${f1(h0[1])} A ${f1(w * scale)} ${f1(w * scale)} 0 0 0 ${f1(ext[0])} ${f1(ext[1])}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n`;
-    svg += text((h0[0] + h1[0]) / 2, h0[1] - 12, `porte ${fz(w)}`, "middle", "#c0392b", 11, "bold");
+    const arc: Pt[] = [];
+    for (let i = 0; i <= 16; i++) { const t = Math.PI / 2 * i / 16; arc.push(P([hw[0] + w * (-ux * Math.cos(t) + ox * Math.sin(t)), hw[1] + w * (-uy * Math.cos(t) + oy * Math.sin(t))])); }
+    svg += `<polyline points="${arc.map((z) => `${f1(z[0])},${f1(z[1])}`).join(" ")}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n`;
+    const m = P([(f0w[0] + hw[0]) / 2 + ox * 18 / scale, (f0w[1] + hw[1]) / 2 + oy * 18 / scale]);   // dehors, dans le debattement
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold"${k === 0 ? "" : ` transform="rotate(${f1(Math.atan2(-uy, ux) * 180 / Math.PI + (uy > 0 ? 180 : 0))} ${f1(m[0])} ${f1(m[1])})"`}>porte ${fz(w)}</text>\n`;
   }
   for (const ps of v.passages || []) {
     const pc = ps.cm, col = pc < 35 ? "#c0392b" : pc < 50 ? "#c77d0a" : "#2a8a4a";
@@ -964,7 +1012,7 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, porte: any)
 
 // dalle seule, vue de dessus, dans son propre repere : cote de chaque cote, angle a chaque
 // sommet, position de la pointe. Les murs de propriete en brun, l'abri en fantome.
-export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, porte: any = null): string {
+export function plan_dalle_svg(g: any, avecBandes = false, v: any = null): string {
   const d = g.dalle;
   const zu = avecBandes || v ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
@@ -972,7 +1020,9 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, porte:
   const n = q.length, scale = 1.25, pad = 110, top = 90;
   const xs = q.map((v) => v[0]), ys = q.map((v) => v[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + pad + top + 40 + (v && porte ? Math.max(0, +porte.largeur_cm * scale - 60) : 0);
+  const pw = v && v.porte ? v.porte.largeur_cm * scale - 60 : 0;
+  const W = (maxx - minx) * scale + 2 * pad + (v && v.porte && v.porte.cote !== 0 ? Math.max(0, pw) : 0);
+  const H = (maxy - miny) * scale + pad + top + 40 + (v && v.porte && v.porte.cote === 0 ? Math.max(0, pw) : 0);
   const P = (v: Pt) => [pad + (v[0] - minx) * scale, top + 40 + (maxy - v[1]) * scale];
   const mur = new Set(d.murs.map((w: any) => w.cote));
   const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
@@ -1019,7 +1069,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, porte:
     const suppose = i < 2 ? "*" : "";
     svg += text(tp[0], tp[1] + 4, `${f1(d.angles_deg[i])}°${suppose}`, "middle", ANGLE, 12, "bold");
   });
-  if (v) svg += variante_svg(v, P, scale, porte);
+  if (v) svg += variante_svg(v, P, scale);
   // pointe : position depuis le coin avant-gauche
   if (d.pointe_cm && !v) {
     const pt: Pt = d.pointe_cm, pp = P(pt), p0 = P([pt[0], 0]), pl = P([0, pt[1]]);
@@ -1274,7 +1324,7 @@ export function buildCore(p: Params) {
   if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
   if (g.dalle && g.dalle.zone_utile) svg["plan-dalle-bandes"] = plan_dalle_svg(g, true);
   const vars = variantes(p, g);
-  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v, v.id === 7 ? null : p.porte);
+  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v);
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, svg };
 }
@@ -1292,9 +1342,10 @@ const AVIS: Record<number, [string[], string[]]> = {
   7: [["prouve qu'aucune rotation ne fait mieux qu'un rectangle droit"], ["identique à l'option 2 avec la zone actuelle"]],
   8: [["la plus grande surface possible avec 4 murs"], ["mur gauche en biais : un coin perdu en long contre le mur de propriété", "deux angles aigus, difficiles à meubler"]],
   9: [["4 murs, un seul en biais, deux angles droits côté porte", "toit simple : un seul bord en biais"], ["au-dessus du seuil", "angle aigu au fond à gauche"]],
-  10: [["sous le seuil, même forme que l'option 9"], ["façade plus étroite", "aucun gain de passage : même pince que l'option 9"]],
+  10: [["sous le seuil, même forme que l'option 9", "passage arrière un peu élargi"], ["façade plus étroite"]],
+  13: [["pleine largeur et la plus grande surface des trapèzes, avec le passage voulu derrière", "porte sur le côté droit : bureau en L sur tout le mur gauche et toute la façade", "façade libre pour des fenêtres, lumière sur le bureau"], ["au-dessus du seuil : déclaration préalable probable", "angle aigu au fond à gauche, occupé par le bout du bureau", "mur gauche très haut contre la propriété : panneau long, inaccessible après montage"]],
   12: [["mur gauche et mur du fond en panneaux entiers : aucune recoupe sur les deux murs contre la propriété, inaccessibles après montage", "sous le seuil, même intérieur que le 200 × 240 d'origine", "façade pleine largeur : porte et fenêtre côté jardin", "que des angles droits ou obtus, pan coupé court", "le pan coupé tombe sous la bande de toit déjà recoupée : une seule coupe de toit en biais"], ["5 murs et 2 angles obtus : profils d'angle pliés sur mesure", "3 bandes de panneau à recouper (façade, mur droit, pan coupé), tirées de 2 panneaux", "gouttière arrière arrêtée avant le pan coupé"]],
-  11: [["sous le seuil sans perdre de largeur de façade", "le passage arrière le plus large des trapèzes"], ["mur droit court : peu de place pour une fenêtre à droite", "angle aigu au fond à gauche, un peu plus fermé que l'option 9"]],
+  11: [["sous le seuil sans perdre de largeur de façade", "le passage arrière le plus large des trapèzes"], ["mur droit court : peu de place pour une porte ou une fenêtre à droite", "angle aigu au fond à gauche, plus fermé que l'option 9"]],
 };
 
 export function variantes_md(p: Params, core: any): string {
@@ -1321,6 +1372,7 @@ export function variantes_md(p: Params, core: any): string {
   md += `- **Le plus simple** : option 1, panneaux entiers, angles droits.\n`;
   if (vs.some((v: any) => v.id === 12)) md += `- **Le meilleur compromis sous le seuil** : option 12, l'option 1 élargie à toute la façade avec un seul coin coupé.\n`;
   md += `- **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.\n`;
+  if (vs.some((v: any) => v.id === 13 && v.bureaux)) md += `- **Bureau en L, passage visé derrière** : option 13, porte à droite, bureau sur tout le mur gauche et toute la façade.\n`;
   md += `- **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.\n\n`;
   md += `## Comparatif\n\n`;
   md += `| # | forme | murs (ext.) | **intérieur** | côtés | passage grand pan | passage petit pan | ≤ ${fz(seuil)} m² |\n|---|---|---|---|---|---|---|---|\n`;
@@ -1334,7 +1386,11 @@ export function variantes_md(p: Params, core: any): string {
     md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
     v.noms_cotes.forEach((n: string, i: number) => { md += `| côté ${n} | ${fr(v.cotes_cm[i])} cm | ${fr(v.cotes_interieures_cm[i])} cm |\n`; });
     md += `| angles | ${v.angles_deg.map((a: number) => fr(a) + "°").join(" · ")} | |\n`;
-    md += `| passage arrière | grand pan ${pas(v, "arriere_droite")} · petit pan ${pas(v, "arriere_gauche")} | |\n\n`;
+    md += `| passage arrière | grand pan ${pas(v, "arriere_droite")} · petit pan ${pas(v, "arriere_gauche")} | |\n`;
+    if (v.porte) md += `| porte | ${fz(v.porte.largeur_cm)} cm sur le côté ${v.porte.nom}, de ${fr(v.porte.debut_cm)} à ${fr(rnd(v.porte.debut_cm + v.porte.largeur_cm, 1))} cm | |\n`;
+    for (const b of v.bureaux || []) md += `| bureau ${b.cote} | | ${fz(b.profondeur_cm)} cm de profondeur sur ${fr(b.longueur_cm)} cm |\n`;
+    if (v.bureaux) md += `| sol libre | | **${fr(v.sol_libre_m2)} m²** (bureaux ${fr(v.bureaux_m2)} m²) |\n`;
+    md += `\n`;
     for (const x of pour) md += `- ✅ ${x}\n`;
     for (const x of contre) md += `- ⚠️ ${x}\n`;
     md += `\n`;

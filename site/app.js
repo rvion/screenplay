@@ -783,6 +783,22 @@ function variantes(p, g) {
       else hi2 = m;
     }
     const h11 = Math.floor(lo2);
+    const vise = +p.dalle_cm.passage_souhaite_cm || 0;
+    if (vise > 0) {
+      const derriere = (q) => {
+        const w = passages(q).find((x) => x.cote === "arriere_droite");
+        return w ? w.cm : Infinity;
+      };
+      lo2 = 0;
+      hi2 = HG[1] - Z[1][1];
+      for (let k = 0; k < 50; k++) {
+        const m = (lo2 + hi2) / 2;
+        if (derriere(pivot(m)) >= vise) lo2 = m;
+        else hi2 = m;
+      }
+      const h13 = Math.floor(lo2);
+      out.push(forme(13, `trap\xE8ze, ${fz(vise)} cm derri\xE8re`, `pleine largeur, mur arri\xE8re du haut du c\xF4t\xE9 gauche jusqu'au mur droit abaiss\xE9 \xE0 ${h13} : ${fz(vise)} cm de passage derri\xE8re l'abri`, pivot(h13)));
+    }
     out.push(forme(11, `trap\xE8ze pivot\xE9, plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `le trap\xE8ze 9, coin arri\xE8re droit abaiss\xE9 \xE0 ${h11} : sous ${fz(seuil)} m\xB2, passage arri\xE8re \xE9largi`, pivot(h11)));
     const pente_pan = (Z[3][1] - HD[1]) / (HD[0] - Z[3][0]);
     const au_module = (i, j) => {
@@ -797,6 +813,37 @@ function variantes(p, g) {
       if (q && poly_area(q) <= seuil * 1e4 && (!m12 || poly_area(q) > poly_area(m12.q))) m12 = { q, i, j };
     }
     if (m12) out.push(forme(12, "coin coup\xE9 au module", `l'option 1 \xE9largie \xE0 toute la fa\xE7ade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz(mod)} sans recoupe, pan coup\xE9 parall\xE8le au grand pan`, m12.q));
+  }
+  const place = (v, cote, position) => {
+    const k = v.noms_cotes.indexOf(cote);
+    if (k < 0) return null;
+    const L = v.cotes_cm[k], w = Math.min(+p.porte.largeur_cm, L);
+    const s0 = typeof position === "number" ? position : position === "gauche" ? 0 : position === "centre" ? (L - w) / 2 : L - w;
+    return { cote: k, nom: cote, debut_cm: rnd(s0, 1), largeur_cm: w };
+  };
+  const disp = p.disposition_trapeze;
+  for (const v of out) {
+    if (!p.porte || v.id === 7) {
+      v.porte = null;
+      continue;
+    }
+    const perso = v.id === 13 && disp;
+    v.porte = place(v, perso ? disp.porte_cote : "avant", perso ? disp.porte_position : p.porte.position);
+    if (!perso) continue;
+    const r = v.polygone, inter = inset(r, r.map(() => ep));
+    v.bureaux = (disp.bureaux || []).map((b) => {
+      const i = v.noms_cotes.indexOf(b.cote);
+      if (i < 0) return null;
+      const a = r[i], c = r[(i + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, e = ep + +b.profondeur_cm;
+      const nx = -(c[1] - a[1]) / l * e, ny = (c[0] - a[0]) / l * e;
+      const q = clip_half(inter, [a[0] + nx, a[1] + ny], [c[0] + nx, c[1] + ny], false);
+      return { cote: b.cote, profondeur_cm: +b.profondeur_cm, longueur_cm: v.cotes_interieures_cm[i], aire_m2: rnd(poly_area(q) / 1e4, 2), polygone: q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]), brut: q };
+    }).filter(Boolean);
+    let occ = v.bureaux.reduce((s, b) => s + poly_area(b.brut), 0);
+    for (let i = 0; i < v.bureaux.length; i++) for (let j = i + 1; j < v.bureaux.length; j++) occ -= poly_area(clip_convex(v.bureaux[i].brut, v.bureaux[j].brut));
+    for (const b of v.bureaux) delete b.brut;
+    v.bureaux_m2 = rnd(occ / 1e4, 2);
+    v.sol_libre_m2 = rnd((poly_area(inter) - occ) / 1e4, 2);
   }
   return out.sort((a, b) => a.id - b.id);
 }
@@ -911,9 +958,16 @@ function plan_sol_svg(p, g, openings) {
   svg += "</svg>\n";
   return svg;
 }
-function variante_svg(v, P, scale, porte) {
+function variante_svg(v, P, scale) {
   const q = v.polygone, n = q.length, BLEU = "#2b5d8a", ANGLE = "#b0452a";
   let svg = poly(q.map(P), "#cfe0f1", BLEU, 2.5);
+  for (const bu of v.bureaux || []) {
+    svg += poly(bu.polygone.map(P), "#e6c79c", "#9a7040", 1.2);
+    const c2 = bu.polygone.reduce((s, w) => [s[0] + w[0] / bu.polygone.length, s[1] + w[1] / bu.polygone.length], [0, 0]), pc = P(c2);
+    const vertical = bu.cote.startsWith("gauche") || bu.cote.startsWith("droite");
+    svg += `<text x="${f1(pc[0])}" y="${f1(pc[1])}" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="11" font-weight="bold"${vertical ? ` transform="rotate(-90 ${f1(pc[0])} ${f1(pc[1])})"` : ""}>bureau ${fz(bu.profondeur_cm)} \xD7 ${fz(bu.longueur_cm)}</text>
+`;
+  }
   q.forEach((a, i) => {
     const b = q[(i + 1) % n], pa = P(a), pb = P(b);
     const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
@@ -939,17 +993,23 @@ function variante_svg(v, P, scale, porte) {
       svg += text(tp[0], tp[1] + 4, `${f1(v.angles_deg[i])}\xB0`, "middle", ANGLE, 11, "bold");
     }
   });
-  if (porte) {
-    const a = q[0], b = q[1], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = Math.min(+porte.largeur_cm, L);
-    const s0 = typeof porte.position === "number" ? porte.position : porte.position === "gauche" ? 0 : porte.position === "centre" ? (L - w) / 2 : L - w;
-    const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L;
-    const h0 = P([a[0] + ux * s0, a[1] + uy * s0]), h1 = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w)]);
-    const ext = P([a[0] + ux * (s0 + w), a[1] + uy * (s0 + w) - w]);
+  if (v.porte) {
+    const k = v.porte.cote, a = q[k], b = q[(k + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), w = v.porte.largeur_cm, s0 = v.porte.debut_cm;
+    const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, ox = uy, oy = -ux;
+    const f0w = [a[0] + ux * s0, a[1] + uy * s0], hw = [a[0] + ux * (s0 + w), a[1] + uy * (s0 + w)];
+    const h0 = P(f0w), h1 = P(hw), ext = P([hw[0] + ox * w, hw[1] + oy * w]);
     svg += line(h0[0], h0[1], h1[0], h1[1], "#c0392b", 5);
     svg += line(h1[0], h1[1], ext[0], ext[1], "#c0392b", 2);
-    svg += `<path d="M ${f1(h0[0])} ${f1(h0[1])} A ${f1(w * scale)} ${f1(w * scale)} 0 0 0 ${f1(ext[0])} ${f1(ext[1])}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+    const arc = [];
+    for (let i = 0; i <= 16; i++) {
+      const t = Math.PI / 2 * i / 16;
+      arc.push(P([hw[0] + w * (-ux * Math.cos(t) + ox * Math.sin(t)), hw[1] + w * (-uy * Math.cos(t) + oy * Math.sin(t))]));
+    }
+    svg += `<polyline points="${arc.map((z) => `${f1(z[0])},${f1(z[1])}`).join(" ")}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
 `;
-    svg += text((h0[0] + h1[0]) / 2, h0[1] - 12, `porte ${fz(w)}`, "middle", "#c0392b", 11, "bold");
+    const m = P([(f0w[0] + hw[0]) / 2 + ox * 18 / scale, (f0w[1] + hw[1]) / 2 + oy * 18 / scale]);
+    svg += `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold"${k === 0 ? "" : ` transform="rotate(${f1(Math.atan2(-uy, ux) * 180 / Math.PI + (uy > 0 ? 180 : 0))} ${f1(m[0])} ${f1(m[1])})"`}>porte ${fz(w)}</text>
+`;
   }
   for (const ps of v.passages || []) {
     const pc = ps.cm, col = pc < 35 ? "#c0392b" : pc < 50 ? "#c77d0a" : "#2a8a4a";
@@ -976,7 +1036,7 @@ function variante_svg(v, P, scale, porte) {
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
   return svg;
 }
-function plan_dalle_svg(g, avecBandes = false, v = null, porte = null) {
+function plan_dalle_svg(g, avecBandes = false, v = null) {
   const d = g.dalle;
   const zu = avecBandes || v ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
@@ -984,7 +1044,9 @@ function plan_dalle_svg(g, avecBandes = false, v = null, porte = null) {
   const n = q.length, scale = 1.25, pad = 110, top = 90;
   const xs = q.map((v2) => v2[0]), ys = q.map((v2) => v2[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + pad + top + 40 + (v && porte ? Math.max(0, +porte.largeur_cm * scale - 60) : 0);
+  const pw = v && v.porte ? v.porte.largeur_cm * scale - 60 : 0;
+  const W = (maxx - minx) * scale + 2 * pad + (v && v.porte && v.porte.cote !== 0 ? Math.max(0, pw) : 0);
+  const H = (maxy - miny) * scale + pad + top + 40 + (v && v.porte && v.porte.cote === 0 ? Math.max(0, pw) : 0);
   const P = (v2) => [pad + (v2[0] - minx) * scale, top + 40 + (maxy - v2[1]) * scale];
   const mur = new Set(d.murs.map((w) => w.cote));
   const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
@@ -1036,7 +1098,7 @@ function plan_dalle_svg(g, avecBandes = false, v = null, porte = null) {
     const suppose = i < 2 ? "*" : "";
     svg += text(tp[0], tp[1] + 4, `${f1(d.angles_deg[i])}\xB0${suppose}`, "middle", ANGLE, 12, "bold");
   });
-  if (v) svg += variante_svg(v, P, scale, porte);
+  if (v) svg += variante_svg(v, P, scale);
   if (d.pointe_cm && !v) {
     const pt = d.pointe_cm, pp = P(pt), p0 = P([pt[0], 0]), pl = P([0, pt[1]]);
     svg += line(pp[0], pp[1], p0[0], p0[1], "#aaa", 0.8, "4 4");
@@ -1278,7 +1340,7 @@ function buildCore(p) {
   if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
   if (g.dalle && g.dalle.zone_utile) svg["plan-dalle-bandes"] = plan_dalle_svg(g, true);
   const vars = variantes(p, g);
-  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v, v.id === 7 ? null : p.porte);
+  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v);
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, svg };
 }

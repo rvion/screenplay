@@ -25,19 +25,34 @@ window.SHED_PARAMS = {
     ],
     "mur_hauteur_cm": 180,
     "mur_epaisseur_cm": 15,
-    "passage_souhaite_cm": 45,
+    "passage_souhaite_cm": 50,
     "bandes_libres_cm": {
       "_comment": "Bande reservee (laissee libre) le long de chaque cote de la dalle, vers l'interieur. Ce qui reste au centre = zone utile (plan-dalle-bandes.svg).",
       "avant": 5,
       "droite": 5,
       "arriere_droite": 45,
-      "arriere_gauche": 45,
+      "arriere_gauche": 12,
       "gauche": 12
     },
     "decalage_cm": {
       "x": 2,
       "y": 2
     }
+  },
+  "disposition_trapeze": {
+    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : porte sur le cote droit, bureau en L le long de tout le mur gauche et de toute la facade (facade = fenetres seulement). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm.",
+    "porte_cote": "droite",
+    "porte_position": "droite",
+    "bureaux": [
+      {
+        "cote": "gauche",
+        "profondeur_cm": 60
+      },
+      {
+        "cote": "avant",
+        "profondeur_cm": 50
+      }
+    ]
   },
   "reglementaire": {
     "seuil_sans_formalite_m2": 5,
