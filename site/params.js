@@ -71,13 +71,12 @@ window.SHED_PARAMS = {
       }
     ],
     "lit_pliant": {
-      "largeur_cm": 55,
-      "longueur_cm": 170,
-      "contre": "fond",
-      "epaisseur_replie_cm": 10,
-      "acces_porte_cm": 50,
+      "largeur_cm": 75,
+      "longueur_cm": 190,
+      "acces_porte_cm": 60,
       "sous_bureau": true
     },
+    "rehausse_prix_ml_eur": 13,
     "sieges": [
       {
         "type": "fauteuil de bureau",

@@ -57,6 +57,7 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
   const lp = v.lit_pliant, I = inset_ordre(v.polygone, base.panneau.epaisseur_mm / 10);
   const dedans = (z) => I.every((a, i) => { const b = I[(i + 1) % I.length]; return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -0.2 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
   ok(lp && lp.tient && lp.polygone.every(dedans), "lit pliant dans l'interieur");
+  ok(lp.largeur_cm >= 75 && lp.longueur_cm >= 190, "lit d'au moins 75 x 190");
   ok(base.disposition_trapeze.lit_pliant.sous_bureau || v.bureaux.every((b) => poly_area(clip_convex(lp.polygone, b.polygone)) < 2), "lit pliant hors des bureaux, sauf sous_bureau");
   // controle : un lit court tient sur le sol libre, sans passer sous un bureau
   const court = JSON.parse(JSON.stringify(base)); court.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 150, acces_porte_cm: 60, sous_bureau: true };
@@ -64,11 +65,17 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
   ok(lc.tient && lc.sous_bureau_cm2 === 0, "lit de 150 : sur le sol libre, rien sous les bureaux");
   const sans = JSON.parse(JSON.stringify(base)); sans.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 180, acces_porte_cm: 60, sous_bureau: false };
   ok(!buildCore(sans).variantes.find((x) => x.id === 13).lit_pliant.tient, "lit de 65 x 180 sans passer sous un bureau : ne tient pas (signale)");
-  // rabattable contre le fond : long bord sur la face interieure du mur, replie a plat, 2 fixations
+  // rabattable contre le fond (55 x 170, 50 cm devant la porte) : long bord sur la face interieure du mur,
+  // replie a plat, 2 fixations ; un 75 x 190 n'y tient pas sans supprimer l'acces a la porte
+  const cf = JSON.parse(JSON.stringify(base));
+  cf.disposition_trapeze.lit_pliant = { largeur_cm: 55, longueur_cm: 170, contre: "fond", epaisseur_replie_cm: 10, acces_porte_cm: 50, sous_bureau: true };
+  const lpf = buildCore(cf).variantes.find((x) => x.id === 13).lit_pliant;
+  cf.disposition_trapeze.lit_pliant = { ...cf.disposition_trapeze.lit_pliant, largeur_cm: 75, longueur_cm: 190, acces_porte_cm: 20 };
+  ok(!buildCore(cf).variantes.find((x) => x.id === 13).lit_pliant.tient, "75 x 190 en couchette contre le fond : ne tient pas avec 20 cm devant la porte");
   const ep = base.panneau.epaisseur_mm / 10, f = m.faces.find((x) => x.cle === "B"), LB = f.longueur_cm;
   const dmur = (z) => Math.abs((f.a[0] - f.de[0]) * (z[1] - f.de[1]) - (f.a[1] - f.de[1]) * (z[0] - f.de[0])) / LB;
-  ok(lp.contre.startsWith("fond") && near(dmur(lp.polygone[0]), ep, 0.2) && near(dmur(lp.polygone[1]), ep, 0.2), "lit rabattable plaque contre la face interieure du mur du fond");
-  ok(near(dmur(lp.replie[2]), ep + lp.epaisseur_replie_cm, 0.2) && lp.fixations.length === 2 && lp.fixations.every((z) => near(dmur(z), ep, 0.2)), "replie a plat sur son epaisseur, 2 fixations sur le mur du fond");
+  ok(lpf.contre.startsWith("fond") && near(dmur(lpf.polygone[0]), ep, 0.2) && near(dmur(lpf.polygone[1]), ep, 0.2), "lit rabattable plaque contre la face interieure du mur du fond");
+  ok(near(dmur(lpf.replie[2]), ep + lpf.epaisseur_replie_cm, 0.2) && lpf.fixations.length === 2 && lpf.fixations.every((z) => near(dmur(z), ep, 0.2)), "replie a plat sur son epaisseur, 2 fixations sur le mur du fond");
   ok(!m.faces.find((x) => x.cle === "A").ouvertures.some((o) => o.type === "lit"), "rien du lit sur la facade");
   const L = [0, 1, 2].map((i) => Math.hypot(lp.polygone[i + 1][0] - lp.polygone[i][0], lp.polygone[i + 1][1] - lp.polygone[i][1]));
   ok(near(L[0], lp.longueur_cm, 0.2) && near(L[1], lp.largeur_cm, 0.2), "lit pliant aux bonnes dimensions");
@@ -88,6 +95,16 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
 const { abri_md } = await import(pathToFileURL(out).href);
 const page = abri_md(base, core);
 ok(["modele-sol", "modele-toit", "modele-rehausse", "modele-facade-A", "modele-facade-D", "modele-facade-B", "modele-facade-G"].every((k) => page.includes(`site/assets/${k}.svg`)), "abri.md inclut les 7 plans");
+ok(page.indexOf("modele-implantation.svg") < page.indexOf("## En bref") && core.svg["modele-implantation"].includes("262"), "abri.md s'ouvre sur la dalle (implantation, cotes de la dalle)");
+ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## À trancher"].every((h) => page.includes(h)) && !page.includes("NE TIENT PAS"), "abri.md complet, et tout y tient");
+// debit murs : chaque bande prise dans une chute tient dans ce qu'il reste des panneaux recoupes
+{
+  const toutes = m.faces.flatMap((f) => f.panneaux), neufs = toutes.filter((x) => x.source === "neuf");
+  ok(neufs.length === m.panneaux_mur_a_commander, "panneaux a commander = bandes tirees d'un panneau neuf");
+  const reste = neufs.reduce((s, x) => s + base.panneau.largeur_utile_cm - x.largeur_cm, 0), pris = toutes.filter((x) => x.source === "chute").reduce((s, x) => s + x.largeur_cm, 0);
+  ok(pris <= reste + 1e-6, "les bandes tirees des chutes ne depassent pas les chutes disponibles");
+  ok(m.budget.total_eur > 0 && near(m.budget.total_eur, m.budget.lignes.reduce((s, l) => s + l.montant_eur, 0), 1), "budget : total = somme des lignes");
+}
 
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }
 console.log("\nModele 2D OK ✓");
