@@ -62,11 +62,27 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
   const court = JSON.parse(JSON.stringify(base)); court.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 150, acces_porte_cm: 60, sous_bureau: true };
   const lc = buildCore(court).variantes.find((x) => x.id === 13).lit_pliant;
   ok(lc.tient && lc.sous_bureau_cm2 === 0, "lit de 150 : sur le sol libre, rien sous les bureaux");
-  const sans = JSON.parse(JSON.stringify(base)); sans.disposition_trapeze.lit_pliant.sous_bureau = false;
-  ok(!buildCore(sans).variantes.find((x) => x.id === 13).lit_pliant.tient, "lit de 180 sans passer sous un bureau : ne tient pas (signale)");
+  const sans = JSON.parse(JSON.stringify(base)); sans.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 180, acces_porte_cm: 60, sous_bureau: false };
+  ok(!buildCore(sans).variantes.find((x) => x.id === 13).lit_pliant.tient, "lit de 65 x 180 sans passer sous un bureau : ne tient pas (signale)");
+  // rabattable contre le fond : long bord sur la face interieure du mur, replie a plat, 2 fixations
+  const ep = base.panneau.epaisseur_mm / 10, f = m.faces.find((x) => x.cle === "B"), LB = f.longueur_cm;
+  const dmur = (z) => Math.abs((f.a[0] - f.de[0]) * (z[1] - f.de[1]) - (f.a[1] - f.de[1]) * (z[0] - f.de[0])) / LB;
+  ok(lp.contre.startsWith("fond") && near(dmur(lp.polygone[0]), ep, 0.2) && near(dmur(lp.polygone[1]), ep, 0.2), "lit rabattable plaque contre la face interieure du mur du fond");
+  ok(near(dmur(lp.replie[2]), ep + lp.epaisseur_replie_cm, 0.2) && lp.fixations.length === 2 && lp.fixations.every((z) => near(dmur(z), ep, 0.2)), "replie a plat sur son epaisseur, 2 fixations sur le mur du fond");
+  ok(!m.faces.find((x) => x.cle === "A").ouvertures.some((o) => o.type === "lit"), "rien du lit sur la facade");
   const L = [0, 1, 2].map((i) => Math.hypot(lp.polygone[i + 1][0] - lp.polygone[i][0], lp.polygone[i + 1][1] - lp.polygone[i][1]));
   ok(near(L[0], lp.longueur_cm, 0.2) && near(L[1], lp.largeur_cm, 0.2), "lit pliant aux bonnes dimensions");
   ok(core.svg["modele-sol"].includes("lit pliant"), "plan de sol : lit pliant dessine");
+}
+
+// why we think it is actually a bug, and not just meaning spec should change: acces_porte_cm is a
+// depth in cm, 0 means no access zone; it was read with `|| 60`, so 0 silently became 60 cm
+{
+  const z = JSON.parse(JSON.stringify(base));
+  z.disposition_trapeze.lit_pliant = { largeur_cm: 60, longueur_cm: 180, acces_porte_cm: 0, sous_bureau: true, contre: "fond" };
+  ok(buildCore(z).variantes.find((x) => x.id === 13).lit_pliant.tient, "acces_porte_cm = 0 : aucune zone devant la porte, le lit 60 x 180 tient");
+  z.disposition_trapeze.lit_pliant.acces_porte_cm = 20;
+  ok(buildCore(z).variantes.find((x) => x.id === 13).lit_pliant.tient, "controle : avec 20 cm devant la porte, il tient deja");
 }
 
 const { abri_md } = await import(pathToFileURL(out).href);

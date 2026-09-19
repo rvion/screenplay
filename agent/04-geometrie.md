@@ -116,7 +116,9 @@ en biais 256,6, **G** gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.
   Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).
 - **Sièges et lit** : fauteuil 70 × 70 contre le bureau gauche (y 109 → 179), tabouret 30 × 30
   contre le bureau de façade. Sur le sol libre, un lit de 65 de large tient jusqu'à **~165** de long
-  (le fond en biais limite, pas l'accès à la porte) ; le lit pliant 65 × 180 tient le long du
-  bureau gauche, le pied **12 cm sous le bureau de façade**, fauteuil et tabouret rangés.
+  (le fond en biais limite, pas l'accès à la porte) ; le lit est **rabattable contre le mur du fond**
+  (couchette de bateau) : 55 × 170, long bord plaqué sur la face intérieure du fond en biais, replié à
+  plat sur 10 cm, 2 fixations intérieures (rien en façade) ; déplié, son pied glisse sous le bureau
+  gauche, et il laisse 50 cm devant la porte. À 60 cm devant la porte, seul un 55 × 160 tient.
 - **Porte** : ouverture 65 × 205 sur D, de 100,5 à 165,5 ; chambranle 5 ; cadre à 5 cm de la face
   intérieure du mur du fond et 5 cm sous le haut du mur.

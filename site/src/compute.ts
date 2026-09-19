@@ -894,28 +894,49 @@ export function variantes(p: Params, g: any) {
       const acces: Pt[][] = [];
       if (v.porte) {
         const k = v.porte.cote, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
-        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm || 60);
+        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm ?? 60);
         acces.push([[a[0] + ux * s0, a[1] + uy * s0], [a[0] + ux * s1, a[1] + uy * s1], [a[0] + ux * s1 + nx * pr, a[1] + uy * s1 + ny * pr], [a[0] + ux * s0 + nx * pr, a[1] + uy * s0 + ny * pr]]);
       }
       const sous = !!disp.lit_pliant.sous_bureau;
       const fixes = sous ? acces : [...v.bureaux.map((b: any) => b.brut), ...acces];
-      const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
-      const angles = [0, 90, ...r.map((a, i) => { const c = r[(i + 1) % r.length]; return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI; })];
+      // candidats : plaque contre la face interieure du mur `contre` (lit rabattable), sinon partout
+      const candidats: { q: Pt[]; s?: number }[] = [];
+      const kc = disp.lit_pliant.contre ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(disp.lit_pliant.contre)) : -1;
+      let mur: any = null;
+      if (kc >= 0) {
+        const a = r[kc], c = r[(kc + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
+        mur = { a, ux, uy, nx, ny };
+        for (let s = 0; s + LL <= l; s += 1) candidats.push({ s, q: [[a[0] + ux * s + nx * ep, a[1] + uy * s + ny * ep], [a[0] + ux * (s + LL) + nx * ep, a[1] + uy * (s + LL) + ny * ep], [a[0] + ux * (s + LL) + nx * (ep + LW), a[1] + uy * (s + LL) + ny * (ep + LW)], [a[0] + ux * s + nx * (ep + LW), a[1] + uy * s + ny * (ep + LW)]] });
+      } else {
+        const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
+        const angles = [0, 90, ...r.map((a, i) => { const c = r[(i + 1) % r.length]; return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI; })];
+        for (const deg of angles) {
+          const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
+          for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2)
+            candidats.push({ q: [[x, y], [x + ca * LL, y + sa * LL], [x + ca * LL - sa * LW, y + sa * LL + ca * LW], [x - sa * LW, y + ca * LW]] });
+        }
+      }
       let best: any = null;
-      for (const deg of angles) {
-        const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
-        for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2) {
-          const q: Pt[] = [[x, y], [x + ca * LL, y + sa * LL], [x + ca * LL - sa * LW, y + sa * LL + ca * LW], [x - sa * LW, y + ca * LW]];
+      {
+        for (const { q, s } of candidats) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o: Pt[]) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous ? v.bureaux.reduce((s: number, b: any) => s + poly_area(clip_convex(q, b.brut)), 0) : 0;
           const gene = poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
           const cout = dessous * 1000 + gene;
-          if (!best || cout < best.cout - 1) best = { gene, dessous, cout, q, deg };
+          if (!best || cout < best.cout - 1) best = { gene, dessous, cout, q, s };
         }
       }
       v.lit_pliant = best
-        ? { largeur_cm: LW, longueur_cm: LL, tient: true, gene_sieges_m2: rnd(best.gene / 1e4, 2), sous_bureau_cm2: rnd(best.dessous, 0), polygone: best.q.map(([x, y]: Pt) => [rnd(x, 1), rnd(y, 1)]) }
+        ? {
+          largeur_cm: LW, longueur_cm: LL, tient: true, gene_sieges_m2: rnd(best.gene / 1e4, 2), sous_bureau_cm2: rnd(best.dessous, 0), polygone: best.q.map(([x, y]: Pt) => [rnd(x, 1), rnd(y, 1)]),
+          // rabattable : replie a plat contre le mur, deux fixations (charnieres) sur la face interieure
+          ...(mur ? (() => {
+            const e = +(disp.lit_pliant.epaisseur_replie_cm ?? 10), s0 = best.s, { a, ux, uy, nx, ny } = mur, at = (s: number, d: number): Pt => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+            const rep = [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + e), at(s0, ep + e)], fx = [at(s0 + 15, ep), at(s0 + LL - 15, ep)];
+            return { contre: v.noms_cotes[kc], debut_cm: s0, replie: rep.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]), epaisseur_replie_cm: e, fixations: fx.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+          })() : {}),
+        }
         : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
     }
     for (const b of v.bureaux) delete b.brut;
@@ -1052,6 +1073,10 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number): string {
   }
   if (v.lit_pliant && v.lit_pliant.tient) {
     const lp = v.lit_pliant;
+    if (lp.replie) {
+      svg += poly(lp.replie.map(P), "#d9c8ec", "#6a3d9a", 1.5);
+      for (const z of lp.fixations) { const c = P(z); svg += `<rect x="${f1(c[0] - 3)}" y="${f1(c[1] - 3)}" width="6" height="6" fill="#6a3d9a"/>\n`; }
+    }
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     // etiquette a la tete du lit (bout le plus loin des bureaux), hors du fauteuil
     const [q0, q1, q2, q3] = lp.polygone as Pt[];
@@ -1648,6 +1673,10 @@ export function modele_sol_svg(p: Params, v: any, m: any): string {
   }
   if (v.lit_pliant && v.lit_pliant.tient) {
     const lp = v.lit_pliant;
+    if (lp.replie) {
+      svg += poly(lp.replie.map(P), "#d9c8ec", "#6a3d9a", 1.5);
+      for (const z of lp.fixations) { const c = P(z); svg += `<rect x="${f1(c[0] - 3)}" y="${f1(c[1] - 3)}" width="6" height="6" fill="#6a3d9a"/>\n`; }
+    }
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     // etiquette a la tete du lit (bout le plus loin des bureaux), hors du fauteuil
     const [q0, q1, q2, q3] = lp.polygone as Pt[];
@@ -1701,7 +1730,7 @@ export function modele_sol_svg(p: Params, v: any, m: any): string {
   });
   svg += text(W / 2, 26, `Plan de sol · murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m²`, "middle", "#222", 15, "bold");
   svg += text(W / 2, 44, `murs ${fz(+p.panneau.epaisseur_mm / 10)} cm · porte ${fz(v.porte.largeur_cm)} ouvrant dehors · fenêtres en façade (bleu)${v.sol_libre_m2 != null ? ` · sol libre hors bureaux ${v.sol_libre_m2} m²` : ""}`, "middle", "#888", 11);
-  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, "violet pointillé = lit pliant déplié (on range fauteuil et tabouret)", "middle", "#6a3d9a", 11);
+  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, `violet pointillé = lit déplié${v.lit_pliant.replie ? " · violet plein = replié contre le mur · carrés = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " · on range les sièges pour le déplier" : ""}`, "middle", "#6a3d9a", 11);
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
@@ -1834,7 +1863,7 @@ export function abri_md(p: Params, core: any): string {
   for (const f of v.fenetres) md += `| fenêtre ${f.ouvrant ? "ouvrante" : "fixe"} | ${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}, allège ${fz(f.allege_cm)}, face A de ${fr(f.debut_cm)} à ${fr(rnd(f.debut_cm + f.largeur_cm, 1))} cm |\n`;
   for (const b of v.bureaux) md += `| bureau ${b.cote} | ${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)} cm |\n`;
   for (const st of v.sieges || []) md += `| ${st.type} | ${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm, devant le bureau ${st.contre}${st.tient ? "" : " · **NE TIENT PAS**"} |\n`;
-  if (v.lit_pliant) md += `| lit pliant (déplié, pointillé) | ${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)} cm${v.lit_pliant.tient ? `${v.lit_pliant.sous_bureau_cm2 > 0 ? ", le pied passe sous le bureau (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit)" : ""}${v.lit_pliant.gene_sieges_m2 > 0 ? ", on range les sièges pour le déplier" : ", sans déplacer les sièges"}` : " · **NE TIENT PAS**"} |\n`;
+  if (v.lit_pliant) md += `| lit pliant (déplié, pointillé) | ${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)} cm${v.lit_pliant.tient ? `${v.lit_pliant.sous_bureau_cm2 > 0 ? ", le pied passe sous le bureau (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit)" : ""}${v.lit_pliant.replie ? `, rabattable contre le mur ${v.lit_pliant.contre} (replié : ${fz(v.lit_pliant.epaisseur_replie_cm)} cm, 2 fixations intérieures, rien en façade)` : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? ", on range les sièges pour le déplier" : ", sans déplacer les sièges"}` : " · **NE TIENT PAS**"} |\n`;
   md += `| rehausse | ${m.rehausse.pieces.length} pièces, ${m.rehausse.nb_madriers} madriers ${m.rehausse.section_mm.join(" × ")} |\n\n`;
   if (d && d.toit) md += `> Toit **${d.toit.sens === "arriere" ? "vers l'arrière" : d.toit.sens}**, chute **${fz(m.chute_cm)} cm** : choix par défaut, à confirmer (\`disposition_trapeze.toit\`).\n\n`;
   const plans: [string, string][] = [["modele-sol", "Plan de sol"], ["modele-toit", "Toiture"], ["modele-rehausse", "Rehausse bois"], ["modele-facade-A", "Face A · avant"], ["modele-facade-D", "Face D · droite"], ["modele-facade-B", "Face B · fond"], ["modele-facade-G", "Face G · gauche"]];

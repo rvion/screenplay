@@ -20,7 +20,7 @@
 | bureau avant | 50 × 206 cm |
 | fauteuil de bureau | 70 × 70 cm, devant le bureau gauche |
 | tabouret | 30 × 30 cm, devant le bureau avant |
-| lit pliant (déplié, pointillé) | 65 × 180 cm, le pied passe sous le bureau (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit), on range les sièges pour le déplier |
+| lit pliant (déplié, pointillé) | 55 × 170 cm, le pied passe sous le bureau (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit), rabattable contre le mur fond en biais (replié : 10 cm, 2 fixations intérieures, rien en façade), sans déplacer les sièges |
 | rehausse | 4 pièces, 2 madriers 75 × 300 |
 
 > Toit **vers l'arrière**, chute **30 cm** : choix par défaut, à confirmer (`disposition_trapeze.toit`).

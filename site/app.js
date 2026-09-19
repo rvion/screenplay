@@ -910,30 +910,55 @@ function variantes(p, g) {
       const acces = [];
       if (v.porte) {
         const k = v.porte.cote, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
-        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm || 60);
+        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm ?? 60);
         acces.push([[a[0] + ux * s0, a[1] + uy * s0], [a[0] + ux * s1, a[1] + uy * s1], [a[0] + ux * s1 + nx * pr, a[1] + uy * s1 + ny * pr], [a[0] + ux * s0 + nx * pr, a[1] + uy * s0 + ny * pr]]);
       }
       const sous2 = !!disp.lit_pliant.sous_bureau;
       const fixes = sous2 ? acces : [...v.bureaux.map((b) => b.brut), ...acces];
-      const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
-      const angles = [0, 90, ...r.map((a, i) => {
-        const c = r[(i + 1) % r.length];
-        return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI;
-      })];
-      let best2 = null;
-      for (const deg of angles) {
-        const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
-        for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2) {
-          const q = [[x, y], [x + ca * LL, y + sa * LL], [x + ca * LL - sa * LW, y + sa * LL + ca * LW], [x - sa * LW, y + ca * LW]];
-          if (!q.every(dedans_int)) continue;
-          if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
-          const dessous = sous2 ? v.bureaux.reduce((s, b) => s + poly_area(clip_convex(q, b.brut)), 0) : 0;
-          const gene = poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
-          const cout = dessous * 1e3 + gene;
-          if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, deg };
+      const candidats = [];
+      const kc = disp.lit_pliant.contre ? v.noms_cotes.findIndex((nm) => nm.startsWith(disp.lit_pliant.contre)) : -1;
+      let mur = null;
+      if (kc >= 0) {
+        const a = r[kc], c = r[(kc + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
+        mur = { a, ux, uy, nx, ny };
+        for (let s = 0; s + LL <= l; s += 1) candidats.push({ s, q: [[a[0] + ux * s + nx * ep, a[1] + uy * s + ny * ep], [a[0] + ux * (s + LL) + nx * ep, a[1] + uy * (s + LL) + ny * ep], [a[0] + ux * (s + LL) + nx * (ep + LW), a[1] + uy * (s + LL) + ny * (ep + LW)], [a[0] + ux * s + nx * (ep + LW), a[1] + uy * s + ny * (ep + LW)]] });
+      } else {
+        const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
+        const angles = [0, 90, ...r.map((a, i) => {
+          const c = r[(i + 1) % r.length];
+          return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI;
+        })];
+        for (const deg of angles) {
+          const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
+          for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2)
+            candidats.push({ q: [[x, y], [x + ca * LL, y + sa * LL], [x + ca * LL - sa * LW, y + sa * LL + ca * LW], [x - sa * LW, y + ca * LW]] });
         }
       }
-      v.lit_pliant = best2 ? { largeur_cm: LW, longueur_cm: LL, tient: true, gene_sieges_m2: rnd(best2.gene / 1e4, 2), sous_bureau_cm2: rnd(best2.dessous, 0), polygone: best2.q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) } : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
+      let best2 = null;
+      {
+        for (const { q, s } of candidats) {
+          if (!q.every(dedans_int)) continue;
+          if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
+          const dessous = sous2 ? v.bureaux.reduce((s2, b) => s2 + poly_area(clip_convex(q, b.brut)), 0) : 0;
+          const gene = poses.reduce((s2, o) => s2 + poly_area(clip_convex(q, o)), 0);
+          const cout = dessous * 1e3 + gene;
+          if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, s };
+        }
+      }
+      v.lit_pliant = best2 ? {
+        largeur_cm: LW,
+        longueur_cm: LL,
+        tient: true,
+        gene_sieges_m2: rnd(best2.gene / 1e4, 2),
+        sous_bureau_cm2: rnd(best2.dessous, 0),
+        polygone: best2.q.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]),
+        // rabattable : replie a plat contre le mur, deux fixations (charnieres) sur la face interieure
+        ...mur ? (() => {
+          const e = +(disp.lit_pliant.epaisseur_replie_cm ?? 10), s0 = best2.s, { a, ux, uy, nx, ny } = mur, at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+          const rep = [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + e), at(s0, ep + e)], fx = [at(s0 + 15, ep), at(s0 + LL - 15, ep)];
+          return { contre: v.noms_cotes[kc], debut_cm: s0, replie: rep.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]), epaisseur_replie_cm: e, fixations: fx.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+        })() : {}
+      } : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
     }
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd(occ / 1e4, 2);
@@ -1071,6 +1096,14 @@ function variante_svg(v, P, scale) {
   }
   if (v.lit_pliant && v.lit_pliant.tient) {
     const lp = v.lit_pliant;
+    if (lp.replie) {
+      svg += poly(lp.replie.map(P), "#d9c8ec", "#6a3d9a", 1.5);
+      for (const z of lp.fixations) {
+        const c2 = P(z);
+        svg += `<rect x="${f1(c2[0] - 3)}" y="${f1(c2[1] - 3)}" width="6" height="6" fill="#6a3d9a"/>
+`;
+      }
+    }
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     const [q0, q1, q2, q3] = lp.polygone;
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
@@ -1601,6 +1634,14 @@ function modele_sol_svg(p, v, m) {
   }
   if (v.lit_pliant && v.lit_pliant.tient) {
     const lp = v.lit_pliant;
+    if (lp.replie) {
+      svg += poly(lp.replie.map(P), "#d9c8ec", "#6a3d9a", 1.5);
+      for (const z of lp.fixations) {
+        const c = P(z);
+        svg += `<rect x="${f1(c[0] - 3)}" y="${f1(c[1] - 3)}" width="6" height="6" fill="#6a3d9a"/>
+`;
+      }
+    }
     svg += poly(lp.polygone.map(P), "none", "#6a3d9a", 1.8, "7 4");
     const [q0, q1, q2, q3] = lp.polygone;
     const tete = P([q0[0] + (q3[0] - q0[0]) / 2 + (q1[0] - q0[0]) * 0.12, q0[1] + (q3[1] - q0[1]) / 2 + (q1[1] - q0[1]) * 0.12]);
@@ -1654,7 +1695,7 @@ function modele_sol_svg(p, v, m) {
   });
   svg += text(W / 2, 26, `Plan de sol \xB7 murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", "#222", 15, "bold");
   svg += text(W / 2, 44, `murs ${fz(+p.panneau.epaisseur_mm / 10)} cm \xB7 porte ${fz(v.porte.largeur_cm)} ouvrant dehors \xB7 fen\xEAtres en fa\xE7ade (bleu)${v.sol_libre_m2 != null ? ` \xB7 sol libre hors bureaux ${v.sol_libre_m2} m\xB2` : ""}`, "middle", "#888", 11);
-  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, "violet pointill\xE9 = lit pliant d\xE9pli\xE9 (on range fauteuil et tabouret)", "middle", "#6a3d9a", 11);
+  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, `violet pointill\xE9 = lit d\xE9pli\xE9${v.lit_pliant.replie ? " \xB7 violet plein = repli\xE9 contre le mur \xB7 carr\xE9s = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " \xB7 on range les si\xE8ges pour le d\xE9plier" : ""}`, "middle", "#6a3d9a", 11);
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
