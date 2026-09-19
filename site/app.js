@@ -785,7 +785,11 @@ function variantes(p, g) {
     }
     const h11 = Math.floor(lo2);
     const vise = +p.dalle_cm.passage_souhaite_cm || 0;
-    if (vise > 0) {
+    const fixe = p.disposition_trapeze && p.disposition_trapeze.cotes_cm;
+    if (fixe) {
+      const [fa, fd, fg] = [+fixe.avant, +fixe.droite, +fixe.gauche];
+      out.push(forme(13, `trap\xE8ze aux cotes ${fz(fa)} / ${fz(fd)} / ${fz(fg)}`, `fa\xE7ade ${fz(fa)}, mur droit ${fz(fd)}, mur gauche ${fz(fg)} : trois murs d'\xE9querre cal\xE9s sur le module de ${fz(mod)}, le fond en biais en d\xE9coule`, [Z[0], [Z[0][0] + fa, Z[0][1]], [Z[0][0] + fa, Z[0][1] + fd], [Z[0][0], Z[0][1] + fg]]));
+    } else if (vise > 0) {
       const derriere = (q) => {
         const w = passages(q).find((x) => x.cote === "arriere_droite");
         return w ? w.cm : Infinity;
@@ -1577,7 +1581,9 @@ function modele_trapeze(p, v) {
   const q = v.polygone, n = q.length;
   const H = +p.murs.hauteur_cm, c = +(t.chute_cm ?? p.toit.pente_chute_cm), mod = +p.panneau.largeur_utile_cm;
   const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
-  const h2 = (z) => H + c * (1 - (z[1] - y0) / D);
+  const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
+  const droite = t.sens === "droite", course = droite ? Wd : D;
+  const h2 = (z) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
   const porte_h = v.porte && v.porte.hauteur_cm ? +v.porte.hauteur_cm : +(d.porte_hauteur_cm || p.porte.hauteur_cm);
   const faces = q.map((a, i) => {
     const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), F = lettre(v.noms_cotes[i]);
@@ -1592,17 +1598,23 @@ function modele_trapeze(p, v) {
   const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05).map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd(f.hauteur_debut_cm - H, 1), h1: rnd(f.hauteur_fin_cm - H, 1) }));
   const barres = ranger_rehausse(pieces, section, stock);
   const deb = t.debord_cm || { avant: 10, arriere: 10, cotes: 0 };
-  const decal = faces.map((f) => -(f.cle === "A" ? +deb.avant : f.cle === "B" ? +deb.arriere : +deb.cotes || 0));
+  const cotes = +deb.cotes || 0;
+  const decal = faces.map((f) => -(f.cle === "A" ? +deb.avant : f.cle === "B" ? +deb.arriere : f.cle === "D" ? +(deb.droite ?? cotes) : +(deb.gauche ?? cotes)));
   const contour = inset_ordre(q, decal);
-  const rampant = Math.sqrt(1 + (c / D) ** 2);
+  const rampant = Math.sqrt(1 + (c / course) ** 2);
   const xmin = Math.min(...contour.map((z) => z[0])), xmax = Math.max(...contour.map((z) => z[0]));
+  const ymin = Math.min(...contour.map((z) => z[1])), ymax = Math.max(...contour.map((z) => z[1]));
   const panneaux_toit = [];
-  for (let x = xmin, k = 1; x < xmax - 0.05; x += mod, k++) {
-    const x1 = Math.min(x + mod, xmax);
-    let pc = clip_half(contour, [x, 1e4], [x, -1e4], true);
-    pc = clip_half(pc, [x1, -1e4], [x1, 1e4], true);
-    const ys = pc.map((z) => z[1]);
-    panneaux_toit.push({ id: `T${k}`, largeur_cm: rnd(x1 - x, 1), longueur_cm: rnd((Math.max(...ys) - Math.min(...ys)) * rampant, 1), polygone: pc.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]) });
+  for (let s = droite ? ymin : xmin, k = 1, fin = droite ? ymax : xmax; s < fin - 0.05; s += mod, k++) {
+    const s1 = Math.min(s + mod, fin);
+    let pc = droite ? clip_half(contour, [-1e4, s], [1e4, s], true) : clip_half(contour, [s, 1e4], [s, -1e4], true);
+    pc = droite ? clip_half(pc, [1e4, s1], [-1e4, s1], true) : clip_half(pc, [s1, -1e4], [s1, 1e4], true);
+    const le_long = pc.map((z) => z[droite ? 0 : 1]);
+    const biais = pc.some((a, i) => {
+      const b = pc[(i + 1) % pc.length];
+      return Math.abs(b[0] - a[0]) > 0.5 && Math.abs(b[1] - a[1]) > 0.5;
+    });
+    panneaux_toit.push({ id: `T${k}`, largeur_cm: rnd(s1 - s, 1), longueur_cm: rnd((Math.max(...le_long) - Math.min(...le_long)) * rampant, 1), biais, polygone: pc.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]) });
   }
   const bandes = faces.flatMap((f) => f.panneaux.map((pn) => ({ face: f.cle, ...pn }))).sort((x, y) => y.largeur_cm - x.largeur_cm);
   const chutes = [];
@@ -1623,14 +1635,17 @@ function modele_trapeze(p, v) {
     pn.source = b ? b.source : "neuf";
     pn.decoupes = f.ouvertures.filter((o) => o.debut_cm - (o.chambranle_cm || 0) < pn.debut_cm + pn.largeur_cm && o.debut_cm + o.largeur_cm + (o.chambranle_cm || 0) > pn.debut_cm).map((o) => `${o.type === "porte" ? "porte" : "fen\xEAtre"} ${fz(o.largeur_cm + 2 * (o.chambranle_cm || 0))} \xD7 ${fz(o.hauteur_cm + (o.chambranle_cm || 0))}`);
   }
-  const fB = faces.findIndex((f) => f.cle === "B");
+  const fB = faces.findIndex((f) => f.cle === (droite ? "D" : "B"));
   const g0 = contour[fB], g1 = contour[(fB + 1) % n];
-  const bas = g0[1] > g1[1] ? g0 : g1;
+  const bas = droite ? g0[1] < g1[1] ? g0 : g1 : g0[1] > g1[1] ? g0 : g1;
   return {
     hauteur_mur_cm: H,
     chute_cm: c,
     profondeur_cm: rnd(D, 1),
-    pente: { pourcent: rnd(100 * c / D, 1), degres: rnd(Math.atan2(c, D) * 180 / Math.PI, 2) },
+    sens: droite ? "droite" : "arriere",
+    // portee = plus longue bande de toit entre deux murs porteurs
+    portee_cm: rnd(droite ? Wd : D, 1),
+    pente: { pourcent: rnd(100 * c / course, 1), degres: rnd(Math.atan2(c, course) * 180 / Math.PI, 2) },
     hauteurs_coins_cm: q.map((z) => rnd(h2(z), 1)),
     faces,
     rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
@@ -1638,7 +1653,8 @@ function modele_trapeze(p, v) {
       contour: contour.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
       aire_m2: rnd(poly_area(contour) / 1e4, 2),
       panneaux: panneaux_toit,
-      gouttiere: { de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(g1[0] - g0[0], g1[1] - g0[1]), 1), descente: bas.map((z) => rnd(z, 1)) }
+      debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) },
+      gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(g1[0] - g0[0], g1[1] - g0[1]), 1), descente: bas.map((z) => rnd(z, 1)) }
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
@@ -1652,7 +1668,8 @@ function budget_modele(p, v, m) {
   const toit_m2 = rnd(m.toit.panneaux.reduce((s, t) => s + mod * t.longueur_cm / 100, 0), 2);
   const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
   const angles_h = m.hauteurs_coins_cm.reduce((s, h2) => s + h2, 0) / 100;
-  const rives = m.faces.filter((f) => f.cle === "D" || f.cle === "G").reduce((s, f) => s + f.longueur_cm, 0) / 100;
+  const cles_rives = m.sens === "droite" ? ["A", "B"] : ["D", "G"];
+  const rives = m.faces.filter((f) => cles_rives.includes(f.cle)).reduce((s, f) => s + f.longueur_cm, 0) / 100;
   const profils = rnd(2 * angles_h + perim + rives, 1);
   const fen = v.fenetres || [];
   const coque = [
@@ -1794,11 +1811,17 @@ function modele_toit_svg(v, m) {
     const c = P([(Math.min(...xs2) + Math.max(...xs2)) / 2, (Math.min(...ys2) + Math.max(...ys2)) / 2]);
     svg += text(c[0], c[1] - 6, pn.id, "middle", "#5a4f3a", 16, "bold");
     svg += text(c[0], c[1] + 12, `${fz(pn.largeur_cm)} \xD7 ${fz(pn.longueur_cm)}`, "middle", "#5a4f3a", 11);
-    for (let x = Math.min(...xs2) + 25; x < Math.max(...xs2) - 5; x += 25) {
+    if (m.sens === "droite") for (let y = Math.min(...ys2) + 25; y < Math.max(...ys2) - 5; y += 25) {
+      const row = clip_half(clip_half(pn.polygone, [-1e4, y - 0.5], [1e4, y - 0.5], true), [1e4, y + 0.5], [-1e4, y + 0.5], true);
+      if (row.length < 3) continue;
+      const cx = row.map((z) => z[0]), a = P([Math.min(...cx), y]), b = P([Math.max(...cx), y]);
+      svg += line(a[0], a[1], b[0], b[1], "#cfc6b3", 1);
+    }
+    else for (let x = Math.min(...xs2) + 25; x < Math.max(...xs2) - 5; x += 25) {
       const col = clip_half(clip_half(pn.polygone, [x - 0.5, 1e4], [x - 0.5, -1e4], true), [x + 0.5, -1e4], [x + 0.5, 1e4], true);
       if (col.length < 3) continue;
-      const cy = col.map((z) => z[1]), a2 = P([x, Math.min(...cy)]), b2 = P([x, Math.max(...cy)]);
-      svg += line(a2[0], a2[1], b2[0], b2[1], "#cfc6b3", 1);
+      const cy = col.map((z) => z[1]), a = P([x, Math.min(...cy)]), b = P([x, Math.max(...cy)]);
+      svg += line(a[0], a[1], b[0], b[1], "#cfc6b3", 1);
     }
   }
   svg += poly(v.polygone.map(P), "none", "#2b5d8a", 1.2, "5 4");
@@ -1810,17 +1833,25 @@ function modele_toit_svg(v, m) {
   const mid = P([(T.gouttiere.de[0] + T.gouttiere.a[0]) / 2, (T.gouttiere.de[1] + T.gouttiere.a[1]) / 2]);
   svg += text(mid[0] + 10, mid[1] - 12, `goutti\xE8re ${fz(T.gouttiere.longueur_cm)}`, "start", "#1b6fa8", 11, "bold");
   const xs = T.contour.map((z) => z[0]), ys = T.contour.map((z) => z[1]);
-  const ax = Math.min(...xs) + 100, a = P([ax, Math.min(...ys) + 40]), b = P([ax, Math.min(...ys) + 130]);
-  svg += line(a[0], a[1], b[0], b[1], "#c0392b", 2.5);
-  svg += `<polygon points="${f1(b[0])},${f1(b[1] - 2)} ${f1(b[0] - 7)},${f1(b[1] + 12)} ${f1(b[0] + 7)},${f1(b[1] + 12)}" fill="#c0392b"/>
+  if (m.sens === "droite") {
+    const ay = Math.min(...ys) + 80, a = P([Math.min(...xs) + 40, ay]), b = P([Math.min(...xs) + 130, ay]);
+    svg += line(a[0], a[1], b[0], b[1], "#c0392b", 2.5);
+    svg += `<polygon points="${f1(b[0] + 2)},${f1(b[1])} ${f1(b[0] - 12)},${f1(b[1] - 7)} ${f1(b[0] - 12)},${f1(b[1] + 7)}" fill="#c0392b"/>
 `;
-  svg += text(a[0] - 10, (a[1] + b[1]) / 2, `pente ${fr1(m.pente.pourcent)} % (${fr1(m.pente.degres)}\xB0)`, "end", "#c0392b", 12, "bold");
+    svg += text((a[0] + b[0]) / 2, a[1] - 9, `pente ${fr1(m.pente.pourcent)} % (${fr1(m.pente.degres)}\xB0)`, "middle", "#c0392b", 12, "bold");
+  } else {
+    const ax = Math.min(...xs) + 100, a = P([ax, Math.min(...ys) + 40]), b = P([ax, Math.min(...ys) + 130]);
+    svg += line(a[0], a[1], b[0], b[1], "#c0392b", 2.5);
+    svg += `<polygon points="${f1(b[0])},${f1(b[1] - 2)} ${f1(b[0] - 7)},${f1(b[1] + 12)} ${f1(b[0] + 7)},${f1(b[1] + 12)}" fill="#c0392b"/>
+`;
+    svg += text(a[0] - 10, (a[1] + b[1]) / 2, `pente ${fr1(m.pente.pourcent)} % (${fr1(m.pente.degres)}\xB0)`, "end", "#c0392b", 12, "bold");
+  }
   const q = T.contour, n = q.length;
   q.forEach((z, i) => {
     svg += cote_svg(P(z), P(q[(i + 1) % n]), fz(rnd(Math.hypot(q[(i + 1) % n][0] - z[0], q[(i + 1) % n][1] - z[1]), 1)), 26, "#7a6f5a", 11);
   });
   svg += text(W / 2, 26, `Toiture \xB7 ${T.panneaux.length} panneaux \xB7 ${T.aire_m2} m\xB2 couverts`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `panneaux dans le sens de la pente (longueur = rampant) \xB7 murs en pointill\xE9 \xB7 d\xE9bords avant et fond`, "middle", "#888", 11);
+  svg += text(W / 2, 44, `panneaux dans le sens de la pente (longueur = rampant) \xB7 murs en pointill\xE9 \xB7 ${m.sens === "droite" ? "\xE9gout c\xF4t\xE9 jardin (droite), haut contre le mur gauche" : "d\xE9bords avant et fond"}`, "middle", "#888", 11);
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }

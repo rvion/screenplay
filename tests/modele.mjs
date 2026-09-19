@@ -107,5 +107,44 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(m.budget.total_eur > 0 && near(m.budget.total_eur, m.budget.lignes.reduce((s, l) => s + l.montant_eur, 0), 1), "budget : total = somme des lignes");
 }
 
+// variante proposee (abri_v2) : murs au module, sous le seuil, toit vers la droite
+{
+  const { params_v2 } = await import(pathToFileURL(out).href);
+  const p2 = params_v2(base);
+  ok(!!p2 && base.disposition_trapeze.toit.sens !== "droite", "abri_v2 : surcouche fusionnee sans toucher aux parametres de base");
+  const c2 = buildCore(p2), m2 = c2.modele, v2 = c2.variantes.find((x) => x.id === 13), mod = base.panneau.largeur_utile_cm;
+  const L = Object.fromEntries(m2.faces.map((f) => [f.cle, f]));
+  ok(near(L.A.longueur_cm, 200) && near(L.D.longueur_cm, 200) && near(L.G.longueur_cm, 300), "v2 : facade 200, droite 200, gauche 300");
+  ok(["A", "D", "G"].every((k) => L[k].panneaux.every((pn) => near(pn.largeur_cm, mod))), "v2 : faces A, D et G en panneaux entiers");
+  // a la main : trapeze 200 x (200 + 300) / 2 = 5,00 m2 ; fond = racine(200² + 100²) = 223,6
+  ok(near(v2.aire_m2, 5, 0.001) && v2.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2, "v2 : 5,00 m² de murs, au seuil (" + v2.aire_m2 + ")");
+  ok(near(L.B.longueur_cm, 223.6, 0.05), "v2 : fond en biais 223,6 (" + L.B.longueur_cm + ")");
+  const derriere = v2.passages.find((q) => q.cote === "arriere_droite").cm;
+  ok(derriere >= 49.5, "v2 : passage derriere >= 50 cm a l'arrondi (" + derriere + ")");
+  ok(v2.polygone.every(([x, y]) => c2.geometrie.dalle.zone_utile.polygone.length && y >= 0.9), "v2 : abri avance a 1 cm du bord avant de la dalle");
+  // toit vers la droite : mur gauche haut, mur droit sans rehausse, egout et descente cote jardin
+  ok(m2.sens === "droite" && near(L.G.hauteur_debut_cm, H + 22.5) && near(L.G.hauteur_fin_cm, H + 22.5), "v2 : mur gauche haut d'un bout a l'autre (" + L.G.hauteur_debut_cm + ")");
+  ok(near(L.D.hauteur_debut_cm, H) && near(L.D.hauteur_fin_cm, H) && !m2.rehausse.pieces.some((r) => r.face === "D"), "v2 : mur droit a " + H + ", sans rehausse");
+  ok(near(m2.pente.pourcent, 11.25, 0.06) && near(m2.portee_cm, 200), "v2 : pente 22,5 / 200 = 11,3 %, portee 2,0 m (" + m2.pente.pourcent + " %, " + m2.portee_cm + ")");
+  ok(m2.toit.gouttiere.face === "D" && m2.toit.gouttiere.descente[1] < m2.toit.gouttiere.de[1] + 1e-6 || m2.toit.gouttiere.descente[1] <= Math.min(m2.toit.gouttiere.de[1], m2.toit.gouttiere.a[1]) + 1e-6, "v2 : gouttiere sur le mur droit, descente devant");
+  ok(m2.toit.panneaux.length === 3 && m2.toit.panneaux.every((t) => near(t.largeur_cm, mod)), "v2 : 3 panneaux de toit, tous de 100 de large (aucune bande etroite)");
+  ok(m2.toit.panneaux.filter((t) => t.biais && poly_area(t.polygone) < 0.9 * mod * (200 + 25)).length === 1, "v2 : un seul panneau de toit vraiment entame par le biais");
+  ok(m2.rehausse.section_mm[1] === 225 && m2.rehausse.nb_madriers <= 2, "v2 : madrier courant 75 x 225, " + m2.rehausse.nb_madriers + " madrier(s)");
+  ok(v2.porte.largeur_cm === 80 && v2.porte.tient !== false && v2.porte.debut_cm - v2.porte.chambranle_cm >= mod - 0.05, "v2 : porte de 80 entierement dans le 2e module, D1 entier (cadre a partir de " + (v2.porte.debut_cm - v2.porte.chambranle_cm) + ")");
+  ok(v2.fenetres.length === 2 && v2.fenetres.every((f) => f.tient !== false), "v2 : deux fenetres qui tiennent en facade");
+  // le fond de la v2 (223,6) est trop court pour un lit de 190 rabattable : il est pose au sol libre
+  ok(v2.lit_pliant.tient === true && !v2.lit_pliant.replie, "v2 : lit 75 x 190 pose au sol libre (pas rabattable)");
+  {
+    const p3 = params_v2(base); p3.disposition_trapeze.lit_pliant.contre = "fond";
+    ok(buildCore(p3).variantes.find((x) => x.id === 13).lit_pliant.tient === false, "v2 : le meme lit rabattable contre le fond ne tient pas (perte affichee dans abri-v2.md)");
+  }
+  const { abri_md } = await import(pathToFileURL(out).href);
+  const page2 = abri_md(p2, c2, { prefixe: "modele-v2-", titre: base.abri_v2.titre, pertes: base.abri_v2.pertes, notes: base.abri_v2.notes, hors_modele: base.abri_v2.hors_modele, base: core });
+  ok(page2.includes("### Ce que la version 2 perd") && page2.includes("pliant, posé au sol libre"), "abri-v2.md dit ce que la v2 perd");
+  ok(page2.includes("site/assets/modele-v2-toit.svg") && !page2.includes("site/assets/modele-toit.svg"), "abri-v2.md pointe vers ses propres plans");
+  ok(page2.includes("## Ce qui change par rapport à la version 1") && page2.includes("vers la droite (jardin)"), "abri-v2.md s'ouvre sur le tableau compare");
+  ok(!abri_md(base, core).includes("version 1"), "abri.md inchange par les options de la v2");
+}
+
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }
 console.log("\nModele 2D OK ✓");

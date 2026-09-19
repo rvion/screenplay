@@ -45,6 +45,51 @@
       { "cote": "avant", "largeur_cm": 100, "hauteur_cm": 110, "allege_cm": 95, "position": 100, "ouvrant": false }
     ]
   },
+  "abri_v2": {
+    "_comment": "Variante proposee de l'abri retenu : une SURCOUCHE de ce fichier (params = seulement ce qui change, fusionne en profondeur, les listes sont remplacees). npm run emit ecrit abri-v2.md et site/assets/modele-v2-*.svg a cote de abri.md, avec un tableau compare calcule. notes = le pourquoi de chaque changement ; hors_modele = conseils que le modele ne dessine pas.",
+    "titre": "Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)",
+    "params": {
+      "dalle_cm": { "bandes_libres_cm": { "avant": 1 } },
+      "disposition_trapeze": {
+        "cotes_cm": { "avant": 200, "droite": 200, "gauche": 300 },
+        "porte_largeur_cm": 80,
+        "toit": { "sens": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 0, "arriere": 0, "gauche": 0, "droite": 25 } },
+        "rehausse_section_mm": [75, 225],
+        "rehausse_prix_ml_eur": 10,
+        "lit_pliant": { "contre": "" },
+        "fenetres": [
+          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 110, "allege_cm": 95, "position": 10, "ouvrant": true },
+          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 110, "allege_cm": 95, "position": 110, "ouvrant": false }
+        ]
+      }
+    },
+    "pertes": [
+      "**0,35 m² d'intérieur en moins** (4,46 au lieu de 4,81 m²), pris surtout dans le coin aigu du fond, la surface la moins utile.",
+      "**Le lit rabattable contre le fond ne tient plus** : un lit de 190 plaqué contre le mur en biais demande un mur d'au moins 244 cm (le coin aigu et le coin obtus mangent chacun leur part), et le fond ne fait plus que 224 cm. La version 2 garde un lit pliant de 75 × 190 posé au sol libre, sièges rangés (`lit_pliant.contre` vide). Garder le lit rabattable impose un fond de 244 cm au moins, donc de sortir du module ou du seuil de 5 m².",
+      "**Bureau gauche plus court de 13 cm** (284 au lieu de 297 cm) : sans effet, aucun siège n'atteint le bout.",
+      "**Un peu plus chère** (voir la ligne budget du tableau) : l'écart vient de la deuxième fenêtre, ouvrante. À fenêtres égales la coque de la version 2 coûte moins (madrier courant, toit plus court)."
+    ],
+    "notes": [
+      "**Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à 12 cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.",
+      "**5,00 m² de murs** : au seuil sans formalité (emprise et plancher ≤ 5 m²), au lieu d'une déclaration préalable pour 0,37 m² de murs en plus. Le prix : 0,35 m² d'intérieur en moins, pris surtout dans le coin aigu du fond.",
+      "**Abri avancé de 4 cm** (bande libre avant 1 au lieu de 5) : la porte n'est plus en façade, cette bande ne sert plus. Le passage derrière l'abri retrouve 50 cm.",
+      "**Toit vers la droite, côté jardin**, au lieu du fond : gouttière et descente accessibles tous les jours, récupérateur d'eau possible, plus une goutte dans le passage arrière ni au pied du mur de propriété (aujourd'hui toute l'eau du toit arrive au coin le plus enfermé).",
+      "**Portée du toit 2,0 m** au lieu de 3,1 m : les panneaux vont du mur gauche au mur droit. C'était l'hypothèse la plus fragile du projet (H6).",
+      "**Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.",
+      "**Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.",
+      "**Débord de 25 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1.",
+      "**Porte de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.",
+      "**Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante."
+    ],
+    "hors_modele": [
+      "Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.",
+      "Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.",
+      "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 12 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
+      "**Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.",
+      "Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.",
+      "À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm."
+    ]
+  },
   "reglementaire": {
     "seuil_sans_formalite_m2": 5,
     "_comment": "Emprise au sol et surface de plancher jusqu'a ce seuil : aucune formalite (a confirmer en mairie, et le PLU s'applique quand meme). Sert a l'option 4 des variantes de forme."

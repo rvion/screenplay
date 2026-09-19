@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md, abri_md } from "./compute";
+import { buildCore, variantes_md, abri_md, params_v2 } from "./compute";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -34,6 +34,15 @@ function emit(p: any) {
     JSON.stringify(p, null, 2) + ";\n");
   writeFileSync(join(ROOT, "variantes.md"), variantes_md(p, core));
   writeFileSync(join(ROOT, "abri.md"), abri_md(p, core));
+  // variante proposee (bloc abri_v2) : memes plans, prefixes modele-v2-, et une page comparee
+  const p2 = params_v2(p);
+  if (p2) {
+    const core2 = buildCore(p2);
+    for (const [name, content] of Object.entries(core2.svg)) {
+      if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", "modele-v2-") + ".svg"), content as string);
+    }
+    writeFileSync(join(ROOT, "abri-v2.md"), abri_md(p2, core2, { prefixe: "modele-v2-", titre: p.abri_v2.titre, pertes: p.abri_v2.pertes, notes: p.abri_v2.notes, hors_modele: p.abri_v2.hors_modele, base: core }));
+  }
   stamp();
   return core;
 }

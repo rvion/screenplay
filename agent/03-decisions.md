@@ -235,3 +235,18 @@ plans 2D, demande explicite). *Amende* D21 (emprise), D26 (passage).
 *Précisé ensuite :* lit 75 × 190 minimum, rabattable contre le mur du fond, aucun dégagement devant la
 porte (elle ouvre dehors) ; une seule fenêtre de façade, la droite, élargie à 100 (fixe) ; `abri.md`
 devient le document complet de l'abri (implantation sur la dalle, plans, débit, budget).
+
+## D28 — Variante « version 2 » de l'abri retenu, générée à côté de la version 1
+L'abri retenu (D27) a été dimensionné par une cible d'intérieur (4,8 m²). Une relecture propose de
+le dimensionner par **les panneaux, le seuil et l'eau** : trois murs au module (200 / 200 / 300,
+soit 5,00 m² de murs), abri avancé de 4 cm, **toit vers la droite** (égout côté jardin, portée
+2 m, madrier courant 75 × 225), débord de 25 cm sur la porte, porte de 80, deux fenêtres de 80.
+Plutôt que de remplacer la version 1, la variante est une **surcouche de paramètres** (`abri_v2`)
+rejouée par les mêmes fonctions : `abri-v2.md` s'ouvre sur un tableau comparé **calculé**, et dit
+aussi ce que la variante perd. *Pourquoi :* deux versions dessinées par le même code se comparent
+sans débat sur les chiffres ; le tableau a d'ailleurs corrigé la proposition (la v2 coûte un peu
+plus à cause de la fenêtre ouvrante, deux panneaux de toit portent un biais, et un lit de 190
+rabattable ne tient pas contre un fond de 224 cm : il lui faut 244 cm). *Écarté :* modifier
+`disposition_trapeze` en place (la version 1 est en cours de réglage) ; une page écrite à la main
+(chiffres non vérifiables). *Le choix entre les deux versions reste ouvert* (backlog).
+

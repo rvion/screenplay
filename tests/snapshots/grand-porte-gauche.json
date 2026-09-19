@@ -2328,6 +2328,8 @@
   "hauteur_mur_cm": 230,
   "chute_cm": 30,
   "profondeur_cm": 314.1,
+  "sens": "arriere",
+  "portee_cm": 314.1,
   "pente": {
    "pourcent": 9.6,
    "degres": 5.46
@@ -2656,6 +2658,7 @@
      "id": "T1",
      "largeur_cm": 100,
      "longueur_cm": 337.4,
+     "biais": true,
      "polygone": [
       [
        12,
@@ -2679,6 +2682,7 @@
      "id": "T2",
      "largeur_cm": 100,
      "longueur_cm": 275.1,
+     "biais": true,
      "polygone": [
       [
        112,
@@ -2702,6 +2706,7 @@
      "id": "T3",
      "largeur_cm": 18,
      "longueur_cm": 212.7,
+     "biais": true,
      "polygone": [
       [
        212,
@@ -2722,7 +2727,14 @@
      ]
     }
    ],
+   "debord_cm": {
+    "avant": 10,
+    "arriere": 10,
+    "droite": 0,
+    "gauche": 0
+   },
    "gouttiere": {
+    "face": "B",
     "de": [
      230,
      195.6

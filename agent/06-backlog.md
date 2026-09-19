@@ -1,6 +1,9 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Abri : version 1 ou version 2** (D28). `abri-v2.md` compare les deux : la v2 est au seuil
+      de 5 m², en panneaux entiers sur 3 faces, toit vers le jardin (portée 2 m) ; elle perd 0,35 m²
+      d'intérieur et le lit rabattable contre le fond. On peut aussi ne prendre que certains points.
 - [ ] **Toit de l'abri retenu** (D27) : sens (vers l'arrière par défaut) et chute (30 cm par défaut,
       5,5° ; madrier 75 × 300 à trouver en classe 4, sinon deux pièces superposées).
 - [ ] **Débit, achats, budget et 3D** suivent encore le rectangle 200 × 240 : les porter sur
