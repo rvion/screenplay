@@ -1414,6 +1414,7 @@ export function variantes_md(p: Params, core: any): string {
   const NOM: Record<string, string> = { avant: "avant", droite: "droite", arriere_droite: "grand pan du fond", arriere_gauche: "petit pan du fond", gauche: "gauche" };
   const pas = (v: any, c: string) => { const q = v.passages.find((x: any) => x.cote === c); return q ? `${fr(q.cm)} cm` : "–"; };
   let md = `# Formes d'abri possibles sur la dalle\n\n`;
+  if (core.modele) md += `> **Abri retenu : option 13.** Ses plans complets (sol, toit, rehausse, 4 façades) sont dans [abri.md](abri.md).\n\n`;
   md += `> Généré par \`npm run emit\` depuis \`params.json\` et \`site/src/compute.ts\` : ne pas éditer à la main.\n\n`;
   md += `## Hypothèses\n\n`;
   md += `- **Dalle réelle** : ${fr(d.aire_m2)} m², côtés ${noms.map((n: string, i: number) => `${NOM[n] || n} ${fz(d.cotes_cm[i])}`).join(", ")} cm.\n`;
@@ -1436,7 +1437,7 @@ export function variantes_md(p: Params, core: any): string {
   md += `\n`;
   for (const v of vs) {
     const [pour, contre] = AVIS[v.id] || [[], []];
-    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}\n\n`;
+    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? " · **retenue : plans complets dans [abri.md](abri.md)**" : ""}\n\n`;
     md += `![option ${v.id}](site/assets/variante-${v.id}.svg)\n\n`;
     md += `| | murs (extérieur) | intérieur |\n|---|---|---|\n`;
     md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
@@ -1725,4 +1726,30 @@ export function modele_facade_svg(m: any, f: any): string {
   svg += text(W / 2, 26, `Face ${f.cle} · ${f.nom} · vue de l'extérieur`, "middle", "#222", 15, "bold");
   svg += text(W / 2, 44, `${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(Hm)} · hauteurs finies aux deux bouts`, "middle", "#888", 11);
   return svg + "</svg>\n";
+}
+
+/* ----------------------------------------------------------------- */
+/* Page de l'abri retenu (markdown, genere par le CLI)                */
+/* ----------------------------------------------------------------- */
+export function abri_md(p: Params, core: any): string {
+  const m = core.modele, v = core.variantes.find((x: any) => x.id === 13);
+  if (!m || !v) return "";
+  const fr = (x: number) => String(x).replace(".", ",");
+  const d = p.disposition_trapeze, po = v.porte;
+  let md = `# Abri retenu : trapèze de l'option 13\n\n`;
+  md += `> Généré par \`npm run emit\` depuis \`params.json\` et \`site/src/compute.ts\` : ne pas éditer à la main. Comparaison des autres formes : [variantes.md](variantes.md).\n\n`;
+  md += `## En chiffres\n\n| | |\n|---|---|\n`;
+  md += `| murs (extérieur) | ${fr(v.aire_m2)} m² |\n| **intérieur** | **${fr(v.aire_interieure_m2)} m²** |\n| sol libre (hors bureau) | ${fr(v.sol_libre_m2)} m² |\n`;
+  md += `| côtés | ${m.faces.map((f: any) => `${f.cle} ${fr(f.longueur_cm)}`).join(" · ")} cm |\n`;
+  md += `| hauteurs finies | ${m.faces.map((f: any) => `${f.cle} ${fr(f.hauteur_debut_cm)} → ${fr(f.hauteur_fin_cm)}`).join(" · ")} cm |\n`;
+  md += `| toit | pente ${fr(m.pente.pourcent)} % (${fr(m.pente.degres)}°), chute ${fz(m.chute_cm)} cm, ${m.toit.panneaux.length} panneaux, ${fr(m.toit.aire_m2)} m² |\n`;
+  md += `| passage derrière l'abri | ${fr(v.passages.find((q: any) => q.cote === "arriere_droite").cm)} cm |\n`;
+  md += `| porte | ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur la face D, cadre ${fz(po.chambranle_cm)} cm, de ${fr(po.debut_cm)} à ${fr(rnd(po.debut_cm + po.largeur_cm, 1))} cm |\n`;
+  for (const f of v.fenetres) md += `| fenêtre ${f.ouvrant ? "ouvrante" : "fixe"} | ${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}, allège ${fz(f.allege_cm)}, face A de ${fr(f.debut_cm)} à ${fr(rnd(f.debut_cm + f.largeur_cm, 1))} cm |\n`;
+  for (const b of v.bureaux) md += `| bureau ${b.cote} | ${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)} cm |\n`;
+  md += `| rehausse | ${m.rehausse.pieces.length} pièces, ${m.rehausse.nb_madriers} madriers ${m.rehausse.section_mm.join(" × ")} |\n\n`;
+  if (d && d.toit) md += `> Toit **${d.toit.sens === "arriere" ? "vers l'arrière" : d.toit.sens}**, chute **${fz(m.chute_cm)} cm** : choix par défaut, à confirmer (\`disposition_trapeze.toit\`).\n\n`;
+  const plans: [string, string][] = [["modele-sol", "Plan de sol"], ["modele-toit", "Toiture"], ["modele-rehausse", "Rehausse bois"], ["modele-facade-A", "Face A · avant"], ["modele-facade-D", "Face D · droite"], ["modele-facade-B", "Face B · fond"], ["modele-facade-G", "Face G · gauche"]];
+  for (const [f, t] of plans) md += `## ${t}\n\n![${t}](site/assets/${f}.svg)\n\n`;
+  return md;
 }

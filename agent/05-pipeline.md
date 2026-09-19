@@ -7,6 +7,7 @@ screenplay/
 ├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
 ├── README.md           # cahier lisible sur GitHub (public)
 ├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d'abri (SVG inclus)
+├── abri.md            # GÉNÉRÉ : l'abri retenu (option 13), chiffres + ses 7 plans
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
 ├── tsconfig.json

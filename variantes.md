@@ -1,5 +1,7 @@
 # Formes d'abri possibles sur la dalle
 
+> **Abri retenu : option 13.** Ses plans complets (sol, toit, rehausse, 4 façades) sont dans [abri.md](abri.md).
+
 > Généré par `npm run emit` depuis `params.json` et `site/src/compute.ts` : ne pas éditer à la main.
 
 ## Hypothèses
@@ -308,7 +310,7 @@
 
 ## Option 13
 
-**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur
+**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur · **retenue : plans complets dans [abri.md](abri.md)**
 
 ![option 13](site/assets/variante-13.svg)
 

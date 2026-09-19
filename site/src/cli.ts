@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md } from "./compute";
+import { buildCore, variantes_md, abri_md } from "./compute";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -33,6 +33,7 @@ function emit(p: any) {
     "// Genere par scripts/build.mjs - parametres par defaut pour l'app.\nwindow.SHED_PARAMS = " +
     JSON.stringify(p, null, 2) + ";\n");
   writeFileSync(join(ROOT, "variantes.md"), variantes_md(p, core));
+  writeFileSync(join(ROOT, "abri.md"), abri_md(p, core));
   stamp();
   return core;
 }
