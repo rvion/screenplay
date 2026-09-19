@@ -32,6 +32,18 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
   ok(near(gd.angles_deg.reduce((s, x) => s + x, 0), 540, 0.3), "somme des angles du pentagone = 540");
 }
 
+// zone utile : chaque cote de la zone est a sa bande du cote de dalle correspondant
+{
+  const gd = geometry(base).dalle, z = gd.zone_utile;
+  const L = gd.polygone.map(([x, y]) => [x + gd.decalage_cm[0], y + gd.decalage_cm[1]]);
+  const dline = (p, a, b) => Math.abs((b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])) / dist(a, b);
+  ok(z.polygone.length === 5, "zone utile : 5 cotes");
+  ok(z.bandes_cm.every((w, i) => near(dline(z.polygone[i], L[i], L[(i + 1) % 5]), w, 0.1) && near(dline(z.polygone[(i + 1) % 5], L[i], L[(i + 1) % 5]), w, 0.1)), "zone utile : chaque cote a sa bande du bord de dalle");
+  ok(near(z.aire_m2 + z.bandes_m2, gd.aire_m2, 0.011), "zone utile + bandes = aire de la dalle");
+  const zero = clone(base); zero.dalle_cm.bandes_libres_cm = {};
+  ok(near(geometry(zero).dalle.zone_utile.aire_m2, gd.aire_m2, 1e-9), "bandes nulles : zone utile = dalle");
+}
+
 // decoupage : carre 10x10 coupe par un rectangle qui en couvre la moitie
 ok(near(poly_area(clip_convex([[0, 0], [10, 0], [10, 10], [0, 10]], [[5, -1], [20, -1], [20, 20], [5, 20]])), 50, 1e-9), "decoupage : moitie du carre = 50");
 

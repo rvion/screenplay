@@ -78,7 +78,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 
 ## Calcul & livrables (`site/src/compute.ts`)
 `buildCore(params)` (pur, sans DOM/Three) produit géométrie + débit + achats + budget + modèle 3D
-**et** les 8 SVG. Consommé en direct par le site et par le CLI Node `site/src/cli.ts --emit` :
+**et** les 9 SVG. Consommé en direct par le site et par le CLI Node `site/src/cli.ts --emit` :
 
 | Sortie | Rôle |
 |---|---|
@@ -86,6 +86,7 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 | `site/data/derived.json` | géométrie + débit + achats + budget + modèle 3D en JSON |
 | `site/assets/plan-sol.svg` | plan de sol coté, dalle réelle en pointillé avec ses 5 cotes en gris, partie hors dalle hachurée |
 | `site/assets/plan-dalle.svg` | dalle seule vue de dessus : cote de chaque côté, angle intérieur à chaque sommet (`dalle.angles_deg`), position de la pointe, murs de propriété, abri en fantôme |
+| `site/assets/plan-dalle-bandes.svg` | même plan + bande libre le long de chaque côté (`dalle_cm.bandes_libres_cm`), zone utile au centre avec ses cotes et son aire (`dalle.zone_utile`) |
 | `site/assets/plan-toit.svg` | plan de toiture (panneaux, sens d'écoulement, rampant) |
 | `site/assets/plan-rehausse.svg` | **plan de coupe de la rehausse** : madrier coupé en diagonale + madrier droit (ou bande de panneau) |
 | `site/assets/facade-{A,D,B,G}.svg` | élévations : rectangles de mur + joints + rehausse + porte |

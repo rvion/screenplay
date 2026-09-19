@@ -26,6 +26,14 @@ window.SHED_PARAMS = {
     "mur_hauteur_cm": 180,
     "mur_epaisseur_cm": 15,
     "passage_souhaite_cm": 45,
+    "bandes_libres_cm": {
+      "_comment": "Bande reservee (laissee libre) le long de chaque cote de la dalle, vers l'interieur. Ce qui reste au centre = zone utile (plan-dalle-bandes.svg).",
+      "avant": 5,
+      "droite": 5,
+      "arriere_droite": 45,
+      "arriere_gauche": 45,
+      "gauche": 12
+    },
     "decalage_cm": {
       "x": 2,
       "y": 2
