@@ -192,6 +192,12 @@ reste → le dépôt (<code>projet.depot_url</code>). Titres ancrés façon GitH
 <li>Le dossier est <strong>vidé puis réécrit</strong> à chaque emit (pas de page orpheline). <code>tests/docs.mjs</code>
 garde : pages à jour avec leur <code>.md</code>, une page par <code>.md</code> suivi, aucun lien, image, ancre ou lien
 vers le dépôt mort (la garde est d&#39;abord essayée sur un échantillon cassé).</li>
+<li>Une variante peut porter <code>atouts</code> (ce que la disposition apporte à l&#39;usage : vie privée, lumière,
+rangement), rendus avant <code>pertes</code>. Les <code>{champs}</code> y sont remplacés par des valeurs <strong>calculées</strong>
+(<code>{arriere_m2}</code>, <code>{arriere_profondeur_cm}</code>, <code>{passage_cm}</code>, <code>{porte_cm}</code>) : aucun chiffre saisi.
+<code>arriere</code> = dalle au-delà du mur du fond et dans la largeur de l&#39;abri, donc invisible depuis la
+façade ; hachurée en vert sur le plan d&#39;implantation. <code>disposition_trapeze.porte_vitree = false</code>
+donne une porte pleine (prix <code>porte_pleine</code>, dessin et libellés).</li>
 <li>Plusieurs variantes : tout bloc <code>abri_vN</code> de <code>params.json</code> (<code>versions_abri</code>) donne <code>abri-vN.md</code>
 et ses plans <code>modele-vN-*.svg</code>, comparés à la version 1.</li>
 </ul>

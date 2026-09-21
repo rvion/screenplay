@@ -43,7 +43,7 @@ function emit(p: any) {
     for (const [name, content] of Object.entries(coren.svg)) {
       if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", prefixe) + ".svg"), content as string);
     }
-    writeFileSync(join(ROOT, `abri-v${n}.md`), abri_md(pn, coren, { prefixe, version: n, titre: bloc.titre, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: core }));
+    writeFileSync(join(ROOT, `abri-v${n}.md`), abri_md(pn, coren, { prefixe, version: n, titre: bloc.titre, atouts: bloc.atouts, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: core }));
     generes.push(`abri-v${n}.md`);
   }
   emitDocs(p, generes);

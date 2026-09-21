@@ -54,6 +54,7 @@
       "disposition_trapeze": {
         "cotes_cm": { "avant": 200, "droite": 200, "gauche": 300 },
         "porte_largeur_cm": 80,
+        "porte_vitree": false,
         "toit": { "sens": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 0, "arriere": 0, "gauche": 0, "droite": 25 } },
         "rehausse_section_mm": [75, 225],
         "rehausse_prix_ml_eur": 10,
@@ -64,6 +65,11 @@
         ]
       }
     },
+    "atouts": [
+      "**À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade, qui donnent sur le plateau du bureau et pas sur les écrans ; un film dépoli sur leur moitié basse ou un store règle le reste.",
+      "**La lumière de côté, comme le demande l'ergonomie.** Le jour n'entre que par les fenêtres de façade. L'ordinateur et le second écran vont sur le bureau gauche, contre le mur aveugle : assis face à ce mur, on reçoit la lumière **par le côté gauche**, écrans perpendiculaires aux fenêtres, sans fenêtre dans le dos ni en face. Une porte vitrée sur le mur droit aurait été exactement dans le dos, en reflet sur les écrans : la porte pleine supprime ce défaut.",
+      "**Les outils de jardin cachés derrière, et pas de second abri.** Derrière le mur du fond il reste **{arriere_m2} m² de dalle**, profonds de {arriere_profondeur_cm} cm au plus large, entre l'abri et le mur de propriété : invisibles depuis le jardin et depuis la maison, hachurés en vert sur le plan d'implantation. Outils à manche accrochés au mur, tuyau, pots, sacs de terreau, échelle : tout y tient, le jardin garde une seule construction et reste dégagé. On y accède par le passage de {passage_cm} cm le long du grand pan. **À vérifier :** ce qui est plus large que ce passage n'y entre pas (une brouette fait environ 60 cm, certaines tondeuses 50 à 55) ; mesurer la tondeuse avant de compter dessus."
+    ],
     "pertes": [
       "**0,35 m² d'intérieur en moins** (4,46 au lieu de 4,81 m²), pris surtout dans le coin aigu du fond, la surface la moins utile.",
       "**Le lit rabattable contre le fond ne tient plus** : un lit de 190 plaqué contre le mur en biais demande un mur d'au moins 244 cm (le coin aigu et le coin obtus mangent chacun leur part), et le fond ne fait plus que 224 cm. La version 2 garde un lit pliant de 75 × 190 posé au sol libre, sièges rangés (`lit_pliant.contre` vide). Garder le lit rabattable impose un fond de 244 cm au moins, donc de sortir du module ou du seuil de 5 m².",
@@ -79,7 +85,7 @@
       "**Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.",
       "**Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.",
       "**Débord de 25 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1.",
-      "**Porte de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.",
+      "**Porte pleine de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.",
       "**Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante."
     ],
     "hors_modele": [
@@ -174,6 +180,7 @@
     "panneau_mur_m2": 35,
     "panneau_toit_m2": 35,
     "porte_vitree": 900,
+    "porte_pleine": 450,
     "fenetre_fixe": 200,
     "fenetre_ouvrante": 320,
     "fixation_cachee_m2": 5,

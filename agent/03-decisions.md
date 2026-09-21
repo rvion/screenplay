@@ -250,6 +250,12 @@ plus à cause de la fenêtre ouvrante, deux panneaux de toit portent un biais, e
 rabattable ne tient pas contre un fond de 224 cm : il lui faut 244 cm). *Écarté :* modifier
 `disposition_trapeze` en place (la version 1 est en cours de réglage) ; une page écrite à la main
 (chiffres non vérifiables). *Le choix entre les deux versions reste ouvert* (backlog).
+*Usage (ajout du 2026-09-21)* : la version 2 prend une **porte pleine** et dit pourquoi cette
+disposition sert au quotidien. Les voisins de l'étage voient la façade : porte de côté et pleine,
+ils ne voient jamais l'intérieur. Le jour n'entre que par la façade : écrans sur le bureau gauche,
+lumière de côté, rien de vitré dans le dos. Et la dalle derrière l'abri (1,89 m², calculé) cache
+les outils de jardin, ce qui évite un second abri. Le calcul montre que la version 1 offre la même
+surface cachée (1,88 m²) : ce n'est pas un argument pour l'une contre l'autre.
 
 ## D29 — Chaque document Markdown a sa page sur le site, avec un index
 Les documents du projet (`abri.md`, `abri-v2.md`, `variantes.md`…) ne se lisaient que sur GitHub.

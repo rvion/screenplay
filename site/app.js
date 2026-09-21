@@ -721,6 +721,18 @@ function variantes(p, g) {
     });
     return { cote, cm: rnd(best2.cm, 1), segment: best2.segment.map((v) => [rnd(v[0], 1), rnd(v[1], 1)]) };
   });
+  const dalle_abs = g.dalle.polygone.map(([x, y]) => [x + ox, y + oy]);
+  const derriere_abri = (r) => {
+    const fonds = r.map((a2, i) => i).filter((i) => nom_cote(r[i], r[(i + 1) % r.length]).startsWith("fond"));
+    if (fonds.length !== 1) return null;
+    const a = r[fonds[0]], b = r[(fonds[0] + 1) % r.length], xmax = Math.max(...r.map((z) => z[0]));
+    let zone = clip_half(dalle_abs, a, b, false);
+    zone = clip_half(zone, [xmax, -1e4], [xmax, 1e4], true);
+    if (zone.length < 3) return null;
+    const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    const recul = (z) => -((b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0])) / l;
+    return { aire_m2: rnd(poly_area(zone) / 1e4, 2), profondeur_max_cm: rnd(Math.max(...zone.map(recul)), 0), polygone: zone.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+  };
   const forme = (id, titre, note, q) => {
     const k = q.reduce((m, v, i) => v[1] < q[m][1] - 1e-6 || Math.abs(v[1] - q[m][1]) <= 1e-6 && v[0] < q[m][0] ? i : m, 0);
     const r = [...q.slice(k), ...q.slice(0, k)];
@@ -744,7 +756,8 @@ function variantes(p, g) {
           return rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1);
         });
       })(),
-      passages: passages(r)
+      passages: passages(r),
+      arriere: derriere_abri(r)
     };
   };
   const out = [];
@@ -881,7 +894,7 @@ function variantes(p, g) {
       const pos = disp.porte_position;
       const s0 = typeof pos === "number" ? Math.min(Math.max(pos, min), max) : pos === "gauche" ? min : pos === "centre" ? (min + max) / 2 : max;
       const Hm = +p.murs.hauteur_cm;
-      v.porte = { ...v.porte, debut_cm: rnd(s0, 1), chambranle_cm: ch, marge_cm: mg, hauteur_cm: rnd(Math.min(+(disp.porte_hauteur_cm || Hm), Hm - mg - ch), 1), tient: max >= min - 1e-6 };
+      v.porte = { ...v.porte, vitree: disp.porte_vitree !== false, debut_cm: rnd(s0, 1), chambranle_cm: ch, marge_cm: mg, hauteur_cm: rnd(Math.min(+(disp.porte_hauteur_cm || Hm), Hm - mg - ch), 1), tient: max >= min - 1e-6 };
     }
     v.fenetres = (disp.fenetres || []).map((f) => {
       const k = v.noms_cotes.indexOf(f.cote);
@@ -1284,6 +1297,14 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null) {
     svg += `<circle cx="${f1(dsc[0])}" cy="${f1(dsc[1])}" r="5" fill="#1b6fa8"/>
 `;
   }
+  if (m && v && v.arriere) {
+    svg += `<defs><pattern id="cache" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#6b8e23" stroke-width="1.6"/></pattern></defs>
+`;
+    svg += poly(v.arriere.polygone.map(P), "url(#cache)", "#6b8e23", 1);
+    const zx = v.arriere.polygone.map((z) => z[0]), zy = v.arriere.polygone.map((z) => z[1]);
+    const c = P([(Math.min(...zx) + Math.max(...zx)) / 2 - 20, (Math.min(...zy) + Math.max(...zy)) / 2 + 12]);
+    svg += text(c[0], c[1], `rangement cach\xE9`, "middle", "#4f6b18", 11, "bold") + text(c[0], c[1] + 13, `${v.arriere.aire_m2} m\xB2`, "middle", "#4f6b18", 11, "bold");
+  }
   if (v) svg += variante_svg(v, P, scale, !!m);
   if (m && v) {
     svg += poly(m.interieur.map(P), "none", "#2b5d8a", 1, "3 2");
@@ -1610,7 +1631,7 @@ function modele_trapeze(p, v) {
     const panneaux = [];
     for (let s = 0, k = 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd(s, 1), largeur_cm: rnd(Math.min(mod, L - s), 1) });
     const ouvertures = [];
-    if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
+    if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
     for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
     return { cle: F, nom: v.noms_cotes[i], de: a, a: b, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h2(a), 1), hauteur_fin_cm: rnd(h2(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
   });
@@ -1698,7 +1719,7 @@ function budget_modele(p, v, m) {
     ["Surco\xFBt fixation cach\xE9e (mur)", mur_m2, "m\xB2", get("fixation_cachee_m2")],
     ["Panneaux sandwich toit 60 mm (\xE0 longueur)", toit_m2, "m\xB2", get("panneau_toit_m2")],
     [`Rehausse bois (madriers ${m.rehausse.section_mm.join(" \xD7 ")})`, rnd(m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, 1), "ml", +(d.rehausse_prix_ml_eur ?? (p.rehausse && p.rehausse.prix_ml_eur) ?? 10)],
-    ["Porte vitr\xE9e + cadre", v.porte ? 1 : 0, "u", get("porte_vitree")],
+    v.porte && v.porte.vitree === false ? ["Porte pleine isol\xE9e + cadre", 1, "u", get("porte_pleine")] : ["Porte vitr\xE9e + cadre", v.porte ? 1 : 0, "u", get("porte_vitree")],
     ["Fen\xEAtre fixe", fen.filter((f) => !f.ouvrant).length, "u", get("fenetre_fixe")],
     ["Fen\xEAtre ouvrante", fen.filter((f) => f.ouvrant).length, "u", get("fenetre_ouvrante")],
     ["Profils (angles int. + ext., rail de pied, rives)", profils, "ml", get("profils_ml")],
@@ -1922,10 +1943,10 @@ function modele_facade_svg(m, f) {
     }
     const a = P(o.debut_cm, o.allege_cm), b = P(o.debut_cm + o.largeur_cm, o.allege_cm + o.hauteur_cm);
     const col = o.type === "porte" ? "#c0392b" : "#1b9aa8";
-    svg += `<rect x="${f1(a[0])}" y="${f1(b[1])}" width="${f1(b[0] - a[0])}" height="${f1(a[1] - b[1])}" fill="#bfe3ef" stroke="${col}" stroke-width="2"/>
+    svg += `<rect x="${f1(a[0])}" y="${f1(b[1])}" width="${f1(b[0] - a[0])}" height="${f1(a[1] - b[1])}" fill="${o.type === "porte" && o.vitree === false ? "#c9cfd4" : "#bfe3ef"}" stroke="${col}" stroke-width="2"/>
 `;
     const c = P(o.debut_cm + o.largeur_cm / 2, o.allege_cm + o.hauteur_cm / 2);
-    svg += text(c[0], c[1] - 4, o.type === "porte" ? "porte" : o.ouvrant ? "fen\xEAtre ouvrante" : "fen\xEAtre fixe", "middle", col, 11, "bold");
+    svg += text(c[0], c[1] - 4, o.type === "porte" ? o.vitree === false ? "porte pleine" : "porte" : o.ouvrant ? "fen\xEAtre ouvrante" : "fen\xEAtre fixe", "middle", col, 11, "bold");
     svg += text(c[0], c[1] + 12, `${fz(o.largeur_cm)} \xD7 ${fz(o.hauteur_cm)}${o.allege_cm ? ` \xB7 all\xE8ge ${fz(o.allege_cm)}` : ""}`, "middle", col, 10);
     svg += cote_svg(P(o.debut_cm, 0), P(o.debut_cm + o.largeur_cm, 0), fz(o.largeur_cm), 20, col, 10);
     if (o.chambranle_cm) {

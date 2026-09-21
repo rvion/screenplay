@@ -138,6 +138,15 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(m2.rehausse.section_mm[1] === 225 && m2.rehausse.nb_madriers <= 2, "v2 : madrier courant 75 x 225, " + m2.rehausse.nb_madriers + " madrier(s)");
   ok(v2.porte.largeur_cm === 80 && v2.porte.tient !== false && v2.porte.debut_cm - v2.porte.chambranle_cm >= mod - 0.05, "v2 : porte de 80 entierement dans le 2e module, D1 entier (cadre a partir de " + (v2.porte.debut_cm - v2.porte.chambranle_cm) + ")");
   ok(v2.fenetres.length === 2 && v2.fenetres.every((f) => f.tient !== false), "v2 : deux fenetres qui tiennent en facade");
+  // porte pleine : ni vitrage dans le dos des ecrans, ni vue depuis l'etage des voisins
+  ok(v2.porte.vitree === false && v.porte.vitree === true, "v2 : porte pleine (la v1 garde sa porte vitree)");
+  ok(m2.budget.lignes.some((l) => l.poste.startsWith("Porte pleine") && l.pu_eur === base.prix_indicatifs_eur.porte_pleine) && !m2.budget.lignes.some((l) => l.poste.startsWith("Porte vitrée")), "v2 : budget = porte pleine, plus de porte vitree");
+  ok(c2.svg["modele-facade-D"].includes("porte pleine") && !core.svg["modele-facade-D"].includes("porte pleine"), "v2 : facade D dessine une porte pleine");
+  // espace cache derriere l'abri. A la main, dalle au-dela de la droite (12,301)-(212,201), x <= 212 :
+  // sommets (0,307) (212,201) (212,269.3) (72.7,398.3) (0,324) -> 1,89 m2 ; pointe a 114 cm du mur du fond
+  ok(near(v2.arriere.aire_m2, 1.89, 0.02) && near(v2.arriere.profondeur_max_cm, 114, 1.5), "v2 : " + v2.arriere.aire_m2 + " m² caches derriere l'abri, " + v2.arriere.profondeur_max_cm + " cm au plus profond");
+  ok(v2.arriere.aire_m2 >= v.arriere.aire_m2 - 0.05, "v2 : autant de place derriere que la v1 (" + v.arriere.aire_m2 + " m²), ce n'est pas un avantage de la v2");
+  ok(c2.svg["modele-implantation"].includes("rangement caché"), "v2 : la zone cachee est dessinee sur le plan d'implantation");
   // le fond de la v2 (223,6) est trop court pour un lit de 190 rabattable : il est pose au sol libre
   ok(v2.lit_pliant.tient === true && !v2.lit_pliant.replie, "v2 : lit 75 x 190 pose au sol libre (pas rabattable)");
   {
@@ -145,7 +154,9 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
     ok(buildCore(p3).variantes.find((x) => x.id === 13).lit_pliant.tient === false, "v2 : le meme lit rabattable contre le fond ne tient pas (perte affichee dans abri-v2.md)");
   }
   const { abri_md } = await import(pathToFileURL(out).href);
-  const page2 = abri_md(p2, c2, { prefixe: "modele-v2-", titre: base.abri_v2.titre, pertes: base.abri_v2.pertes, notes: base.abri_v2.notes, hors_modele: base.abri_v2.hors_modele, base: core });
+  const page2 = abri_md(p2, c2, { prefixe: "modele-v2-", titre: base.abri_v2.titre, atouts: base.abri_v2.atouts, pertes: base.abri_v2.pertes, notes: base.abri_v2.notes, hors_modele: base.abri_v2.hors_modele, base: core });
+  ok(["regards", "lumière de côté", "outils de jardin"].every((mot) => page2.includes(mot)) && page2.indexOf("### Ce que cette disposition apporte") < page2.indexOf("### Ce que la version 2 perd"), "abri-v2.md : vie privee, lumiere, rangement, avant les pertes");
+  ok(!/\{\w+\}/.test(page2) && page2.includes(`${String(v2.arriere.aire_m2).replace(".", ",")} m² de dalle`), "abri-v2.md : chiffres du rangement injectes depuis le calcul, aucun {champ} oublie");
   ok(page2.includes("### Ce que la version 2 perd") && page2.includes("pliant, posé au sol libre"), "abri-v2.md dit ce que la v2 perd");
   ok(page2.includes("site/assets/modele-v2-toit.svg") && !page2.includes("site/assets/modele-toit.svg"), "abri-v2.md pointe vers ses propres plans");
   ok(page2.includes("## Ce qui change par rapport à la version 1") && page2.includes("vers la droite (jardin)"), "abri-v2.md s'ouvre sur le tableau compare");

@@ -134,6 +134,12 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
 - Le dossier est **vidé puis réécrit** à chaque emit (pas de page orpheline). `tests/docs.mjs`
   garde : pages à jour avec leur `.md`, une page par `.md` suivi, aucun lien, image, ancre ou lien
   vers le dépôt mort (la garde est d'abord essayée sur un échantillon cassé).
+- Une variante peut porter `atouts` (ce que la disposition apporte à l'usage : vie privée, lumière,
+  rangement), rendus avant `pertes`. Les `{champs}` y sont remplacés par des valeurs **calculées**
+  (`{arriere_m2}`, `{arriere_profondeur_cm}`, `{passage_cm}`, `{porte_cm}`) : aucun chiffre saisi.
+  `arriere` = dalle au-delà du mur du fond et dans la largeur de l'abri, donc invisible depuis la
+  façade ; hachurée en vert sur le plan d'implantation. `disposition_trapeze.porte_vitree = false`
+  donne une porte pleine (prix `porte_pleine`, dessin et libellés).
 - Plusieurs variantes : tout bloc `abri_vN` de `params.json` (`versions_abri`) donne `abri-vN.md`
   et ses plans `modele-vN-*.svg`, comparés à la version 1.
 

@@ -24,11 +24,18 @@
 | gouttière et descente | mur du fond, descente au coin arrière gauche | mur droit, descente devant côté jardin |
 | rehausse | 4 pièces, 2 madrier(s) 75 × 300 | 3 pièces, 2 madrier(s) 75 × 225 |
 | hauteurs finies des coins | 245 · 245 · 227,9 · 215 cm | 237,5 · 215 · 215 · 237,5 cm |
-| porte | 65 × 205, débord de toit au-dessus : 0 cm | 80 × 205, débord de toit au-dessus : 25 cm |
+| espace caché derrière l'abri | 1,88 m², jusqu'à 99 cm de profondeur | 1,89 m², jusqu'à 114 cm de profondeur |
+| porte | vitrée, 65 × 205, débord de toit au-dessus : 0 cm | pleine, 80 × 205, débord de toit au-dessus : 25 cm |
 | fenêtres en façade | 100 fixe | 80 ouvrante + 80 fixe |
 | sol libre hors bureaux | 2,41 m² | 2,21 m² |
 | lit | 75 × 190, rabattable contre le fond | 75 × 190, pliant, posé au sol libre |
-| budget indicatif HT | 3 960 € (coque 3 364 €) | 4 155 € (coque 3 574 €) |
+| budget indicatif HT | 3 960 € (coque 3 364 €) | 3 705 € (coque 3 124 €) |
+
+### Ce que cette disposition apporte
+
+- **À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade, qui donnent sur le plateau du bureau et pas sur les écrans ; un film dépoli sur leur moitié basse ou un store règle le reste.
+- **La lumière de côté, comme le demande l'ergonomie.** Le jour n'entre que par les fenêtres de façade. L'ordinateur et le second écran vont sur le bureau gauche, contre le mur aveugle : assis face à ce mur, on reçoit la lumière **par le côté gauche**, écrans perpendiculaires aux fenêtres, sans fenêtre dans le dos ni en face. Une porte vitrée sur le mur droit aurait été exactement dans le dos, en reflet sur les écrans : la porte pleine supprime ce défaut.
+- **Les outils de jardin cachés derrière, et pas de second abri.** Derrière le mur du fond il reste **1,89 m² de dalle**, profonds de 114 cm au plus large, entre l'abri et le mur de propriété : invisibles depuis le jardin et depuis la maison, hachurés en vert sur le plan d'implantation. Outils à manche accrochés au mur, tuyau, pots, sacs de terreau, échelle : tout y tient, le jardin garde une seule construction et reste dégagé. On y accède par le passage de 50 cm le long du grand pan. **À vérifier :** ce qui est plus large que ce passage n'y entre pas (une brouette fait environ 60 cm, certaines tondeuses 50 à 55) ; mesurer la tondeuse avant de compter dessus.
 
 ### Ce que la version 2 perd
 
@@ -47,7 +54,7 @@
 6. **Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.
 7. **Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.
 8. **Débord de 25 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1.
-9. **Porte de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.
+9. **Porte pleine de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.
 10. **Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante.
 
 ### Conseils que les plans ne montrent pas
@@ -65,8 +72,8 @@
 - **4,46 m² intérieur** (5 m² de murs), 50,1 cm de passage derrière.
 - **4 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 200, fond en biais 223,6, gauche 300 cm.
 - **Toit** mono-pente vers la droite (jardin), 6,42° : 237,5 cm contre le mur gauche, 215 cm côté porte.
-- **Porte** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Budget indicatif** : 3 532 € à 4 778 € HT (coque 3 574 €, aménagement 581 €).
+- **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
+- **Budget indicatif** : 3 149 € à 4 261 € HT (coque 3 124 €, aménagement 581 €).
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,46 m² ⇒ aucune formalité.
 
 ## À trancher
@@ -171,7 +178,7 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 
 | ouverture | taille | où | détail |
 |---|---|---|---|
-| porte vitrée | 80 × 205 (cadre 90 × 210) | face D, de 106,3 à 186,3 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
+| porte pleine | 80 × 205 (cadre 90 × 210) | face D, de 106,3 à 186,3 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
 | fenêtre oscillo-battante | 80 × 110 | face A, de 10 à 90 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
 | fenêtre fixe | 80 × 110 | face A, de 110 à 190 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
 
@@ -193,7 +200,7 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | Surcoût fixation cachée (mur) | 21,5 m² | 5 € | 108 € |
 | Panneaux sandwich toit 60 mm (à longueur) | 6,54 m² | 35 € | 229 € |
 | Rehausse bois (madriers 75 × 225) | 9,6 ml | 10 € | 96 € |
-| Porte vitrée + cadre | 1 u | 900 € | 900 € |
+| Porte pleine isolée + cadre | 1 u | 450 € | 450 € |
 | Fenêtre fixe | 1 u | 200 € | 200 € |
 | Fenêtre ouvrante | 1 u | 320 € | 320 € |
 | Profils (angles int. + ext., rail de pied, rives) | 31,6 ml | 12 € | 379 € |
@@ -206,8 +213,8 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | Chauffage | 1 forfait | 120 € | 120 € |
 | Store | 1 forfait | 60 € | 60 € |
 | Finition intérieure | 1 forfait | 120 € | 120 € |
-| **coque** | | | **3 574 €** |
+| **coque** | | | **3 124 €** |
 | **aménagement** | | | **581 €** |
-| **total** | | | **4 155 €** (3 532 € à 4 778 €, ±15 %) |
+| **total** | | | **3 705 €** (3 149 € à 4 261 €, ±15 %) |
 
 Prix médians du marché, à confirmer par devis (`prix_indicatifs_eur`). Porte et fenêtres au prix des blocs standard.
