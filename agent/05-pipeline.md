@@ -10,6 +10,7 @@ screenplay/
 ├── abri.md            # GÉNÉRÉ : l'abri retenu (option 13), chiffres + ses 7 plans
 ├── abri-v2.md         # GÉNÉRÉ : variante proposée (bloc abri_v2 de params.json), tableau comparé + ses plans
 ├── abri-v3.md         # GÉNÉRÉ : version 3 (bloc abri_v3, hérite de abri_v2, comparée à la version 2)
+├── abri-v4.md         # GÉNÉRÉ : version 4 (bloc abri_v4, hérite de abri_v3 : toit vers le fond)
 │                      # (tout bloc abri_vN donne de même abri-vN.md et ses plans modele-vN-*.svg)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)

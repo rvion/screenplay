@@ -1750,7 +1750,11 @@ export function modele_trapeze(p: Params, v: any) {
       contour: contour.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]), aire_m2: rnd(poly_area(contour) / 1e4, 2),
       panneaux: panneaux_toit, debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) }, gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)),
         troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
-        longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1), descente: bas.map((z) => rnd(z, 1)) },
+        longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1), descente: ((): Pt => {
+          if (t.descente !== "droite" && t.descente !== "gauche") return bas;
+          const bouts = egouts.flatMap(({ a, b }) => [a, b]);
+          return bouts.reduce((m, z) => ((t.descente === "droite" ? z[0] > m[0] + 1e-6 : z[0] < m[0] - 1e-6) ? z : m), bouts[0] || bas);
+        })().map((z) => rnd(z, 1)) },
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
@@ -2044,6 +2048,15 @@ export function params_v2(p: Params, cle = "abri_v2"): Params | null {
   return fusion(depart || JSON.parse(JSON.stringify(p)), p[cle].params);
 }
 
+// position de la descente en mots, d'apres ses coordonnees dans l'emprise de l'abri
+function ou_descente(m: any): string {
+  const xs = m.faces.flatMap((f: any) => [f.de[0], f.a[0]]), ys = m.faces.flatMap((f: any) => [f.de[1], f.a[1]]);
+  const [x, y] = m.toit.gouttiere.descente, mx = (Math.min(...xs) + Math.max(...xs)) / 2, y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const cote = x > mx ? "droit" : "gauche";
+  if (y < y0 + (y1 - y0) * 0.2) return `devant à ${cote === "droit" ? "droite" : "gauche"}, côté jardin`;
+  return y > y0 + (y1 - y0) * 0.85 ? `au coin arrière ${cote}` : `à l'arrière du mur ${cote}, à l'entrée du passage`;
+}
+
 // tableau compare de deux abris (memes fonctions, deux jeux de parametres)
 function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number, ep: number, n = 2, depuis = 1): string {
   const fr = (x: number) => String(x).replace(".", ",");
@@ -2067,7 +2080,7 @@ function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number,
     ["pente", (x) => `${fr(x.m.pente.pourcent)} % (${fr(x.m.pente.degres)}°), chute ${fr(x.m.chute_cm)} cm`],
     ["portée du toit sans panne", (x) => `${fr(rnd(x.m.portee_cm / 100, 2))} m`],
     ["panneaux de toit", (x) => `${x.m.toit.panneaux.length}, dont ${x.m.toit.panneaux.filter((t: any) => t.biais).length} coupé(s) en biais et ${toit_etroit(x.m)} de moins de 30 cm de large`],
-    ["gouttière et descente", (x) => `${fr(x.m.toit.gouttiere.longueur_cm)} cm sur ${x.m.toit.gouttiere.troncons.map((t: any) => t.face).join(" + ")}, ${x.m.sens === "droite" ? "descente devant côté jardin" : "descente au coin arrière gauche"}`],
+    ["gouttière et descente", (x) => `${fr(x.m.toit.gouttiere.longueur_cm)} cm sur ${x.m.toit.gouttiere.troncons.map((t: any) => t.face).join(" + ")}, descente ${ou_descente(x.m)}`],
     ["rehausse", (x) => `${x.m.rehausse.pieces.length} pièces, ${x.m.rehausse.nb_madriers} madrier(s) ${x.m.rehausse.section_mm.join(" × ")}`],
     ["hauteurs finies des coins", (x) => x.m.hauteurs_coins_cm.map(fr).join(" · ") + " cm"],
     ["espace caché derrière l'abri", (x) => (x.v.arriere ? `${fr(x.v.arriere.aire_m2)} m², jusqu'à ${fz(x.v.arriere.profondeur_max_cm)} cm de profondeur` : "–")],
@@ -2103,6 +2116,8 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
       arriere_m2: v.arriere ? fr(v.arriere.aire_m2) : "?", arriere_profondeur_cm: v.arriere ? fz(v.arriere.profondeur_max_cm) : "?",
       passage_cm: fz(Math.floor(derriere.cm)), porte_cm: fz(po.largeur_cm),
       murs_m2: fr(v.aire_m2), interieur_m2: fr(v.aire_interieure_m2), sol_libre_m2: fr(v.sol_libre_m2),
+      gauche_cm: fz(Math.min(...v.polygone.map((z: Pt) => z[0]))),
+      debord_droite_cm: fz(m.toit.debord_cm.droite), debord_avant_cm: fz(m.toit.debord_cm.avant), debord_arriere_cm: fz(m.toit.debord_cm.arriere),
     };
     {
       const vb = opts.base.variantes.find((x: any) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q: any) => q.cote === "arriere_droite");
@@ -2110,14 +2125,18 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
         base_murs_m2: fr(vb.aire_m2), base_interieur_m2: fr(vb.aire_interieure_m2), base_arriere_m2: vb.arriere ? fr(vb.arriere.aire_m2) : "?",
         base_passage_cm: fz(Math.floor(pb.cm)), gain_interieur_m2: fr(rnd(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
         gain_sol_libre_m2: fr(rnd(v.sol_libre_m2 - vb.sol_libre_m2, 2)), ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
-        gouttiere_cm: fz(m.toit.gouttiere.longueur_cm),
+        base_debord_droite_cm: fz(mb.toit.debord_cm.droite),
+        gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), base_pente_pourcent: fr(mb.pente.pourcent),
+        portee_m: fr(rnd(m.portee_cm / 100, 1)), base_portee_m: fr(rnd(mb.portee_cm / 100, 1)), descente: ou_descente(m), base_descente: ou_descente(mb),
+        panneaux_toit: String(m.toit.panneaux.length), base_panneaux_toit: String(mb.toit.panneaux.length),
+        hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers), base_madriers: String(mb.rehausse.nb_madriers),
       });
     }
     const injecte = (s: string) => s.replace(/\{(\w+)\}/g, (tout, k) => (k in valeurs ? valeurs[k] : tout));
     if ((opts.atouts || []).length) md += `### Ce que cette disposition apporte\n\n` + opts.atouts.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
     if ((opts.pertes || []).length) md += `### Ce que la version ${opts.version || 2} perd\n\n` + opts.pertes.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
     if ((opts.notes || []).length) md += `### Pourquoi\n\n` + opts.notes.map((s: string, i: number) => `${i + 1}. ${injecte(s)}\n`).join("") + `\n`;
-    if ((opts.hors_modele || []).length) md += `### Conseils que les plans ne montrent pas\n\n` + opts.hors_modele.map((s: string) => `- ${s}\n`).join("") + `\n`;
+    if ((opts.hors_modele || []).length) md += `### Conseils que les plans ne montrent pas\n\n` + opts.hors_modele.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
   }
   md += `## En bref\n\n`;
   md += `- **Dalle existante** : ${fr(core.geometrie.dalle.aire_m2)} m², côtés ${core.geometrie.dalle.cotes_cm.map(fz).join(" / ")} cm, murs de propriété à gauche et au fond.\n`;
@@ -2157,7 +2176,9 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   for (const r of m.rehausse.pieces) md += `| ${r.id} | ${r.face} | ${fr(r.L)} cm | ${fr(r.h0)} → ${fr(r.h1)} cm |\n`;
   md += `\n**${m.rehausse.nb_madriers} madriers** : ${m.rehausse.barres.map((b: any, k: number) => `n°${k + 1} = ${b.troncons.map((t: any) => t.pieces.map((q: any) => q.id).join(" + ")).join(" puis ")} (chute ${fr(b.chute_cm)} cm)`).join(" ; ")}. Deux pièces sur un même tronçon = une seule coupe en biais.\n\n`;
   md += droite ? `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm ${m.toit.gouttiere.troncons.length > 1 ? `en ${m.toit.gouttiere.troncons.length} tronçons (${m.toit.gouttiere.troncons.map((t: any) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}) : le long du pan en biais puis du mur droit, avec un angle,` : "le long du mur droit,"} au-dessus de la porte ; descente au coin avant droit, côté jardin (récupérateur d'eau possible). Aucune eau dans le passage arrière ni au pied du mur de propriété.\n`
-    : `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm le long du fond, descente au coin arrière gauche (point bas), atteignable par le passage.\n`;
+    : m.toit.gouttiere.troncons.length > 1 || d.toit.descente
+      ? `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm derrière l'abri, en ${m.toit.gouttiere.troncons.length} tronçon(s) (${m.toit.gouttiere.troncons.map((t: any) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}) : les nervures du toit mènent toute l'eau aux bouts arrière des panneaux. Descente ${ou_descente(m)}.\n`
+      : `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm le long du fond, descente au coin arrière gauche (point bas), atteignable par le passage.\n`;
   md += `- ${m.faces.length} angles : ${m.faces.map((f: any, i: number) => `${m.faces[(i + m.faces.length - 1) % m.faces.length].cle}/${f.cle} ${fr(m.angles_deg[i])}°`).join(", ")} ; hauteur de chaque angle = hauteur finie du coin.\n`;
   md += `- Rail de pied sur tout le périmètre (${fr(rnd(m.faces.reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100, 2))} m), bavettes de rive sur les côtés ${droite ? "A et B" : "D et G"}.\n\n`;
   md += `## Ouvertures\n\n| ouverture | taille | où | détail |\n|---|---|---|---|\n`;

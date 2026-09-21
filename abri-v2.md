@@ -17,26 +17,26 @@
 | faces en panneaux entiers | aucune | A, D, G |
 | bandes de mur de moins de 30 cm | 2 | 1 |
 | panneaux de mur à commander | 10 | 10 |
-| passage derrière l'abri | 50,6 cm | 50,1 cm |
+| passage derrière l'abri | 50,6 cm | 51,5 cm |
 | sens du toit | vers le fond (mur de propriété) | vers la droite (jardin) |
 | pente | 9,6 % (5,46°), chute 30 cm | 11,2 % (6,42°), chute 22,5 cm |
 | portée du toit sans panne | 3,14 m | 2 m |
 | panneaux de toit | 3, dont 3 coupé(s) en biais et 1 de moins de 30 cm de large | 3, dont 2 coupé(s) en biais et 0 de moins de 30 cm de large |
-| gouttière et descente | 256,6 cm sur B, descente au coin arrière gauche | 439,1 cm sur D + B, descente devant côté jardin |
+| gouttière et descente | 256,6 cm sur B, descente au coin arrière gauche | 432,9 cm sur D + B, descente devant à droite, côté jardin |
 | rehausse | 4 pièces, 2 madrier(s) 75 × 300 | 3 pièces, 2 madrier(s) 75 × 225 |
 | hauteurs finies des coins | 245 · 245 · 227,9 · 215 cm | 237,5 · 215 · 215 · 237,5 cm |
-| espace caché derrière l'abri | 1,88 m², jusqu'à 99 cm de profondeur | 1,89 m², jusqu'à 114 cm de profondeur |
-| porte | vitrée, 65 × 205, débord de toit au-dessus : 0 cm | pleine, 80 × 205, débord de toit au-dessus : 25 cm |
+| espace caché derrière l'abri | 1,88 m², jusqu'à 99 cm de profondeur | 1,9 m², jusqu'à 115 cm de profondeur |
+| porte | vitrée, 65 × 205, débord de toit au-dessus : 0 cm | pleine, 80 × 205, débord de toit au-dessus : 15 cm |
 | fenêtres en façade | 100 fixe | 80 ouvrante + 80 fixe |
 | sol libre hors bureaux | 2,41 m² | 2,21 m² |
 | lit | 75 × 190, rabattable contre le fond | 75 × 190, pliant, posé au sol libre |
-| budget indicatif HT | 3 960 € (coque 3 364 €) | 3 678 € (coque 3 097 €) |
+| budget indicatif HT | 3 960 € (coque 3 364 €) | 3 671 € (coque 3 090 €) |
 
 ### Ce que cette disposition apporte
 
-- **À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade, qui donnent sur le plateau du bureau et pas sur les écrans ; un film dépoli sur leur moitié basse ou un store règle le reste.
+- **À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade : petites (80 × 80) et hautes (allège à 110 cm), elles donnent sur le bord du plateau et pas sur les écrans ; un store règle le reste.
 - **La lumière de côté, comme le demande l'ergonomie.** Le jour n'entre que par les fenêtres de façade. L'ordinateur et le second écran vont sur le bureau gauche, contre le mur aveugle : assis face à ce mur, on reçoit la lumière **par le côté gauche**, écrans perpendiculaires aux fenêtres, sans fenêtre dans le dos ni en face. Une porte vitrée sur le mur droit aurait été exactement dans le dos, en reflet sur les écrans : la porte pleine supprime ce défaut.
-- **Les outils de jardin cachés derrière, et pas de second abri.** Derrière le mur du fond il reste **1,89 m² de dalle**, profonds de 114 cm au plus large, entre l'abri et le mur de propriété : invisibles depuis le jardin et depuis la maison, hachurés en vert sur le plan d'implantation. Outils à manche accrochés au mur, tuyau, pots, sacs de terreau, échelle : tout y tient, le jardin garde une seule construction et reste dégagé. On y accède par le passage de 50 cm le long du grand pan. **À vérifier :** ce qui est plus large que ce passage n'y entre pas (une brouette fait environ 60 cm, certaines tondeuses 50 à 55) ; mesurer la tondeuse avant de compter dessus.
+- **Les outils de jardin cachés derrière, et pas de second abri.** Derrière le mur du fond il reste **1,9 m² de dalle**, profonds de 115 cm au plus large, entre l'abri et le mur de propriété : invisibles depuis le jardin et depuis la maison, hachurés en vert sur le plan d'implantation. Outils à manche accrochés au mur, tuyau, pots, sacs de terreau, échelle : tout y tient, le jardin garde une seule construction et reste dégagé. On y accède par le passage de 51 cm le long du grand pan. **À vérifier :** ce qui est plus large que ce passage n'y entre pas (une brouette fait environ 60 cm, certaines tondeuses 50 à 55) ; mesurer la tondeuse avant de compter dessus.
 
 ### Ce que la version 2 perd
 
@@ -47,23 +47,23 @@
 
 ### Pourquoi
 
-1. **Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à 12 cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.
+1. **Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à 10 cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.
 2. **5,00 m² de murs** : au seuil sans formalité (emprise et plancher ≤ 5 m²), au lieu d'une déclaration préalable pour 0,37 m² de murs en plus. Le prix : 0,35 m² d'intérieur en moins, pris surtout dans le coin aigu du fond.
 3. **Abri avancé de 4 cm** (bande libre avant 1 au lieu de 5) : la porte n'est plus en façade, cette bande ne sert plus. Le passage derrière l'abri retrouve 50 cm.
 4. **Toit vers la droite, côté jardin**, au lieu du fond : descente devant, côté jardin, accessible tous les jours, récupérateur d'eau possible (aujourd'hui toute l'eau du toit arrive au coin le plus enfermé, au pied du mur de propriété). **Attention :** l'eau du fond du toit sort par le mur du fond en biais, pas par le mur droit. La gouttière doit donc courir aussi le long du fond, en pente naturelle vers le coin droit où elle rejoint celle du mur droit (le modèle la compte sur les deux bords : voir le tableau). Sans ce tronçon, cette eau tomberait dans le passage arrière.
 5. **Portée du toit 2,0 m** au lieu de 3,1 m : les panneaux vont du mur gauche au mur droit. C'était l'hypothèse la plus fragile du projet (H6).
 6. **Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.
 7. **Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.
-8. **Débord de 25 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1.
+8. **Débord de 15 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1. Volontairement court : il ne coûte rien (c'est la longueur des panneaux de toit) et reste discret.
 9. **Porte pleine de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.
-10. **Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante.
+10. **Deux fenêtres de 80 × 80, allège à 110 cm**, une par panneau entier de façade, l'ouvrante à gauche, en diagonale de la porte pour la ventilation traversante. Petites et hautes : assis, le regard passe juste au-dessus de l'allège (yeux vers 120 cm), et depuis l'étage des voisins on voit moins le plateau du bureau qu'avec des fenêtres de 110 de haut.
 
 ### Conseils que les plans ne montrent pas
 
 - La gouttière a **deux tronçons et un angle** (fond en biais, puis mur droit) : pièce d'angle à prévoir à la commande, le budget ne compte qu'un forfait.
 - Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.
 - Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.
-- Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 12 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).
+- Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 10 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).
 - **Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.
 - Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.
 - À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm.
@@ -71,11 +71,11 @@
 ## En bref
 
 - **Dalle existante** : 8,51 m², côtés 262 / 223 / 258 / 104 / 324 cm, murs de propriété à gauche et au fond.
-- **4,46 m² intérieur** (5 m² de murs), 50,1 cm de passage derrière.
+- **4,46 m² intérieur** (5 m² de murs), 51,5 cm de passage derrière.
 - **4 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 200, fond en biais 223,6, gauche 300 cm.
 - **Toit** mono-pente vers la droite (jardin), 6,42° : 237,5 cm contre le mur gauche, 215 cm côté porte.
 - **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Budget indicatif** : 3 126 € à 4 230 € HT (coque 3 097 €, aménagement 581 €).
+- **Budget indicatif** : 3 120 € à 4 222 € HT (coque 3 090 €, aménagement 581 €).
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,46 m² ⇒ aucune formalité.
 
 ## À trancher
@@ -137,8 +137,8 @@ Murs 5 m² · intérieur 4,46 m² (murs de 6 cm retirés) · sol libre hors bure
 
 | pièce | largeur | provenance | découpe |
 |---|---|---|---|
-| A1 | 100 cm | panneau entier | fenêtre 80 × 110 |
-| A2 | 100 cm | panneau entier | fenêtre 80 × 110 |
+| A1 | 100 cm | panneau entier | fenêtre 80 × 80 |
+| A2 | 100 cm | panneau entier | fenêtre 80 × 80 |
 | D1 | 100 cm | panneau entier | – |
 | D2 | 100 cm | panneau entier | porte 90 × 210 |
 | B1 | 100 cm | panneau entier | – |
@@ -154,11 +154,11 @@ Murs 5 m² · intérieur 4,46 m² (murs de 6 cm retirés) · sol libre hors bure
 
 | pièce | largeur | longueur à commander | coupe |
 |---|---|---|---|
-| T1 | 100 cm | 226,4 cm | entier, coupes droites |
-| T2 | 100 cm | 226,4 cm | un bord en biais le long du mur du fond |
+| T1 | 100 cm | 216,4 cm | entier, coupes droites |
+| T2 | 100 cm | 216,4 cm | un bord en biais le long du mur du fond |
 | T3 | 100 cm | 201,3 cm | un bord en biais le long du mur du fond |
 
-Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur de propriété, rives avant et fond affleurantes (bavette de rive). Surface couverte 5,48 m².
+Débords : 15 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur de propriété, rives avant et fond affleurantes (bavette de rive). Surface couverte 5,29 m².
 
 ### Rehausse bois (madrier 75 × 225, stock 480 cm)
 
@@ -172,7 +172,7 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 
 ### Gouttière et profils
 
-- Gouttière 439,1 cm en 2 tronçons (D 187,5 + B 251,6) : le long du pan en biais puis du mur droit, avec un angle, au-dessus de la porte ; descente au coin avant droit, côté jardin (récupérateur d'eau possible). Aucune eau dans le passage arrière ni au pied du mur de propriété.
+- Gouttière 432,9 cm en 2 tronçons (D 192,5 + B 240,4) : le long du pan en biais puis du mur droit, avec un angle, au-dessus de la porte ; descente au coin avant droit, côté jardin (récupérateur d'eau possible). Aucune eau dans le passage arrière ni au pied du mur de propriété.
 - 4 angles : G/A 90°, A/D 90°, D/B 116,6°, B/G 63,4° ; hauteur de chaque angle = hauteur finie du coin.
 - Rail de pied sur tout le périmètre (9,24 m), bavettes de rive sur les côtés A et B.
 
@@ -181,8 +181,8 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | ouverture | taille | où | détail |
 |---|---|---|---|
 | porte pleine | 80 × 205 (cadre 90 × 210) | face D, de 106,3 à 186,3 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
-| fenêtre oscillo-battante | 80 × 110 | face A, de 10 à 90 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
-| fenêtre fixe | 80 × 110 | face A, de 110 à 190 cm depuis le coin gauche | allège 95 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 80 | face A, de 10 à 90 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre fixe | 80 × 80 | face A, de 110 à 190 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
 
 ## Aménagement
 
@@ -200,7 +200,7 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 |---|---|---|---|
 | Panneaux sandwich mur 60 mm (à commander) | 21,5 m² | 35 € | 752 € |
 | Surcoût fixation cachée (mur) | 21,5 m² | 5 € | 108 € |
-| Panneaux sandwich toit 60 mm (à longueur) | 6,54 m² | 35 € | 229 € |
+| Panneaux sandwich toit 60 mm (à longueur) | 6,34 m² | 35 € | 222 € |
 | Rehausse bois (madriers 75 × 225) | 9,6 ml | 10 € | 96 € |
 | Porte pleine isolée + cadre | 1 u | 450 € | 450 € |
 | Fenêtre fixe | 1 u | 200 € | 200 € |
@@ -215,8 +215,8 @@ Débords : 25 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | Chauffage | 1 forfait | 120 € | 120 € |
 | Store | 1 forfait | 60 € | 60 € |
 | Finition intérieure | 1 forfait | 120 € | 120 € |
-| **coque** | | | **3 097 €** |
+| **coque** | | | **3 090 €** |
 | **aménagement** | | | **581 €** |
-| **total** | | | **3 678 €** (3 126 € à 4 230 €, ±15 %) |
+| **total** | | | **3 671 €** (3 120 € à 4 222 €, ±15 %) |
 
 Prix médians du marché, à confirmer par devis (`prix_indicatifs_eur`). Porte et fenêtres au prix des blocs standard.

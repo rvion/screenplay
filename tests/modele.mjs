@@ -114,7 +114,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   {
     // un bloc abri_v3 de plus est pris sans rien declarer, dans l'ordre des numeros
     const p = JSON.parse(JSON.stringify(base)); p.abri_v10 = { params: {} }; p.abri_v3 = { params: { disposition_trapeze: { porte_largeur_cm: 90 } } }; p.abri_vide = {};
-    ok(versions_abri(p).map((x) => x.cle).join() === "abri_v2,abri_v3,abri_v10", "variantes : abri_v2, abri_v3, abri_v10 dans l'ordre, blocs sans params ignores");
+    ok(versions_abri(p).map((x) => x.cle).join() === "abri_v2,abri_v3,abri_v4,abri_v10", "variantes : abri_v2, abri_v3, abri_v4, abri_v10 dans l'ordre des numeros, blocs sans params ignores");
     ok(params_v2(p, "abri_v3").disposition_trapeze.porte_largeur_cm === 90 && params_v2(p, "abri_v3").disposition_trapeze.toit.sens === "arriere", "abri_v3 : sa surcouche seule, pas celle de la v2");
   }
   ok(!!p2 && base.disposition_trapeze.toit.sens !== "droite", "abri_v2 : surcouche fusionnee sans toucher aux parametres de base");
@@ -128,6 +128,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   const derriere = v2.passages.find((q) => q.cote === "arriere_droite").cm;
   ok(derriere >= 49.5, "v2 : passage derriere >= 50 cm a l'arrondi (" + derriere + ")");
   ok(v2.polygone.every(([x, y]) => c2.geometrie.dalle.zone_utile.polygone.length && y >= 0.9), "v2 : abri avance a 1 cm du bord avant de la dalle");
+  ok(near(Math.min(...v2.polygone.map((z) => z[0])), 10, 0.05) && m2.toit.debord_cm.droite === 15, "v2 : 10 cm au bord gauche de la dalle, debord de 15 au-dessus de la porte");
   // toit vers la droite : mur gauche haut, mur droit sans rehausse, egout et descente cote jardin
   ok(m2.sens === "droite" && near(L.G.hauteur_debut_cm, H + 22.5) && near(L.G.hauteur_fin_cm, H + 22.5), "v2 : mur gauche haut d'un bout a l'autre (" + L.G.hauteur_debut_cm + ")");
   ok(near(L.D.hauteur_debut_cm, H) && near(L.D.hauteur_fin_cm, H) && !m2.rehausse.pieces.some((r) => r.face === "D"), "v2 : mur droit a " + H + ", sans rehausse");
@@ -144,9 +145,9 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(v2.porte.vitree === false && v.porte.vitree === true, "v2 : porte pleine (la v1 garde sa porte vitree)");
   ok(m2.budget.lignes.some((l) => l.poste.startsWith("Porte pleine") && l.pu_eur === base.prix_indicatifs_eur.porte_pleine) && !m2.budget.lignes.some((l) => l.poste.startsWith("Porte vitrée")), "v2 : budget = porte pleine, plus de porte vitree");
   ok(c2.svg["modele-facade-D"].includes("porte pleine") && !core.svg["modele-facade-D"].includes("porte pleine"), "v2 : facade D dessine une porte pleine");
-  // espace cache derriere l'abri. A la main, dalle au-dela de la droite (12,301)-(212,201), x <= 212 :
-  // sommets (0,307) (212,201) (212,269.3) (72.7,398.3) (0,324) -> 1,89 m2 ; pointe a 114 cm du mur du fond
-  ok(near(v2.arriere.aire_m2, 1.89, 0.02) && near(v2.arriere.profondeur_max_cm, 114, 1.5), "v2 : " + v2.arriere.aire_m2 + " m² caches derriere l'abri, " + v2.arriere.profondeur_max_cm + " cm au plus profond");
+  // espace cache derriere l'abri. A la main, dalle au-dela de la droite (10,301)-(210,201), x <= 210 :
+  // sommets (0,306) (210,201) (210,271.2) (72.7,398.3) (0,324) -> 1,90 m2 ; pointe a 115 cm du mur du fond
+  ok(near(v2.arriere.aire_m2, 1.9, 0.015) && near(v2.arriere.profondeur_max_cm, 115, 1.5), "v2 : " + v2.arriere.aire_m2 + " m² caches derriere l'abri, " + v2.arriere.profondeur_max_cm + " cm au plus profond");
   ok(v2.arriere.aire_m2 >= v.arriere.aire_m2 - 0.05, "v2 : autant de place derriere que la v1 (" + v.arriere.aire_m2 + " m²), ce n'est pas un avantage de la v2");
   ok(c2.svg["modele-implantation"].includes("rangement caché"), "v2 : la zone cachee est dessinee sur le plan d'implantation");
   // le fond de la v2 (223,6) est trop court pour un lit de 190 rabattable : il est pose au sol libre
@@ -170,19 +171,19 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   const { params_v2, abri_md } = await import(pathToFileURL(out).href);
   const p2 = params_v2(base), p3 = params_v2(base, "abri_v3");
   ok(p3.disposition_trapeze.toit.sens === "droite" && p3.disposition_trapeze.porte_vitree === false && p3.dalle_cm.bandes_libres_cm.avant === 1, "v3 : herite des reglages de la v2 (toit a droite, porte pleine, abri avance)");
-  ok(p3.dalle_cm.bandes_libres_cm.gauche === 5 && p2.dalle_cm.bandes_libres_cm.gauche === 12, "v3 : 5 cm a gauche, la v2 garde 12");
+  ok(p3.dalle_cm.bandes_libres_cm.gauche === 10 && p2.dalle_cm.bandes_libres_cm.gauche === 10 && base.dalle_cm.bandes_libres_cm.gauche === 12, "v2 et v3 : 10 cm a gauche (la v1 garde 12)");
   const c2 = buildCore(p2), c3 = buildCore(p3), m3 = c3.modele, v3 = c3.variantes.find((x) => x.id === 13), v2 = c2.variantes.find((x) => x.id === 13);
   ok(m3.faces.map((f) => f.cle).join("") === "ADCBG", "v3 : cinq murs A, D, C (pan), B (fond), G");
   const L = Object.fromEntries(m3.faces.map((f) => [f.cle, f]));
   // a la main : 200 x 300 moins le coin 100 x 100 / 2 = 5,50 m2 ; pan = 100 x racine(2) = 141,4 ; angles 90 90 135 135 90
   ok(near(v3.aire_m2, 5.5, 0.001) && near(L.C.longueur_cm, 141.4, 0.05) && near(L.B.longueur_cm, 100), "v3 : 5,50 m² de murs, pan de 141,4, fond de 100 (" + v3.aire_m2 + ", " + L.C.longueur_cm + ")");
   ok(v3.angles_deg.join() === "90,90,135,135,90", "v3 : angles 90 · 90 · 135 · 135 · 90, aucun angle aigu (" + v3.angles_deg.join(" ") + ")");
-  ok(near(Math.min(...v3.polygone.map((z) => z[0])), 5, 0.05), "v3 : mur gauche a 5 cm du bord de la dalle");
+  ok(near(Math.min(...v3.polygone.map((z) => z[0])), 10, 0.05), "v3 : mur gauche a 10 cm du bord de la dalle");
   const mod = base.panneau.largeur_utile_cm;
   ok(["A", "D", "B", "G"].every((k) => L[k].panneaux.every((pn) => near(pn.largeur_cm, mod))) && L.C.panneaux.filter((pn) => pn.largeur_cm < mod - 0.05).length === 1, "v3 : A, D, B, G en panneaux entiers, une seule bande recoupee (sur le pan)");
   const pas = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
-  // a la main : coin (105, 301), mur a y = 223 + 157 x 0,926 = 368,4 ; ecart 67,4 x 0,734 = 49,5
-  ok(near(pas(v3), 49.5, 0.6), "v3 : passage derriere 49,5 cm, au coin du fond (" + pas(v3) + ")");
+  // a la main : coin (110, 301), mur a y = 223 + 152 x 0,926 = 363,8 ; ecart 62,8 x 0,734 = 46,0
+  ok(near(pas(v3), 46.0, 0.6), "v3 : passage derriere 46 cm, au coin du fond (" + pas(v3) + ")");
   ok(v3.aire_interieure_m2 > v2.aire_interieure_m2 + 0.4, "v3 : +" + (v3.aire_interieure_m2 - v2.aire_interieure_m2).toFixed(2) + " m² d'interieur sur la v2");
   ok(v3.arriere && v3.arriere.polygones.length === 2 && v3.arriere.aire_m2 < v2.arriere.aire_m2, "v3 : rangement cache plus petit que la v2 (" + v3.arriere.aire_m2 + " contre " + v2.arriere.aire_m2 + " m²), sur deux murs de fond");
   // le toit penche a droite : l'eau sort par D et par le pan C, pas par le fond B
@@ -196,6 +197,38 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(page3.includes("**5 murs**") && page3.includes("site/assets/modele-v3-facade-C.svg") && page3.includes("5 angles"), "abri-v3.md : 5 murs, 5 angles, l'elevation du pan");
   ok(!/\{\w+\}/.test(page3) && page3.includes("déclaration préalable"), "abri-v3.md : tous les {champs} remplaces, et la declaration prealable annoncee");
   ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
+}
+
+// fenetres 80 x 80, allege 110, sur la v2 et tout ce qui en herite
+{
+  const { params_v2 } = await import(pathToFileURL(out).href);
+  for (const cle of ["abri_v2", "abri_v3", "abri_v4"]) {
+    const f = buildCore(params_v2(base, cle)).variantes.find((x) => x.id === 13).fenetres;
+    ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 80 && w.allege_cm === 110 && w.tient !== false) && f[0].ouvrant && !f[1].ouvrant, cle + " : deux fenetres 80 x 80, allege 110 (haut a 190), l'ouvrante a gauche");
+  }
+}
+
+// version 4 : la version 3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)
+{
+  const { params_v2, abri_md } = await import(pathToFileURL(out).href);
+  const p3 = params_v2(base, "abri_v3"), p4 = params_v2(base, "abri_v4"), c3 = buildCore(p3), c4 = buildCore(p4);
+  const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
+  ok(JSON.stringify(v4.polygone) === JSON.stringify(v3.polygone) && v4.aire_interieure_m2 === v3.aire_interieure_m2, "v4 : meme forme et meme interieur que la v3");
+  const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
+  // a la main, chute 22,5 sur 300 de profondeur : facade 237,5 ; a y = 200, 215 + 22,5 / 3 = 222,5 ; fond 215
+  ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
+  ok(near(L.D.hauteur_fin_cm, 222.5, 0.05) && near(L.C.hauteur_debut_cm, 222.5, 0.05) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 222,5, pan 222,5 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 7.5, 0.06) && near(m4.portee_cm, 300), "v4 : pente 22,5 / 300 = 7,5 %, portee 3 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
+  ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
+  const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);
+  ok(m4.toit.gouttiere.descente[0] === Math.max(...bouts.map((z) => z[0])), "v4 : descente au bout droit de la gouttiere (" + m4.toit.gouttiere.descente + ")");
+  ok(m4.toit.panneaux.length === 2 && m4.toit.panneaux.every((t) => near(t.largeur_cm, 100)) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit de 100, un seul coupe en biais");
+  ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
+  const b4 = base.abri_v4, page4 = abri_md(p4, c4, { prefixe: "modele-v4-", version: 4, depuis: 3, titre: b4.titre, atouts: b4.atouts, pertes: b4.pertes, notes: b4.notes, hors_modele: b4.hors_modele, base: c3 });
+  ok(page4.includes("| | version 3 ([abri-v3.md](abri-v3.md)) | **version 4** |") && !/\{\w+\}/.test(page4), "abri-v4.md se compare a la version 3, tous les {champs} remplaces");
+  ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("à l'entrée du passage"), "abri-v4.md : gouttiere derriere en 2 troncons, descente a l'entree du passage");
+  ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
 }
 
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }

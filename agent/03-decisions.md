@@ -304,3 +304,20 @@ sans lui). *Pourquoi le modèle a été généralisé plutôt que contourné :* 
 gouttière sur tous les bords d'égout, zones cachées multiples et héritage de variantes servent à
 toute forme future. *Le choix entre les versions reste ouvert.*
 
+## D31 — Réglages du 2026-09-21 : fenêtres 80 × 80, 10 cm à gauche, débords courts, et une version 4
+Quatre demandes. (1) **Fenêtres 80 × 80, allège à 110 cm** (haut à 190) au lieu de 80 × 110 allège
+95 : assis, les yeux (vers 120 cm) passent juste au-dessus de l'allège, et depuis l'étage des
+voisins on voit moins le bureau. 110 plutôt que 115 pour garder cette vue assise. Réglé dans la
+version 2, donc hérité. (2) **10 cm au bord gauche** pour la version 2 et ses héritières, au lieu
+de 12 (v2) et 5 (v3, *amende D30*) : le vide reste traitable. Conséquence calculée : le passage de
+la version 3 passe de 49,4 à **46 cm**, celui de la version 2 monte à 51,5 cm. (3) **Débords de
+toit plus courts** : 15 cm au-dessus de la porte (v2, v3), 5 cm devant et derrière (v4).
+(4) **Version 4 = version 3 avec le toit vers le fond**, demandée parce que les panneaux de toit
+ont des nervures dans le sens de la pente : l'eau ne sort que par leurs bouts bas, la gouttière va
+donc derrière, sur le mur du fond et le pan à 45° (règle générale du modèle, D30). *Ce que le
+calcul montre :* façade de niveau à 237,5 cm et un panneau de toit en moins, mais portée 3 m au
+lieu de 2 m, pente 7,5 % au lieu de 11,2 %, plus de débord gratuit sur la porte, et une descente
+sans bonne place (coincée au coin arrière gauche, ou à l'entrée du passage comme retenu ici, avec
+un tuyau à ramener au jardin). Les deux sens restent proposés côte à côte (`abri-v3.md`,
+`abri-v4.md`).
+

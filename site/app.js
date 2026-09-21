@@ -1715,7 +1715,11 @@ function modele_trapeze(p, v) {
         a: g1.map((z) => rnd(z, 1)),
         troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
         longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1),
-        descente: bas.map((z) => rnd(z, 1))
+        descente: (() => {
+          if (t.descente !== "droite" && t.descente !== "gauche") return bas;
+          const bouts = egouts.flatMap(({ a, b }) => [a, b]);
+          return bouts.reduce((m, z) => (t.descente === "droite" ? z[0] > m[0] + 1e-6 : z[0] < m[0] - 1e-6) ? z : m, bouts[0] || bas);
+        })().map((z) => rnd(z, 1))
       }
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),

@@ -6,18 +6,18 @@
 <text x="277.5" y="160.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">A2</text>
 <polygon points="90.0,138.1 340.0,138.1 340.0,138.1 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
 <text x="215.0" y="128.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R1 · rehausse 22.5 → 0</text>
-<rect x="102.5" y="150.6" width="100.0" height="137.5" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
+<rect x="102.5" y="169.4" width="100.0" height="100.0" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
 <text x="152.5" y="215.4" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre ouvrante</text>
-<text x="152.5" y="231.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 110 · allège 95</text>
+<text x="152.5" y="231.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 80 · allège 110</text>
 <line x1="102.5" y1="410.9" x2="102.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="202.5" y1="410.9" x2="202.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="102.5" y1="426.9" x2="202.5" y2="426.9" stroke="#1b9aa8" stroke-width="1"/>
 <line x1="99.5" y1="429.9" x2="105.5" y2="423.9" stroke="#1b9aa8" stroke-width="1"/>
 <line x1="199.5" y1="429.9" x2="205.5" y2="423.9" stroke="#1b9aa8" stroke-width="1"/>
 <text x="152.5" y="434.9" text-anchor="middle" dominant-baseline="middle" fill="#1b9aa8" font-size="10" font-weight="bold" transform="rotate(0.0 152.5 434.9)">80</text>
-<rect x="227.5" y="150.6" width="100.0" height="137.5" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
+<rect x="227.5" y="169.4" width="100.0" height="100.0" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
 <text x="277.5" y="215.4" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre fixe</text>
-<text x="277.5" y="231.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 110 · allège 95</text>
+<text x="277.5" y="231.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 80 · allège 110</text>
 <line x1="227.5" y1="410.9" x2="227.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="327.5" y1="410.9" x2="327.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="227.5" y1="426.9" x2="327.5" y2="426.9" stroke="#1b9aa8" stroke-width="1"/>

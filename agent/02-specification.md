@@ -146,7 +146,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   bords par où l'eau sort (normale extérieure dans le sens de la pente : `gouttiere.troncons`).
   L'espace caché derrière l'abri se calcule sur un ou deux murs de fond (union des zones).
   Une variante peut **hériter** d'une autre (`herite`) et choisir sa base de comparaison
-  (`compare_a`) : `abri_v3` = `abri_v2` + cinq murs + 5 cm à gauche, comparée à la version 2.
+  (`compare_a`) : `abri_v3` = `abri_v2` + cinq murs, comparée à la version 2 ; `abri_v4` = `abri_v3` +
+  toit vers le fond, comparée à la version 3. `toit.descente` (`droite`/`gauche`) place la descente
+  au bout de la gouttière choisi ; sans lui, elle va au point bas. Les textes d'une variante
+  reçoivent aussi `{gauche_cm}`, les débords, la pente, la portée et la position de la descente.
 - Plusieurs variantes : tout bloc `abri_vN` de `params.json` (`versions_abri`) donne `abri-vN.md`
   et ses plans `modele-vN-*.svg`, comparés à la version 1.
 

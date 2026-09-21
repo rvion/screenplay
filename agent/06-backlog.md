@@ -1,6 +1,10 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Sens du toit : version 3 (vers le jardin) ou version 4 (vers le fond) ?** (D31) La v4 a une
+      façade de niveau et la gouttière cachée derrière ; elle coûte une portée de 3 m, une pente de
+      7,5 % et une descente à l'entrée du passage. Passage de la v3 et de la v4 : 46 cm, à essayer
+      avec la tondeuse.
 - [ ] **Abri : version 3 ?** (D30) `abri-v3.md` : cinq murs, pan à 45°, 4,95 m² intérieur, plus d'angle
       aigu ; mais 5,50 m² de murs (déclaration préalable) et rangement caché réduit à 1,41 m².
 - [ ] **Abri : version 1 ou version 2** (D28). `abri-v2.md` compare les deux : la v2 est au seuil

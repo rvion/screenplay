@@ -50,23 +50,23 @@
     "_comment": "Variante proposee de l'abri retenu : une SURCOUCHE de ce fichier (params = seulement ce qui change, fusionne en profondeur, les listes sont remplacees). npm run emit ecrit abri-v2.md et site/assets/modele-v2-*.svg a cote de abri.md, avec un tableau compare calcule. notes = le pourquoi de chaque changement ; hors_modele = conseils que le modele ne dessine pas.",
     "titre": "Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)",
     "params": {
-      "dalle_cm": { "bandes_libres_cm": { "avant": 1 } },
+      "dalle_cm": { "bandes_libres_cm": { "avant": 1, "gauche": 10 } },
       "disposition_trapeze": {
         "cotes_cm": { "avant": 200, "droite": 200, "gauche": 300 },
         "porte_largeur_cm": 80,
         "porte_vitree": false,
-        "toit": { "sens": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 0, "arriere": 0, "gauche": 0, "droite": 25 } },
+        "toit": { "sens": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 0, "arriere": 0, "gauche": 0, "droite": 15 } },
         "rehausse_section_mm": [75, 225],
         "rehausse_prix_ml_eur": 10,
         "lit_pliant": { "contre": "" },
         "fenetres": [
-          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 110, "allege_cm": 95, "position": 10, "ouvrant": true },
-          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 110, "allege_cm": 95, "position": 110, "ouvrant": false }
+          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 80, "allege_cm": 110, "position": 10, "ouvrant": true },
+          { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 80, "allege_cm": 110, "position": 110, "ouvrant": false }
         ]
       }
     },
     "atouts": [
-      "**À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade, qui donnent sur le plateau du bureau et pas sur les écrans ; un film dépoli sur leur moitié basse ou un store règle le reste.",
+      "**À l'abri des regards.** Les voisins de l'étage voient la façade de l'abri. Avec la porte sur le mur droit, de côté, une porte ouverte ne leur montre jamais l'intérieur : ils ne voient que le battant. La porte est **pleine**, pas vitrée : fermée, elle ne montre rien non plus. Il reste les deux fenêtres de façade : petites (80 × 80) et hautes (allège à 110 cm), elles donnent sur le bord du plateau et pas sur les écrans ; un store règle le reste.",
       "**La lumière de côté, comme le demande l'ergonomie.** Le jour n'entre que par les fenêtres de façade. L'ordinateur et le second écran vont sur le bureau gauche, contre le mur aveugle : assis face à ce mur, on reçoit la lumière **par le côté gauche**, écrans perpendiculaires aux fenêtres, sans fenêtre dans le dos ni en face. Une porte vitrée sur le mur droit aurait été exactement dans le dos, en reflet sur les écrans : la porte pleine supprime ce défaut.",
       "**Les outils de jardin cachés derrière, et pas de second abri.** Derrière le mur du fond il reste **{arriere_m2} m² de dalle**, profonds de {arriere_profondeur_cm} cm au plus large, entre l'abri et le mur de propriété : invisibles depuis le jardin et depuis la maison, hachurés en vert sur le plan d'implantation. Outils à manche accrochés au mur, tuyau, pots, sacs de terreau, échelle : tout y tient, le jardin garde une seule construction et reste dégagé. On y accède par le passage de {passage_cm} cm le long du grand pan. **À vérifier :** ce qui est plus large que ce passage n'y entre pas (une brouette fait environ 60 cm, certaines tondeuses 50 à 55) ; mesurer la tondeuse avant de compter dessus."
     ],
@@ -77,42 +77,41 @@
       "**Un peu plus chère** (voir la ligne budget du tableau) : l'écart vient de la deuxième fenêtre, ouvrante. À fenêtres égales la coque de la version 2 coûte moins (madrier courant, toit plus court)."
     ],
     "notes": [
-      "**Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à 12 cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.",
+      "**Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à {gauche_cm} cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.",
       "**5,00 m² de murs** : au seuil sans formalité (emprise et plancher ≤ 5 m²), au lieu d'une déclaration préalable pour 0,37 m² de murs en plus. Le prix : 0,35 m² d'intérieur en moins, pris surtout dans le coin aigu du fond.",
       "**Abri avancé de 4 cm** (bande libre avant 1 au lieu de 5) : la porte n'est plus en façade, cette bande ne sert plus. Le passage derrière l'abri retrouve 50 cm.",
       "**Toit vers la droite, côté jardin**, au lieu du fond : descente devant, côté jardin, accessible tous les jours, récupérateur d'eau possible (aujourd'hui toute l'eau du toit arrive au coin le plus enfermé, au pied du mur de propriété). **Attention :** l'eau du fond du toit sort par le mur du fond en biais, pas par le mur droit. La gouttière doit donc courir aussi le long du fond, en pente naturelle vers le coin droit où elle rejoint celle du mur droit (le modèle la compte sur les deux bords : voir le tableau). Sans ce tronçon, cette eau tomberait dans le passage arrière.",
       "**Portée du toit 2,0 m** au lieu de 3,1 m : les panneaux vont du mur gauche au mur droit. C'était l'hypothèse la plus fragile du projet (H6).",
       "**Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.",
       "**Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.",
-      "**Débord de 25 cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1.",
+      "**Débord de {debord_droite_cm} cm à droite** : il abrite la porte, qui n'a aucun auvent dans la version 1. Volontairement court : il ne coûte rien (c'est la longueur des panneaux de toit) et reste discret.",
       "**Porte pleine de 80** : une porte de service standard (un fauteuil de bureau ne passe pas dans 65, et un bloc vitré de 65 est du sur-mesure). Elle tient entièrement dans le deuxième module du mur droit : le panneau D1 reste entier, le cadre bois fait office de poteau d'angle.",
-      "**Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante."
+      "**Deux fenêtres de 80 × 80, allège à 110 cm**, une par panneau entier de façade, l'ouvrante à gauche, en diagonale de la porte pour la ventilation traversante. Petites et hautes : assis, le regard passe juste au-dessus de l'allège (yeux vers 120 cm), et depuis l'étage des voisins on voit moins le plateau du bureau qu'avec des fenêtres de 110 de haut."
     ],
     "hors_modele": [
       "La gouttière a **deux tronçons et un angle** (fond en biais, puis mur droit) : pièce d'angle à prévoir à la commande, le budget ne compte qu'un forfait.",
       "Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.",
       "Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.",
-      "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 12 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
+      "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à {gauche_cm} cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
       "**Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.",
       "Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.",
       "À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm."
     ]
   },
   "abri_v3": {
-    "_comment": "Version 3 = version 2 (herite) + un cinquieme mur : le fond d'equerre sur un module, puis un pan a 45 degres jusqu'au haut du mur droit ; et 5 cm seulement entre l'abri et le bord gauche de la dalle. compare_a = la version a laquelle abri-v3.md se compare. Les {champs} des textes sont remplaces par des valeurs calculees.",
+    "_comment": "Version 3 = version 2 (herite) + un cinquieme mur : le fond d'equerre sur un module, puis un pan a 45 degres jusqu'au haut du mur droit ; l'ecart de {gauche_cm} cm au bord gauche de la dalle est celui de la version 2. compare_a = la version a laquelle abri-v3.md se compare. Les {champs} des textes sont remplaces par des valeurs calculees.",
     "herite": "abri_v2",
     "compare_a": 2,
     "titre": "Abri de jardin : le bureau à cinq murs, version 3 (fond d'équerre et pan à 45°)",
     "params": {
-      "dalle_cm": { "bandes_libres_cm": { "gauche": 5 } },
       "disposition_trapeze": { "cotes_cm": { "avant": 200, "droite": 200, "gauche": 300, "fond": 100 } }
     },
     "atouts": [
       "**{gain_interieur_m2} m² d'intérieur en plus** que la version 2 ({interieur_m2} au lieu de {base_interieur_m2} m²), dont {gain_sol_libre_m2} m² de sol libre : le fond de la pièce devient une vraie travée d'équerre, large d'un mètre, au lieu de finir en pointe.",
       "**Plus aucun angle aigu.** Les deux angles qui ne sont pas droits sont identiques, 135° : un seul profil d'angle plié à commander en deux exemplaires, et un bout de bureau gauche d'équerre contre le mur du fond.",
       "**Une seule recoupe de panneau dans tout l'abri.** Façade 200, droite 200, fond 100, gauche 300 : des panneaux entiers. Seul le pan à 45° (141,4 cm) demande une bande, et il donne sur le passage, donc accessible.",
-      "**Le pan à 45° longe le mur de propriété** (incliné à 42,8°) : le passage derrière garde une largeur presque constante, {passage_cm} cm au plus étroit, au lieu de s'ouvrir en entonnoir. La tondeuse manuelle y passe comme dans la version 2.",
-      "**5 cm au lieu de 12 contre le bord gauche** : l'abri glisse de 7 cm vers le mur, et ses deux coins arrière s'éloignent d'autant du grand pan. C'est ce qui rend au passage les centimètres que le cinquième mur lui prenait.",
+      "**Le pan à 45° longe le mur de propriété** (incliné à 42,8°) : le passage derrière garde une largeur presque constante au lieu de s'ouvrir en entonnoir. Au plus étroit il fait {passage_cm} cm, contre {base_passage_cm} cm dans la version 2 : c'est le cinquième mur qui prend la différence. **À vérifier avec la tondeuse avant de choisir.**",
+      "**{gauche_cm} cm contre le bord gauche, comme la version 2** : assez pour fermer le vide proprement (bavette devant, grillage au fond) et pour que l'eau et les feuilles ne restent pas coincées. À 5 cm le passage derrière gagnerait 3 à 4 cm, mais le vide deviendrait impossible à traiter.",
       "Tout ce que la version 2 apporte reste vrai ici : porte pleine sur le côté, à l'abri des regards de l'étage voisin ; lumière de côté sur les écrans du bureau gauche ; toit vers le jardin, portée de 2 m, madrier courant. Voir [abri-v2.md](abri-v2.md)."
     ],
     "pertes": [
@@ -124,13 +123,48 @@
     ],
     "notes": [
       "**La forme se ferme toute seule sur le module** : mur gauche 300, mur droit 200, fond 100, il reste un coin de 100 × 100 à fermer, donc un pan à exactement 45° de 141,4 cm. Aucune cote n'est ajustée pour y arriver.",
-      "**5 cm à gauche, c'est peu mais ça tient** : le mur gauche se monte à plat puis se lève (voir les conseils de la version 2), on ne visse rien dans ce vide. Il faut le fermer devant par une bavette et au fond par un grillage.",
+      "**{gauche_cm} cm à gauche** : le mur gauche se monte à plat puis se lève (voir les conseils de la version 2), on ne visse rien dans ce vide. Il faut le fermer devant par une bavette et au fond par un grillage.",
       "**Pourquoi comparer à la version 2** : la version 3 en reprend tous les réglages (`herite`), seuls la forme et la bande gauche changent. Le tableau isole donc l'effet du cinquième mur."
     ],
     "hors_modele": [
       "Le modèle dessine la gouttière sur les deux bords d'égout, mais pas sa pièce d'angle à 135° ni la pente à lui donner vers la descente : à prévoir à la commande.",
       "Le pan à 45° reçoit une pièce de rehausse en biais dont la hauteur varie le long du mur : c'est une coupe de plus dans le madrier, pas une difficulté.",
-      "Avant de déposer la déclaration préalable, vérifier au PLU la règle d'implantation par rapport à la limite (à 5 cm du mur de propriété, l'abri n'est ni en limite ni à 3 m)."
+      "Avant de déposer la déclaration préalable, vérifier au PLU la règle d'implantation par rapport à la limite (à {gauche_cm} cm du mur de propriété, l'abri n'est ni en limite ni à 3 m)."
+    ]
+  },
+  "abri_v4": {
+    "_comment": "Version 4 = version 3 (herite) avec le toit vers le FOND : les nervures des panneaux menent l'eau a l'arriere, la gouttiere court derriere l'abri (mur du fond + pan a 45 degres). descente = bout de la gouttiere ou placer la descente (droite = vers le jardin). Comparee a la version 3 : le tableau isole l'effet du sens du toit.",
+    "herite": "abri_v3",
+    "compare_a": 3,
+    "titre": "Abri de jardin : le bureau à cinq murs, version 4 (toit vers le fond, gouttière derrière)",
+    "params": {
+      "disposition_trapeze": {
+        "toit": { "sens": "arriere", "descente": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 5, "arriere": 5, "gauche": 0, "droite": 0 } }
+      }
+    },
+    "atouts": [
+      "**Une façade droite et haute** : {hauteur_facade_cm} cm d'un bout à l'autre, le toit ne se voit pas pencher depuis le jardin ni depuis la maison. Dans la version 3 la façade descend de 237,5 à 215 cm vers la porte.",
+      "**La gouttière est derrière, invisible** : {gouttiere_cm} cm le long du mur du fond puis du pan à 45°. Les nervures des panneaux de toit vont de l'avant vers l'arrière, toute l'eau arrive donc aux bouts arrière des panneaux, et nulle part ailleurs.",
+      "**Un panneau de toit en moins** : {panneaux_toit} panneaux au lieu de {base_panneaux_toit}, dans le sens de la profondeur, sans bande étroite. Un seul porte une coupe en biais, le long du pan à 45°.",
+      "**Le mur contre la propriété n'est plus le mur haut** : il descend de 237,5 cm devant à 215 cm au fond, au lieu de rester à 237,5 cm sur ses trois mètres. Moins de mur visible au-dessus du mur du voisin.",
+      "Débord de {debord_avant_cm} cm devant : il protège un peu les fenêtres de façade, que la version 3 laisse à nu."
+    ],
+    "pertes": [
+      "**Portée du toit : {portee_m} m au lieu de {base_portee_m} m.** Les panneaux vont de la façade au mur du fond. C'est l'hypothèse la plus fragile du projet pour du 60 mm : à faire confirmer par le fabricant, ou prévoir une panne en bois en travers, à mi-profondeur (2 m de portée, elle relie aussi le mur gauche au mur droit).",
+      "**Pente {pente_pourcent} % au lieu de {base_pente_pourcent} %** : la même chute de 22,5 cm s'étale sur 3 m au lieu de 2 m. C'est peu pour une toiture en panneaux ; une chute de 30 cm donnerait 10 %, mais demande un madrier de 300, introuvable en stock (ou deux pièces superposées).",
+      "**La descente n'a pas de bonne place.** Au coin arrière gauche, le point bas naturel, elle est coincée entre deux murs, hors d'atteinte, et l'eau finit au pied du mur de propriété. Placée {descente}, comme ici, elle se trouve dans le passage qu'on veut garder libre, et il faut encore un tuyau le long du mur droit pour amener l'eau au jardin. La version 3 la met devant, côté jardin, sur la dalle.",
+      "**La gouttière du pan à 45° est à contre-pente** : le bord du toit y monte de 7,5 cm vers le mur droit, la gouttière doit descendre dans l'autre sens. Elle pend donc de 8 à 9 cm sous le bord du toit à son bout droit.",
+      "**Plus d'abri au-dessus de la porte** : le débord de {base_debord_droite_cm} cm de la version 3 venait gratuitement de la longueur des panneaux. Ici un débord à droite demande un panneau de toit de plus, refendu. Prévoir une marquise.",
+      "**Gouttière dans le passage** : à 2,05 m du sol environ, au point où le passage fait {passage_cm} cm. Avec un débord arrière de {debord_arriere_cm} cm, le bord du toit et la gouttière avancent d'une quinzaine de centimètres au-dessus du passage : on passe dessous, mais elle se nettoie dans un couloir étroit, pas depuis le jardin."
+    ],
+    "notes": [
+      "**Pourquoi les nervures décident** : un panneau sandwich de toiture a des nervures dans sa longueur, et il se pose nervures dans le sens de la pente. L'eau ne quitte donc le toit que par les bouts bas des panneaux. Toit vers le fond : gouttière au fond, sur les deux bords où finissent les panneaux (mur du fond et pan à 45°). Le modèle applique cette règle à toute forme.",
+      "**Tout le reste est celui de la version 3** : mêmes cinq murs, même intérieur, même passage, porte pleine sur le côté, deux fenêtres de 80 × 80. Le tableau ne montre que ce que le sens du toit change."
+    ],
+    "hors_modele": [
+      "La panne intermédiaire conseillée n'est ni dessinée ni chiffrée : un bois de 75 × 150 environ, 2 m, posé sur les murs gauche et droit.",
+      "Le tuyau qui ramène l'eau de la descente au jardin (2 m le long du mur droit, au sol) n'est pas chiffré non plus.",
+      "Une marquise au-dessus de la porte est à ajouter au budget."
     ]
   },
   "reglementaire": {
