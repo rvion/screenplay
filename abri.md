@@ -11,7 +11,8 @@
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 175, fond en biais 141,4, fond 100, gauche 275 cm.
 - **Toit** mono-pente vers le fond, 4,68° : 237,5 cm devant, 215 cm au plus bas.
 - **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Budget indicatif** : 3 170 € à 4 290 € HT (coque 3 148 €, aménagement 582 €).
+- **Matériaux** : 3 146 € TTC (2 674 € à 3 618 €), sans main-d'œuvre ni livraison ; équipement optionnel 259 €.
+
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,48 m² ⇒ aucune formalité.
 
 ## À trancher
@@ -135,32 +136,344 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | tabouret | 30 × 30 cm | devant le bureau de façade |
 | lit pliant (déplié) | 75 × 190 cm | au milieu, pied sous un bureau, sièges rangés |
 
-## Budget indicatif (HT, fourniture seule)
+## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 
-| poste | quantité | prix unitaire | montant |
-|---|---|---|---|
-| Panneaux sandwich mur 60 mm (à commander) | 21,5 m² | 35 € | 752 € |
-| Surcoût fixation cachée (mur) | 21,5 m² | 5 € | 108 € |
-| Panneaux sandwich toit 60 mm (à longueur) | 5,72 m² | 35 € | 200 € |
-| Rehausse bois (madriers 75 × 225) | 9,6 ml | 10 € | 96 € |
-| Porte pleine isolée + cadre | 1 u | 450 € | 450 € |
-| Fenêtre fixe | 1 u | 200 € | 200 € |
-| Fenêtre ouvrante | 1 u | 320 € | 320 € |
-| Profils (angles int. + ext., rail de pied, rives) | 36 ml | 12 € | 432 € |
-| Visserie + étanchéité | 1 forfait | 160 € | 160 € |
-| Gouttière + descente | 1 forfait | 130 € | 130 € |
-| Ventilation | 1 forfait | 150 € | 150 € |
-| Livraison des panneaux | 1 forfait | 150 € | 150 € |
-| Plancher isolé | 4,48 m² | 45 € | 202 € |
-| Électricité (multiprise, éclairage) | 1 forfait | 80 € | 80 € |
-| Chauffage | 1 forfait | 120 € | 120 € |
-| Store | 1 forfait | 60 € | 60 € |
-| Finition intérieure | 1 forfait | 120 € | 120 € |
-| **coque** | | | **3 148 €** |
-| **aménagement** | | | **582 €** |
-| **total** | | | **3 730 €** (3 170 € à 4 290 €, ±15 %) |
+### Panneaux · 1 132 €
 
-Prix médians du marché, à confirmer par devis (`prix_indicatifs_eur`). Porte et fenêtres au prix des blocs standard.
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 21,5 m² | 42 € | 903 € | 10 panneaux entiers à commander (les bandes recoupées sortent des chutes) |
+| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 5,72 m² | 40 € | 229 € | 2 panneaux coupés à longueur : T1 286 cm, T2 286 cm |
+
+### Bois · 179 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Madrier 75 × 225 classe 4 (rehausse, lisse haute) *(prix à confirmer)* | 9,6 ml | 14 € | 134 € | 2 pièce(s) de 480 cm |
+| Panne intermédiaire 75 × 150 classe 4, en travers à mi-profondeur *(prix à confirmer)* | 2 ml | 10 € | 20 € | portée du toit 2,8 m : une panne de la longueur de la façade la ramène à 1,4 m |
+| Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 5 ml | 5 € | 25 € | deux montants + une traverse haute |
+
+### Profils et bavettes · 462 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Profil de départ en U (rail de pied) *(prix à confirmer)* | 8,01 ml | 9 € | 72 € | périmètre des murs moins le cadre de la porte |
+| Profils d'angle à 90°, extérieur + intérieur *(prix à confirmer)* | 13,8 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces |
+| Profils d'angle pliés sur mesure (135°), extérieur + intérieur *(prix à confirmer)* | 8,76 ml | 18 € | 158 € | 2 angles non droits, deux faces |
+| Bandes de rive de toit *(prix à confirmer)* | 4,72 ml | 12 € | 57 € | bords du toit parallèles à la pente |
+| Bavette de tête (bord haut du toit) *(prix à confirmer)* | 2 ml | 12 € | 24 € | bord haut du toit |
+| Closoirs mousse sous les nervures *(prix à confirmer)* | 4,41 ml | 3 € | 13 € | bord haut + bord d'égout |
+
+### Fixations · 49 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) *(prix à confirmer)* | 0,27 cent | 45 € | 12 € | 2 panneaux × 3 appuis × 4 vis, +10 % |
+| Vis de couture (recouvrements de panneaux, bavettes, profils) *(prix à confirmer)* | 0,65 cent | 12 € | 8 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 % |
+| Vis autoperceuses de panneaux de mur (pied et tête) *(prix à confirmer)* | 0,66 cent | 25 € | 17 € | 10 panneaux × 2 extrémités × 3 vis, +10 % |
+| Chevilles ou goujons pour fixer le rail dans la dalle *(prix à confirmer)* | 20 u | 1 € | 12 € | une tous les 50 cm |
+
+### Étanchéité · 122 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Bande d'arase sous le rail de pied *(prix à confirmer)* | 8,91 ml | 2 € | 13 € | périmètre des murs |
+| Bande butyle (joints de panneaux, tête de mur sous la rehausse) *(prix à confirmer)* | 22,41 ml | 1 € | 27 € | 5 joints de mur × 2,2 m + périmètre + recouvrements de toit |
+| Mastic polyuréthane ou MS polymère, cartouches *(prix à confirmer)* | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures |
+| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,3 ml | 3 € | 28 € | tour de la porte et des fenêtres |
+| Mousse polyuréthane expansive, bombes *(prix à confirmer)* | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles |
+
+### Ouvertures · 820 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Porte de service pleine isolée 80 × 205 cm, avec dormant *(prix à confirmer)* | 1 u | 450 € | 450 € | une porte |
+| Fenêtre fixe PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 150 € | 150 € | fenêtres fixes |
+| Fenêtre oscillo-battante PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 220 € | 220 € | fenêtres ouvrantes |
+
+### Eaux pluviales · 87 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Gouttière demi-ronde *(prix à confirmer)* | 2,41 ml | 6 € | 14 € | 2 tronçon(s) : C 138,5 cm + B 102,1 cm |
+| Crochets de gouttière *(prix à confirmer)* | 6 u | 3 € | 15 € | un tous les 50 cm |
+| Naissance, fonds, angle, coudes et colliers (lot) *(prix à confirmer)* | 1 lot | 35 € | 35 € | un angle, une naissance, deux fonds, deux coudes, deux colliers |
+| Tuyau de descente *(prix à confirmer)* | 3,9 ml | 6 € | 23 € | hauteur du mur + le retour au sol le long du mur droit jusqu'au jardin |
+
+### Plancher isolé · 255 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Lambourdes traitées (entraxe 40 cm) *(prix à confirmer)* | 13 ml | 2 € | 26 € | surface intérieure ÷ 0,40 m, +10 % |
+| Isolant rigide 40 mm entre lambourdes *(prix à confirmer)* | 4,7 m² | 12 € | 56 € | surface intérieure, +5 % |
+| Film polyéthylène sous le plancher *(prix à confirmer)* | 5,15 m² | 1 € | 5 € | surface intérieure, +15 % de recouvrements |
+| Dalles OSB3 18 mm rainurées *(prix à confirmer)* | 4,93 m² | 14 € | 69 € | surface intérieure, +10 % de chutes |
+| Revêtement de sol (vinyle ou stratifié) *(prix à confirmer)* | 4,93 m² | 20 € | 99 € | surface intérieure, +10 % de chutes |
+
+### Équipement (optionnel) · 259 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Grilles ou entrées d'air murales *(prix à confirmer)* | 2 u | 15 € | 30 € | une basse, une haute, sur deux murs opposés |
+| Goulotte électrique 2 m *(prix à confirmer)* | 3 u | 8 € | 24 € | la moitié du périmètre, en longueurs de 2 m |
+| Multiprise parafoudre *(prix à confirmer)* | 1 u | 25 € | 25 € | sur le câble déjà en place |
+| Réglette ou plafonnier LED *(prix à confirmer)* | 1 u | 30 € | 30 € | un point lumineux |
+| Radiateur panneau 750 W à thermostat *(prix à confirmer)* | 1 u | 90 € | 90 € | bureau chauffé toute l'année |
+| Stores des fenêtres de façade *(prix à confirmer)* | 2 u | 30 € | 60 € | un par fenêtre |
+
+### Consommables · 40 €
+
+| matériau | quantité | prix unitaire | montant | comment c'est compté |
+|---|---|---|---|---|
+| Lame de scie circulaire pour métal (coupe à froid des panneaux) *(prix à confirmer)* | 1 u | 40 € | 40 € | jamais de meuleuse : elle brûle le laquage et la mousse |
+
+**Total des matériaux : 3 146 € TTC** (fourchette 2 674 € à 3 618 €, ±15 %). Équipement optionnel en plus : 259 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+
+Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
+
+## Guide de montage
+
+### Avant de commander
+
+- Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici) : tout le calepinage en dépend.
+- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici, ramenée à 1,4 m par la panne intermédiaire ; et la **pente minimale** (8,2 % ici).
+- Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.
+- Vérifier au PLU la règle d'implantation près de la limite (l'abri est à 10 cm du mur de propriété).
+- Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
+
+### Outillage
+
+- Scie circulaire avec **lame pour métal** (coupe à froid) et rail de guidage ; scie sauteuse lame métal pour les angles des ouvertures. **Pas de meuleuse** : elle brûle le laquage et la mousse, et ses étincelles piquent la tôle.
+- Visseuse à choc avec douilles 8 mm, perforateur et foret béton, cordeau à tracer, mètre de 5 m, niveau de 1,20 m ou laser, grande équerre, fil à plomb.
+- Pistolet à mastic, cutter, serre-joints, 4 étais ou chevrons pour tenir les murs pendant le montage, échelle ou escabeau stable.
+- Gants anti-coupure, lunettes, protection auditive. Les rives de tôle coupent.
+
+### Étape 1 · Tracer l'abri sur la dalle
+
+Tout le reste s'aligne sur ce tracé : dix minutes de plus ici évitent un mur qui ne ferme pas.
+
+**Outils :** cordeau, mètre, grande équerre
+
+1. Tracer la façade à 10 cm du bord avant de la dalle et le mur gauche à 10 cm du bord gauche.
+2. Reporter les 5 murs dans l'ordre : A 200 cm, D 175 cm, C 141,4 cm, B 100 cm, G 275 cm.
+3. Angles, dans le même ordre : 90°, 90°, 135°, 135°, 90°.
+
+**À contrôler avant de continuer :**
+
+- [ ] Diagonales du tracé : coin avant gauche → haut du mur droit = 265,8 cm ; coin avant droit → coin arrière gauche = 340 cm.
+- [ ] Passage derrière l'abri : 57,8 cm au plus étroit, à mesurer une fois le tracé fait.
+
+### Étape 2 · Poser le rail de pied
+
+Le rail tient le pied des panneaux et les isole de l'eau de la dalle.
+
+**Outils :** perforateur, visseuse, niveau
+
+1. Dérouler la bande d'arase sur le tracé (8,91 m), poser le profil en U dessus, **nu extérieur du rail sur le trait**.
+2. Cheviller tous les 50 cm, et à 10 cm de chaque angle.
+3. Interrompre le rail sur la largeur du cadre de la porte (90 cm, face D).
+4. Cordon de mastic continu entre le rail et la dalle, côté extérieur.
+
+**À contrôler avant de continuer :**
+
+- [ ] Rail de niveau : caler si la dalle a plus de 5 mm de faux niveau sur un mur.
+- [ ] Angles du rail conformes au tracé avant de cheviller le dernier mur.
+
+### Étape 3 · Préparer toutes les coupes à plat
+
+Un panneau se coupe bien sur tréteaux, mal une fois debout.
+
+**Outils :** scie circulaire lame métal, rail de guidage, scie sauteuse
+
+1. Bandes de mur : D1 75 cm, C2 41,4 cm, G3 75 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
+2. Fenêtres : 80 × 80 cm, bas à 110 cm ; 80 × 80 cm, bas à 110 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
+3. Toit : T2 à couper en biais d'après le plan de toiture.
+4. Rehausse : R1 (mur A, 200 cm, 22,5 → 22,5 cm), R2 (mur D, 175 cm, 22,5 → 8,2 cm), R3 (mur C, 141,4 cm, 8,2 → 0 cm), R4 (mur G, 275 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
+
+**À contrôler avant de continuer :**
+
+- [ ] Retirer le film de protection des panneaux au fur et à mesure : après quelques semaines au soleil il ne part plus.
+- [ ] Ébavurer chaque coupe et passer une retouche de peinture sur la tôle mise à nu.
+
+### Étape 4 · Monter le mur gauche à plat, puis le lever
+
+À 10 cm du mur de propriété aucune visseuse ne passe : ce mur se fait au sol.
+
+**Outils :** visseuse, serre-joints, 2 personnes, étais
+
+1. Assembler G1 (100), G2 (100), G3 (75) à plat, butyle dans chaque joint, et visser dessus leur pièce de rehausse.
+2. Placer la bande de 75 cm côté façade, la seule extrémité qu'on atteindra ensuite.
+3. Lever le mur à deux, l'engager dans le rail, le tenir par deux étais vissés dans la rehausse.
+4. Visser le pied dans le rail depuis l'intérieur.
+
+**À contrôler avant de continuer :**
+
+- [ ] Aplomb dans les deux sens avant de lâcher les étais.
+- [ ] Vide de 10 cm régulier sur toute la longueur.
+
+### Étape 5 · Monter les autres murs
+
+On tourne dans un seul sens pour que chaque panneau s'emboîte dans le précédent.
+
+**Outils :** visseuse, niveau, étais
+
+1. Mur B (fond, 100 cm) : B1 (100).
+2. Mur C (fond en biais, 141,4 cm) : C1 (100), C2 (41,4).
+3. Mur D (droite, 175 cm) : D1 (75), D2 (100), en laissant le vide du cadre de porte.
+4. Mur A (façade, 200 cm) : A1 (100), A2 (100).
+5. Butyle dans chaque emboîtement, panneau serré contre le précédent, vissé au pied dans le rail.
+6. Étayer chaque mur tant que la rehausse n'est pas posée : avant elle, rien ne tient les têtes.
+
+**À contrôler avant de continuer :**
+
+- [ ] Aplomb de chaque panneau avant de visser le suivant : l'erreur se cumule.
+- [ ] Têtes de murs toutes à 215 cm, à 3 mm près, au niveau laser.
+
+### Étape 6 · Fermer les angles
+
+Les profils d'angle lient deux murs et ferment la mousse.
+
+**Outils :** visseuse, mastic
+
+1. Profil extérieur puis intérieur à chacun des 5 angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.
+2. Les angles de 135° reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.
+3. Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur.
+
+**À contrôler avant de continuer :**
+
+- [ ] Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.
+
+### Étape 7 · Poser la rehausse bois
+
+Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.
+
+**Outils :** visseuse, serre-joints
+
+1. Poser R1 sur A, R2 sur D, R3 sur C, R4 sur G, sur un cordon de butyle en tête de panneaux.
+2. Visser la rehausse dans la tôle des deux faces de chaque panneau, tous les 40 cm.
+3. Assembler les pièces entre elles aux angles par deux longues vis en biais.
+
+**À contrôler avant de continuer :**
+
+- [ ] Hauteurs finies des coins : 237,5 · 237,5 · 223,2 · 215 · 215 cm (dans l'ordre des coins, à partir du coin avant gauche).
+- [ ] Dessus de la rehausse dans un même plan : poser une règle d'un mur à l'autre.
+
+### Étape 8 · Poser la panne intermédiaire
+
+Le toit porte sur 2,8 m : une panne en travers ramène la portée à 1,4 m.
+
+**Outils :** visseuse, niveau
+
+1. Poser un bois de 75 × 150 de 200 cm en travers, à mi-profondeur, du mur gauche au mur droit, porté par deux sabots ou deux tasseaux vissés dans la rehausse.
+2. Régler son dessus dans le plan du toit : il est plus bas que la rehausse de façade et plus haut que celle du fond.
+
+**À contrôler avant de continuer :**
+
+- [ ] Une règle posée de la façade au fond touche la panne sans la forcer.
+
+### Étape 9 · Couvrir
+
+Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que par le bas des panneaux.
+
+**Outils :** visseuse, 2 personnes, échelle
+
+1. Poser T1 (100 × 286 cm), T2 (100 × 286 cm), en commençant du côté opposé aux vents dominants.
+2. Closoirs mousse sous les nervures, en haut et en bas, avant de visser.
+3. Visser dans la rehausse et dans la panne par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
+4. Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.
+5. Bandes de rive sur les bords parallèles à la pente, bavette de tête sur le bord haut.
+
+**À contrôler avant de continuer :**
+
+- [ ] Débords : 5 cm devant, 5 cm au fond, 0 cm à droite, 0 cm à gauche.
+- [ ] Ne jamais marcher entre deux appuis : marcher au droit des murs, sur une planche.
+
+### Étape 10 · Gouttière et descente
+
+Recueillir toute l'eau du toit et l'emmener au jardin.
+
+**Outils :** visseuse, niveau, scie à métaux
+
+1. 240,6 cm de gouttière en 2 tronçon(s) : C 138,5 cm + B 102,1 cm.
+2. Crochets tous les 50 cm, pente de 5 mm par mètre vers la descente.
+3. Descente au bout droit de la gouttière, puis un tuyau au sol le long du mur droit jusqu'au jardin : rien ne doit s'écouler au pied du mur de propriété.
+
+**À contrôler avant de continuer :**
+
+- [ ] Verser un seau d'eau en haut du toit : tout doit arriver à la descente.
+
+### Étape 11 · Poser la porte
+
+Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles.
+
+**Outils :** visseuse, niveau, cales
+
+1. Monter le cadre bois de 90 × 210 cm dans le vide du mur D, vissé dans la dalle en pied et dans la rehausse en tête.
+2. Poser la porte pleine de 80 × 205 cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.
+3. Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic.
+
+**À contrôler avant de continuer :**
+
+- [ ] Jeu régulier de 3 mm autour du battant, la porte se ferme sans forcer.
+- [ ] Arrêt de porte à prévoir : ouverte, elle prend le vent.
+
+### Étape 12 · Poser les fenêtres
+
+Une fenêtre se fixe dans la tôle des deux faces, jamais dans la mousse.
+
+**Outils :** visseuse, niveau, cales
+
+1. 2 fenêtre(s) en façade : oscillo-battante de 10 à 90 cm ; fixe de 110 à 190 cm.
+2. Habiller la tranche de la découpe d'un profil en U ou d'un tasseau, caler la fenêtre, visser par le dormant.
+3. Bande comprimée au pourtour, mastic dehors, bavette d'appui sous la fenêtre.
+
+**À contrôler avant de continuer :**
+
+- [ ] Niveau et aplomb du dormant avant le serrage final.
+- [ ] L'ouvrante s'ouvre sans toucher le bureau.
+
+### Étape 13 · Étanchéité générale
+
+L'air qui entre apporte l'humidité qui condense sur l'acier.
+
+**Outils :** pistolet à mastic, mousse
+
+1. Cordon de mastic au pied des murs, dedans et dehors.
+2. Fermer le vide de 10 cm contre le mur de propriété : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.
+3. Mousse puis mastic à chaque traversée (câble, entrée d'air).
+
+**À contrôler avant de continuer :**
+
+- [ ] De nuit, une lampe allumée dedans : aucun jour visible de dehors.
+
+### Étape 14 · Plancher isolé
+
+La dalle est froide : le plancher fait le confort des pieds.
+
+**Outils :** scie, visseuse
+
+1. Film polyéthylène sur la dalle, remonté de 10 cm le long des murs.
+2. Lambourdes tous les 40 cm, calées de niveau, isolant rigide de 40 mm entre elles.
+3. Dalles OSB de 18 mm vissées, joints décalés, 8 mm de jeu contre les murs ; revêtement de sol ensuite.
+
+**À contrôler avant de continuer :**
+
+- [ ] Hauteur sous plafond après plancher : 2,32 m au plus haut, 2,09 m au plus bas.
+
+### Étape 15 · Ventilation, électricité, aménagement
+
+Une pièce étanche et chauffée sans ventilation condense.
+
+**Outils :** scie cloche, visseuse
+
+1. Deux entrées d'air sur deux murs opposés, une basse et une haute.
+2. Électricité en apparent, sous goulotte, depuis le câble existant : on ne perce pas la tôle extérieure pour un câble.
+3. Bureaux sur pieds ou sur équerres au sol : 60 × 263 cm à gauche, 50 × 188 cm en façade. Les parements de 0,5 mm ne portent pas une charge suspendue.
+
+**À contrôler avant de continuer :**
+
+- [ ] Après une semaine chauffée : aucune trace de condensation aux angles ni autour des fenêtres.
+
 
 ## Pourquoi cette version
 
@@ -190,7 +503,7 @@ Comparée à la version 3, dont elle reprend les réglages.
 | fenêtres en façade | 80 ouvrante + 80 fixe | 80 ouvrante + 80 fixe |
 | sol libre hors bureaux | 2,26 m² | 2,26 m² |
 | lit | 75 × 190, pliant, posé au sol libre | 75 × 190, pliant, posé au sol libre |
-| budget indicatif HT | 3 725 € (coque 3 143 €) | 3 730 € (coque 3 148 €) |
+| budget indicatif HT | 3 138 € (coque 2 883 €) | 3 146 € (coque 2 891 €) |
 
 ### Ce que cette disposition apporte
 

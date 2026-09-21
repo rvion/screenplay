@@ -150,7 +150,7 @@
     "titre_principal": "Abri de jardin : le bureau à cinq murs",
     "params": {
       "disposition_trapeze": {
-        "toit": { "sens": "arriere", "descente": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 5, "arriere": 5, "gauche": 0, "droite": 0 } }
+        "toit": { "sens": "arriere", "descente": "droite", "panne_intermediaire": true, "chute_cm": 22.5, "debord_cm": { "avant": 5, "arriere": 5, "gauche": 0, "droite": 0 } }
       }
     },
     "atouts": [
@@ -255,6 +255,215 @@
   "divers": {
     "facteur_chute_pct": 10,
     "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
+  },
+  "prix_materiaux_eur_ttc": {
+    "_comment": "Prix des MATERIAUX, TTC, pour un particulier, en France. Ni main-d'oeuvre ni forfait ; la livraison est a part et hors total. Chaque article : pu (prix unitaire), unite, source (adresse ou le prix a ete releve), note. Un article sans source est marque 'prix a confirmer' sur le site et dans abri.md. Les quantites sont calculees par site/src/chantier.ts.",
+    "incertitude_pct": 15,
+    "panneau_mur_m2": {
+      "pu": 42,
+      "unite": "m²",
+      "note": ""
+    },
+    "panneau_toit_m2": {
+      "pu": 40,
+      "unite": "m²",
+      "note": ""
+    },
+    "madrier_ml": {
+      "pu": 14,
+      "unite": "ml",
+      "note": ""
+    },
+    "panne_ml": {
+      "pu": 10,
+      "unite": "ml",
+      "note": ""
+    },
+    "chevron_cadre_ml": {
+      "pu": 5,
+      "unite": "ml",
+      "note": ""
+    },
+    "profil_pied_ml": {
+      "pu": 9,
+      "unite": "ml",
+      "note": ""
+    },
+    "angle_standard_ml": {
+      "pu": 10,
+      "unite": "ml",
+      "note": ""
+    },
+    "angle_sur_mesure_ml": {
+      "pu": 18,
+      "unite": "ml",
+      "note": ""
+    },
+    "bande_rive_ml": {
+      "pu": 12,
+      "unite": "ml",
+      "note": ""
+    },
+    "bandeau_haut_ml": {
+      "pu": 12,
+      "unite": "ml",
+      "note": ""
+    },
+    "closoir_ml": {
+      "pu": 3,
+      "unite": "ml",
+      "note": ""
+    },
+    "vis_toit_100": {
+      "pu": 45,
+      "unite": "cent",
+      "note": ""
+    },
+    "vis_couture_100": {
+      "pu": 12,
+      "unite": "cent",
+      "note": ""
+    },
+    "vis_mur_100": {
+      "pu": 25,
+      "unite": "cent",
+      "note": ""
+    },
+    "cheville_beton_u": {
+      "pu": 0.6,
+      "unite": "u",
+      "note": ""
+    },
+    "bande_arase_ml": {
+      "pu": 1.5,
+      "unite": "ml",
+      "note": ""
+    },
+    "butyle_ml": {
+      "pu": 1.2,
+      "unite": "ml",
+      "note": ""
+    },
+    "mastic_cartouche": {
+      "pu": 9,
+      "unite": "cartouche",
+      "note": ""
+    },
+    "bande_comprimee_ml": {
+      "pu": 2.5,
+      "unite": "ml",
+      "note": ""
+    },
+    "mousse_pu_u": {
+      "pu": 9,
+      "unite": "bombe",
+      "note": ""
+    },
+    "porte_pleine_u": {
+      "pu": 450,
+      "unite": "u",
+      "note": ""
+    },
+    "porte_vitree_u": {
+      "pu": 900,
+      "unite": "u",
+      "note": ""
+    },
+    "fenetre_fixe_u": {
+      "pu": 150,
+      "unite": "u",
+      "note": ""
+    },
+    "fenetre_ob_u": {
+      "pu": 220,
+      "unite": "u",
+      "note": ""
+    },
+    "gouttiere_ml": {
+      "pu": 6,
+      "unite": "ml",
+      "note": ""
+    },
+    "gouttiere_crochet_u": {
+      "pu": 2.5,
+      "unite": "u",
+      "note": ""
+    },
+    "gouttiere_accessoires_u": {
+      "pu": 35,
+      "unite": "lot",
+      "note": ""
+    },
+    "descente_ml": {
+      "pu": 6,
+      "unite": "ml",
+      "note": ""
+    },
+    "lambourde_ml": {
+      "pu": 2,
+      "unite": "ml",
+      "note": ""
+    },
+    "isolant_sol_m2": {
+      "pu": 12,
+      "unite": "m²",
+      "note": ""
+    },
+    "film_pe_m2": {
+      "pu": 1,
+      "unite": "m²",
+      "note": ""
+    },
+    "osb_m2": {
+      "pu": 14,
+      "unite": "m²",
+      "note": ""
+    },
+    "revetement_sol_m2": {
+      "pu": 20,
+      "unite": "m²",
+      "note": ""
+    },
+    "aerateur_u": {
+      "pu": 15,
+      "unite": "u",
+      "note": ""
+    },
+    "goulotte_u": {
+      "pu": 8,
+      "unite": "u",
+      "note": ""
+    },
+    "multiprise_u": {
+      "pu": 25,
+      "unite": "u",
+      "note": ""
+    },
+    "eclairage_u": {
+      "pu": 30,
+      "unite": "u",
+      "note": ""
+    },
+    "radiateur_u": {
+      "pu": 90,
+      "unite": "u",
+      "note": ""
+    },
+    "store_u": {
+      "pu": 30,
+      "unite": "u",
+      "note": ""
+    },
+    "lame_metal_u": {
+      "pu": 40,
+      "unite": "u",
+      "note": ""
+    },
+    "livraison_panneaux": {
+      "pu": 250,
+      "unite": "forfait",
+      "note": "service, affiche a part, jamais dans le total des materiaux"
+    }
   },
   "prix_indicatifs_eur": {
     "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300 ; fenetre PVC fixe 150-300, oscillo-battante 250-450 ; surcout panneaux mur a fixation cachee ~5 EUR/m2). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",

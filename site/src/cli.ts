@@ -79,14 +79,14 @@ function emitDocs(p: any, generes: string[]) {
 // Cache-bust : reecrit ?v=<hash> sur style.css / app.js / params.js dans index.html.
 function stamp() {
   // index.html = l'abri retenu (abri.js) ; configurateur.html = l'etude initiale du rectangle (app.js)
-  for (const [page, script] of [["index.html", "abri.js"], ["configurateur.html", "app.js"]]) {
+  for (const [page, script, feuille] of [["index.html", "abri.js", "abri.css"], ["configurateur.html", "app.js", "style.css"]]) {
     const hash = createHash("sha256");
-    for (const a of ["style.css", script, "params.js"]) {
+    for (const a of [feuille, script, "params.js"]) {
       try { hash.update(readFileSync(join(SITE, a))); } catch { /* bundle absent avant build */ }
     }
     const v = hash.digest("hex").slice(0, 8);
     const chemin = join(SITE, page);
-    const html = readFileSync(chemin, "utf8").replace(/(href|src)="(style\.css|app\.js|abri\.js|params\.js)(?:\?v=[^"]*)?"/g, `$1="$2?v=${v}"`);
+    const html = readFileSync(chemin, "utf8").replace(/(href|src)="(style\.css|abri\.css|app\.js|abri\.js|params\.js)(?:\?v=[^"]*)?"/g, `$1="$2?v=${v}"`);
     writeFileSync(chemin, html);
   }
 }

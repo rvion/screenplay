@@ -124,9 +124,14 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   - `abri.md` = cette version (titre `titre_principal`, sa comparaison et ses raisons **en fin** de
     page sous « Pourquoi cette version ») ; la première forme passe dans `abri-v1.md` ; l'ancienne
     adresse de cette version (`abri-v4.md`) devient une page relais ; les liens entre pages suivent (`nom_page`).
-  - **`site/index.html` = la page de l'abri retenu** (bundle `site/abri.js`, entrée
-    `src/abri_main.ts`) : aperçu, **modèle 3D**, implantation, plans, à commander, ouvertures et
-    aménagement, budget, **montage étape par étape**, pourquoi cette forme. Tout est calculé dans
+  - **`site/index.html` = le dossier de construction de l'abri retenu** (bundle `site/abri.js`, entrée
+    `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
+    pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
+    serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
+    Sections : **fiche chantier** (12 lignes : murs, angles, hauteurs, toit, implantation, passage,
+    surfaces, panneaux, ouvertures, gouttière, matériaux) à côté du **modèle 3D**, implantation, plans
+    et élévations, débit des panneaux, **matériaux à acheter**, **guide de montage**, ouvertures et
+    aménagement, pourquoi cette forme. Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
     aucune cote dans le HTML, et la page marche en `file://`.
   - **Menu de gauche** : les versions listées dans `abri_menu` (aujourd'hui `abri_v3`, `abri_v4`), chacune
@@ -135,6 +140,23 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     pour cette version, avec un bandeau « une étude » et le lien vers son document. Toute version
     calculable reste atteignable par `?v=N` même hors menu ; un numéro inconnu retombe sur la
     retenue. Sous les versions, les sections de la page. Sur petit écran la colonne passe en haut.
+  - **Matériaux à acheter** (`src/chantier.ts`, `nomenclature_abri`) : une **nomenclature**, pas un
+    budget. Que des matériaux, en **TTC**, quantités **calculées** depuis le modèle avec leur règle
+    affichée (« comment c'est compté »). **Ni main-d'œuvre, ni forfait, ni livraison** (la livraison
+    est citée à part, hors total). Groupes : panneaux, bois, profils et bavettes, fixations,
+    étanchéité, ouvertures, eaux pluviales, plancher isolé, consommables ; l'équipement (aérateurs,
+    électricité, chauffage, stores) est **optionnel et compté à part**. Prix dans
+    `prix_materiaux_eur_ttc` : chaque article a `pu`, `unite`, `source` ; **sans source il est marqué
+    « prix à confirmer »** sur le site et dans `abri.md`. `m.budget` garde `total_eur`, `coque_eur`,
+    `amenagement_eur` pour les tableaux comparés, mais ils ne comptent que des matériaux.
+  - **Guide de montage** (`guide_montage`) : avant de commander, outillage, puis les étapes (tracé,
+    rail, coupes à plat, mur gauche monté à plat, autres murs, angles, rehausse, panne si
+    `toit.panne_intermediaire`, couverture, gouttière, porte, fenêtres, étanchéité, plancher,
+    ventilation et électricité). Chaque étape : but, outils, gestes numérotés, **contrôles à
+    cocher** avec les cotes du modèle (diagonales du tracé, hauteurs des coins, débords). Les cases
+    cochées sont gardées dans le navigateur, par version. Le même guide est écrit dans `abri.md`.
+  - `chantier.ts` est pur et **n'importe pas `compute.ts`** (pas de cycle) : il reçoit la variante et
+    le modèle déjà calculés.
   - L'étude initiale (rectangle réglable) vit sur `site/configurateur.html` (bundle `site/app.js`).
 - **Modèle 3D** : `modele3d_abri` (pur, dans `compute.ts`) décrit la scène en cm dans le repère de la
   dalle : dalle, murs de propriété, plancher, murs (panneaux, ouvertures, rehausse), toit (contour,

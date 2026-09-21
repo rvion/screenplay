@@ -11,6 +11,8 @@
 //     A x chute (face A). Le mur arriere B reste a H ;
 //   - toit mono-pente en panneaux toiture, ecoulement vers l'arriere (B).
 
+import { nomenclature_abri, guide_montage } from "./chantier";
+
 export type Params = any;
 
 export const FACE_INDEX: Record<string, number> = { A: 0, D: 1, B: 2, G: 3 };
@@ -1561,6 +1563,7 @@ export function buildCore(p: Params) {
   const v13 = vars.find((v: any) => v.id === 13 && v.bureaux);
   const modele: any = v13 ? modele_trapeze(p, v13) : null;
   if (modele) modele.budget = budget_modele(p, v13, modele);
+  if (modele) modele.guide = guide_montage(p, v13, modele);
   const modele3d = modele && g.dalle ? modele3d_abri(p, g, v13, modele) : null;
   if (modele) {
     svg["modele-implantation"] = plan_dalle_svg(g, false, v13, modele);
@@ -1802,39 +1805,8 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
 
 // budget indicatif de l'abri retenu, memes prix que le rectangle (prix_indicatifs_eur)
 export function budget_modele(p: Params, v: any, m: any) {
-  const pr = p.prix_indicatifs_eur || {}, get = (k: string) => (pr[k] == null ? 0 : +pr[k]);
-  const d = p.disposition_trapeze || {}, mod = +p.panneau.largeur_utile_cm / 100, H = m.hauteur_mur_cm / 100;
-  const mur_m2 = rnd(m.panneaux_mur_a_commander * mod * H, 2);
-  const toit_m2 = rnd(m.toit.panneaux.reduce((s: number, t: any) => s + mod * t.longueur_cm / 100, 0), 2);
-  const perim = m.faces.reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100;
-  const angles_h = m.hauteurs_coins_cm.reduce((s: number, h: number) => s + h, 0) / 100;
-  const egout = new Set(m.toit.gouttiere.troncons.map((t: any) => t.face));
-  const cles_rives = (m.sens === "droite" ? ["A", "B", "C"] : ["D", "G", "C"]).filter((k) => !egout.has(k));
-  const rives = m.faces.filter((f: any) => cles_rives.includes(f.cle)).reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100;
-  const profils = rnd(2 * angles_h + perim + rives, 1);
-  const fen = v.fenetres || [];
-  const coque: [string, number, string, number][] = [
-    ["Panneaux sandwich mur 60 mm (à commander)", mur_m2, "m²", get("panneau_mur_m2")],
-    ["Surcoût fixation cachée (mur)", mur_m2, "m²", get("fixation_cachee_m2")],
-    ["Panneaux sandwich toit 60 mm (à longueur)", toit_m2, "m²", get("panneau_toit_m2")],
-    [`Rehausse bois (madriers ${m.rehausse.section_mm.join(" × ")})`, rnd(m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, 1), "ml", +(d.rehausse_prix_ml_eur ?? (p.rehausse && p.rehausse.prix_ml_eur) ?? 10)],
-    v.porte && v.porte.vitree === false ? ["Porte pleine isolée + cadre", 1, "u", get("porte_pleine")] : ["Porte vitrée + cadre", v.porte ? 1 : 0, "u", get("porte_vitree")],
-    ["Fenêtre fixe", fen.filter((f: any) => !f.ouvrant).length, "u", get("fenetre_fixe")],
-    ["Fenêtre ouvrante", fen.filter((f: any) => f.ouvrant).length, "u", get("fenetre_ouvrante")],
-    ["Profils (angles int. + ext., rail de pied, rives)", profils, "ml", get("profils_ml")],
-    ["Visserie + étanchéité", 1, "forfait", get("visserie_etancheite_forfait")],
-    ["Gouttière + descente", 1, "forfait", get("gouttiere_descente_forfait")],
-    ["Ventilation", 1, "forfait", get("ventilation_forfait")],
-    ["Livraison des panneaux", 1, "forfait", get("livraison_forfait")],
-  ];
-  const am = p.amenagement || {}, amen: [string, number, string, number][] = [];
-  if (am.plancher && am.plancher.actif) amen.push(["Plancher isolé", v.aire_interieure_m2, "m²", +am.plancher.prix_m2_eur || 0]);
-  for (const [k, label] of [["electricite", "Électricité (multiprise, éclairage)"], ["chauffage", "Chauffage"], ["store", "Store"], ["finition_interieure", "Finition intérieure"]] as [string, string][])
-    if (am[k] && am[k].actif) amen.push([label, 1, "forfait", +am[k].forfait_eur || 0]);
-  const lignes = [...coque.map((x) => [...x, "coque"]), ...amen.map((x) => [...x, "amenagement"])].map(([poste, qte, unite, pu, groupe]: any) => ({ poste, qte, unite, pu_eur: pu, montant_eur: rnd(qte * pu), groupe }));
-  const c = lignes.filter((l) => l.groupe === "coque").reduce((s, l) => s + l.montant_eur, 0), a = lignes.filter((l) => l.groupe !== "coque").reduce((s, l) => s + l.montant_eur, 0);
-  const inc = pr.incertitude_pct == null ? 15 : +pr.incertitude_pct;
-  return { lignes, coque_eur: rnd(c), amenagement_eur: rnd(a), total_eur: rnd(c + a), incertitude_pct: inc, total_bas_eur: rnd((c + a) * (1 - inc / 100)), total_haut_eur: rnd((c + a) * (1 + inc / 100)) };
+  // materiaux seulement, quantites calculees, prix TTC de prix_materiaux_eur_ttc : voir chantier.ts
+  return nomenclature_abri(p, v, m);
 }
 
 // cote : ligne parallele a [a, b] (points ecran) decalee de `off` vers l'exterieur, texte dans l'axe
@@ -2205,7 +2177,7 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   md += droite ? `- **Toit** mono-pente vers la droite (jardin), ${fr(m.pente.degres)}° : ${fr(Math.max(...m.hauteurs_coins_cm))} cm contre le mur gauche, ${fr(Math.min(...m.hauteurs_coins_cm))} cm côté porte.\n`
     : `- **Toit** mono-pente vers le fond, ${fr(m.pente.degres)}° : ${fr(m.hauteurs_coins_cm[0])} cm devant, ${fr(Math.min(...m.hauteurs_coins_cm))} cm au plus bas.\n`;
   md += `- **Porte${po.vitree === false ? " pleine" : ""}** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **${v.fenetres.length === 1 ? `une fenêtre de ${fz(v.fenetres[0].largeur_cm)}` : `${v.fenetres.length} fenêtres`}** en façade, **bureau en L** sur la façade et le mur gauche${lp && lp.replie ? `, **lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le fond` : ""}.\n`;
-  md += `- **Budget indicatif** : ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)} HT (coque ${eur(B.coque_eur)}, aménagement ${eur(B.amenagement_eur)}).\n`;
+  md += `- **Matériaux** : ${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}), sans main-d'œuvre ni livraison ; équipement optionnel ${eur(B.options_eur)}.\n\n`;
   md += `- **Formalités** : emprise au sol ${fr(m.formalites.emprise_au_sol_m2)} m², surface de plancher ${fr(m.formalites.surface_plancher_m2)} m² ⇒ ${m.formalites.libelle}.\n\n`;
   md += `## À trancher\n\n`;
   const stock_courant = +m.rehausse.section_mm[1] <= 225;
@@ -2248,10 +2220,21 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   for (const b of v.bureaux) md += `| bureau ${b.cote === "avant" ? "de façade" : b.cote} | ${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)} cm | tout le mur ${b.cote === "avant" ? "de façade" : b.cote} |\n`;
   for (const st of v.sieges || []) md += `| ${st.type} | ${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm | devant le bureau ${st.contre === "avant" ? "de façade" : st.contre} |\n`;
   if (lp) md += `| lit ${lp.replie ? "rabattable" : "pliant"} (déplié) | ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} cm | ${!lp.tient ? "**NE TIENT PAS**" : lp.replie ? `contre le mur du fond (replié : ${fz(lp.epaisseur_replie_cm)} cm), ${lp.sous_bureau_cm2 > 0 ? "pied sous le bureau gauche" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}` : `au milieu${lp.sous_bureau_cm2 > 0 ? ", pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}`} |\n`;
-  md += `\n## Budget indicatif (HT, fourniture seule)\n\n| poste | quantité | prix unitaire | montant |\n|---|---|---|---|\n`;
-  for (const l of B.lignes) md += `| ${l.poste} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} |\n`;
-  md += `| **coque** | | | **${eur(B.coque_eur)}** |\n| **aménagement** | | | **${eur(B.amenagement_eur)}** |\n| **total** | | | **${eur(B.total_eur)}** (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}, ±${B.incertitude_pct} %) |\n\n`;
-  md += `Prix médians du marché, à confirmer par devis (\`prix_indicatifs_eur\`). Porte et fenêtres au prix des blocs standard.\n`;
+  md += `\n## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)\n\n`;
+  for (const gr of B.groupes) {
+    md += `### ${gr.nom} · ${eur(gr.total_eur)}\n\n| matériau | quantité | prix unitaire | montant | comment c'est compté |\n|---|---|---|---|---|\n`;
+    for (const l of B.lignes.filter((x: any) => x.groupe === gr.nom)) md += `| ${l.poste}${l.a_confirmer ? " *(prix à confirmer)*" : ""} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} | ${l.regle} |\n`;
+    md += `\n`;
+  }
+  md += `**Total des matériaux : ${eur(B.materiaux_eur)} TTC** (fourchette ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}, ±${B.incertitude_pct} %). Équipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h: any) => `${h.poste} ≈ ${eur(h.montant_eur)}`).join(", ")}.` : ""}\n\n`;
+  md += `Prix relevés chez des marchands français (\`prix_materiaux_eur_ttc\` dans \`params.json\`, source notée pour chacun) ; les quantités se recalculent avec l'abri.\n`;
+  const Gd = m.guide;
+  if (Gd) {
+    md += `\n## Guide de montage\n\n### Avant de commander\n\n` + Gd.avant.map((x: string) => `- ${x}\n`).join("") + `\n### Outillage\n\n` + Gd.outillage.map((x: string) => `- ${x}\n`).join("") + `\n`;
+    Gd.etapes.forEach((e: any, i: number) => {
+      md += `### Étape ${i + 1} · ${e.titre}\n\n${e.but}\n\n**Outils :** ${e.outils.join(", ")}\n\n` + e.faire.map((x: string, k: number) => `${k + 1}. ${x}\n`).join("") + `\n**À contrôler avant de continuer :**\n\n` + e.controler.map((x: string) => `- [ ] ${x}\n`).join("") + `\n`;
+    });
+  }
   if (opts.en_fin && pourquoi) md += `\n` + pourquoi;
   return md;
 }

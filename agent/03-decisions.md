@@ -376,3 +376,19 @@ Les murs et la rehausse ont maintenant des coupes d'onglet. La garde a été vue
 verte avec. *Leçon de mesure :* la boîte englobante rapide de three.js enveloppe la boîte locale
 d'un objet tourné ; il faut la boîte précise pour mesurer un mur en biais.
 
+## D36 — Une nomenclature de matériaux au lieu d'un budget, un vrai guide de montage, une page sobre
+Retours de Rémi (2026-09-22). (1) « Les prix sont faux, je ne demande pas le prix des services :
+seulement les matériaux bruts, et un guide de montage complet. » L'ancien budget mêlait des prix au
+m² de mémoire et des **forfaits** (ventilation, électricité, finition, livraison). Il est remplacé
+par une **nomenclature** : chaque article est un achat, sa quantité est calculée par une règle
+affichée, son prix est **TTC** avec une **source** ; un article sans source est marqué « prix à
+confirmer ». La livraison est hors total, l'équipement est optionnel et à part. (2) Le montage en
+11 lignes devient un **guide** : avant de commander, outillage, étapes avec but, outils, gestes et
+contrôles à cocher portant les cotes du modèle. (3) « Plus dense, plus simple, plus professionnel,
+facile pour moi et pour les gens que je ferai venir » : la page d'accueil perd son bandeau coloré,
+ses badges et ses emoji ; elle devient un dossier de construction (fiche chantier, tableaux serrés,
+impression). La version retenue passe en tête du menu. *Pourquoi une feuille à part* (`abri.css`) :
+`style.css` sert encore le configurateur du rectangle, qu'on ne touche pas. *Écarté :* garder des
+forfaits « pour arrondir » ; un guide écrit à la main dans le HTML (il citerait des cotes fausses
+au premier changement).
+

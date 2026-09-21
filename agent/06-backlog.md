@@ -1,6 +1,9 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Prix des matériaux** (D36) : les articles marqués « prix à confirmer » n'ont pas encore de
+      source. Demander deux devis de panneaux (mur et toit, coupés à longueur, profils pliés) :
+      c'est la moitié du total.
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
       lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
       navigateur, pas encore par l'œil de Rémi.

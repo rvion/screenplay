@@ -34,6 +34,7 @@ screenplay/
     ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts, pour index.html)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
     ├── .nojekyll
+    ├── abri.css        # feuille autonome de la page d'accueil (dense, imprimable ; écrite à la main)
     ├── docs.css        # styles des pages de documents (écrit à la main)
     ├── docs/           # GÉNÉRÉ : une page HTML par .md suivi par git + index.html (adresses à partager)
     ├── assets/*.svg    # GÉNÉRÉS : plan-sol, plan-toit, plan-rehausse, facade-{A,D,B,G}

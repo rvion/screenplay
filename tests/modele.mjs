@@ -97,14 +97,15 @@ const { abri_md } = await import(pathToFileURL(out).href);
 const page = abri_md(base, core);
 ok(["modele-sol", "modele-toit", "modele-rehausse", "modele-facade-A", "modele-facade-D", "modele-facade-B", "modele-facade-G"].every((k) => page.includes(`site/assets/${k}.svg`)), "abri.md inclut les 7 plans");
 ok(page.indexOf("modele-implantation.svg") < page.indexOf("## En bref") && core.svg["modele-implantation"].includes("262"), "abri.md s'ouvre sur la dalle (implantation, cotes de la dalle)");
-ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## À trancher"].every((h) => page.includes(h)) && !page.includes("NE TIENT PAS"), "abri.md complet, et tout y tient");
+ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter", "## Guide de montage", "## À trancher"].every((h) => page.includes(h)) && !page.includes("NE TIENT PAS"), "abri.md complet, et tout y tient");
 // debit murs : chaque bande prise dans une chute tient dans ce qu'il reste des panneaux recoupes
 {
   const toutes = m.faces.flatMap((f) => f.panneaux), neufs = toutes.filter((x) => x.source === "neuf");
   ok(neufs.length === m.panneaux_mur_a_commander, "panneaux a commander = bandes tirees d'un panneau neuf");
   const reste = neufs.reduce((s, x) => s + base.panneau.largeur_utile_cm - x.largeur_cm, 0), pris = toutes.filter((x) => x.source === "chute").reduce((s, x) => s + x.largeur_cm, 0);
   ok(pris <= reste + 1e-6, "les bandes tirees des chutes ne depassent pas les chutes disponibles");
-  ok(m.budget.total_eur > 0 && near(m.budget.total_eur, m.budget.lignes.reduce((s, l) => s + l.montant_eur, 0), 1), "budget : total = somme des lignes");
+  ok(m.budget.total_eur > 0 && near(m.budget.total_eur, m.budget.lignes.filter((l) => !l.optionnel).reduce((s, l) => s + l.montant_eur, 0), 1), "materiaux : total = somme des lignes hors equipement optionnel");
+  ok(m.budget.ttc === true && m.budget.lignes.every((l) => !/forfait/i.test(l.unite)) && near(m.budget.options_eur, m.budget.lignes.filter((l) => l.optionnel).reduce((s, l) => s + l.montant_eur, 0), 1), "materiaux : TTC, aucun forfait, l'equipement optionnel compte a part");
 }
 
 // variante proposee (abri_v2) : murs au module, sous le seuil, toit vers la droite
@@ -143,7 +144,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(v2.fenetres.length === 2 && v2.fenetres.every((f) => f.tient !== false), "v2 : deux fenetres qui tiennent en facade");
   // porte pleine : ni vitrage dans le dos des ecrans, ni vue depuis l'etage des voisins
   ok(v2.porte.vitree === false && v.porte.vitree === true, "v2 : porte pleine (la v1 garde sa porte vitree)");
-  ok(m2.budget.lignes.some((l) => l.poste.startsWith("Porte pleine") && l.pu_eur === base.prix_indicatifs_eur.porte_pleine) && !m2.budget.lignes.some((l) => l.poste.startsWith("Porte vitrée")), "v2 : budget = porte pleine, plus de porte vitree");
+  ok(m2.budget.lignes.some((l) => /^Porte de service pleine/.test(l.poste) && l.pu_eur === base.prix_materiaux_eur_ttc.porte_pleine_u.pu) && !m2.budget.lignes.some((l) => /vitrée/.test(l.poste)), "v2 : budget = porte pleine, plus de porte vitree");
   ok(c2.svg["modele-facade-D"].includes("porte pleine") && !core.svg["modele-facade-D"].includes("porte pleine"), "v2 : facade D dessine une porte pleine");
   // espace cache derriere l'abri. A la main, dalle au-dela de la droite (10,301)-(210,201), x <= 210 :
   // sommets (0,306) (210,201) (210,271.2) (72.7,398.3) (0,324) -> 1,90 m2 ; pointe a 115 cm du mur du fond

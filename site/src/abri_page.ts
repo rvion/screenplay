@@ -48,6 +48,8 @@ export function menu_versions(p: Params) {
   const principale = version_principale(p) || 1;
   // abri_menu : les versions montrees dans le menu (les autres restent atteignables par ?v=N)
   const montrees = Array.isArray(p.abri_menu) ? versions_pretes(p).filter((n) => p.abri_menu.includes(`abri_v${n}`)) : versions_pretes(p);
+  // la version retenue d'abord, puis les autres de la plus recente a la plus ancienne
+  montrees.sort((a, b) => (a === principale ? -1 : b === principale ? 1 : b - a));
   return montrees.map((n) => {
     const { core } = coeur(p, n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
     const nom = (p[`abri_v${n}`] && p[`abri_v${n}`].nom_court) || `version ${n}`;
@@ -65,65 +67,80 @@ const liste = (id: string, items: string[]) => html(id, items.map((s) => `<li>${
 
 export function rend_abri(a: Abri) {
   const { pp, core, v, m } = a;
-  if (!v || !m) { html("kpis", '<p class="viewer-fallback">Aucun abri retenu dans params.json.</p>'); return; }
+  if (!v || !m) { html("fiche", "<tr><td>Aucun abri retenu dans params.json.</td></tr>"); return; }
   const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
-  const passage = v.passages.find((q: any) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length;
+  const passage = v.passages.find((q: any) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
   const gauche = Math.min(...v.polygone.map((z: number[]) => z[0])), avant = Math.min(...v.polygone.map((z: number[]) => z[1]));
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z: number[]) => z[0]));
-  const sans_formalite = v.aire_m2 <= seuil;
+  const sans_formalite = v.aire_m2 <= seuil, retenue = a.version === a.principale;
   const nom_face = (f: any) => (f.cle === "A" ? "façade" : f.nom);
-
-  // menu des versions, et ce que la page montre
   const NOMBRES = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
-  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · ${fr(x.murs_m2)} m² · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
-  texte("titre", `🏡 Bureau de jardin à ${NOMBRES[n] || n} murs`);
-  const retenue = a.version === a.principale;
+
+  // menu des versions, en-tete
+  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  texte("titre", `Bureau de jardin à ${NOMBRES[n] || n} murs`);
+  texte("sous-titre", `Dossier de construction · version ${a.version}${retenue ? " (retenue)" : " (étude)"} · panneaux sandwich ${fz(ep)} cm autoportants · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
   const doc = el("lien-document") as HTMLAnchorElement | null;
   if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
 
-  // en-tete
-  texte("sous-titre", `${n} murs en panneaux sandwich ${fz(ep)} cm autoportants · ${fr(v.aire_m2)} m² de murs, ${fr(v.aire_interieure_m2)} m² intérieur · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"} · sur la dalle existante`);
-  html("badges", [sans_formalite ? `Sans formalité (≤ ${fz(seuil)} m²)` : "Déclaration préalable", `Passage arrière ${fz(Math.floor(passage.cm))} cm`, `${m.panneaux_mur_a_commander} panneaux de mur`, "Paramétrique"].map((s) => `<span class="badge">${s}</span>`).join(""));
+  // fiche chantier : ce qu'on cherche sur place, sur un ecran
+  const paires: [string, string][] = [
+    ["Murs (extérieur)", m.faces.map((f: any) => `${f.cle} ${fr(f.longueur_cm)}`).join(" · ") + " cm"],
+    ["Angles", m.angles_deg.map((g: number) => fr(g) + "°").join(" · ")],
+    ["Hauteurs finies des coins", m.hauteurs_coins_cm.map((h: number) => fr(h)).join(" · ") + " cm"],
+    ["Hauteur des panneaux de mur", `${fz(m.hauteur_mur_cm)} cm`],
+    ["Toit", `vers ${m.sens === "droite" ? "la droite (jardin)" : "le fond"} · pente ${fr(m.pente.pourcent)} % · portée ${fr(Math.round(m.portee_cm) / 100)} m${a.pp.disposition_trapeze.toit.panne_intermediaire ? " (panne à mi-profondeur)" : ""}`],
+    ["Implantation", `${fz(gauche)} cm du bord gauche · ${fz(avant)} cm du bord avant · ${fz(droite_libre)} cm de dalle à droite`],
+    ["Passage derrière", `${fr(passage.cm)} cm au plus étroit`],
+    ["Surfaces", `${fr(v.aire_m2)} m² de murs (${sans_formalite ? `au seuil de ${fz(seuil)} m², sans formalité` : "déclaration préalable"}) · ${fr(v.aire_interieure_m2)} m² intérieur · ${fr(v.sol_libre_m2)} m² de sol libre`],
+    ["Panneaux", `${m.panneaux_mur_a_commander} de mur (${fz(mod)} × ${fz(m.hauteur_mur_cm)}) · ${m.toit.panneaux.length} de toit · ${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" × ")}`],
+    ["Ouvertures", `porte ${po.vitree === false ? "pleine" : "vitrée"} ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} face ${m.faces[po.cote].cle} · ${v.fenetres.map((f: any) => `${f.ouvrant ? "OB" : "fixe"} ${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}, allège ${fz(f.allege_cm)}`).join(" · ")}`],
+    ["Gouttière", `${fr(G.longueur_cm)} cm sur ${G.troncons.map((t: any) => t.face).join(" + ")} · descente ${ou_descente(m)}`],
+    ["Matériaux", `${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}), sans main-d'œuvre ni livraison`],
+  ];
+  html("fiche", paires.map(([k, val]) => `<tr><th>${k}</th><td>${val}</td></tr>`).join(""));
+  table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
+    m.faces.map((f: any, i: number) => [`<b>${f.cle}</b> ${nom_face(f)}`, `${fr(f.longueur_cm)}`, `${fr(v.cotes_interieures_cm[i])}`, `${fr(f.hauteur_debut_cm)} → ${fr(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${pn.id} ${fz(pn.largeur_cm)}`).join(" · "), `${fr(m.angles_deg[i])}°`]));
 
-  // apercu
-  html("kpis", [[`${fr(v.aire_interieure_m2)} m²`, "intérieur"], [`${fr(v.aire_m2)} m²`, "murs (emprise)"], [`${fz(passage.cm)} cm`, "passage derrière"], [eur(B.total_eur), "budget indicatif HT"]]
-    .map(([val, lab]) => `<div class="card kpi"><div class="v">${val}</div><div class="l">${lab}</div></div>`).join(""));
-  table("murs", ["mur", "longueur ext.", "longueur int.", "hauteur finie", "panneaux", "angle au début"],
-    m.faces.map((f: any, i: number) => [`<b>${f.cle}</b> · ${nom_face(f)}`, `${fr(f.longueur_cm)} cm`, `${fr(v.cotes_interieures_cm[i])} cm`, `${fr(f.hauteur_debut_cm)} → ${fr(f.hauteur_fin_cm)} cm`, f.panneaux.map((pn: any) => `${pn.id} ${fz(pn.largeur_cm)}`).join(" · "), `${fr(m.angles_deg[i])}°`]));
-
-  // implantation
+  // implantation et plans : les SVG du modele, injectes tels quels
   liste("implantation-points", [
-    `L'abri est posé à <b>${fz(gauche)} cm</b> du bord gauche de la dalle (mur de propriété) et à <b>${fz(avant)} cm</b> du bord avant.`,
-    `À droite il reste <b>${fz(droite_libre)} cm</b> de dalle : le chemin vers la porte et vers l'arrière.`,
-    `Derrière, le passage le long du grand pan fait <b>${fr(passage.cm)} cm</b> au plus étroit.`,
-    v.arriere ? `<b>${fr(v.arriere.aire_m2)} m²</b> de dalle restent cachés derrière l'abri (hachures vertes), jusqu'à ${fz(v.arriere.profondeur_max_cm)} cm de profondeur : le rangement des outils de jardin.` : "",
-    sans_formalite ? `${fr(v.aire_m2)} m² de murs : au seuil de ${fz(seuil)} m², aucune formalité a priori (à confirmer en mairie, et le PLU s'applique quand même).` : `${fr(v.aire_m2)} m² de murs : au-dessus de ${fz(seuil)} m², déclaration préalable.`,
+    `Abri à <b>${fz(gauche)} cm</b> du bord gauche (mur de propriété) et <b>${fz(avant)} cm</b> du bord avant ; <b>${fz(droite_libre)} cm</b> de dalle à droite, le chemin vers la porte et l'arrière.`,
+    `Passage derrière, le long du grand pan : <b>${fr(passage.cm)} cm</b> au plus étroit.`,
+    v.arriere ? `<b>${fr(v.arriere.aire_m2)} m²</b> de dalle cachés derrière l'abri (hachures vertes), jusqu'à ${fz(v.arriere.profondeur_max_cm)} cm de profondeur : le rangement des outils de jardin.` : "",
   ].filter(Boolean));
-
-  // plans : les SVG du modele, injectes tels quels
   const plans: [string, string][] = [["modele-implantation", "implantation"], ["modele-sol", "sol"], ["modele-toit", "toit"], ["modele-rehausse", "rehausse"]];
   for (const [nom, id] of plans) html(`plan-${id}`, core.svg[nom] || "");
   html("facades", m.faces.map((f: any, i: number) => `<figure><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div><figcaption>Face ${f.cle} · ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</figcaption></figure>`).join(""));
 
-  // a commander
+  // debit
   table("debit-murs", ["pièce", "largeur", "provenance", "découpe"],
     m.faces.flatMap((f: any) => f.panneaux.map((pn: any) => [`<b>${pn.id}</b>`, `${fr(pn.largeur_cm)} cm`, pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoupé" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "–"])));
-  texte("debit-murs-total", `${m.panneaux_mur_a_commander} panneaux de mur de ${fz(mod)} × ${fz(m.hauteur_mur_cm)} cm à commander (les bandes étroites sortent des chutes).`);
-  table("debit-toit", ["pièce", "largeur", "longueur à commander", "coupe"],
-    m.toit.panneaux.map((t: any) => [`<b>${t.id}</b>`, `${fr(t.largeur_cm)} cm`, `${fr(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier, coupes droites"}`]));
+  table("debit-toit", ["pièce", "largeur", "longueur", "coupe"],
+    m.toit.panneaux.map((t: any) => [`<b>${t.id}</b>`, `${fr(t.largeur_cm)} cm`, `${fr(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]));
   table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [`<b>${r.id}</b>`, r.face, `${fr(r.L)} cm`, `${fr(r.h0)} → ${fr(r.h1)} cm`]));
-  texte("debit-rehausse-total", `${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" × ")} de ${fz(m.rehausse.longueur_stock_cm)} cm. Deux pièces sur un même tronçon = une seule coupe en biais.`);
-  const perim = m.faces.reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100, G = m.toit.gouttiere;
-  liste("debit-divers", [
-    `Gouttière <b>${fr(G.longueur_cm)} cm</b> (${G.troncons.map((t: any) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}), descente ${ou_descente(m)}.`,
-    `Rail de pied sur tout le périmètre : <b>${fr(Math.round(perim * 100) / 100)} m</b>, sur bande EPDM.`,
-    `${n} profils d'angle (extérieur + intérieur) : ${m.faces.map((f: any, i: number) => `${m.faces[(i + n - 1) % n].cle}/${f.cle} ${fr(m.angles_deg[i])}°`).join(", ")}. Les angles qui ne sont pas droits se commandent pliés sur mesure.`,
-  ]);
+
+  // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait
+  html("materiaux", B.groupes.map((gr: any) => `<h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th><th>comment c'est compté</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}</td></tr>`).join("")}</tbody></table></div>`).join(""));
+  html("materiaux-total", `<b>Total des matériaux : ${eur(B.materiaux_eur)} TTC</b> (fourchette ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}). Équipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}.` : ""} Ni main-d'œuvre ni forfait : seulement ce qu'on achète.`);
+
+  // guide de montage : cases a cocher, etat garde dans le navigateur (par version)
+  const Gd = m.guide, cle_cases = `abri-v${a.version}-cases`;
+  let faites: Record<string, boolean> = {};
+  try { faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}"); } catch { faites = {}; }
+  liste("guide-avant", Gd.avant.map(md_en_ligne));
+  liste("guide-outillage", Gd.outillage.map(md_en_ligne));
+  html("etapes", Gd.etapes.map((e: any, i: number) => `<li class="etape"><h3><span class="num-etape">${i + 1}</span>${e.titre}</h3><p class="but">${md_en_ligne(e.but)}</p><p class="outils"><b>Outils :</b> ${e.outils.join(", ")}</p><ol>${e.faire.map((x: string) => `<li>${md_en_ligne(x)}</li>`).join("")}</ol><div class="controle"><b>À contrôler avant de continuer</b>${e.controler.map((x: string, k: number) => `<label><input type="checkbox" data-case="${i}.${k}"${faites[`${i}.${k}`] ? " checked" : ""}> ${md_en_ligne(x)}</label>`).join("")}</div></li>`).join(""));
+  const etapes = el("etapes");
+  if (etapes) etapes.addEventListener("change", (ev) => {
+    const c = ev.target as HTMLInputElement;
+    if (!c || !c.dataset || !c.dataset.case) return;
+    faites[c.dataset.case] = c.checked;
+    try { window.localStorage.setItem(cle_cases, JSON.stringify(faites)); } catch { /* navigation privee : l'etat ne survit pas, la page marche */ }
+  });
 
   // ouvertures et amenagement
-  const po = v.porte;
   table("ouvertures-table", ["ouverture", "taille", "où", "détail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitrée"}`, `${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm (cadre ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)})`, `face ${m.faces[po.cote].cle}, de ${fr(po.debut_cm)} à ${fr(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} cm depuis la façade`, "ouvre vers l'extérieur, ferrée côté fond"],
     ...v.fenetres.map((f: any) => [`fenêtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, `${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)} cm`, `face A, de ${fr(f.debut_cm)} à ${fr(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} cm depuis le coin gauche`, `allège ${fz(f.allege_cm)} cm, dans un seul panneau`]),
@@ -133,29 +150,6 @@ export function rend_abri(a: Abri) {
     ...(v.sieges || []).map((st: any) => [st.type, `${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm`, `devant le bureau ${st.contre === "avant" ? "de façade" : st.contre}`]),
     ...(v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, `${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)} cm`, v.lit_pliant.tient ? (v.lit_pliant.replie ? "contre un mur" : "déplié au sol libre, sièges rangés") : "ne tient pas"]] : []),
   ]);
-  texte("sol-libre", `Sol libre hors bureaux : ${fr(v.sol_libre_m2)} m².`);
-
-  // budget
-  table("budget", ["poste", "quantité", "prix unitaire", "montant"], B.lignes.map((l: any) => [l.poste, `${fr(l.qte)} ${l.unite}`, eur(l.pu_eur), eur(l.montant_eur)]),
-    ["<b>total</b>", `coque ${eur(B.coque_eur)} · aménagement ${eur(B.amenagement_eur)}`, "", `<b>${eur(B.total_eur)}</b>`]);
-  texte("budget-fourchette", `${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)} HT (±${B.incertitude_pct} %), fourniture seule, prix médians à confirmer par devis.`);
-
-  // montage : les etapes, avec les cotes du modele
-  const F = Object.fromEntries(m.faces.map((f: any) => [f.cle, f])), bande = (f: any) => f.panneaux.find((pn: any) => pn.largeur_cm < mod - 0.05);
-  const obtus = m.angles_deg.filter((g: number) => Math.abs(g - 90) > 0.5);
-  liste("etapes", [
-    `<b>Tracer sur la dalle.</b> Reporter les ${n} murs : ${m.faces.map((f: any) => `${f.cle} ${fr(f.longueur_cm)}`).join(", ")} cm, à ${fz(gauche)} cm du bord gauche et ${fz(avant)} cm du bord avant. Vérifier les angles (${m.angles_deg.map((g: number) => fr(g) + "°").join(", ")}) et les diagonales avant de percer.`,
-    `<b>Rail de pied.</b> ${fr(Math.round(perim * 100) / 100)} m de rail sur bande EPDM, chevillé tous les 50 cm. Il surélève les panneaux de la dalle.`,
-    F.G ? `<b>Mur gauche d'abord, assemblé à plat.</b> ${F.G.panneaux.length} panneaux (${F.G.panneaux.map((pn: any) => fz(pn.largeur_cm)).join(" + ")} cm) et leur rehausse, vissés au sol puis levés d'un bloc : à ${fz(gauche)} cm du mur de propriété aucune visseuse ne passe.${bande(F.G) ? ` La bande de ${fz(bande(F.G).largeur_cm)} cm est côté façade, la seule extrémité qu'on atteint.` : ""}` : "",
-    F.B ? `<b>Mur du fond${F.C ? " et pan en biais" : ""}.</b> ${F.B.panneaux.map((pn: any) => pn.id).join(", ")}${F.C ? ` puis ${F.C.panneaux.map((pn: any) => `${pn.id} (${fz(pn.largeur_cm)})`).join(", ")}` : ""}. Les angles de ${[...new Set(obtus.map((g: number) => fr(g) + "°"))].join(" et ")} reçoivent des profils pliés sur mesure, à commander avec les panneaux.` : "",
-    `<b>Façade.</b> ${F.A.panneaux.length} panneaux ; découper les ${v.fenetres.length} fenêtres (${v.fenetres.map((f: any) => `${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}, allège ${fz(f.allege_cm)}`).join(" ; ")}) à plat avant la pose, une par panneau, jamais sur un joint.`,
-    `<b>Mur de la porte.</b> ${F[m.faces[po.cote].cle].panneaux.map((pn: any) => `${pn.id} ${fz(pn.largeur_cm)}`).join(", ")} cm. Le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)} cm tient dans le module du fond et sert de montant d'angle.`,
-    `<b>Rehausse bois.</b> ${m.rehausse.pieces.length} pièces (${m.rehausse.pieces.map((r: any) => `${r.id} sur ${r.face}`).join(", ")}) tirées de ${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" × ")}. Posée sur butyle et vissée en tête des panneaux, elle fait lisse haute : c'est elle qui tient le toit.`,
-    `<b>Toit.</b> ${m.toit.panneaux.length} panneaux (${m.toit.panneaux.map((t: any) => `${t.id} ${fz(t.largeur_cm)} × ${fz(t.longueur_cm)}`).join(", ")} cm), nervures dans le sens de la pente (${fr(m.pente.pourcent)} %, vers ${m.sens === "droite" ? "la droite" : "le fond"}). ${m.toit.panneaux.filter((t: any) => t.biais).length} portent un bord en biais à couper au sol. Rives fermées par une bavette.`,
-    `<b>Gouttière.</b> ${fr(G.longueur_cm)} cm en ${G.troncons.length} tronçon(s) sur ${G.troncons.map((t: any) => t.face).join(" et ")}, descente ${ou_descente(m)}.`,
-    `<b>Porte, fenêtres, étanchéité.</b> Bande comprimée au pourtour des ouvertures et au pied, couvre-joints d'angle. Fermer le vide de ${fz(gauche)} cm contre le mur de propriété : bavette devant, grillage au fond.`,
-    `<b>Intérieur.</b> Plancher isolé, multiprise et éclairage sur le câble déjà présent, bureaux sur pieds (les parements de 0,5 mm ne portent pas une charge suspendue), chauffage, stores sur les fenêtres de façade.`,
-  ].filter(Boolean));
 
   // pourquoi
   const T = a.textes;
