@@ -7,11 +7,11 @@ screenplay/
 ├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
 ├── README.md           # cahier lisible sur GitHub (public)
 ├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d'abri (SVG inclus)
-├── abri.md            # GÉNÉRÉ : l'abri RETENU = la version nommée par params.abri_principal (abri_v3)
+├── abri.md            # GÉNÉRÉ : l'abri RETENU = la version nommée par params.abri_principal (abri_v4)
 ├── abri-v1.md         # GÉNÉRÉ : la première forme retenue (trapèze de l'option 13)
 ├── abri-v2.md         # GÉNÉRÉ : variante proposée (bloc abri_v2 de params.json), tableau comparé + ses plans
-├── abri-v3.md         # GÉNÉRÉ : page relais vers abri.md (la version 3 est devenue l'abri retenu)
-├── abri-v4.md         # GÉNÉRÉ : version 4 (bloc abri_v4, hérite de abri_v3 : toit vers le fond)
+├── abri-v3.md         # GÉNÉRÉ : version 3 (cinq murs, toit vers le jardin), comparée à la version 2
+├── abri-v4.md         # GÉNÉRÉ : page relais vers abri.md (la version 4 est l'abri retenu)
 │                      # (tout bloc abri_vN donne de même abri-vN.md et ses plans modele-vN-*.svg)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)

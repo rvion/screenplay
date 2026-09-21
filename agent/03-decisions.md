@@ -351,3 +351,28 @@ l'aspect reste à juger par Rémi. *Écarté :* fondre la version 3 dans `dispos
 (casse l'héritage des versions 2 et 4 et tous les tests de la version 1) ; garder deux pages
 d'accueil concurrentes.
 
+## D34 — L'abri retenu a son toit vers le fond : la version 4 devient principale
+Demande de Rémi (2026-09-22) : l'eau vers le fond, pas vers la droite. La version 4 (D31) est
+exactement cela : les cinq murs de la version 3, le toit qui descend de la façade vers le fond, la
+gouttière derrière l'abri sur le mur du fond et le pan à 45°. Le changement tient en un mot,
+`abri_principal: "abri_v4"` (D33) : `abri.md`, la page d'accueil et le modèle 3D suivent, la
+version 3 (toit vers le jardin) redevient une page de comparaison, `abri-v4.md` devient la page
+relais. *Ce que ce choix apporte :* une façade de niveau, une gouttière invisible, un panneau de
+toit en moins, et le mur contre la propriété n'est plus le mur haut. *Ce qu'il coûte, et que la
+page dit :* portée de toit 2,75 m au lieu de 2 m (panne en bois à mi-profondeur conseillée, pas
+encore modélisée), pente 8,2 % au lieu de 11,2 %, plus de débord gratuit au-dessus de la porte, et
+une descente à l'entrée du passage avec un tuyau à ramener au jardin.
+
+## D35 — Menu de gauche des versions prêtes, et murs en onglet dans la scène 3D
+Demande de Rémi (2026-09-22) : un menu à gauche pour passer d'une version à l'autre, limité à
+celles qui sont prêtes. `abri_menu` liste les versions montrées (`abri_v3`, `abri_v4`) ; la page
+d'accueil rend n'importe quelle version par `?v=N` avec les mêmes fonctions, donc le menu n'ajoute
+aucune page : il change le jeu de paramètres. Les versions 1 et 2 restent calculables et
+atteignables par leur adresse, avec leur document dans `docs/`, sans être mises en avant.
+*Trouvé en chemin :* en mesurant la scène 3D de **chaque** version et plus seulement de la retenue,
+le test a montré qu'aux angles aigus des versions 1 et 2 (58° et 63°) les murs à bouts droits
+dépassaient de 3 cm à travers le mur voisin ; les angles de 135° des versions 3 et 4 le cachaient.
+Les murs et la rehausse ont maintenant des coupes d'onglet. La garde a été vue rouge sans l'onglet,
+verte avec. *Leçon de mesure :* la boîte englobante rapide de three.js enveloppe la boîte locale
+d'un objet tourné ; il faut la boîte précise pour mesurer un mur en biais.
+

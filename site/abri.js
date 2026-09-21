@@ -1743,13 +1743,15 @@ function modele3d_abri(p, g, v, m) {
     murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: d.mur_epaisseur_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
-    murs: m.faces.map((f) => ({
+    murs: m.faces.map((f, i) => ({
       cle: f.cle,
       nom: f.nom,
       de: f.de,
       a: f.a,
       longueur_cm: f.longueur_cm,
       hauteur_mur_cm: f.hauteur_mur_cm,
+      angle_debut_deg: m.angles_deg[i],
+      angle_fin_deg: m.angles_deg[(i + 1) % m.faces.length],
       hauteur_debut_cm: f.hauteur_debut_cm,
       hauteur_fin_cm: f.hauteur_fin_cm,
       panneaux: f.panneaux.map((pn) => ({ id: pn.id, debut_cm: pn.debut_cm, largeur_cm: pn.largeur_cm })),
@@ -2032,6 +2034,9 @@ var version_principale = (p) => {
   const m = /^abri_v(\d+)$/.exec(p.abri_principal || "");
   return m && p[p.abri_principal] ? +m[1] : 0;
 };
+function versions_abri(p) {
+  return Object.keys(p).map((cle) => ({ cle, m: /^abri_v(\d+)$/.exec(cle) })).filter((x) => x.m && p[x.cle] && p[x.cle].params).map((x) => ({ n: +x.m[1], cle: x.cle })).sort((a, b) => a.n - b.n);
+}
 function params_v2(p, cle = "abri_v2") {
   if (!p[cle] || !p[cle].params) return null;
   const fusion = (a, b) => {
@@ -2109,16 +2114,40 @@ var echappe = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g
 function md_en_ligne(s) {
   return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
 }
-function calcule_abri(p) {
-  const version = version_principale(p), cle = p.abri_principal, bloc = version ? p[cle] : null;
-  const pp = version ? params_v2(p, cle) : p, core = buildCore(pp);
+var versions_pretes = (p) => [1, ...versions_abri(p).map((x) => x.n)];
+var coeurs = /* @__PURE__ */ new WeakMap();
+function coeur(p, n) {
+  let cache = coeurs.get(p);
+  if (!cache) {
+    cache = /* @__PURE__ */ new Map();
+    coeurs.set(p, cache);
+  }
+  if (!cache.has(n)) {
+    const pp = n > 1 ? params_v2(p, `abri_v${n}`) : p;
+    cache.set(n, { pp, core: buildCore(pp) });
+  }
+  return cache.get(n);
+}
+function calcule_abri(p, demande = 0) {
+  const principale = version_principale(p) || 1;
+  const version = versions_pretes(p).includes(demande) ? demande : principale;
+  const bloc = version > 1 ? p[`abri_v${version}`] : null, { pp, core } = coeur(p, version);
   const v = core.variantes.find((x) => x.id === 13), m = core.modele;
   let textes = null;
   if (bloc && v && m) {
-    const depuis = +bloc.compare_a || 1, base = depuis > 1 && p[`abri_v${depuis}`] ? buildCore(params_v2(p, `abri_v${depuis}`)) : buildCore(p);
-    textes = textes_variante(bloc, core, base);
+    const depuis = versions_pretes(p).includes(+bloc.compare_a) ? +bloc.compare_a : 1;
+    textes = textes_variante(bloc, core, coeur(p, depuis).core);
   }
-  return { p, pp, core, v, m, version, bloc, textes };
+  return { p, pp, core, v, m, version, principale, bloc, textes };
+}
+function menu_versions(p) {
+  const principale = version_principale(p) || 1;
+  const montrees = Array.isArray(p.abri_menu) ? versions_pretes(p).filter((n) => p.abri_menu.includes(`abri_v${n}`)) : versions_pretes(p);
+  return montrees.map((n) => {
+    const { core } = coeur(p, n), v = core.variantes.find((x) => x.id === 13), m = core.modele, passage = v.passages.find((q) => q.cote === "arriere_droite");
+    const nom = p[`abri_v${n}`] && p[`abri_v${n}`].nom_court || `version ${n}`;
+    return { n, nom, principale: n === principale, murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, budget_eur: m.budget.total_eur, sens: m.sens };
+  });
 }
 var el = (id) => document.getElementById(id);
 var texte = (id, s) => {
@@ -2145,6 +2174,15 @@ function rend_abri(a) {
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z) => z[0]));
   const sans_formalite = v.aire_m2 <= seuil;
   const nom_face = (f) => f.cle === "A" ? "fa\xE7ade" : f.nom;
+  const NOMBRES = ["z\xE9ro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
+  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m\xB2 int. \xB7 ${fr(x.murs_m2)} m\xB2 \xB7 passage ${fz2(Math.round(x.passage_cm))} cm \xB7 ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  texte("titre", `\u{1F3E1} Bureau de jardin \xE0 ${NOMBRES[n] || n} murs`);
+  const retenue = a.version === a.principale;
+  html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une \xE9tude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
+  const bandeau = el("bandeau");
+  if (bandeau) bandeau.hidden = retenue;
+  const doc = el("lien-document");
+  if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
   texte("sous-titre", `${n} murs en panneaux sandwich ${fz2(ep)} cm autoportants \xB7 ${fr(v.aire_m2)} m\xB2 de murs, ${fr(v.aire_interieure_m2)} m\xB2 int\xE9rieur \xB7 toit vers ${m.sens === "droite" ? "le jardin" : "le fond"} \xB7 sur la dalle existante`);
   html("badges", [sans_formalite ? `Sans formalit\xE9 (\u2264 ${fz2(seuil)} m\xB2)` : "D\xE9claration pr\xE9alable", `Passage arri\xE8re ${fz2(Math.floor(passage.cm))} cm`, `${m.panneaux_mur_a_commander} panneaux de mur`, "Param\xE9trique"].map((s) => `<span class="badge">${s}</span>`).join(""));
   html("kpis", [[`${fr(v.aire_interieure_m2)} m\xB2`, "int\xE9rieur"], [`${fr(v.aire_m2)} m\xB2`, "murs (emprise)"], [`${fz2(passage.cm)} cm`, "passage derri\xE8re"], [eur(B.total_eur), "budget indicatif HT"]].map(([val, lab]) => `<div class="card kpi"><div class="v">${val}</div><div class="l">${lab}</div></div>`).join(""));
@@ -2217,6 +2255,8 @@ function rend_abri(a) {
   ].filter(Boolean));
   const T = a.textes;
   const bloc = (titre, items, ordonne = false) => items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "";
+  const section = el("pourquoi");
+  if (section) section.hidden = !T;
   html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle co\xFBte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
 }
 
@@ -2299,6 +2339,19 @@ function peuple_abri(abri, data, visible = {}) {
       geo.translate((s0 + s1) / 200, (h0 + h1) / 200, (z0 + z1) / 200);
       return ombre(new THREE.Mesh(geo, m));
     };
+    const onglet = (geo, e) => {
+      const pos = geo.attributes.position, cot = (deg) => 1 / Math.tan(deg * Math.PI / 360);
+      const ka = cot(f.angle_debut_deg) * e / 100, kb = cot(f.angle_fin_deg) * e / 100;
+      for (let i = 0; i < pos.count; i++) {
+        if (pos.getZ(i) > 1e-6) continue;
+        const x = pos.getX(i);
+        if (x < 1e-6) pos.setX(i, ka);
+        else if (x > L / 100 - 1e-6) pos.setX(i, L / 100 - kb);
+      }
+      geo.translate(0, 0, -e / 100);
+      geo.computeVertexNormals();
+      return geo;
+    };
     const forme = new THREE.Shape();
     forme.moveTo(0, 0);
     forme.lineTo(L / 100, 0);
@@ -2315,8 +2368,7 @@ function peuple_abri(abri, data, visible = {}) {
       trou.closePath();
       forme.holes.push(trou);
     }
-    const geoMur = new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false });
-    geoMur.translate(0, 0, -ep / 100);
+    const geoMur = onglet(new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false }), ep);
     pose(ombre(new THREE.Mesh(geoMur, matMur)));
     for (const pn of f.panneaux) {
       if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
@@ -2334,8 +2386,7 @@ function peuple_abri(abri, data, visible = {}) {
       r.lineTo(L / 100, f.hauteur_fin_cm / 100);
       r.lineTo(0, f.hauteur_debut_cm / 100);
       r.closePath();
-      const geoR = new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false });
-      geoR.translate(0, 0, -data.rehausse_epaisseur_cm / 100);
+      const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
     }
     for (const o of f.ouvertures) {
@@ -2505,7 +2556,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("params.js manquant (window.SHED_PARAMS).");
     return;
   }
-  const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
+  const demande = Number(new URLSearchParams(window.location.search).get("v")) || 0;
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), demande);
   rend_abri(abri);
   const boite = document.getElementById("viewer");
   let vue = null;

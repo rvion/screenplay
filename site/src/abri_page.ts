@@ -1,6 +1,6 @@
 // Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
-import { buildCore, params_v2, version_principale, textes_variante, ou_descente, type Params } from "./compute";
+import { buildCore, params_v2, version_principale, versions_abri, textes_variante, ou_descente, type Params } from "./compute";
 
 const fr = (x: number) => String(x).replace(".", ",");
 const fz = (x: number) => fr(Math.round(x * 10) / 10);
@@ -15,19 +15,44 @@ export function md_en_ligne(s: string): string {
     .replace(/`([^`]+)`/g, "<code>$1</code>");
 }
 
-export interface Abri { p: Params; pp: Params; core: any; v: any; m: any; version: number; bloc: any; textes: ReturnType<typeof textes_variante> | null }
+export interface Abri { p: Params; pp: Params; core: any; v: any; m: any; version: number; principale: number; bloc: any; textes: ReturnType<typeof textes_variante> | null }
 
-// l'abri retenu : la version principale si elle existe, sinon la disposition de base
-export function calcule_abri(p: Params): Abri {
-  const version = version_principale(p), cle = p.abri_principal, bloc = version ? p[cle] : null;
-  const pp = version ? params_v2(p, cle)! : p, core = buildCore(pp);
+// versions pretes a montrer : la 1 (disposition de base) et chaque bloc abri_vN, dans l'ordre
+export const versions_pretes = (p: Params): number[] => [1, ...versions_abri(p).map((x) => x.n)];
+
+// un calcul par version et par jeu de parametres (le menu et les comparaisons reutilisent les memes)
+const coeurs = new WeakMap<object, Map<number, { pp: Params; core: any }>>();
+function coeur(p: Params, n: number) {
+  let cache = coeurs.get(p);
+  if (!cache) { cache = new Map(); coeurs.set(p, cache); }
+  if (!cache.has(n)) { const pp = n > 1 ? params_v2(p, `abri_v${n}`)! : p; cache.set(n, { pp, core: buildCore(pp) }); }
+  return cache.get(n)!;
+}
+
+// une version de l'abri ; sans numero (ou numero inconnu) : la version retenue
+export function calcule_abri(p: Params, demande = 0): Abri {
+  const principale = version_principale(p) || 1;
+  const version = versions_pretes(p).includes(demande) ? demande : principale;
+  const bloc = version > 1 ? p[`abri_v${version}`] : null, { pp, core } = coeur(p, version);
   const v = core.variantes.find((x: any) => x.id === 13), m = core.modele;
   let textes = null;
   if (bloc && v && m) {
-    const depuis = +bloc.compare_a || 1, base = depuis > 1 && p[`abri_v${depuis}`] ? buildCore(params_v2(p, `abri_v${depuis}`)!) : buildCore(p);
-    textes = textes_variante(bloc, core, base);
+    const depuis = versions_pretes(p).includes(+bloc.compare_a) ? +bloc.compare_a : 1;
+    textes = textes_variante(bloc, core, coeur(p, depuis).core);
   }
-  return { p, pp, core, v, m, version, bloc, textes };
+  return { p, pp, core, v, m, version, principale, bloc, textes };
+}
+
+// le menu : chaque version prete avec son nom court et ses chiffres cles
+export function menu_versions(p: Params) {
+  const principale = version_principale(p) || 1;
+  // abri_menu : les versions montrees dans le menu (les autres restent atteignables par ?v=N)
+  const montrees = Array.isArray(p.abri_menu) ? versions_pretes(p).filter((n) => p.abri_menu.includes(`abri_v${n}`)) : versions_pretes(p);
+  return montrees.map((n) => {
+    const { core } = coeur(p, n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
+    const nom = (p[`abri_v${n}`] && p[`abri_v${n}`].nom_court) || `version ${n}`;
+    return { n, nom, principale: n === principale, murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, budget_eur: m.budget.total_eur, sens: m.sens };
+  });
 }
 
 const el = (id: string) => document.getElementById(id);
@@ -47,6 +72,16 @@ export function rend_abri(a: Abri) {
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z: number[]) => z[0]));
   const sans_formalite = v.aire_m2 <= seuil;
   const nom_face = (f: any) => (f.cle === "A" ? "façade" : f.nom);
+
+  // menu des versions, et ce que la page montre
+  const NOMBRES = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
+  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · ${fr(x.murs_m2)} m² · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  texte("titre", `🏡 Bureau de jardin à ${NOMBRES[n] || n} murs`);
+  const retenue = a.version === a.principale;
+  html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
+  const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
+  const doc = el("lien-document") as HTMLAnchorElement | null;
+  if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
 
   // en-tete
   texte("sous-titre", `${n} murs en panneaux sandwich ${fz(ep)} cm autoportants · ${fr(v.aire_m2)} m² de murs, ${fr(v.aire_interieure_m2)} m² intérieur · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"} · sur la dalle existante`);
@@ -125,5 +160,6 @@ export function rend_abri(a: Abri) {
   // pourquoi
   const T = a.textes;
   const bloc = (titre: string, items: string[], ordonne = false) => (items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "");
+  const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
   html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle coûte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
 }

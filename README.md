@@ -20,13 +20,13 @@ termine en pointe et longe le mur de propriété à gauche et au fond : l'abri r
 est un **bureau à cinq murs**, avec un mur du fond d'équerre et un pan à 45° qui longe le mur de
 propriété et garde un passage vers l'arrière. Il reste au seuil des 5 m² de murs (sans
 formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
-vers le jardin.
+vers le fond : la gouttière court derrière l'abri, le long du mur du fond et du pan à 45°.
 
-![implantation de l'abri retenu sur la dalle](site/assets/modele-v3-implantation.svg)
+![implantation de l'abri retenu sur la dalle](site/assets/modele-v4-implantation.svg)
 
 - **Le document complet** (plans, débit, budget, raisons), généré : **[abri.md](abri.md)**
 - **La page d'accueil du site** montre le même abri : modèle 3D, plans, à commander, montage pas à pas
-- Les autres versions étudiées : [abri-v1.md](abri-v1.md), [abri-v2.md](abri-v2.md), [abri-v4.md](abri-v4.md) ;
+- Les autres versions étudiées : [abri-v1.md](abri-v1.md), [abri-v2.md](abri-v2.md), [abri-v3.md](abri-v3.md) (le même abri, toit vers le jardin) ;
   toutes les formes envisagées : [variantes.md](variantes.md)
 - Pour retenir une autre version : changer `abri_principal` dans [`params.json`](params.json)
 

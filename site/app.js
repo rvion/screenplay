@@ -1743,13 +1743,15 @@ function modele3d_abri(p, g, v, m) {
     murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: d.mur_epaisseur_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
-    murs: m.faces.map((f) => ({
+    murs: m.faces.map((f, i) => ({
       cle: f.cle,
       nom: f.nom,
       de: f.de,
       a: f.a,
       longueur_cm: f.longueur_cm,
       hauteur_mur_cm: f.hauteur_mur_cm,
+      angle_debut_deg: m.angles_deg[i],
+      angle_fin_deg: m.angles_deg[(i + 1) % m.faces.length],
       hauteur_debut_cm: f.hauteur_debut_cm,
       hauteur_fin_cm: f.hauteur_fin_cm,
       panneaux: f.panneaux.map((pn) => ({ id: pn.id, debut_cm: pn.debut_cm, largeur_cm: pn.largeur_cm })),

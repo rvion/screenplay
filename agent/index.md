@@ -1,7 +1,7 @@
 # screenplay — abri de jardin / bureau paramétrique
 
 > **L'abri retenu aujourd'hui** = la version nommée par `abri_principal` dans `params.json`
-> (`abri_v3` : bureau à cinq murs). C'est elle que montrent `abri.md`, la page d'accueil du site
+> (`abri_v4` : bureau à cinq murs, toit vers le fond). C'est elle que montrent `abri.md`, la page d'accueil du site
 > (`site/index.html`, bundle `site/abri.js`) et le modèle 3D. Le rectangle décrit ci-dessous est
 > l'étude initiale, toujours réglable sur `site/configurateur.html` (bundle `site/app.js`).
 

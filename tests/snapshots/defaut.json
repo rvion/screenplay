@@ -3420,6 +3420,8 @@
     ],
     "longueur_cm": 218,
     "hauteur_mur_cm": 215,
+    "angle_debut_deg": 90,
+    "angle_fin_deg": 90,
     "hauteur_debut_cm": 245,
     "hauteur_fin_cm": 245,
     "panneaux": [
@@ -3463,6 +3465,8 @@
     ],
     "longueur_cm": 178.8,
     "hauteur_mur_cm": 215,
+    "angle_debut_deg": 90,
+    "angle_fin_deg": 121.8,
     "hauteur_debut_cm": 245,
     "hauteur_fin_cm": 227.9,
     "panneaux": [
@@ -3502,6 +3506,8 @@
     ],
     "longueur_cm": 256.6,
     "hauteur_mur_cm": 215,
+    "angle_debut_deg": 121.8,
+    "angle_fin_deg": 58.2,
     "hauteur_debut_cm": 227.9,
     "hauteur_fin_cm": 215,
     "panneaux": [
@@ -3536,6 +3542,8 @@
     ],
     "longueur_cm": 314.1,
     "hauteur_mur_cm": 215,
+    "angle_debut_deg": 58.2,
+    "angle_fin_deg": 90,
     "hauteur_debut_cm": 215,
     "hauteur_fin_cm": 245,
     "panneaux": [

@@ -107,9 +107,19 @@ window.SHED_PARAMS = {
       }
     ]
   },
-  "abri_principal": "abri_v3",
+  "abri_principal": "abri_v4",
+  "abri_menu": [
+    "abri_v3",
+    "abri_v4"
+  ],
+  "_abri_menu_comment": "Les versions montrees dans le menu de gauche du site, celles qui sont pretes. Les autres restent atteignables par ?v=N et ont leur document dans docs/.",
+  "abri_v1": {
+    "_comment": "La version 1 est la disposition de base (disposition_trapeze) : ce bloc ne porte que son nom pour le menu du site, pas de params.",
+    "nom_court": "première forme : trapèze, toit vers le fond"
+  },
   "_abri_principal_comment": "La version retenue : son bloc abri_vN devient abri.md, la page d'accueil du site et le modele 3D. La premiere forme (disposition_trapeze de base) passe dans abri-v1.md. Pour retenir une autre version, changer ce seul nom.",
   "abri_v2": {
+    "nom_court": "quatre murs au module, toit vers le jardin",
     "_comment": "Variante proposee de l'abri retenu : une SURCOUCHE de ce fichier (params = seulement ce qui change, fusionne en profondeur, les listes sont remplacees). npm run emit ecrit abri-v2.md et site/assets/modele-v2-*.svg a cote de abri.md, avec un tableau compare calcule. notes = le pourquoi de chaque changement ; hors_modele = conseils que le modele ne dessine pas.",
     "titre": "Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)",
     "params": {
@@ -199,6 +209,7 @@ window.SHED_PARAMS = {
     ]
   },
   "abri_v3": {
+    "nom_court": "cinq murs, toit vers le jardin",
     "_comment": "Version 3 = version 2 (herite) + un cinquieme mur : le fond d'equerre sur un module, puis un pan a 45 degres jusqu'au haut du mur droit ; murs gauche 275 et droit 175 (25 cm de moins que le module : 5,00 m2 de murs, au seuil) ; 10 cm de dalle visibles a gauche ET devant. compare_a = la version a laquelle abri-v3.md se compare. Les {champs} des textes sont remplaces par des valeurs calculees.",
     "herite": "abri_v2",
     "compare_a": 2,
@@ -250,10 +261,12 @@ window.SHED_PARAMS = {
     ]
   },
   "abri_v4": {
+    "nom_court": "cinq murs, toit vers le fond, gouttière derrière",
     "_comment": "Version 4 = version 3 (herite) avec le toit vers le FOND : les nervures des panneaux menent l'eau a l'arriere, la gouttiere court derriere l'abri (mur du fond + pan a 45 degres). descente = bout de la gouttiere ou placer la descente (droite = vers le jardin). Comparee a la version 3 : le tableau isole l'effet du sens du toit.",
     "herite": "abri_v3",
     "compare_a": 3,
     "titre": "Abri de jardin : le bureau à cinq murs, version 4 (toit vers le fond, gouttière derrière)",
+    "titre_principal": "Abri de jardin : le bureau à cinq murs",
     "params": {
       "disposition_trapeze": {
         "toit": {

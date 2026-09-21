@@ -6,7 +6,9 @@ import { createAbriViewer, type AbriViewer } from "./viewer_abri";
 document.addEventListener("DOMContentLoaded", () => {
   const params = (window as any).SHED_PARAMS;
   if (!params) { console.error("params.js manquant (window.SHED_PARAMS)."); return; }
-  const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
+  // ?v=2 : une autre version prete ; sans rien, la version retenue
+  const demande = Number(new URLSearchParams(window.location.search).get("v")) || 0;
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), demande);
   rend_abri(abri);
 
   const boite = document.getElementById("viewer");

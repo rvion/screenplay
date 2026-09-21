@@ -69,6 +69,21 @@ export function peuple_abri(abri: Vec, data: any, visible: Record<string, boolea
       geo.translate((s0 + s1) / 200, (h0 + h1) / 200, (z0 + z1) / 200);
       return ombre(new THREE.Mesh(geo, m));
     };
+    // coupe d'onglet : la face interieure d'un mur est plus courte que sa face exterieure, de e / tan(angle / 2)
+    // a chaque bout. Sans elle un mur a bouts droits traverse son voisin des que l'angle est aigu.
+    // Seuls les sommets des deux bouts bougent : les ouvertures ne sont pas deformees.
+    const onglet = (geo: Vec, e: number) => {
+      const pos = geo.attributes.position, cot = (deg: number) => 1 / Math.tan((deg * Math.PI) / 360);
+      const ka = cot(f.angle_debut_deg) * e / 100, kb = cot(f.angle_fin_deg) * e / 100;
+      for (let i = 0; i < pos.count; i++) {
+        if (pos.getZ(i) > 1e-6) continue;                                // z = e : future face exterieure, inchangee ; z = 0 : face interieure
+        const x = pos.getX(i);
+        if (x < 1e-6) pos.setX(i, ka); else if (x > L / 100 - 1e-6) pos.setX(i, L / 100 - kb);
+      }
+      geo.translate(0, 0, -e / 100);
+      geo.computeVertexNormals();
+      return geo;
+    };
     // panneau de mur : rectangle de la hauteur des murs, perce des ouvertures (cadre de porte compris)
     const forme = new THREE.Shape();
     forme.moveTo(0, 0); forme.lineTo(L / 100, 0); forme.lineTo(L / 100, f.hauteur_mur_cm / 100); forme.lineTo(0, f.hauteur_mur_cm / 100); forme.closePath();
@@ -78,8 +93,7 @@ export function peuple_abri(abri: Vec, data: any, visible: Record<string, boolea
       trou.moveTo(s0, h0); trou.lineTo(s0, h1); trou.lineTo(s1, h1); trou.lineTo(s1, h0); trou.closePath();
       forme.holes.push(trou);
     }
-    const geoMur = new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false });
-    geoMur.translate(0, 0, -ep / 100);
+    const geoMur = onglet(new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false }), ep);
     pose(ombre(new THREE.Mesh(geoMur, matMur)));
     // joints de panneaux et etiquettes
     for (const pn of f.panneaux) {
@@ -95,8 +109,7 @@ export function peuple_abri(abri: Vec, data: any, visible: Record<string, boolea
     if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + 0.05) {
       const r = new THREE.Shape(), Hm = f.hauteur_mur_cm / 100;
       r.moveTo(0, Hm); r.lineTo(L / 100, Hm); r.lineTo(L / 100, f.hauteur_fin_cm / 100); r.lineTo(0, f.hauteur_debut_cm / 100); r.closePath();
-      const geoR = new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false });
-      geoR.translate(0, 0, -data.rehausse_epaisseur_cm / 100);
+      const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
     }
     for (const o of f.ouvertures) {

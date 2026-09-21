@@ -4,7 +4,10 @@
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
       lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
       navigateur, pas encore par l'œil de Rémi.
-- [ ] **Sens du toit : version 3 (vers le jardin) ou version 4 (vers le fond) ?** (D31) La v4 a une
+- [ ] **Panne à mi-profondeur** (D34) : avec le toit vers le fond la portée est de 2,75 m. Ajouter au
+      modèle, aux plans et au budget un bois en travers (2 m, mur gauche à mur droit) ? Et confirmer
+      la pente de 8,2 % chez le fabricant.
+- [x] **Sens du toit** : tranché le 2026-09-22, vers le fond (D34). Était : version 3 ou version 4 ? (D31) La v4 a une
       façade de niveau et la gouttière cachée derrière ; elle coûte une portée de 3 m, une pente de
       7,5 % et une descente à l'entrée du passage. Passage de la v3 et de la v4 : 57,8 cm.
 - [ ] **Abri : version 3 ?** (D30, D32) `abri-v3.md` : cinq murs, pan à 45°, plus d'angle aigu, 5,00 m²

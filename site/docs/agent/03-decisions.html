@@ -327,6 +327,29 @@ three.js et <strong>mesurée</strong> (boîtes englobantes), puis la page est ou
 l&#39;aspect reste à juger par Rémi. <em>Écarté :</em> fondre la version 3 dans <code>disposition_trapeze</code>
 (casse l&#39;héritage des versions 2 et 4 et tous les tests de la version 1) ; garder deux pages
 d&#39;accueil concurrentes.</p>
+<h2 id="d34--l39abri-retenu-a-son-toit-vers-le-fond--la-version-4-devient-principale">D34 — L&#39;abri retenu a son toit vers le fond : la version 4 devient principale</h2>
+<p>Demande de Rémi (2026-09-22) : l&#39;eau vers le fond, pas vers la droite. La version 4 (D31) est
+exactement cela : les cinq murs de la version 3, le toit qui descend de la façade vers le fond, la
+gouttière derrière l&#39;abri sur le mur du fond et le pan à 45°. Le changement tient en un mot,
+<code>abri_principal: &quot;abri_v4&quot;</code> (D33) : <code>abri.md</code>, la page d&#39;accueil et le modèle 3D suivent, la
+version 3 (toit vers le jardin) redevient une page de comparaison, <code>abri-v4.md</code> devient la page
+relais. <em>Ce que ce choix apporte :</em> une façade de niveau, une gouttière invisible, un panneau de
+toit en moins, et le mur contre la propriété n&#39;est plus le mur haut. <em>Ce qu&#39;il coûte, et que la
+page dit :</em> portée de toit 2,75 m au lieu de 2 m (panne en bois à mi-profondeur conseillée, pas
+encore modélisée), pente 8,2 % au lieu de 11,2 %, plus de débord gratuit au-dessus de la porte, et
+une descente à l&#39;entrée du passage avec un tuyau à ramener au jardin.</p>
+<h2 id="d35--menu-de-gauche-des-versions-prêtes-et-murs-en-onglet-dans-la-scène-3d">D35 — Menu de gauche des versions prêtes, et murs en onglet dans la scène 3D</h2>
+<p>Demande de Rémi (2026-09-22) : un menu à gauche pour passer d&#39;une version à l&#39;autre, limité à
+celles qui sont prêtes. <code>abri_menu</code> liste les versions montrées (<code>abri_v3</code>, <code>abri_v4</code>) ; la page
+d&#39;accueil rend n&#39;importe quelle version par <code>?v=N</code> avec les mêmes fonctions, donc le menu n&#39;ajoute
+aucune page : il change le jeu de paramètres. Les versions 1 et 2 restent calculables et
+atteignables par leur adresse, avec leur document dans <code>docs/</code>, sans être mises en avant.
+<em>Trouvé en chemin :</em> en mesurant la scène 3D de <strong>chaque</strong> version et plus seulement de la retenue,
+le test a montré qu&#39;aux angles aigus des versions 1 et 2 (58° et 63°) les murs à bouts droits
+dépassaient de 3 cm à travers le mur voisin ; les angles de 135° des versions 3 et 4 le cachaient.
+Les murs et la rehausse ont maintenant des coupes d&#39;onglet. La garde a été vue rouge sans l&#39;onglet,
+verte avec. <em>Leçon de mesure :</em> la boîte englobante rapide de three.js enveloppe la boîte locale
+d&#39;un objet tourné ; il faut la boîte précise pour mesurer un mur en biais.</p>
 </main>
 </body>
 </html>

@@ -20,7 +20,9 @@ const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
 const site = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")), html = readFileSync(join(ROOT, "site/index.html"), "utf8");
 ok(html.includes(`three@${site.devDependencies.three.replace(/^[^0-9]*/, "")}/`), "meme version de three dans le test et sur le site (" + site.devDependencies.three + ")");
 
-const a = calcule_abri(base), d = a.core.modele3d, m = a.m, v = a.v;
+for (const version of [0, 1, 2, 3, 4]) {
+console.log(version ? `\n— version ${version} —` : "\n— version retenue —");
+const a = calcule_abri(base, version), d = a.core.modele3d, m = a.m, v = a.v;
 ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.murs.length + ")");
 
 const racine = new THREE.Group();
@@ -35,7 +37,8 @@ ok(["toit", "mobilier", "lit", "etiquettes", "sieges"].every((k) => groupes[k]) 
 const xs = d.dalle.map((z) => z[0]), ys = d.dalle.map((z) => z[1]);
 const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
 const monde = (x, y, h) => [(x - cx) / 100, h / 100, -(y - cy) / 100];
-const boite = (o) => new THREE.Box3().setFromObject(o);
+// boite PRECISE (sommets reels) : la boite rapide de three enveloppe la boite locale d'un mur tourne, pas sa vraie forme
+const boite = (o) => new THREE.Box3().setFromObject(o, true);
 
 // chaque mur : sa boite englobante doit etre celle du segment [de, a] epaissi vers l'INTERIEUR, de 0 a la hauteur des murs
 const murs = racine.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
@@ -56,12 +59,17 @@ d.murs.forEach((f, i) => {
 // enveloppe des murs = emprise de l'abri, a l'epaisseur pres
 const tout = new THREE.Box3(); murs.forEach((o) => tout.union(boite(o)));
 const px = v.polygone.map((z) => z[0]), py = v.polygone.map((z) => z[1]);
+// coupes d'onglet : aucun mur ne depasse du trace de l'abri, meme a un angle aigu (versions 1 et 2)
+ok(murs.every((o) => { const b = boite(o); return b.min.x >= (Math.min(...px) - cx) / 100 - 1e-4 && b.max.x <= (Math.max(...px) - cx) / 100 + 1e-4 && -b.max.z >= (Math.min(...py) - cy) / 100 - 1e-4 && -b.min.z <= (Math.max(...py) - cy) / 100 + 1e-4; }), "aucun mur ne traverse son voisin (angles " + m.angles_deg.join(" · ") + ")");
 ok(near(tout.max.x - tout.min.x, (Math.max(...px) - Math.min(...px)) / 100, 0.001) && near(tout.max.z - tout.min.z, (Math.max(...py) - Math.min(...py)) / 100, 0.001), `emprise 3D des murs = ${((tout.max.x - tout.min.x)).toFixed(2)} × ${((tout.max.z - tout.min.z)).toFixed(2)} m, celle du plan`);
 
 // toit : pose sur le plan du toit, haut du cote haut, bas du cote de l'egout, au-dessus de tous les murs
 const toit = groupes.toit.children.find((o) => o.isMesh && o.geometry.type === "BufferGeometry");
 const bt = boite(toit), pl = d.toit.plan, ept = d.toit.epaisseur_cm;
-ok(near(bt.max.y, (pl.haut_cm + ept) / 100, 0.002), "toit : point haut a " + (pl.haut_cm + ept) + " cm (dessous du toit " + pl.haut_cm + " + epaisseur)");
+// le plan du toit se prolonge sur les debords : le point haut est au bord du debord cote haut, pas a l'aplomb du mur
+const h_plan = (z) => pl.haut_cm - (pl.haut_cm - pl.bas_cm) * ((pl.sens === "droite" ? z[0] : z[1]) - pl.origine_cm) / pl.course_cm;
+const haut_attendu = Math.max(...d.toit.contour.map(h_plan)) + ept;
+ok(near(bt.max.y, haut_attendu / 100, 0.002) && haut_attendu >= pl.haut_cm + ept - 1e-6 && haut_attendu < pl.haut_cm + ept + 3, "toit : point haut a " + haut_attendu.toFixed(1) + " cm = plan du toit au bord du debord haut + epaisseur (a l'aplomb du mur : " + (pl.haut_cm + ept) + ")");
 ok(bt.min.y >= (pl.bas_cm - 5) / 100 && bt.min.y <= pl.bas_cm / 100 + 1e-6, "toit : point bas au niveau de la tete des murs cote egout, debord compris (" + (bt.min.y * 100).toFixed(1) + " cm)");
 {
   // le cote haut est bien celui que dit le plan : a droite le toit doit etre PLUS BAS qu'a gauche (sens droite), au fond plus bas que devant (sens arriere)
@@ -88,6 +96,8 @@ const bureaux = groupes.mobilier.children.filter((o) => o.isMesh);
 ok(bureaux.length === v.bureaux.length && bureaux.every((o) => near(boite(o).max.y, (d.sol.epaisseur_cm + 75) / 100, 1e-6) && boite(o).min.x >= tout.min.x && boite(o).max.x <= tout.max.x), bureaux.length + " bureaux, plateau a 75 cm du plancher, dans les murs");
 // dalle et murs de propriete
 ok(d.murs_propriete.length === 3 && racine.children.filter((o) => o.isMesh && near(boite(o).max.y, d.murs_propriete[0].hauteur_cm / 100, 1e-6) && near(boite(o).min.y, -0.14, 1e-6)).length === 3, "dalle et 3 murs de propriété de " + d.murs_propriete[0].hauteur_cm + " cm");
+
+}
 
 console.log(fails ? `\n${fails} echec(s) 3D.` : "\nScene 3D de l'abri OK ✓");
 process.exit(fails ? 1 : 0);

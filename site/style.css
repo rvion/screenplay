@@ -141,3 +141,27 @@ ol.etapes li { background: var(--card); border: 1px solid var(--line); border-ra
 #implantation-points li, #debit-divers li { margin: .3rem 0; }
 #pourquoi-corps li { margin: .35rem 0; }
 footer a { color: inherit; }
+
+/* colonne de gauche : les versions pretes, puis les sections de la page */
+.mise-en-page { display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 0 1rem; max-width: 1290px; margin: 0 auto; align-items: start; }
+.mise-en-page > main { margin: 0; max-width: 980px; }
+aside.menu { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; padding: 1.2rem .4rem 1.2rem 1rem; }
+aside.menu h2 { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 1rem 0 .5rem; border: 0; padding: 0; }
+ul.versions { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+ul.versions a { display: block; text-decoration: none; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .55rem .7rem; }
+ul.versions a:hover { border-color: var(--accent); }
+ul.versions li.ici a { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); background: #f2f6fa; }
+.v-nom { display: block; font-weight: 700; color: var(--accent); }
+.v-retenue { font-size: .68rem; font-weight: 700; color: #fff; background: var(--accent2); border-radius: 999px; padding: .08rem .45rem; margin-left: .3rem; vertical-align: 1px; }
+.v-desc { display: block; font-size: .86rem; line-height: 1.3; }
+.v-chiffres { display: block; font-size: .74rem; color: var(--muted); margin-top: .15rem; line-height: 1.35; }
+nav.sections { display: grid; gap: .1rem; }
+nav.sections a { color: var(--accent); text-decoration: none; font-size: .9rem; padding: .22rem .5rem; border-radius: 6px; }
+nav.sections a:hover { background: #eef2f6; }
+p.bandeau { background: #fff7e6; border: 1px solid #f0d9a8; border-radius: var(--radius); padding: .6rem .9rem; margin: 0 0 1rem; }
+@media (max-width: 920px) {
+  .mise-en-page { grid-template-columns: minmax(0, 1fr); }
+  aside.menu { position: static; max-height: none; padding: 1rem 1.5rem 0; }
+  ul.versions { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  nav.sections { display: flex; flex-wrap: wrap; gap: .1rem .3rem; }
+}
