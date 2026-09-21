@@ -107,6 +107,8 @@ window.SHED_PARAMS = {
       }
     ]
   },
+  "abri_principal": "abri_v3",
+  "_abri_principal_comment": "La version retenue : son bloc abri_vN devient abri.md, la page d'accueil du site et le modele 3D. La premiere forme (disposition_trapeze de base) passe dans abri-v1.md. Pour retenir une autre version, changer ce seul nom.",
   "abri_v2": {
     "_comment": "Variante proposee de l'abri retenu : une SURCOUCHE de ce fichier (params = seulement ce qui change, fusionne en profondeur, les listes sont remplacees). npm run emit ecrit abri-v2.md et site/assets/modele-v2-*.svg a cote de abri.md, avec un tableau compare calcule. notes = le pourquoi de chaque changement ; hors_modele = conseils que le modele ne dessine pas.",
     "titre": "Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)",
@@ -201,6 +203,7 @@ window.SHED_PARAMS = {
     "herite": "abri_v2",
     "compare_a": 2,
     "titre": "Abri de jardin : le bureau à cinq murs, version 3 (fond d'équerre et pan à 45°)",
+    "titre_principal": "Abri de jardin : le bureau à cinq murs",
     "params": {
       "dalle_cm": {
         "bandes_libres_cm": {

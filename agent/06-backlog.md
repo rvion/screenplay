@@ -1,6 +1,9 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
+      lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
+      navigateur, pas encore par l'œil de Rémi.
 - [ ] **Sens du toit : version 3 (vers le jardin) ou version 4 (vers le fond) ?** (D31) La v4 a une
       façade de niveau et la gouttière cachée derrière ; elle coûte une portée de 3 m, une pente de
       7,5 % et une descente à l'entrée du passage. Passage de la v3 et de la v4 : 57,8 cm.

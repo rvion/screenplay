@@ -18,9 +18,10 @@
 ├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
 ├── README.md           # cahier lisible sur GitHub (public)
 ├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d&#39;abri (SVG inclus)
-├── abri.md            # GÉNÉRÉ : l&#39;abri retenu (option 13), chiffres + ses 7 plans
+├── abri.md            # GÉNÉRÉ : l&#39;abri RETENU = la version nommée par params.abri_principal (abri_v3)
+├── abri-v1.md         # GÉNÉRÉ : la première forme retenue (trapèze de l&#39;option 13)
 ├── abri-v2.md         # GÉNÉRÉ : variante proposée (bloc abri_v2 de params.json), tableau comparé + ses plans
-├── abri-v3.md         # GÉNÉRÉ : version 3 (bloc abri_v3, hérite de abri_v2, comparée à la version 2)
+├── abri-v3.md         # GÉNÉRÉ : page relais vers abri.md (la version 3 est devenue l&#39;abri retenu)
 ├── abri-v4.md         # GÉNÉRÉ : version 4 (bloc abri_v4, hérite de abri_v3 : toit vers le fond)
 │                      # (tout bloc abri_vN donne de même abri-vN.md et ses plans modele-vN-*.svg)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
@@ -36,10 +37,12 @@
 │   ├── dom.mjs         # smoke-test DOM (jsdom)
 │   └── snapshots/*.json
 └── site/               # GitHub Pages (publié tel quel)
-    ├── index.html
+    ├── index.html      # page de l&#39;abri retenu (3D, plans, débit, montage) ; charge abri.js
+    ├── configurateur.html # l&#39;étude initiale : rectangle réglable ; charge app.js
     ├── style.css
     ├── src/            # TypeScript : compute (logique pure) + viewer/render/controls/main + cli
-    ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts)
+    ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts, pour configurateur.html)
+    ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts, pour index.html)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
     ├── .nojekyll
     ├── docs.css        # styles des pages de documents (écrit à la main)

@@ -175,6 +175,34 @@ T1… toiture), porte + fenêtre vitrées, toit débordant nervuré, gouttière 
 plan de rehausse et dans le tableau de débit (<code>debit.*.pieces</code>). Le dernier panneau d&#39;une face
 est le plus étroit (recoupe).</li>
 </ul>
+<h2 id="abri-retenu-et-page-d39accueil">Abri retenu et page d&#39;accueil</h2>
+<ul>
+<li><code>params.json</code> nomme <strong>la version retenue</strong> : <code>abri_principal</code> (aujourd&#39;hui <code>abri_v3</code>). Changer ce
+nom suffit à en retenir une autre. Conséquences, toutes générées :<ul>
+<li><code>abri.md</code> = cette version (titre <code>titre_principal</code>, sa comparaison et ses raisons <strong>en fin</strong> de
+page sous « Pourquoi cette version ») ; la première forme passe dans <code>abri-v1.md</code> ; l&#39;ancienne
+adresse (<code>abri-v3.md</code>) devient une page relais ; les liens entre pages suivent (<code>nom_page</code>).</li>
+<li><strong><code>site/index.html</code> = la page de l&#39;abri retenu</strong> (bundle <code>site/abri.js</code>, entrée
+<code>src/abri_main.ts</code>) : aperçu, <strong>modèle 3D</strong>, implantation, plans, à commander, ouvertures et
+aménagement, budget, <strong>montage étape par étape</strong>, pourquoi cette forme. Tout est calculé dans
+le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
+aucune cote dans le HTML, et la page marche en <code>file://</code>.</li>
+<li>L&#39;étude initiale (rectangle réglable) vit sur <code>site/configurateur.html</code> (bundle <code>site/app.js</code>).</li>
+</ul>
+</li>
+<li><strong>Modèle 3D</strong> : <code>modele3d_abri</code> (pur, dans <code>compute.ts</code>) décrit la scène en cm dans le repère de la
+dalle : dalle, murs de propriété, plancher, murs (panneaux, ouvertures, rehausse), toit (contour,
+plan, panneaux), gouttière, mobilier. <code>src/viewer_abri.ts</code> la construit pour <strong>N murs sur un
+contour convexe</strong> et un toit dans un sens ou l&#39;autre : murs extrudés vers l&#39;intérieur et percés,
+joints et repères de panneaux, cadre et battant de porte ouvert vers l&#39;extérieur, fenêtres,
+rehausse bois, toit nervuré dans le sens de la pente, gouttière sur chaque bord d&#39;égout, descente,
+bureaux, sièges, lit (cases à cocher : toit, mobilier, lit déplié, repères). <code>peuple_abri</code>
+construit la scène <strong>sans renderer</strong>, ce qui permet de la mesurer sous Node.</li>
+<li>Tests : <code>tests/abri3d.mjs</code> construit la scène avec le vrai three.js (devDependency, même version
+que le CDN) et vérifie les boîtes englobantes (chaque mur sur son tracé et épaissi vers
+l&#39;intérieur, emprise, sens de la pente, rehausse, gouttière, descente, battant vers l&#39;extérieur,
+bureaux) ; <code>tests/abri_dom.mjs</code> remplit <code>index.html</code> sous jsdom et vérifie chaque section.</li>
+</ul>
 <h2 id="documents-partageables-sitedocs">Documents partageables (<code>site/docs/</code>)</h2>
 <ul>
 <li>Chaque fichier <strong>Markdown suivi par git</strong> (racine : <code>README.md</code>, <code>variantes.md</code>, <code>abri.md</code>,

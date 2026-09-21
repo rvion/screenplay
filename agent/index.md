@@ -1,5 +1,10 @@
 # screenplay — abri de jardin / bureau paramétrique
 
+> **L'abri retenu aujourd'hui** = la version nommée par `abri_principal` dans `params.json`
+> (`abri_v3` : bureau à cinq murs). C'est elle que montrent `abri.md`, la page d'accueil du site
+> (`site/index.html`, bundle `site/abri.js`) et le modèle 3D. Le rectangle décrit ci-dessous est
+> l'étude initiale, toujours réglable sur `site/configurateur.html` (bundle `site/app.js`).
+
 Conception, plans, débit, budget et modèle 3D d'un petit bureau de jardin (rectangle 200 × 240,
 panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,
 aménagement chiffré) que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,

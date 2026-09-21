@@ -118,6 +118,31 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   plan de rehausse et dans le tableau de débit (`debit.*.pieces`). Le dernier panneau d'une face
   est le plus étroit (recoupe).
 
+## Abri retenu et page d'accueil
+- `params.json` nomme **la version retenue** : `abri_principal` (aujourd'hui `abri_v3`). Changer ce
+  nom suffit à en retenir une autre. Conséquences, toutes générées :
+  - `abri.md` = cette version (titre `titre_principal`, sa comparaison et ses raisons **en fin** de
+    page sous « Pourquoi cette version ») ; la première forme passe dans `abri-v1.md` ; l'ancienne
+    adresse (`abri-v3.md`) devient une page relais ; les liens entre pages suivent (`nom_page`).
+  - **`site/index.html` = la page de l'abri retenu** (bundle `site/abri.js`, entrée
+    `src/abri_main.ts`) : aperçu, **modèle 3D**, implantation, plans, à commander, ouvertures et
+    aménagement, budget, **montage étape par étape**, pourquoi cette forme. Tout est calculé dans
+    le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
+    aucune cote dans le HTML, et la page marche en `file://`.
+  - L'étude initiale (rectangle réglable) vit sur `site/configurateur.html` (bundle `site/app.js`).
+- **Modèle 3D** : `modele3d_abri` (pur, dans `compute.ts`) décrit la scène en cm dans le repère de la
+  dalle : dalle, murs de propriété, plancher, murs (panneaux, ouvertures, rehausse), toit (contour,
+  plan, panneaux), gouttière, mobilier. `src/viewer_abri.ts` la construit pour **N murs sur un
+  contour convexe** et un toit dans un sens ou l'autre : murs extrudés vers l'intérieur et percés,
+  joints et repères de panneaux, cadre et battant de porte ouvert vers l'extérieur, fenêtres,
+  rehausse bois, toit nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
+  bureaux, sièges, lit (cases à cocher : toit, mobilier, lit déplié, repères). `peuple_abri`
+  construit la scène **sans renderer**, ce qui permet de la mesurer sous Node.
+- Tests : `tests/abri3d.mjs` construit la scène avec le vrai three.js (devDependency, même version
+  que le CDN) et vérifie les boîtes englobantes (chaque mur sur son tracé et épaissi vers
+  l'intérieur, emprise, sens de la pente, rehausse, gouttière, descente, battant vers l'extérieur,
+  bureaux) ; `tests/abri_dom.mjs` remplit `index.html` sous jsdom et vérifie chaque section.
+
 ## Documents partageables (`site/docs/`)
 - Chaque fichier **Markdown suivi par git** (racine : `README.md`, `variantes.md`, `abri.md`,
   `abri-vN.md` ; et `agent/*.md`) a sa page HTML sous `site/docs/`, donc une adresse stable :

@@ -129,3 +129,15 @@ code { background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; font-size
 .ctl-check { flex-direction: row; align-items: center; gap: .5rem; font-size: .85rem; }
 .ctl-check input { accent-color: var(--accent); }
 ol.confort { padding-left: 1.2rem; } ol.confort li { margin: .5rem 0; }
+
+/* page d'accueil : l'abri retenu */
+.viewer-toggles { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; justify-content: center; font-size: .9rem; color: var(--muted); margin-top: .3rem; }
+.viewer-toggles label { cursor: pointer; }
+.table-wrap { overflow-x: auto; margin: .6rem 0; }
+tfoot td { border-top: 2px solid var(--line); background: #f6f6f0; }
+p.note { color: var(--muted); font-size: .9rem; margin-top: .4rem; }
+ol.etapes { padding-left: 1.3rem; display: grid; gap: .55rem; }
+ol.etapes li { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: .7rem .9rem; margin-left: .4rem; }
+#implantation-points li, #debit-divers li { margin: .3rem 0; }
+#pourquoi-corps li { margin: .35rem 0; }
+footer a { color: inherit; }

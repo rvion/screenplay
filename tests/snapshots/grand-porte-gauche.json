@@ -3075,6 +3075,13 @@
     ]
    ],
    "aire_m2": 5.85,
+   "plan": {
+    "sens": "arriere",
+    "origine_cm": 5,
+    "course_cm": 314.1,
+    "haut_cm": 260,
+    "bas_cm": 230
+   },
    "panneaux": [
     {
      "id": "T1",
@@ -3360,6 +3367,492 @@
    "incertitude_pct": 20,
    "total_bas_eur": null,
    "total_haut_eur": null
+  }
+ },
+ "modele3d": {
+  "dalle": [
+   [
+    0,
+    0
+   ],
+   [
+    262,
+    0
+   ],
+   [
+    262,
+    223
+   ],
+   [
+    72.7,
+    398.3
+   ],
+   [
+    0,
+    324
+   ]
+  ],
+  "murs_propriete": [
+   {
+    "cote": "arriere_droite",
+    "de": [
+     262,
+     223
+    ],
+    "a": [
+     72.7,
+     398.3
+    ],
+    "hauteur_cm": 180,
+    "epaisseur_cm": 15
+   },
+   {
+    "cote": "arriere_gauche",
+    "de": [
+     72.7,
+     398.3
+    ],
+    "a": [
+     0,
+     324
+    ],
+    "hauteur_cm": 180,
+    "epaisseur_cm": 15
+   },
+   {
+    "cote": "gauche",
+    "de": [
+     0,
+     324
+    ],
+    "a": [
+     0,
+     0
+    ],
+    "hauteur_cm": 180,
+    "epaisseur_cm": 15
+   }
+  ],
+  "epaisseur_cm": 6,
+  "sol": {
+   "polygone": [
+    [
+     18,
+     11
+    ],
+    [
+     224,
+     11
+    ],
+    [
+     224,
+     180.5
+    ],
+    [
+     18,
+     308.3
+    ]
+   ],
+   "epaisseur_cm": 0
+  },
+  "murs": [
+   {
+    "cle": "A",
+    "nom": "avant",
+    "de": [
+     12,
+     5
+    ],
+    "a": [
+     230,
+     5
+    ],
+    "longueur_cm": 218,
+    "hauteur_mur_cm": 230,
+    "hauteur_debut_cm": 260,
+    "hauteur_fin_cm": 260,
+    "panneaux": [
+     {
+      "id": "A1",
+      "debut_cm": 0,
+      "largeur_cm": 100
+     },
+     {
+      "id": "A2",
+      "debut_cm": 100,
+      "largeur_cm": 100
+     },
+     {
+      "id": "A3",
+      "debut_cm": 200,
+      "largeur_cm": 18
+     }
+    ],
+    "ouvertures": [
+     {
+      "type": "fenetre",
+      "debut_cm": 100,
+      "largeur_cm": 100,
+      "allege_cm": 95,
+      "hauteur_cm": 110,
+      "ouvrant": false
+     }
+    ]
+   },
+   {
+    "cle": "D",
+    "nom": "droite",
+    "de": [
+     230,
+     5
+    ],
+    "a": [
+     230,
+     183.8
+    ],
+    "longueur_cm": 178.8,
+    "hauteur_mur_cm": 230,
+    "hauteur_debut_cm": 260,
+    "hauteur_fin_cm": 242.9,
+    "panneaux": [
+     {
+      "id": "D1",
+      "debut_cm": 0,
+      "largeur_cm": 100
+     },
+     {
+      "id": "D2",
+      "debut_cm": 100,
+      "largeur_cm": 78.8
+     }
+    ],
+    "ouvertures": [
+     {
+      "type": "porte",
+      "vitree": true,
+      "debut_cm": 100.5,
+      "largeur_cm": 65,
+      "allege_cm": 0,
+      "hauteur_cm": 220,
+      "chambranle_cm": 5
+     }
+    ]
+   },
+   {
+    "cle": "B",
+    "nom": "fond en biais",
+    "de": [
+     230,
+     183.8
+    ],
+    "a": [
+     12,
+     319.1
+    ],
+    "longueur_cm": 256.6,
+    "hauteur_mur_cm": 230,
+    "hauteur_debut_cm": 242.9,
+    "hauteur_fin_cm": 230,
+    "panneaux": [
+     {
+      "id": "B1",
+      "debut_cm": 0,
+      "largeur_cm": 100
+     },
+     {
+      "id": "B2",
+      "debut_cm": 100,
+      "largeur_cm": 100
+     },
+     {
+      "id": "B3",
+      "debut_cm": 200,
+      "largeur_cm": 56.6
+     }
+    ],
+    "ouvertures": []
+   },
+   {
+    "cle": "G",
+    "nom": "gauche",
+    "de": [
+     12,
+     319.1
+    ],
+    "a": [
+     12,
+     5
+    ],
+    "longueur_cm": 314.1,
+    "hauteur_mur_cm": 230,
+    "hauteur_debut_cm": 230,
+    "hauteur_fin_cm": 260,
+    "panneaux": [
+     {
+      "id": "G1",
+      "debut_cm": 0,
+      "largeur_cm": 100
+     },
+     {
+      "id": "G2",
+      "debut_cm": 100,
+      "largeur_cm": 100
+     },
+     {
+      "id": "G3",
+      "debut_cm": 200,
+      "largeur_cm": 100
+     },
+     {
+      "id": "G4",
+      "debut_cm": 300,
+      "largeur_cm": 14.1
+     }
+    ],
+    "ouvertures": []
+   }
+  ],
+  "rehausse_epaisseur_cm": 7.5,
+  "toit": {
+   "contour": [
+    [
+     12,
+     -5
+    ],
+    [
+     230,
+     -5
+    ],
+    [
+     230,
+     195.6
+    ],
+    [
+     12,
+     330.9
+    ]
+   ],
+   "plan": {
+    "sens": "arriere",
+    "origine_cm": 5,
+    "course_cm": 314.1,
+    "haut_cm": 260,
+    "bas_cm": 230
+   },
+   "epaisseur_cm": 6,
+   "panneaux": [
+    {
+     "id": "T1",
+     "polygone": [
+      [
+       12,
+       -5
+      ],
+      [
+       112,
+       -5
+      ],
+      [
+       112,
+       268.8
+      ],
+      [
+       12,
+       330.9
+      ]
+     ]
+    },
+    {
+     "id": "T2",
+     "polygone": [
+      [
+       112,
+       -5
+      ],
+      [
+       212,
+       -5
+      ],
+      [
+       212,
+       206.7
+      ],
+      [
+       112,
+       268.8
+      ]
+     ]
+    },
+    {
+     "id": "T3",
+     "polygone": [
+      [
+       212,
+       -5
+      ],
+      [
+       230,
+       -5
+      ],
+      [
+       230,
+       195.6
+      ],
+      [
+       212,
+       206.7
+      ]
+     ]
+    }
+   ]
+  },
+  "gouttiere": {
+   "troncons": [
+    {
+     "face": "B",
+     "de": [
+      230,
+      195.6
+     ],
+     "a": [
+      12,
+      330.9
+     ],
+     "longueur_cm": 256.6
+    }
+   ],
+   "descente": [
+    12,
+    330.9
+   ]
+  },
+  "mobilier": {
+   "bureaux": [
+    {
+     "cote": "gauche",
+     "polygone": [
+      [
+       18,
+       11
+      ],
+      [
+       78,
+       11
+      ],
+      [
+       78,
+       271.1
+      ],
+      [
+       18,
+       308.3
+      ]
+     ]
+    },
+    {
+     "cote": "avant",
+     "polygone": [
+      [
+       18,
+       11
+      ],
+      [
+       224,
+       11
+      ],
+      [
+       224,
+       61
+      ],
+      [
+       18,
+       61
+      ]
+     ]
+    }
+   ],
+   "sieges": [
+    {
+     "type": "fauteuil de bureau",
+     "polygone": [
+      [
+       78,
+       179.1
+      ],
+      [
+       78,
+       109.1
+      ],
+      [
+       148,
+       109.1
+      ],
+      [
+       148,
+       179.1
+      ]
+     ]
+    },
+    {
+     "type": "tabouret",
+     "polygone": [
+      [
+       136,
+       61
+      ],
+      [
+       166,
+       61
+      ],
+      [
+       166,
+       91
+      ],
+      [
+       136,
+       91
+      ]
+     ]
+    }
+   ],
+   "lit": {
+    "polygone": [
+     [
+      223.4,
+      180.8
+     ],
+     [
+      62,
+      281
+     ],
+     [
+      22.5,
+      217.3
+     ],
+     [
+      183.9,
+      117.1
+     ]
+    ],
+    "replie": [
+     [
+      223.4,
+      180.8
+     ],
+     [
+      62,
+      281
+     ],
+     [
+      56.7,
+      272.5
+     ],
+     [
+      218.2,
+      172.3
+     ]
+    ]
+   }
   }
  },
  "svg": {

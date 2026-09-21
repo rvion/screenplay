@@ -334,3 +334,20 @@ tête (`panneaux_depuis_la_fin`) pour que le module entier du fond reçoive tout
 porte ; celle du mur gauche tombe en bout côté façade, accessible. La version 4 hérite de tout
 (portée 2,75 m, pente 8,2 %). *Amende D30 et D31* (cotes et passage de la version 3).
 
+## D33 — La version 3 devient l'abri retenu ; la page d'accueil est sa page de construction, en 3D
+Décision de Rémi (2026-09-21) : le bureau à cinq murs (D30, D32) est **l'abri à construire**.
+*Mécanisme :* un pointeur, `abri_principal: "abri_v3"`, plutôt qu'une réécriture des paramètres de
+base. `abri.md`, la page d'accueil et le modèle 3D suivent ce nom ; la première forme passe dans
+`abri-v1.md`, l'ancienne adresse de la version 3 devient une page relais, les liens entre pages se
+recalculent. *Pourquoi un pointeur :* retenir une autre version reste un changement d'un mot, les
+variantes gardent leur héritage (`herite`), et les tests du modèle de base restent valables.
+*Page d'accueil :* elle n'est plus le configurateur du rectangle (déplacé sur
+`configurateur.html`) mais la page de l'abri retenu, calculée dans le navigateur : 3D, implantation,
+plans, à commander, budget, montage étape par étape, raisons. *Modèle 3D :* une scène générique
+(N murs, toit dans un sens ou l'autre) décrite par `modele3d_abri`, pour qu'une future version
+retenue s'affiche sans code nouveau. *Vérification :* la scène est construite sous Node avec
+three.js et **mesurée** (boîtes englobantes), puis la page est ouverte dans un vrai navigateur ;
+l'aspect reste à juger par Rémi. *Écarté :* fondre la version 3 dans `disposition_trapeze`
+(casse l'héritage des versions 2 et 4 et tous les tests de la version 1) ; garder deux pages
+d'accueil concurrentes.
+

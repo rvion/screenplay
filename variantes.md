@@ -310,7 +310,7 @@
 
 ## Option 13
 
-**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur · **retenue : plans complets dans [abri.md](abri.md)**
+**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur · **première forme retenue : plans dans [abri-v1.md](abri-v1.md)** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](abri.md)
 
 ![option 13](site/assets/variante-13.svg)
 

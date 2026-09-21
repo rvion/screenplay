@@ -13,6 +13,32 @@ paramètres unique** et publié sur un petit **site web**.
 
 ---
 
+## L'abri retenu : le bureau à cinq murs
+
+Le projet a commencé par un rectangle (décrit plus bas). La dalle réelle, relevée au mètre, se
+termine en pointe et longe le mur de propriété à gauche et au fond : l'abri retenu aujourd'hui
+est un **bureau à cinq murs**, avec un mur du fond d'équerre et un pan à 45° qui longe le mur de
+propriété et garde un passage vers l'arrière. Il reste au seuil des 5 m² de murs (sans
+formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
+vers le jardin.
+
+![implantation de l'abri retenu sur la dalle](site/assets/modele-v3-implantation.svg)
+
+- **Le document complet** (plans, débit, budget, raisons), généré : **[abri.md](abri.md)**
+- **La page d'accueil du site** montre le même abri : modèle 3D, plans, à commander, montage pas à pas
+- Les autres versions étudiées : [abri-v1.md](abri-v1.md), [abri-v2.md](abri-v2.md), [abri-v4.md](abri-v4.md) ;
+  toutes les formes envisagées : [variantes.md](variantes.md)
+- Pour retenir une autre version : changer `abri_principal` dans [`params.json`](params.json)
+
+Aucun chiffre n'est recopié ici : ils vivent dans `abri.md`, recalculé à chaque `npm run emit`.
+
+---
+
+# L'étude initiale : le rectangle paramétrique
+
+Ce qui suit décrit la première étude, toujours en ligne et réglable
+([configurateur](https://rvion.github.io/screenplay/configurateur.html)).
+
 ## Le principe, en une phrase
 
 Une boîte rectangulaire dont **tous les panneaux de mur sont des rectangles identiques**

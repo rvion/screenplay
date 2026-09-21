@@ -311,6 +311,22 @@ et droit ne sont plus au module, chacun porte une bande de 75 cm. Celle du mur d
 tête (<code>panneaux_depuis_la_fin</code>) pour que le module entier du fond reçoive tout le cadre de la
 porte ; celle du mur gauche tombe en bout côté façade, accessible. La version 4 hérite de tout
 (portée 2,75 m, pente 8,2 %). <em>Amende D30 et D31</em> (cotes et passage de la version 3).</p>
+<h2 id="d33--la-version-3-devient-l39abri-retenu--la-page-d39accueil-est-sa-page-de-construction-en-3d">D33 — La version 3 devient l&#39;abri retenu ; la page d&#39;accueil est sa page de construction, en 3D</h2>
+<p>Décision de Rémi (2026-09-21) : le bureau à cinq murs (D30, D32) est <strong>l&#39;abri à construire</strong>.
+<em>Mécanisme :</em> un pointeur, <code>abri_principal: &quot;abri_v3&quot;</code>, plutôt qu&#39;une réécriture des paramètres de
+base. <code>abri.md</code>, la page d&#39;accueil et le modèle 3D suivent ce nom ; la première forme passe dans
+<code>abri-v1.md</code>, l&#39;ancienne adresse de la version 3 devient une page relais, les liens entre pages se
+recalculent. <em>Pourquoi un pointeur :</em> retenir une autre version reste un changement d&#39;un mot, les
+variantes gardent leur héritage (<code>herite</code>), et les tests du modèle de base restent valables.
+<em>Page d&#39;accueil :</em> elle n&#39;est plus le configurateur du rectangle (déplacé sur
+<code>configurateur.html</code>) mais la page de l&#39;abri retenu, calculée dans le navigateur : 3D, implantation,
+plans, à commander, budget, montage étape par étape, raisons. <em>Modèle 3D :</em> une scène générique
+(N murs, toit dans un sens ou l&#39;autre) décrite par <code>modele3d_abri</code>, pour qu&#39;une future version
+retenue s&#39;affiche sans code nouveau. <em>Vérification :</em> la scène est construite sous Node avec
+three.js et <strong>mesurée</strong> (boîtes englobantes), puis la page est ouverte dans un vrai navigateur ;
+l&#39;aspect reste à juger par Rémi. <em>Écarté :</em> fondre la version 3 dans <code>disposition_trapeze</code>
+(casse l&#39;héritage des versions 2 et 4 et tous les tests de la version 1) ; garder deux pages
+d&#39;accueil concurrentes.</p>
 </main>
 </body>
 </html>

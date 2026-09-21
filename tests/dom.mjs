@@ -8,7 +8,7 @@ import { pathToFileURL } from "node:url";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const html = readFileSync(join(ROOT, "site/index.html"), "utf8");
+const html = readFileSync(join(ROOT, "site/configurateur.html"), "utf8");
 const dom = new JSDOM(html, { runScripts: "outside-only", pretendToBeVisual: true });
 globalThis.window = dom.window;
 globalThis.document = dom.window.document;

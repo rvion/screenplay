@@ -1,12 +1,12 @@
 # Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)
 
-> Généré par `npm run emit` depuis `params.json` (bloc `abri_v2`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri.md](abri.md). Autres formes étudiées : [variantes.md](variantes.md).
+> Généré par `npm run emit` depuis `params.json` (bloc `abri_v2`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri-v1.md](abri-v1.md). Autres formes étudiées : [variantes.md](variantes.md).
 
 ![implantation sur la dalle](site/assets/modele-v2-implantation.svg)
 
 ## Ce qui change par rapport à la version 1
 
-| | version 1 ([abri.md](abri.md)) | **version 2** |
+| | version 1 ([abri-v1.md](abri-v1.md)) | **version 2** |
 |---|---|---|
 | murs (extérieur) | 5,37 m² | 5 m² |
 | intérieur | **4,81 m²** | **4,46 m²** |

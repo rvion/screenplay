@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Abri de jardin parametrique - app interactive client-side (TS) + generateur Python (plans statiques).",
   "scripts": {
-    "build": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --external:three/* --target=es2020 --legal-comments=none",
+    "build": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --external:three/* --target=es2020 --legal-comments=none && esbuild site/src/abri_main.ts --bundle --format=esm --outfile=site/abri.js --external:three --external:three/* --target=es2020 --legal-comments=none",
     "watch": "esbuild site/src/main.ts --bundle --format=esm --outfile=site/app.js --external:three --external:three/* --target=es2020 --watch",
     "typecheck": "shipkit ci --only typecheck",
     "typecheck:raw": "tsc --noEmit",
@@ -13,7 +13,9 @@
     "test:dom": "node tests/dom.mjs",
     "test:ports": "node tests/ports.mjs",
     "test": "shipkit ci --only test",
-    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:formalites && npm run test:docs && npm run test:ports && npm run test:dom",
+    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:formalites && npm run test:docs && npm run test:ports && npm run test:abri3d && npm run test:abri && npm run test:dom",
+    "test:abri": "node tests/abri_dom.mjs",
+    "test:abri3d": "node tests/abri3d.mjs",
     "test:formalites": "node tests/formalites.mjs",
     "test:docs": "node tests/docs.mjs",
     "test:modele": "node tests/modele.mjs",
@@ -30,6 +32,7 @@
     "jsdom": "^25.0.1",
     "marked": "^18.0.13",
     "rvlib-shipkit": "^0.38.1",
+    "three": "^0.160.0",
     "typescript": "^5.5.4"
   },
   "rvt": {

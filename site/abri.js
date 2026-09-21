@@ -60,13 +60,13 @@ function slab_apex(L, R, ag, ad) {
   const a = (ag * ag - ad * ad + dist * dist) / (2 * dist);
   const h2 = ag * ag - a * a;
   if (a < 0 || a > dist || h2 <= 1e-9) return null;
-  const h3 = Math.sqrt(h2), ux = dx / dist, uy = dy / dist;
+  const h = Math.sqrt(h2), ux = dx / dist, uy = dy / dist;
   let nx = -uy, ny = ux;
   if (ny < 0) {
     nx = -nx;
     ny = -ny;
   }
-  return [L[0] + a * ux + h3 * nx, L[1] + a * uy + h3 * ny];
+  return [L[0] + a * ux + h * nx, L[1] + a * uy + h * ny];
 }
 function interior_angles(q) {
   return q.map((b, i) => {
@@ -586,7 +586,7 @@ function model3d(p, g, openings) {
   const slab = g.dalle ? g.dalle.polygone : g.verts;
   return {
     footprint: g.verts.map((v) => [m(v[0]), m(v[1])]),
-    heights: g.vert_heights_cm.map((h2) => rnd(h2 / 100, 3)),
+    heights: g.vert_heights_cm.map((h) => rnd(h / 100, 3)),
     wall_height_m: m(g.hauteur_mur_cm),
     panel_cover_m: m(+p.panneau.largeur_utile_cm),
     thickness_m: +p.panneau.epaisseur_mm / 1e3,
@@ -652,8 +652,8 @@ function plus_grand_rectangle(Z) {
     }
     let best = { aire: 0, w: 0, h: 0, x: 0, y: 0 };
     for (let i = 0; i <= N; i++) for (let j = i + 1; j <= N; j++) {
-      const w = Math.min(D[i], D[j]) - Math.max(L[i], L[j]), h2 = (j - i) * dy;
-      if (w > 0 && w * h2 > best.aire) best = { aire: w * h2, w, h: h2, x: Math.max(L[i], L[j]), y: ymin + i * dy };
+      const w = Math.min(D[i], D[j]) - Math.max(L[i], L[j]), h = (j - i) * dy;
+      if (w > 0 && w * h > best.aire) best = { aire: w * h, w, h, x: Math.max(L[i], L[j]), y: ymin + i * dy };
     }
     const back = ([x, y]) => [x * c - y * s, x * s + y * c];
     return { ...best, deg: deg2, pts: [[best.x, best.y], [best.x + best.w, best.y], [best.x + best.w, best.y + best.h], [best.x, best.y + best.h]].map(back) };
@@ -683,8 +683,8 @@ function variantes(p, g) {
     const b = Z[(i + 1) % Z.length];
     return (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= -1e-6 * Math.hypot(b[0] - a[0], b[1] - a[1]);
   });
-  const rect = (w, h2) => [[x0, y0], [x0 + w, y0], [x0 + w, y0 + h2], [x0, y0 + h2]];
-  const tient = (w, h2) => rect(w, h2).every(dedans);
+  const rect = (w, h) => [[x0, y0], [x0 + w, y0], [x0 + w, y0 + h], [x0, y0 + h]];
+  const tient = (w, h) => rect(w, h).every(dedans);
   const prof_max = (w) => {
     if (!tient(w, 0)) return 0;
     let lo2 = 0, hi2 = 2e3;
@@ -770,10 +770,10 @@ function variantes(p, g) {
   if (best[0]) out.push(forme(1, "rectangle en panneaux entiers", `${best[0]} \xD7 ${best[1]} modules de ${fz(mod)} : aucune recoupe, angles droits`, rect(best[0] * mod, best[1] * mod)));
   let bw = 0, bh = 0;
   for (let w = 1; w <= Math.floor(x1 - x0); w++) {
-    const h2 = Math.floor(prof_max(w));
-    if (w * h2 > bw * bh) {
+    const h = Math.floor(prof_max(w));
+    if (w * h > bw * bh) {
       bw = w;
-      bh = h2;
+      bh = h;
     }
   }
   out.push(forme(2, "plus grand rectangle", "le plus grand rectangle qui tient dans la zone", rect(bw, bh)));
@@ -811,7 +811,7 @@ function variantes(p, g) {
     }
     const w10 = Math.floor(lo2);
     out.push(forme(10, `trap\xE8ze plafonn\xE9 \xE0 ${fz(seuil)} m\xB2`, `le trap\xE8ze 9, mur droit recul\xE9 \xE0 ${w10} de large : sous ${fz(seuil)} m\xB2`, trap(w10)));
-    const pivot = (h2) => [Z[0], Z[1], [Z[1][0], Z[1][1] + h2], HG];
+    const pivot = (h) => [Z[0], Z[1], [Z[1][0], Z[1][1] + h], HG];
     lo2 = 0;
     hi2 = HD[1] - Z[1][1];
     for (let k = 0; k < 50; k++) {
@@ -1007,9 +1007,9 @@ function variantes(p, g) {
   }
   return out.sort((a, b) => a.id - b.id);
 }
-function svgHeader(w, h2) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h2}" font-family="system-ui,sans-serif" font-size="13">
-<rect width="${w}" height="${h2}" fill="#fbfbf8"/>
+function svgHeader(w, h) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" font-family="system-ui,sans-serif" font-size="13">
+<rect width="${w}" height="${h}" fill="#fbfbf8"/>
 `;
 }
 function line(x1, y1, x2, y2, stroke = "#333", w = 1, dash = "") {
@@ -1503,7 +1503,7 @@ function facade_svg(p, g, face, openings) {
   const H = Math.max(h1, h2) * scale + 2 * pad;
   const title = `Face ${face.cle} \u2014 ${face.libelle}`;
   const W = Math.max(base_W, tw(title, 15) + 24);
-  const P = (x, h3) => [pad + x * scale, H - pad - h3 * scale];
+  const P = (x, h) => [pad + x * scale, H - pad - h * scale];
   let svg = svgHeader(rnd(W), rnd(H));
   svg += poly([P(0, 0), P(L, 0), P(L, Hm), P(0, Hm)], "#eef2f6", "#2b5d8a", 2);
   for (let x = cover; x < L - 1e-6; x += cover) {
@@ -1633,7 +1633,7 @@ function modele_trapeze(p, v) {
   const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
   const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
   const droite = t.sens === "droite", course = droite ? Wd : D;
-  const h2 = (z) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
+  const h = (z) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
   const porte_h = v.porte && v.porte.hauteur_cm ? +v.porte.hauteur_cm : +(d.porte_hauteur_cm || p.porte.hauteur_cm);
   const faces = q.map((a, i) => {
     const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -1647,7 +1647,7 @@ function modele_trapeze(p, v) {
     const ouvertures = [];
     if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
     for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
-    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h2(a), 1), hauteur_fin_cm: rnd(h2(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
+    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h(a), 1), hauteur_fin_cm: rnd(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
   });
   const sec = d.rehausse_section_mm || p.rehausse.section_mm, section = +sec[1] / 10, stock = +p.rehausse.longueur_stock_cm;
   const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05).map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd(f.hauteur_debut_cm - H, 1), h1: rnd(f.hauteur_fin_cm - H, 1) }));
@@ -1705,7 +1705,7 @@ function modele_trapeze(p, v) {
     // portee = plus longue bande de toit entre deux murs porteurs
     portee_cm: rnd(droite ? Wd : D, 1),
     pente: { pourcent: rnd(100 * c / course, 1), degres: rnd(Math.atan2(c, course) * 180 / Math.PI, 2) },
-    hauteurs_coins_cm: q.map((z) => rnd(h2(z), 1)),
+    hauteurs_coins_cm: q.map((z) => rnd(h(z), 1)),
     faces,
     rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
     toit: {
@@ -1771,7 +1771,7 @@ function budget_modele(p, v, m) {
   const mur_m2 = rnd(m.panneaux_mur_a_commander * mod * H, 2);
   const toit_m2 = rnd(m.toit.panneaux.reduce((s, t) => s + mod * t.longueur_cm / 100, 0), 2);
   const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
-  const angles_h = m.hauteurs_coins_cm.reduce((s, h2) => s + h2, 0) / 100;
+  const angles_h = m.hauteurs_coins_cm.reduce((s, h) => s + h, 0) / 100;
   const egout = new Set(m.toit.gouttiere.troncons.map((t) => t.face));
   const cles_rives = (m.sens === "droite" ? ["A", "B", "C"] : ["D", "G", "C"]).filter((k) => !egout.has(k));
   const rives = m.faces.filter((f) => cles_rives.includes(f.cle)).reduce((s, f) => s + f.longueur_cm, 0) / 100;
@@ -1969,12 +1969,12 @@ function modele_rehausse_svg(m) {
   const W = stock * sx + 2 * pad, H = 70 + R.barres.length * (section * sy + gap) + 30;
   let svg = svgHeader(rnd(W), rnd(H));
   R.barres.forEach((b, k) => {
-    const top = 70 + k * (section * sy + gap), X = (x) => pad + x * sx, Y = (h2) => top + (section - h2) * sy;
+    const top = 70 + k * (section * sy + gap), X = (x) => pad + x * sx, Y = (h) => top + (section - h) * sy;
     svg += text(pad, top - 10, `madrier ${k + 1} \xB7 ${R.section_mm[0]} \xD7 ${R.section_mm[1]} \xB7 ${fz(stock)} cm \xB7 chute ${fz(b.chute_cm)} cm`, "start", "#5a4f3a", 12, "bold");
     svg += poly([[X(0), Y(0)], [X(stock), Y(0)], [X(stock), Y(section)], [X(0), Y(section)]], "#f3ece0", "#b8a888", 1, "4 3");
     for (const t of b.troncons) t.pieces.forEach((pc, j) => {
       const x0 = t.x, pts = j === 0 ? [[x0, 0], [x0 + pc.L, 0], [x0 + pc.L, pc.h1], [x0, pc.h0]] : t.inverse ? [[x0, section], [x0 + pc.L, section], [x0 + pc.L, section - pc.h0], [x0, section - pc.h1]] : [[x0, section], [x0 + pc.L, section], [x0 + pc.L, section - pc.h1], [x0, section - pc.h0]];
-      svg += poly(pts.map(([x, h2]) => [X(x), Y(h2)]), "#d9b98a", "#8a5a2b", 1.5);
+      svg += poly(pts.map(([x, h]) => [X(x), Y(h)]), "#d9b98a", "#8a5a2b", 1.5);
       const cx = X(x0 + pc.L * 0.5), cy = Y(j === 0 ? Math.max(pc.h0, pc.h1) / 3 : section - Math.max(pc.h0, pc.h1) / 3);
       svg += text(cx, cy + 4, `${pc.id} \xB7 face ${pc.face} \xB7 ${fz(pc.L)} \xB7 ${fz(pc.h0)} \u2192 ${fz(pc.h1)}`, "middle", "#5a3a1a", 11, "bold");
     });
@@ -1986,7 +1986,7 @@ function modele_rehausse_svg(m) {
 function modele_facade_svg(m, f) {
   const scale = 1.25, pad = 60, top = 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
   const W = L * scale + 2 * pad + 60, H = Math.max(h0, h1) * scale + 2 * pad + top + 30;
-  const P = (x, h2) => [pad + 30 + x * scale, H - pad - 30 - h2 * scale];
+  const P = (x, h) => [pad + 30 + x * scale, H - pad - 30 - h * scale];
   let svg = svgHeader(rnd(W), rnd(H));
   for (const pn of f.panneaux) {
     svg += poly([P(pn.debut_cm, 0), P(pn.debut_cm + pn.largeur_cm, 0), P(pn.debut_cm + pn.largeur_cm, Hm), P(pn.debut_cm, Hm)], "#eef2f6", "#2b5d8a", 1.5);
@@ -2028,327 +2028,418 @@ function modele_facade_svg(m, f) {
   svg += text(W / 2, 44, `${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(Hm)} \xB7 hauteurs finies aux deux bouts`, "middle", "#888", 11);
   return svg + "</svg>\n";
 }
-
-// site/src/viewer.ts
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-function makeSky() {
-  const c = document.createElement("canvas");
-  c.width = 4;
-  c.height = 256;
-  const ctx = c.getContext("2d");
-  const g = ctx.createLinearGradient(0, 0, 0, 256);
-  g.addColorStop(0, "#5b9bd9");
-  g.addColorStop(0.5, "#9cc4ec");
-  g.addColorStop(1, "#e6eef5");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 4, 256);
-  const tex = new THREE.CanvasTexture(c);
-  if ("colorSpace" in tex) tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-function prismGeo(V, outline, zTop, zBot) {
-  const n = outline.length;
-  const top = outline.map((p) => V(p[0], p[1], zTop));
-  const bot = outline.map((p) => V(p[0], p[1], zBot));
-  const pts = [];
-  for (let i = 1; i < n - 1; i++) pts.push(top[0], top[i], top[i + 1]);
-  for (let i = 1; i < n - 1; i++) pts.push(bot[0], bot[i + 1], bot[i]);
-  for (let i = 0; i < n; i++) {
-    const j = (i + 1) % n;
-    pts.push(top[i], bot[i], bot[j], top[i], bot[j], top[j]);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setFromPoints(pts);
-  g.computeVertexNormals();
-  return g;
-}
-function offsetRect(r, d) {
-  const xs = r.map((p) => p[0]), ys = r.map((p) => p[1]);
-  const x0 = Math.min(...xs) - d, x1 = Math.max(...xs) + d, y0 = Math.min(...ys) - d, y1 = Math.max(...ys) + d;
-  return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
-}
-function addRoofSlab(scene, V, outline, roofZ, thk, mat) {
-  const n = outline.length;
-  const top = outline.map((p) => V(p[0], p[1], roofZ(p[1]) + thk));
-  const bot = outline.map((p) => V(p[0], p[1], roofZ(p[1])));
-  const pts = [];
-  for (let i = 1; i < n - 1; i++) pts.push(top[0], top[i], top[i + 1]);
-  for (let i = 1; i < n - 1; i++) pts.push(bot[0], bot[i + 1], bot[i]);
-  for (let i = 0; i < n; i++) {
-    const j = (i + 1) % n;
-    pts.push(top[i], bot[i], bot[j], top[i], bot[j], top[j]);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setFromPoints(pts);
-  g.computeVertexNormals();
-  const mesh = new THREE.Mesh(g, mat);
-  mesh.castShadow = true;
-  scene.add(mesh);
-}
-function addRoofRibs(parent, V, outline, roofZ, thk, mat) {
-  const xs = outline.map((p) => p[0]), ys = outline.map((p) => p[1]);
-  const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const step = 0.18, ribW = 0.045, eps = 0.016, inset2 = 0.05;
-  const zt = (yy) => roofZ(yy) + thk + eps;
-  const y0 = miny + inset2, y1 = maxy - inset2;
-  const pts = [];
-  for (let x = minx + 0.06; x < maxx - ribW; x += step) {
-    pts.push(
-      V(x, y0, zt(y0)),
-      V(x + ribW, y0, zt(y0)),
-      V(x + ribW, y1, zt(y1)),
-      V(x, y0, zt(y0)),
-      V(x + ribW, y1, zt(y1)),
-      V(x, y1, zt(y1))
-    );
-  }
-  const g = new THREE.BufferGeometry();
-  g.setFromPoints(pts);
-  g.computeVertexNormals();
-  parent.add(new THREE.Mesh(g, mat));
-}
-function addGutter(scene, V, a, b, roofZ, over, mat) {
-  const yb = Math.max(a[1], b[1]) + over * 0.8;
-  const x0 = Math.min(a[0], b[0]), x1 = Math.max(a[0], b[0]);
-  const zc = roofZ(Math.max(a[1], b[1])) - 0.03;
-  const gutter = new THREE.Mesh(new THREE.BoxGeometry(x1 - x0 + 0.12, 0.06, 0.08), mat);
-  gutter.position.copy(V((x0 + x1) / 2, yb, zc));
-  gutter.castShadow = true;
-  scene.add(gutter);
-  const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, Math.max(zc, 0.1), 14), mat);
-  pipe.position.copy(V(a[0], yb, zc / 2));
-  scene.add(pipe);
-}
-function addWall(scene, V, a, b, ha, hb, holes, mat) {
-  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
-  const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-  const P = (s, h2) => V(a[0] + ux * s, a[1] + uy * s, h2);
-  const topAt = (s) => ha + (hb - ha) * (s / len);
-  const pts = [];
-  const quad = (p0, p1, p2, p3) => pts.push(p0, p1, p2, p0, p2, p3);
-  const sorted = holes.slice().sort((A, B) => A.s0 - B.s0);
-  let cur = 0;
-  for (const h2 of sorted) {
-    if (h2.s0 > cur + 1e-4) quad(P(cur, 0), P(h2.s0, 0), P(h2.s0, topAt(h2.s0)), P(cur, topAt(cur)));
-    if (h2.y0 > 1e-4) quad(P(h2.s0, 0), P(h2.s1, 0), P(h2.s1, h2.y0), P(h2.s0, h2.y0));
-    quad(P(h2.s0, h2.y1), P(h2.s1, h2.y1), P(h2.s1, topAt(h2.s1)), P(h2.s0, topAt(h2.s0)));
-    cur = h2.s1;
-  }
-  if (len > cur + 1e-4) quad(P(cur, 0), P(len, 0), P(len, topAt(len)), P(cur, topAt(cur)));
-  const g = new THREE.BufferGeometry();
-  g.setFromPoints(pts);
-  g.computeVertexNormals();
-  const mesh = new THREE.Mesh(g, mat);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-}
-function rectMinus(r, h2) {
-  if (h2.s1 <= r.s0 || h2.s0 >= r.s1 || h2.y1 <= r.y0 || h2.y0 >= r.y1) return [r];
-  const out = [];
-  if (h2.s0 > r.s0) out.push({ s0: r.s0, s1: Math.min(h2.s0, r.s1), y0: r.y0, y1: r.y1 });
-  if (h2.s1 < r.s1) out.push({ s0: Math.max(h2.s1, r.s0), s1: r.s1, y0: r.y0, y1: r.y1 });
-  const ms0 = Math.max(r.s0, h2.s0), ms1 = Math.min(r.s1, h2.s1);
-  if (h2.y0 > r.y0) out.push({ s0: ms0, s1: ms1, y0: r.y0, y1: Math.min(h2.y0, r.y1) });
-  if (h2.y1 < r.y1) out.push({ s0: ms0, s1: ms1, y0: Math.max(h2.y1, r.y0), y1: r.y1 });
-  return out.filter((q) => q.s1 - q.s0 > 1e-4 && q.y1 - q.y0 > 1e-4);
-}
-var labelCache = {};
-function labelTexture(txt) {
-  if (labelCache[txt]) return labelCache[txt];
-  const c = document.createElement("canvas");
-  c.width = 256;
-  c.height = 256;
-  const ctx = c.getContext("2d");
-  ctx.clearRect(0, 0, 256, 256);
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.beginPath();
-  ctx.arc(128, 128, 112, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#1f2933";
-  ctx.font = `bold ${txt.length > 2 ? 110 : 140}px system-ui, sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(txt, 128, 136);
-  const tex = new THREE.CanvasTexture(c);
-  if ("colorSpace" in tex) tex.colorSpace = THREE.SRGBColorSpace;
-  return labelCache[txt] = tex;
-}
-function addLabel(scene, pos, size, txt, rotY, rotX = 0) {
-  const mat = new THREE.MeshBasicMaterial({ map: labelTexture(txt), transparent: true, depthWrite: false, side: THREE.DoubleSide });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
-  mesh.position.copy(pos);
-  mesh.rotation.set(rotX, rotY, 0, "YXZ");
-  scene.add(mesh);
-}
-function addPanels(scene, V, a, b, ha, hb, wallH, panels, pieces, holes, mat, rehMat) {
-  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
-  const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-  const nx = uy, ny = -ux;
-  const off = 4e-3, ins = 9e-3;
-  const P = (s, h2) => V(a[0] + ux * s + nx * off, a[1] + uy * s + ny * off, h2);
-  const topAt = (s) => ha + (hb - ha) * (s / len);
-  const rotY = Math.atan2(nx, -ny);
-  const bigHoles = holes.map((h2) => ({ s0: h2.s0 - ins, s1: h2.s1 + ins, y0: h2.y0 - ins, y1: h2.y1 + ins }));
-  const quads = (rects, m) => {
-    const pts = [];
-    for (const r of rects) pts.push(P(r.s0, r.y0), P(r.s1, r.y0), P(r.s1, r.y1), P(r.s0, r.y0), P(r.s1, r.y1), P(r.s0, r.y1));
-    if (!pts.length) return;
-    const g = new THREE.BufferGeometry();
-    g.setFromPoints(pts);
-    g.computeVertexNormals();
-    scene.add(new THREE.Mesh(g, m));
+var version_principale = (p) => {
+  const m = /^abri_v(\d+)$/.exec(p.abri_principal || "");
+  return m && p[p.abri_principal] ? +m[1] : 0;
+};
+function params_v2(p, cle = "abri_v2") {
+  if (!p[cle] || !p[cle].params) return null;
+  const fusion = (a, b) => {
+    if (Array.isArray(b) || b === null || typeof b !== "object") return JSON.parse(JSON.stringify(b));
+    const out = a && typeof a === "object" && !Array.isArray(a) ? { ...a } : {};
+    for (const k of Object.keys(b)) out[k] = fusion(out[k], b[k]);
+    return out;
   };
-  for (const pn of panels) {
-    let rects = [{ s0: pn.s0_m + ins, s1: pn.s1_m - ins, y0: ins, y1: wallH - ins }];
-    for (const h2 of bigHoles) rects = rects.flatMap((r) => rectMinus(r, h2));
-    quads(rects, mat);
-    const w = pn.s1_m - pn.s0_m, cs = (pn.s0_m + pn.s1_m) / 2;
-    const free = holes.filter((h2) => h2.s0 < pn.s1_m && h2.s1 > pn.s0_m);
-    let ch = wallH * 0.72;
-    if (free.length) ch = Math.min(wallH - 0.3, Math.max(...free.map((h2) => h2.y1)) + 0.3);
-    addLabel(scene, P(cs, ch).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.5, w * 0.7), pn.label, rotY);
-  }
-  for (const pc of pieces) {
-    if (pc.kind === "bandeau") {
-      const top = Math.max(ha, hb);
-      quads([{ s0: ins, s1: len - ins, y0: wallH + ins, y1: top - ins }], rehMat);
-      addLabel(scene, P(len / 2, (wallH + top) / 2).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.2, (top - wallH) * 0.85), pc.label, rotY);
-    } else {
-      const tallAtEnd = hb > ha;
-      const sT = tallAtEnd ? len - ins : ins, sS = tallAtEnd ? ins : len - ins;
-      const top = topAt(tallAtEnd ? len : 0) - ins;
-      const pts = tallAtEnd ? [P(sS, wallH + ins), P(sT, wallH + ins), P(sT, top)] : [P(sT, wallH + ins), P(sS, wallH + ins), P(sT, top)];
-      const g = new THREE.BufferGeometry();
-      g.setFromPoints(pts);
-      g.computeVertexNormals();
-      scene.add(new THREE.Mesh(g, rehMat));
-      const sl = tallAtEnd ? len * 0.8 : len * 0.2;
-      addLabel(scene, P(sl, (wallH + topAt(sl)) / 2).add(new THREE.Vector3(nx * 4e-3, 0, -ny * 4e-3)), Math.min(0.17, (topAt(sl) - wallH) * 0.85), pc.label, rotY);
-    }
-  }
+  const depart = p[cle].herite && p[cle].herite !== cle ? params_v2(p, p[cle].herite) : null;
+  return fusion(depart || JSON.parse(JSON.stringify(p)), p[cle].params);
 }
-function addRoofPanels(scene, V, outline, roofZ, thk, slope, panels, mat) {
-  const ys = outline.map((p) => p[1]);
-  const miny = Math.min(...ys), maxy = Math.max(...ys);
-  const ins = 0.012, z = (yy) => roofZ(yy) + thk + 3e-3;
-  for (const pn of panels) {
-    const x0 = pn.x0_m + ins, x1 = pn.x1_m - ins, y0 = miny + ins, y1 = maxy - ins;
-    const g = new THREE.BufferGeometry();
-    g.setFromPoints([V(x0, y0, z(y0)), V(x1, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y0, z(y0)), V(x1, y1, z(y1)), V(x0, y1, z(y1))]);
-    g.computeVertexNormals();
-    scene.add(new THREE.Mesh(g, mat));
-    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-    addLabel(scene, V(cx, cy, roofZ(cy) + thk + 0.03), Math.min(0.5, (x1 - x0) * 0.7), pn.label, 0, -Math.PI / 2 - Math.atan(slope));
-  }
+function ou_descente(m) {
+  const xs = m.faces.flatMap((f) => [f.de[0], f.a[0]]), ys = m.faces.flatMap((f) => [f.de[1], f.a[1]]);
+  const [x, y] = m.toit.gouttiere.descente, mx = (Math.min(...xs) + Math.max(...xs)) / 2, y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const cote = x > mx ? "droit" : "gauche";
+  if (y < y0 + (y1 - y0) * 0.2) return `devant \xE0 ${cote === "droit" ? "droite" : "gauche"}, c\xF4t\xE9 jardin`;
+  return y > y0 + (y1 - y0) * 0.85 ? `au coin arri\xE8re ${cote}` : `\xE0 l'arri\xE8re du mur ${cote}, \xE0 l'entr\xE9e du passage`;
 }
-function addGlass(scene, V, a, b, o) {
-  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
-  const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-  const P = (s, h2) => V(a[0] + ux * s, a[1] + uy * s, h2);
-  const glass = new THREE.MeshPhysicalMaterial({
-    color: 12575727,
-    transparent: true,
-    opacity: 0.34,
-    roughness: 0.05,
-    transmission: 0.6,
-    side: THREE.DoubleSide
-  });
-  if (o.type !== "porte") {
-    const s0 = o.offset_m, s1 = o.offset_m + o.width_m, y0 = o.sill_m, y1 = o.sill_m + o.height_m;
-    const g = new THREE.BufferGeometry();
-    g.setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y0), P(s1, y1), P(s0, y1)]);
-    g.computeVertexNormals();
-    scene.add(new THREE.Mesh(g, glass));
-    scene.add(new THREE.LineLoop(
-      new THREE.BufferGeometry().setFromPoints([P(s0, y0), P(s1, y0), P(s1, y1), P(s0, y1)]),
-      new THREE.LineBasicMaterial({ color: 5595755 })
-    ));
-    if (o.ouvrant) {
-      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(s0, y0), P((s0 + s1) / 2, y1), P(s1, y0)]), new THREE.LineBasicMaterial({ color: 5595755 })));
-    }
+function injecteur(v, m, base) {
+  const fr2 = (x) => String(x).replace(".", ",");
+  const po = v.porte, derriere = v.passages.find((q) => q.cote === "arriere_droite");
+  const opts = { base };
+  const valeurs = {
+    arriere_m2: v.arriere ? fr2(v.arriere.aire_m2) : "?",
+    arriere_profondeur_cm: v.arriere ? fz(v.arriere.profondeur_max_cm) : "?",
+    passage_cm: fz(Math.floor(derriere.cm)),
+    porte_cm: fz(po.largeur_cm),
+    murs_m2: fr2(v.aire_m2),
+    interieur_m2: fr2(v.aire_interieure_m2),
+    sol_libre_m2: fr2(v.sol_libre_m2),
+    gauche_cm: fz(Math.min(...v.polygone.map((z) => z[0]))),
+    debord_droite_cm: fz(m.toit.debord_cm.droite),
+    debord_avant_cm: fz(m.toit.debord_cm.avant),
+    debord_arriere_cm: fz(m.toit.debord_cm.arriere)
+  };
+  if (opts.base) {
+    const vb = opts.base.variantes.find((x) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q) => q.cote === "arriere_droite");
+    Object.assign(valeurs, {
+      base_murs_m2: fr2(vb.aire_m2),
+      base_interieur_m2: fr2(vb.aire_interieure_m2),
+      base_arriere_m2: vb.arriere ? fr2(vb.arriere.aire_m2) : "?",
+      base_passage_cm: fz(Math.floor(pb.cm)),
+      gain_interieur_m2: fr2(rnd(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
+      gain_sol_libre_m2: fr2(rnd(v.sol_libre_m2 - vb.sol_libre_m2, 2)),
+      ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
+      base_debord_droite_cm: fz(mb.toit.debord_cm.droite),
+      gouttiere_cm: fz(m.toit.gouttiere.longueur_cm),
+      pente_pourcent: fr2(m.pente.pourcent),
+      base_pente_pourcent: fr2(mb.pente.pourcent),
+      portee_m: fr2(rnd(m.portee_cm / 100, 1)),
+      base_portee_m: fr2(rnd(mb.portee_cm / 100, 1)),
+      descente: ou_descente(m),
+      base_descente: ou_descente(mb),
+      panneaux_toit: String(m.toit.panneaux.length),
+      base_panneaux_toit: String(mb.toit.panneaux.length),
+      hauteur_facade_cm: fr2(m.hauteurs_coins_cm[0]),
+      madriers: String(m.rehausse.nb_madriers),
+      base_madriers: String(mb.rehausse.nb_madriers)
+    });
+  }
+  const injecte = (s) => s.replace(/\{(\w+)\}/g, (tout, k) => k in valeurs ? valeurs[k] : tout);
+  return injecte;
+}
+function textes_variante(bloc, core, base) {
+  const v = core.variantes.find((x) => x.id === 13), injecte = injecteur(v, core.modele, base);
+  const liste2 = (k) => (bloc[k] || []).map(injecte);
+  return { atouts: liste2("atouts"), pertes: liste2("pertes"), notes: liste2("notes"), hors_modele: liste2("hors_modele") };
+}
+
+// site/src/abri_page.ts
+var fr = (x) => String(x).replace(".", ",");
+var fz2 = (x) => fr(Math.round(x * 10) / 10);
+var eur = (x) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} \u20AC`;
+var echappe = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function md_en_ligne(s) {
+  return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+function calcule_abri(p) {
+  const version = version_principale(p), cle = p.abri_principal, bloc = version ? p[cle] : null;
+  const pp = version ? params_v2(p, cle) : p, core = buildCore(pp);
+  const v = core.variantes.find((x) => x.id === 13), m = core.modele;
+  let textes = null;
+  if (bloc && v && m) {
+    const depuis = +bloc.compare_a || 1, base = depuis > 1 && p[`abri_v${depuis}`] ? buildCore(params_v2(p, `abri_v${depuis}`)) : buildCore(p);
+    textes = textes_variante(bloc, core, base);
+  }
+  return { p, pp, core, v, m, version, bloc, textes };
+}
+var el = (id) => document.getElementById(id);
+var texte = (id, s) => {
+  const e = el(id);
+  if (e) e.textContent = s;
+};
+var html = (id, s) => {
+  const e = el(id);
+  if (e) e.innerHTML = s;
+};
+var table = (id, tetes, lignes, pied = null) => {
+  html(id, `<thead><tr>${tetes.map((t) => `<th>${t}</th>`).join("")}</tr></thead><tbody>${lignes.map((l) => `<tr>${l.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>${pied ? `<tfoot><tr>${pied.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}`);
+};
+var liste = (id, items) => html(id, items.map((s) => `<li>${s}</li>`).join(""));
+function rend_abri(a) {
+  const { pp, core, v, m } = a;
+  if (!v || !m) {
+    html("kpis", '<p class="viewer-fallback">Aucun abri retenu dans params.json.</p>');
     return;
   }
-  const hinge = new THREE.Group();
-  hinge.position.copy(P(o.offset_m, 0));
-  const dir = new THREE.Vector3().subVectors(P(o.offset_m + o.width_m, 0), P(o.offset_m, 0));
-  dir.y = 0;
-  dir.normalize();
-  hinge.rotation.y = -Math.atan2(dir.z, dir.x);
-  const lg = new THREE.PlaneGeometry(o.width_m, o.height_m);
-  lg.translate(o.width_m / 2, o.height_m / 2, 0);
-  const leaf = new THREE.Mesh(lg, glass);
-  leaf.rotation.y = -0.6;
-  hinge.add(leaf);
-  scene.add(hinge);
+  const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
+  const passage = v.passages.find((q) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length;
+  const gauche = Math.min(...v.polygone.map((z) => z[0])), avant = Math.min(...v.polygone.map((z) => z[1]));
+  const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z) => z[0]));
+  const sans_formalite = v.aire_m2 <= seuil;
+  const nom_face = (f) => f.cle === "A" ? "fa\xE7ade" : f.nom;
+  texte("sous-titre", `${n} murs en panneaux sandwich ${fz2(ep)} cm autoportants \xB7 ${fr(v.aire_m2)} m\xB2 de murs, ${fr(v.aire_interieure_m2)} m\xB2 int\xE9rieur \xB7 toit vers ${m.sens === "droite" ? "le jardin" : "le fond"} \xB7 sur la dalle existante`);
+  html("badges", [sans_formalite ? `Sans formalit\xE9 (\u2264 ${fz2(seuil)} m\xB2)` : "D\xE9claration pr\xE9alable", `Passage arri\xE8re ${fz2(Math.floor(passage.cm))} cm`, `${m.panneaux_mur_a_commander} panneaux de mur`, "Param\xE9trique"].map((s) => `<span class="badge">${s}</span>`).join(""));
+  html("kpis", [[`${fr(v.aire_interieure_m2)} m\xB2`, "int\xE9rieur"], [`${fr(v.aire_m2)} m\xB2`, "murs (emprise)"], [`${fz2(passage.cm)} cm`, "passage derri\xE8re"], [eur(B.total_eur), "budget indicatif HT"]].map(([val, lab]) => `<div class="card kpi"><div class="v">${val}</div><div class="l">${lab}</div></div>`).join(""));
+  table(
+    "murs",
+    ["mur", "longueur ext.", "longueur int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
+    m.faces.map((f, i) => [`<b>${f.cle}</b> \xB7 ${nom_face(f)}`, `${fr(f.longueur_cm)} cm`, `${fr(v.cotes_interieures_cm[i])} cm`, `${fr(f.hauteur_debut_cm)} \u2192 ${fr(f.hauteur_fin_cm)} cm`, f.panneaux.map((pn) => `${pn.id} ${fz2(pn.largeur_cm)}`).join(" \xB7 "), `${fr(m.angles_deg[i])}\xB0`])
+  );
+  liste("implantation-points", [
+    `L'abri est pos\xE9 \xE0 <b>${fz2(gauche)} cm</b> du bord gauche de la dalle (mur de propri\xE9t\xE9) et \xE0 <b>${fz2(avant)} cm</b> du bord avant.`,
+    `\xC0 droite il reste <b>${fz2(droite_libre)} cm</b> de dalle : le chemin vers la porte et vers l'arri\xE8re.`,
+    `Derri\xE8re, le passage le long du grand pan fait <b>${fr(passage.cm)} cm</b> au plus \xE9troit.`,
+    v.arriere ? `<b>${fr(v.arriere.aire_m2)} m\xB2</b> de dalle restent cach\xE9s derri\xE8re l'abri (hachures vertes), jusqu'\xE0 ${fz2(v.arriere.profondeur_max_cm)} cm de profondeur : le rangement des outils de jardin.` : "",
+    sans_formalite ? `${fr(v.aire_m2)} m\xB2 de murs : au seuil de ${fz2(seuil)} m\xB2, aucune formalit\xE9 a priori (\xE0 confirmer en mairie, et le PLU s'applique quand m\xEAme).` : `${fr(v.aire_m2)} m\xB2 de murs : au-dessus de ${fz2(seuil)} m\xB2, d\xE9claration pr\xE9alable.`
+  ].filter(Boolean));
+  const plans = [["modele-implantation", "implantation"], ["modele-sol", "sol"], ["modele-toit", "toit"], ["modele-rehausse", "rehausse"]];
+  for (const [nom, id] of plans) html(`plan-${id}`, core.svg[nom] || "");
+  html("facades", m.faces.map((f, i) => `<figure><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div><figcaption>Face ${f.cle} \xB7 ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</figcaption></figure>`).join(""));
+  table(
+    "debit-murs",
+    ["pi\xE8ce", "largeur", "provenance", "d\xE9coupe"],
+    m.faces.flatMap((f) => f.panneaux.map((pn) => [`<b>${pn.id}</b>`, `${fr(pn.largeur_cm)} cm`, pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"]))
+  );
+  texte("debit-murs-total", `${m.panneaux_mur_a_commander} panneaux de mur de ${fz2(mod)} \xD7 ${fz2(m.hauteur_mur_cm)} cm \xE0 commander (les bandes \xE9troites sortent des chutes).`);
+  table(
+    "debit-toit",
+    ["pi\xE8ce", "largeur", "longueur \xE0 commander", "coupe"],
+    m.toit.panneaux.map((t) => [`<b>${t.id}</b>`, `${fr(t.largeur_cm)} cm`, `${fr(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier, coupes droites"}`])
+  );
+  table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [`<b>${r.id}</b>`, r.face, `${fr(r.L)} cm`, `${fr(r.h0)} \u2192 ${fr(r.h1)} cm`]));
+  texte("debit-rehausse-total", `${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" \xD7 ")} de ${fz2(m.rehausse.longueur_stock_cm)} cm. Deux pi\xE8ces sur un m\xEAme tron\xE7on = une seule coupe en biais.`);
+  const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100, G = m.toit.gouttiere;
+  liste("debit-divers", [
+    `Goutti\xE8re <b>${fr(G.longueur_cm)} cm</b> (${G.troncons.map((t) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}), descente ${ou_descente(m)}.`,
+    `Rail de pied sur tout le p\xE9rim\xE8tre : <b>${fr(Math.round(perim * 100) / 100)} m</b>, sur bande EPDM.`,
+    `${n} profils d'angle (ext\xE9rieur + int\xE9rieur) : ${m.faces.map((f, i) => `${m.faces[(i + n - 1) % n].cle}/${f.cle} ${fr(m.angles_deg[i])}\xB0`).join(", ")}. Les angles qui ne sont pas droits se commandent pli\xE9s sur mesure.`
+  ]);
+  const po = v.porte;
+  table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
+    [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${fz2(po.largeur_cm)} \xD7 ${fz2(po.hauteur_cm)} cm (cadre ${fz2(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz2(po.hauteur_cm + po.chambranle_cm)})`, `face ${m.faces[po.cote].cle}, de ${fr(po.debut_cm)} \xE0 ${fr(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} cm depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
+    ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, `${fz2(f.largeur_cm)} \xD7 ${fz2(f.hauteur_cm)} cm`, `face A, de ${fr(f.debut_cm)} \xE0 ${fr(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} cm depuis le coin gauche`, `all\xE8ge ${fz2(f.allege_cm)} cm, dans un seul panneau`])
+  ]);
+  table("amenagement", ["\xE9l\xE9ment", "taille", "place"], [
+    ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, `${fz2(b.profondeur_cm)} \xD7 ${fr(b.longueur_cm)} cm`, `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
+    ...(v.sieges || []).map((st) => [st.type, `${fz2(st.largeur_cm)} \xD7 ${fz2(st.profondeur_cm)} cm`, `devant le bureau ${st.contre === "avant" ? "de fa\xE7ade" : st.contre}`]),
+    ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, `${fz2(v.lit_pliant.largeur_cm)} \xD7 ${fz2(v.lit_pliant.longueur_cm)} cm`, v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
+  ]);
+  texte("sol-libre", `Sol libre hors bureaux : ${fr(v.sol_libre_m2)} m\xB2.`);
+  table(
+    "budget",
+    ["poste", "quantit\xE9", "prix unitaire", "montant"],
+    B.lignes.map((l) => [l.poste, `${fr(l.qte)} ${l.unite}`, eur(l.pu_eur), eur(l.montant_eur)]),
+    ["<b>total</b>", `coque ${eur(B.coque_eur)} \xB7 am\xE9nagement ${eur(B.amenagement_eur)}`, "", `<b>${eur(B.total_eur)}</b>`]
+  );
+  texte("budget-fourchette", `${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)} HT (\xB1${B.incertitude_pct} %), fourniture seule, prix m\xE9dians \xE0 confirmer par devis.`);
+  const F = Object.fromEntries(m.faces.map((f) => [f.cle, f])), bande = (f) => f.panneaux.find((pn) => pn.largeur_cm < mod - 0.05);
+  const obtus = m.angles_deg.filter((g) => Math.abs(g - 90) > 0.5);
+  liste("etapes", [
+    `<b>Tracer sur la dalle.</b> Reporter les ${n} murs : ${m.faces.map((f) => `${f.cle} ${fr(f.longueur_cm)}`).join(", ")} cm, \xE0 ${fz2(gauche)} cm du bord gauche et ${fz2(avant)} cm du bord avant. V\xE9rifier les angles (${m.angles_deg.map((g) => fr(g) + "\xB0").join(", ")}) et les diagonales avant de percer.`,
+    `<b>Rail de pied.</b> ${fr(Math.round(perim * 100) / 100)} m de rail sur bande EPDM, chevill\xE9 tous les 50 cm. Il sur\xE9l\xE8ve les panneaux de la dalle.`,
+    F.G ? `<b>Mur gauche d'abord, assembl\xE9 \xE0 plat.</b> ${F.G.panneaux.length} panneaux (${F.G.panneaux.map((pn) => fz2(pn.largeur_cm)).join(" + ")} cm) et leur rehausse, viss\xE9s au sol puis lev\xE9s d'un bloc : \xE0 ${fz2(gauche)} cm du mur de propri\xE9t\xE9 aucune visseuse ne passe.${bande(F.G) ? ` La bande de ${fz2(bande(F.G).largeur_cm)} cm est c\xF4t\xE9 fa\xE7ade, la seule extr\xE9mit\xE9 qu'on atteint.` : ""}` : "",
+    F.B ? `<b>Mur du fond${F.C ? " et pan en biais" : ""}.</b> ${F.B.panneaux.map((pn) => pn.id).join(", ")}${F.C ? ` puis ${F.C.panneaux.map((pn) => `${pn.id} (${fz2(pn.largeur_cm)})`).join(", ")}` : ""}. Les angles de ${[...new Set(obtus.map((g) => fr(g) + "\xB0"))].join(" et ")} re\xE7oivent des profils pli\xE9s sur mesure, \xE0 commander avec les panneaux.` : "",
+    `<b>Fa\xE7ade.</b> ${F.A.panneaux.length} panneaux ; d\xE9couper les ${v.fenetres.length} fen\xEAtres (${v.fenetres.map((f) => `${fz2(f.largeur_cm)} \xD7 ${fz2(f.hauteur_cm)}, all\xE8ge ${fz2(f.allege_cm)}`).join(" ; ")}) \xE0 plat avant la pose, une par panneau, jamais sur un joint.`,
+    `<b>Mur de la porte.</b> ${F[m.faces[po.cote].cle].panneaux.map((pn) => `${pn.id} ${fz2(pn.largeur_cm)}`).join(", ")} cm. Le cadre bois de ${fz2(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz2(po.hauteur_cm + po.chambranle_cm)} cm tient dans le module du fond et sert de montant d'angle.`,
+    `<b>Rehausse bois.</b> ${m.rehausse.pieces.length} pi\xE8ces (${m.rehausse.pieces.map((r) => `${r.id} sur ${r.face}`).join(", ")}) tir\xE9es de ${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" \xD7 ")}. Pos\xE9e sur butyle et viss\xE9e en t\xEAte des panneaux, elle fait lisse haute : c'est elle qui tient le toit.`,
+    `<b>Toit.</b> ${m.toit.panneaux.length} panneaux (${m.toit.panneaux.map((t) => `${t.id} ${fz2(t.largeur_cm)} \xD7 ${fz2(t.longueur_cm)}`).join(", ")} cm), nervures dans le sens de la pente (${fr(m.pente.pourcent)} %, vers ${m.sens === "droite" ? "la droite" : "le fond"}). ${m.toit.panneaux.filter((t) => t.biais).length} portent un bord en biais \xE0 couper au sol. Rives ferm\xE9es par une bavette.`,
+    `<b>Goutti\xE8re.</b> ${fr(G.longueur_cm)} cm en ${G.troncons.length} tron\xE7on(s) sur ${G.troncons.map((t) => t.face).join(" et ")}, descente ${ou_descente(m)}.`,
+    `<b>Porte, fen\xEAtres, \xE9tanch\xE9it\xE9.</b> Bande comprim\xE9e au pourtour des ouvertures et au pied, couvre-joints d'angle. Fermer le vide de ${fz2(gauche)} cm contre le mur de propri\xE9t\xE9 : bavette devant, grillage au fond.`,
+    `<b>Int\xE9rieur.</b> Plancher isol\xE9, multiprise et \xE9clairage sur le c\xE2ble d\xE9j\xE0 pr\xE9sent, bureaux sur pieds (les parements de 0,5 mm ne portent pas une charge suspendue), chauffage, stores sur les fen\xEAtres de fa\xE7ade.`
+  ].filter(Boolean));
+  const T = a.textes;
+  const bloc = (titre, items, ordonne = false) => items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "";
+  html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle co\xFBte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
 }
-function populate(group2, m) {
-  const fp = m.footprint, hs = m.heights, n = fp.length;
-  const cx = fp.reduce((s, p) => s + p[0], 0) / n;
-  const cy = fp.reduce((s, p) => s + p[1], 0) / n;
-  const V = (x, y, z) => new THREE.Vector3(x - cx, z, cy - y);
-  const roofZ = (ym) => m.roof_front_m - (m.roof_slope || 0) * ym;
-  const panelMat = new THREE.MeshStandardMaterial({ color: 15659250, roughness: 0.5, metalness: 0.15, side: THREE.DoubleSide });
-  const rehMat = new THREE.MeshStandardMaterial({ color: m.rehausse_materiau === "bois" ? 12093786 : 15853256, roughness: m.rehausse_materiau === "bois" ? 0.85 : 0.5, metalness: 0.05, side: THREE.DoubleSide });
-  const floorMat = new THREE.MeshStandardMaterial({ color: 13215612, roughness: 0.7, side: THREE.DoubleSide });
-  const baseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
-  const roofMat = new THREE.MeshStandardMaterial({ color: 10135476, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide });
-  const roofBaseMat = new THREE.MeshStandardMaterial({ color: 4870232, roughness: 0.8, side: THREE.DoubleSide });
-  const ribMat = new THREE.MeshStandardMaterial({ color: 8293014, roughness: 0.55, metalness: 0.3, side: THREE.DoubleSide });
-  const concreteMat = new THREE.MeshStandardMaterial({ color: 15394783, roughness: 0.95, side: THREE.DoubleSide });
-  const railMat = new THREE.MeshStandardMaterial({ color: 7041399, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
-  const metalMat = new THREE.MeshStandardMaterial({ color: 11844288, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide });
-  group2.add(new THREE.Mesh(prismGeo(V, m.slab || fp, 0, -0.14), concreteMat));
-  const wallMat = new THREE.MeshStandardMaterial({ color: 12168087, roughness: 0.95, side: THREE.DoubleSide });
-  for (const w of m.walls || []) {
-    const len = Math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1]) || 1;
-    const nx = (w.b[1] - w.a[1]) / len * w.ep_m, ny = -(w.b[0] - w.a[0]) / len * w.ep_m;
-    const wall = new THREE.Mesh(prismGeo(V, [w.a, w.b, [w.b[0] + nx, w.b[1] + ny], [w.a[0] + nx, w.a[1] + ny]], w.h_m, -0.14), wallMat);
-    wall.castShadow = true;
-    wall.receiveShadow = true;
-    group2.add(wall);
-  }
-  group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, 5e-3), 0.06, 1e-3), railMat));
-  if (m.floor_m > 0) group2.add(new THREE.Mesh(prismGeo(V, offsetRect(fp, -(m.thickness_m || 0.06)), m.floor_m + 5e-3, 2e-3), floorMat));
-  const openings = m.openings || [];
-  for (let i = 0; i < n; i++) {
-    const a = fp[i], b = fp[(i + 1) % n], ha = hs[i], hb = hs[(i + 1) % n];
-    const holes = openings.filter((o) => o.face_index === i).map((o) => ({
-      s0: o.offset_m,
-      s1: o.offset_m + o.width_m,
-      y0: o.sill_m,
-      y1: o.sill_m + o.height_m
-    }));
-    addWall(group2, V, a, b, ha, hb, holes, baseMat);
-    addPanels(
-      group2,
-      V,
-      a,
-      b,
-      ha,
-      hb,
-      m.wall_height_m,
-      (m.panels || []).filter((q) => q.face_index === i),
-      (m.rehausse_pieces || []).filter((q) => q.face_index === i),
-      holes,
-      panelMat,
-      rehMat
-    );
-  }
-  for (const o of openings) addGlass(group2, V, fp[o.face_index], fp[(o.face_index + 1) % n], o);
-  const outline = m.roof_outline || offsetRect(fp, 0.15);
-  addRoofSlab(group2, V, outline, roofZ, m.thickness_m, roofBaseMat);
-  addRoofPanels(group2, V, outline, roofZ, m.thickness_m, m.roof_slope || 0, m.roof_panels || [], roofMat);
-  addRoofRibs(group2, V, outline, roofZ, m.thickness_m, ribMat);
-  const gi = m.gutter_face_index == null ? 2 : m.gutter_face_index;
-  addGutter(group2, V, fp[gi], fp[(gi + 1) % n], roofZ, 0.2, metalMat);
+
+// site/src/viewer_abri.ts
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873 };
+function etiquette(txt) {
+  if (typeof document === "undefined") return null;
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 128;
+  const x = c.getContext("2d");
+  if (!x) return null;
+  x.font = "bold 84px system-ui, sans-serif";
+  x.textAlign = "center";
+  x.textBaseline = "middle";
+  x.lineWidth = 10;
+  x.strokeStyle = "rgba(255,255,255,.9)";
+  x.strokeText(txt, 128, 68);
+  x.fillStyle = "#2b3a47";
+  x.fillText(txt, 128, 68);
+  const t = new THREE.CanvasTexture(c);
+  if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
 }
-function createViewer(container, model0) {
+function peuple_abri(abri, data, visible = {}) {
+  const groupes = {};
+  const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
+  const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
+  const W = (x, y, h) => new THREE.Vector3((x - cx) / 100, h / 100, -(y - cy) / 100);
+  const groupe = (nom) => {
+    const gr = new THREE.Group();
+    groupes[nom] = gr;
+    gr.visible = visible[nom] !== false;
+    abri.add(gr);
+    return gr;
+  };
+  const ombre = (mesh) => {
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  };
+  const prisme = (contour, bas, haut) => {
+    const n = contour.length, T2 = contour.map((z) => W(z[0], z[1], haut(z))), B = contour.map((z) => W(z[0], z[1], bas(z))), pts = [];
+    for (let i = 1; i < n - 1; i++) {
+      pts.push(T2[0], T2[i], T2[i + 1]);
+      pts.push(B[0], B[i + 1], B[i]);
+    }
+    for (let i = 0; i < n; i++) {
+      const j = (i + 1) % n;
+      pts.push(T2[i], B[i], B[j], T2[i], B[j], T2[j]);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setFromPoints(pts);
+    geo.computeVertexNormals();
+    return geo;
+  };
+  const plat = (h) => () => h;
+  abri.add(ombre(new THREE.Mesh(prisme(data.dalle, plat(-14), plat(0)), mat(COUL.dalle, { roughness: 0.95 }))));
+  for (const w of data.murs_propriete) {
+    const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, nx = (w.a[1] - w.de[1]) / l * w.epaisseur_cm, ny = -(w.a[0] - w.de[0]) / l * w.epaisseur_cm;
+    abri.add(ombre(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(-14), plat(w.hauteur_cm)), mat(COUL.propriete, { roughness: 0.95 }))));
+  }
+  if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
+  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.1, roughness: 0.6 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois);
+  const etiq = groupe("etiquettes");
+  for (const f of data.murs) {
+    const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
+    const base = new THREE.Matrix4().makeBasis(new THREE.Vector3(ux, 0, -uy), new THREE.Vector3(0, 1, 0), new THREE.Vector3(uy, 0, ux));
+    base.setPosition(W(f.de[0], f.de[1], 0));
+    const pose = (mesh, parent = abri) => {
+      mesh.applyMatrix4(base);
+      parent.add(mesh);
+      return mesh;
+    };
+    const boite = (s0, s1, h0, h1, z0, z1, m) => {
+      const geo = new THREE.BoxGeometry((s1 - s0) / 100, (h1 - h0) / 100, (z1 - z0) / 100);
+      geo.translate((s0 + s1) / 200, (h0 + h1) / 200, (z0 + z1) / 200);
+      return ombre(new THREE.Mesh(geo, m));
+    };
+    const forme = new THREE.Shape();
+    forme.moveTo(0, 0);
+    forme.lineTo(L / 100, 0);
+    forme.lineTo(L / 100, f.hauteur_mur_cm / 100);
+    forme.lineTo(0, f.hauteur_mur_cm / 100);
+    forme.closePath();
+    for (const o of f.ouvertures) {
+      const ch = o.chambranle_cm || 0, s0 = (o.debut_cm - ch) / 100, s1 = (o.debut_cm + o.largeur_cm + ch) / 100, h0 = o.allege_cm / 100, h1 = (o.allege_cm + o.hauteur_cm + (o.type === "porte" ? ch : 0)) / 100;
+      const trou = new THREE.Path();
+      trou.moveTo(s0, h0);
+      trou.lineTo(s0, h1);
+      trou.lineTo(s1, h1);
+      trou.lineTo(s1, h0);
+      trou.closePath();
+      forme.holes.push(trou);
+    }
+    const geoMur = new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false });
+    geoMur.translate(0, 0, -ep / 100);
+    pose(ombre(new THREE.Mesh(geoMur, matMur)));
+    for (const pn of f.panneaux) {
+      if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
+      const tx = etiquette(pn.id);
+      if (tx) {
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.17), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+        plaque.position.set((pn.debut_cm + pn.largeur_cm / 2) / 100, Math.min(1.55, f.hauteur_mur_cm / 100 - 0.2), 0.012);
+        pose(plaque, etiq);
+      }
+    }
+    if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + 0.05) {
+      const r = new THREE.Shape(), Hm = f.hauteur_mur_cm / 100;
+      r.moveTo(0, Hm);
+      r.lineTo(L / 100, Hm);
+      r.lineTo(L / 100, f.hauteur_fin_cm / 100);
+      r.lineTo(0, f.hauteur_debut_cm / 100);
+      r.closePath();
+      const geoR = new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false });
+      geoR.translate(0, 0, -data.rehausse_epaisseur_cm / 100);
+      pose(ombre(new THREE.Mesh(geoR, matBois)));
+    }
+    for (const o of f.ouvertures) {
+      if (o.type === "porte") {
+        const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = mat(COUL.cadre);
+        if (ch > 0) {
+          pose(boite(s0 - ch, s0, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
+          pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
+          pose(boite(s0, s1, o.hauteur_cm, o.hauteur_cm + ch, -ep, 0, matCadre));
+        }
+        const battant = new THREE.Group(), angle = 1.15;
+        const geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
+        geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
+        battant.add(ombre(new THREE.Mesh(geoB, o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }))));
+        battant.position.set(s1 / 100, 0, -0.01);
+        battant.rotation.y = angle;
+        pose(battant);
+      } else {
+        const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(16053750), c = 4;
+        pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
+        pose(boite(s0, s1, h0, h0 + c, -ep, 0.5, matCadre));
+        pose(boite(s0, s1, h1 - c, h1, -ep, 0.5, matCadre));
+        pose(boite(s0, s0 + c, h0, h1, -ep, 0.5, matCadre));
+        pose(boite(s1 - c, s1, h0, h1, -ep, 0.5, matCadre));
+        if (o.ouvrant) pose(boite((s0 + s1) / 2 - 1, (s0 + s1) / 2 + 1, h0, h1, -ep, 0.5, matCadre));
+      }
+    }
+  }
+  const T = data.toit, pl = T.plan, droite = pl.sens === "droite";
+  const hz = (z) => pl.haut_cm - (pl.haut_cm - pl.bas_cm) * ((droite ? z[0] : z[1]) - pl.origine_cm) / pl.course_cm;
+  const toit = groupe("toit");
+  toit.add(ombre(new THREE.Mesh(prisme(T.contour, hz, (z) => hz(z) + T.epaisseur_cm), mat(COUL.toit, { metalness: 0.2, roughness: 0.5 }))));
+  const matNerv = mat(COUL.nervure, { metalness: 0.3 });
+  const trait = (a, b, dessus, larg, m) => {
+    const A = W(a[0], a[1], hz(a) + T.epaisseur_cm + dessus), B = W(b[0], b[1], hz(b) + T.epaisseur_cm + dessus), dir = new THREE.Vector3().subVectors(B, A), len = dir.length();
+    if (len < 0.02) return;
+    const barre = new THREE.Mesh(new THREE.BoxGeometry(len, 0.03, larg), m);
+    barre.position.copy(A).addScaledVector(dir, 0.5);
+    barre.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), dir.normalize());
+    toit.add(barre);
+  };
+  const corde = (poly2, k) => {
+    const t = droite ? 1 : 0, hits = [];
+    for (let i = 0; i < poly2.length; i++) {
+      const a = poly2[i], b = poly2[(i + 1) % poly2.length];
+      if ((a[t] - k) * (b[t] - k) > 0 || a[t] === b[t]) continue;
+      const u = (k - a[t]) / (b[t] - a[t]);
+      hits.push([a[0] + u * (b[0] - a[0]), a[1] + u * (b[1] - a[1])]);
+    }
+    return hits.length >= 2 ? [hits[0], hits[hits.length - 1]] : null;
+  };
+  for (const pn of T.panneaux) {
+    const t = droite ? 1 : 0, ks = pn.polygone.map((z) => z[t]), k0 = Math.min(...ks), k1 = Math.max(...ks);
+    for (let k = k0 + 12.5; k < k1 - 1; k += 25) {
+      const c = corde(pn.polygone, k);
+      if (c) trait(c[0], c[1], 1.5, 0.03, matNerv);
+    }
+    const joint = corde(T.contour, k1 - 0.01);
+    if (joint && k1 < Math.max(...T.contour.map((z) => z[t])) - 1) trait(joint[0], joint[1], 0.5, 0.012, matJoint);
+    const mx = pn.polygone.reduce((s, z) => s + z[0], 0) / pn.polygone.length, my = pn.polygone.reduce((s, z) => s + z[1], 0) / pn.polygone.length;
+    const tx = etiquette(pn.id);
+    if (tx) {
+      const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.2), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+      plaque.position.copy(W(mx, my, hz([mx, my]) + T.epaisseur_cm + 6));
+      plaque.rotation.x = -Math.PI / 2;
+      toit.add(plaque);
+    }
+  }
+  const matMetal = mat(COUL.metal, { metalness: 0.6, roughness: 0.4 });
+  for (const tr of data.gouttiere.troncons) {
+    const l = Math.hypot(tr.a[0] - tr.de[0], tr.a[1] - tr.de[1]) || 1, nx = (tr.a[1] - tr.de[1]) / l * 6, ny = -(tr.a[0] - tr.de[0]) / l * 6;
+    const A = W(tr.de[0] + nx, tr.de[1] + ny, hz(tr.de) - 5), B = W(tr.a[0] + nx, tr.a[1] + ny, hz(tr.a) - 5), dir = new THREE.Vector3().subVectors(B, A), len = dir.length();
+    const g = new THREE.Mesh(new THREE.BoxGeometry(len, 0.08, 0.11), matMetal);
+    g.position.copy(A).addScaledVector(dir, 0.5);
+    g.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), dir.normalize());
+    toit.add(ombre(g));
+  }
+  const dsc = data.gouttiere.descente, hd = hz(dsc) - 8;
+  const tuyau = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, hd / 100, 16), matMetal);
+  tuyau.position.copy(W(dsc[0], dsc[1], hd / 2));
+  toit.add(ombre(tuyau));
+  const mob = groupe("mobilier"), sol = data.sol.epaisseur_cm;
+  for (const b of data.mobilier.bureaux) mob.add(ombre(new THREE.Mesh(prisme(b.polygone, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+  const sieges = new THREE.Group();
+  mob.add(sieges);
+  groupes.sieges = sieges;
+  for (const st of data.mobilier.sieges) {
+    const haut = /tabouret/.test(st.type) ? 45 : 47;
+    sieges.add(ombre(new THREE.Mesh(prisme(st.polygone, plat(sol + haut - 6), plat(sol + haut)), mat(COUL.siege))));
+    const mxs = st.polygone.reduce((s, z) => s + z[0], 0) / st.polygone.length, mys = st.polygone.reduce((s, z) => s + z[1], 0) / st.polygone.length;
+    const pied = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, (haut - 6) / 100, 12), mat(COUL.siege));
+    pied.position.copy(W(mxs, mys, sol + (haut - 6) / 2));
+    sieges.add(pied);
+  }
+  const lit = groupe("lit");
+  if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
+  sieges.visible = !visible.lit;
+  return groupes;
+}
+function createAbriViewer(container, data0) {
   const scene = new THREE.Scene();
-  scene.background = makeSky();
-  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(4.6, 3.2, 5.6);
+  scene.background = new THREE.Color(14674675);
+  const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+  camera.position.set(3.3, 2.7, 4.3);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -2356,390 +2447,79 @@ function createViewer(container, model0) {
   container.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.target.set(0, 1.1, 0);
+  controls.target.set(0, 1, 0);
   controls.maxPolarAngle = Math.PI / 2 - 0.02;
-  scene.add(new THREE.AmbientLight(16777215, 0.7));
-  const sun = new THREE.DirectionalLight(16777215, 1);
-  sun.position.set(5, 8, 3);
-  sun.castShadow = true;
-  sun.shadow.bias = -8e-4;
-  sun.shadow.mapSize.set(2048, 2048);
-  scene.add(sun);
+  scene.add(new THREE.AmbientLight(16777215, 0.75));
+  const soleil = new THREE.DirectionalLight(16777215, 1);
+  soleil.position.set(5, 8, 6);
+  soleil.castShadow = true;
+  soleil.shadow.bias = -8e-4;
+  soleil.shadow.mapSize.set(2048, 2048);
+  scene.add(soleil);
   scene.add(new THREE.HemisphereLight(13624319, 7039824, 0.4));
-  const grass = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 8628567, roughness: 1 }));
-  grass.rotation.x = -Math.PI / 2;
-  grass.position.y = -0.07;
-  grass.receiveShadow = true;
-  scene.add(grass);
-  const building = new THREE.Group();
-  scene.add(building);
-  function rebuild(model) {
-    for (let i = building.children.length - 1; i >= 0; i--) {
-      const ch = building.children[i];
-      building.remove(ch);
+  const herbe = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 8628567, roughness: 1 }));
+  herbe.rotation.x = -Math.PI / 2;
+  herbe.position.y = -0.15;
+  herbe.receiveShadow = true;
+  scene.add(herbe);
+  const abri = new THREE.Group();
+  scene.add(abri);
+  let groupes = {};
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true };
+  const construit = (data) => {
+    groupes = peuple_abri(abri, data, visible);
+  };
+  function rebuild(data) {
+    for (let i = abri.children.length - 1; i >= 0; i--) {
+      const ch = abri.children[i];
+      abri.remove(ch);
       ch.traverse((o) => {
         if (o.geometry && o.geometry.dispose) o.geometry.dispose();
       });
     }
-    populate(building, model);
+    construit(data);
   }
-  rebuild(model0);
-  function onResize() {
+  rebuild(data0);
+  function montrer(nom, oui) {
+    visible[nom] = oui;
+    if (groupes[nom]) groupes[nom].visible = oui;
+    if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
+  }
+  window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
-  }
-  window.addEventListener("resize", onResize);
-  (function loop() {
-    requestAnimationFrame(loop);
+  });
+  (function boucle() {
+    requestAnimationFrame(boucle);
     controls.update();
     renderer.render(scene, camera);
   })();
-  return { rebuild };
+  return { rebuild, montrer };
 }
 
-// site/src/render.ts
-function setHTML(sel, html) {
-  const e = document.querySelector(sel);
-  if (e) e.innerHTML = html;
-}
-function setText(id, txt) {
-  const e = document.getElementById(id);
-  if (e) e.textContent = txt;
-}
-function renderKpis(core, p) {
-  const g = core.geometrie, t = core.debit;
-  const data = [
-    [g.aire_m2 + " m\xB2", `Surface (${g.cotes.A} \xD7 ${g.cotes.G} cm)`],
-    [g.pente.pourcent + " %", "Pente toiture (" + g.pente.degres + "\xB0)"],
-    [`${t.murs.total_panneaux + t.rehausse.nb_panneaux} + ${t.toit.nb_panneaux}`, "Panneaux mur + toit"],
-    [t.commande_panneaux_m2 + " m\xB2", "\xC0 commander (avec chute)"]
-  ];
-  setHTML("#kpis", data.map(([v, l]) => `<div class="card kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join(""));
-}
-var REH = { bandeau: "bandeau", triangle: "triangle", aucune: "\u2014" };
-function renderFaces(core) {
-  const g = core.geometrie, t = core.debit.toit;
-  let rows = g.faces.map((f) => `<tr><td><b>${f.cle}</b> \xB7 ${f.libelle}</td><td>${f.longueur_cm} cm</td><td>${f.hauteur_mur_cm} cm</td><td>${f.rehausse === "aucune" ? "\u2014" : `<span class="tag rake">${REH[f.rehausse]}</span> \u2192 ${f.hauteur_debut_cm}\u2013${f.hauteur_fin_cm} cm`}</td></tr>`).join("");
-  rows += `<tr class="row-toit"><td><b>${t.face}</b> \xB7 ${t.libelle} <span class="tag toit">toit</span></td><td>${t.largeur_cm} cm</td><td colspan="2">${(t.longueur_panneau_cm / 100).toFixed(2)} m de rampant \xB7 ${g.hauteur_avant_cm} \u2192 ${g.hauteur_arriere_cm} cm</td></tr>`;
-  setHTML("#faces tbody", rows);
-}
-function renderPlans(core) {
-  for (const [name, svg] of Object.entries(core.svg)) {
-    const box = document.getElementById("plan-" + name);
-    if (box) box.innerHTML = svg;
-  }
-}
-function renderDebit(core, p) {
-  const t = core.debit, r = t.rehausse, cover = p.panneau.largeur_utile_cm;
-  let rows = t.murs.lignes.map((x) => `<tr><td><b>${x.face}</b> \xB7 ${x.libelle}</td><td><span class="tag">mur</span></td><td>${x.pieces.map((q) => q.remplace_par ? `<s>${q.label}</s> = ${q.remplace_par}` : `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${x.hauteur_cm} cm \u2014 coupes droites</td><td>${x.nb_panneaux}</td><td>${x.aire_brute_m2} m\xB2</td></tr>`).join("");
-  const bois = r.materiau === "bois";
-  rows += `<tr><td><b>R</b> \xB7 Rehausse</td><td><span class="tag rake">${bois ? "bois" : "mur"}</span></td><td>${r.pieces.map((q) => `<b>${q.label}</b> ${q.longueur_cm} \xD7 ${q.hauteur_cm} cm (${q.piece.toLowerCase()})`).join(" + ")}, ` + (bois ? `${r.nb_madriers} madrier ${r.section_mm[0]}\xD7${r.section_mm[1]} de ${(r.longueur_stock_cm / 100).toFixed(2)} m (${r.ml} ml)` : `tir\xE9es de ${r.nb_panneaux} panneau de ${(r.longueur_panneau_cm / 100).toFixed(2)} m`) + `</td><td>${bois ? r.nb_madriers + " madrier" : r.nb_panneaux}</td><td>${bois ? "\u2014" : r.aire_brute_m2 + " m\xB2"}</td></tr>`;
-  rows += `<tr class="row-toit"><td><b>${t.toit.face}</b> \xB7 ${t.toit.libelle}</td><td><span class="tag toit">toit</span></td><td>${t.toit.pieces.map((q) => `<b>${q.label}</b> ${q.largeur_cm}`).join(" \xB7 ")} \xD7 ${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m dans le sens de la pente \xB7 couvre ${t.toit.aire_couverte_m2} m\xB2</td><td>${t.toit.nb_panneaux}</td><td>${t.toit.aire_brute_m2} m\xB2</td></tr>`;
-  setHTML("#debit tbody", rows);
-  setHTML(
-    "#debit-resume",
-    `Murs : <b>${t.murs.total_panneaux} panneaux</b> identiques (~${t.murs.aire_brute_m2} m\xB2 brut, ${t.murs.aire_nette_m2} m\xB2 net)` + (bois ? ` + rehausse en <b>bois</b> (${r.nb_madriers} madrier)` : ` + <b>${r.nb_panneaux} panneau</b> de rehausse`) + `. Toiture : <b>${t.toit.nb_panneaux} panneaux</b> de ~${(t.toit.longueur_panneau_cm / 100).toFixed(2)} m. Commande totale avec chute ${t.facteur_chute_pct} % : <b>${t.commande_panneaux_m2} m\xB2</b>.`
-  );
-}
-function renderAchats(core) {
-  setHTML("#achats tbody", core.achats.map((a) => `<tr><td>${a.poste}</td><td>${a.qte}</td><td class="note">${a.note}</td></tr>`).join(""));
-}
-function renderBudget(core) {
-  const b = core.budget;
-  const row = (r) => `<tr class="${r.groupe === "amenagement" ? "row-amen" : ""}"><td>${r.poste}</td><td>${r.qte} ${r.unite}</td><td>${r.pu_eur} \u20AC</td><td><b>${r.montant_eur} \u20AC</b></td></tr>`;
-  const coque = b.lignes.filter((r) => r.groupe !== "amenagement"), amen = b.lignes.filter((r) => r.groupe === "amenagement");
-  setHTML("#budget tbody", coque.map(row).join("") + `<tr class="row-sub"><td colspan="3">Coque (structure, menuiseries, toit)</td><td><b>${b.coque_eur} \u20AC</b></td></tr>` + amen.map(row).join("") + (amen.length ? `<tr class="row-sub"><td colspan="3">Am\xE9nagement (confort au quotidien)</td><td><b>${b.amenagement_eur} \u20AC</b></td></tr>` : ""));
-  setHTML(
-    "#budget-total",
-    `Total <b>${b.sous_total_eur} \u20AC</b> HT \xB7 fourchette indicative <b>${b.total_bas_eur} \u2013 ${b.total_haut_eur} \u20AC</b> (\xB1${b.incertitude_pct} %)`
-  );
-}
-function renderAmenagement(core, p) {
-  const am = p.amenagement || {}, g = core.geometrie;
-  const items = [
-    ["plancher", "\u{1FAB5} Plancher isol\xE9", am.plancher ? `${am.plancher.description}. ${am.plancher.epaisseur_cm} cm \u21D2 hauteur sous plafond ${((g.hauteur_arriere_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m \xE0 l'arri\xE8re, ${((g.hauteur_avant_cm - am.plancher.epaisseur_cm) / 100).toFixed(2)} m \xE0 l'avant.` : ""],
-    ["electricite", "\u{1F50C} \xC9lectricit\xE9", am.electricite ? am.electricite.description : ""],
-    ["chauffage", "\u{1F525} Chauffage", am.chauffage ? am.chauffage.description : ""],
-    ["store", "\u{1F31E} Store", am.store ? am.store.description : ""],
-    ["finition_interieure", "\u{1F3A7} Finition int\xE9rieure", am.finition_interieure ? am.finition_interieure.description : ""]
-  ];
-  setHTML("#amenagement-list", items.filter(([k]) => am[k] && am[k].actif).map(([, t, d]) => `<li><b>${t}.</b> ${d}</li>`).join("") || '<li class="note">Aucun am\xE9nagement activ\xE9 (voir r\xE9glages).</li>');
-  setText("v-interieur", String(g.aire_interieure_m2));
-}
-function renderVigilance(core, p) {
-  const g = core.geometrie, pente = g.pente, d = g.dalle;
-  setText("cover", p.panneau.largeur_utile_cm + " cm");
-  setText("v-chute", String(pente.chute_cm));
-  setText("v-pente", pente.pourcent + " %");
-  setText("v-pente-deg", pente.degres + "\xB0");
-  setText("v-portee", (core.debit.toit.portee_cm / 100).toFixed(2) + " m");
-  setText("v-ep", String(p.panneau.epaisseur_mm));
-  setText("v-emprise-deb", String(g.emprise_debords_m2));
-  setText("v-emprise", String(g.formalites.emprise_au_sol_m2));
-  const seuil = document.getElementById("v-seuil");
-  const F = g.formalites;
-  setText("v-plancher", String(F.surface_plancher_m2));
-  if (seuil) seuil.textContent = F.formalite === "aucune" ? "aucune formalit\xE9 a priori, \xE0 confirmer en mairie." : `${F.libelle} \xE0 d\xE9poser.`;
-  const card = document.getElementById("v-dalle");
-  if (card && d) {
-    card.hidden = !d.hors_dalle;
-    const worst = Math.min(...Object.values(d.marges_cm).filter((v) => typeof v === "number"));
-    setText("v-dalle-tri", `${d.hors_dalle_m2} m\xB2${worst < 0 ? ` (jusqu'\xE0 ${Math.round(-worst)} cm au-del\xE0 du bord)` : ""}`);
-    const mur = document.getElementById("v-dalle-mur");
-    if (mur) mur.hidden = !d.hors_dalle_contre_mur;
-  } else if (card) card.hidden = true;
-  const pc = document.getElementById("v-passage");
-  if (pc) {
-    const ps = d && d.passage;
-    pc.hidden = !ps;
-    if (ps) {
-      pc.className = "card " + (ps.etat === "praticable" ? "ok" : "warn");
-      setText("v-passage-cm", `${Math.round(ps.cm)} cm`);
-      setText("v-passage-etat", ps.etat === "praticable" ? "on passe normalement" : ps.etat === "de profil" ? "on passe de profil seulement" : ps.cm <= 0 ? "l'abri traverse le mur : impossible" : "on ne passe pas");
-      setText("v-passage-souhaite", String(ps.souhaite_cm));
-      setText("v-passage-gmax", String(ps.profondeur_max_cm));
-      setText("v-passage-g", String(g.cotes.G));
-      const gauche = d.murs.find((w) => w.cote === "gauche");
-      setText("v-passage-gauche", gauche ? `${gauche.abri_cm} cm` : "\u2014");
-      setText("v-passage-toit", d.degagement_toit_min_cm == null ? "\u2014" : `${d.degagement_toit_min_cm} cm`);
-    }
-  }
-}
-function renderAll(core, p) {
-  renderKpis(core, p);
-  renderFaces(core);
-  renderPlans(core);
-  renderDebit(core, p);
-  renderAchats(core);
-  renderBudget(core);
-  renderAmenagement(core, p);
-  renderVigilance(core, p);
-}
-
-// site/src/controls.ts
-var POSITIONS = [["gauche", "\xE0 gauche"], ["centre", "centr\xE9e"], ["droite", "\xE0 droite"]];
-var FACES = [["A", "A \xB7 avant"], ["D", "D \xB7 droite"], ["B", "B \xB7 arri\xE8re"], ["G", "G \xB7 gauche"]];
-function h(tag, attrs = {}, children = []) {
-  const e = document.createElement(tag);
-  for (const k in attrs) {
-    if (k === "class") e.className = attrs[k];
-    else if (k.startsWith("on") && typeof attrs[k] === "function") e.addEventListener(k.slice(2), attrs[k]);
-    else e.setAttribute(k, attrs[k]);
-  }
-  for (const c of children) e.append(c);
-  return e;
-}
-function group(title, nodes, open = true) {
-  return h("details", { class: "ctl-group", ...open ? { open: "" } : {} }, [
-    h("summary", {}, [title]),
-    ...nodes
-  ]);
-}
-function buildControls(container, params, onChange) {
-  function slider(label, obj, key, min, max, step = 1, unit = "cm") {
-    const out = h("span", { class: "ctl-val" }, [`${obj[key]} ${unit}`]);
-    const input = h("input", { type: "range", min, max, step, value: obj[key] });
-    input.addEventListener("input", () => {
-      obj[key] = Number(input.value);
-      out.textContent = `${obj[key]} ${unit}`;
-      onChange();
-    });
-    return h("label", { class: "ctl ctl-range" }, [h("span", { class: "ctl-lbl" }, [label, out]), input]);
-  }
-  function num(label, obj, key, step = 1, width = "5.5em") {
-    const input = h("input", { type: "number", step, value: obj[key], style: `width:${width}` });
-    input.addEventListener("input", () => {
-      obj[key] = input.value === "" ? 0 : Number(input.value);
-      onChange();
-    });
-    return h("label", { class: "ctl ctl-num" }, [h("span", { class: "ctl-lbl" }, [label]), input]);
-  }
-  function select(label, obj, key, options) {
-    const sel = h("select", {
-      onchange: () => {
-        obj[key] = sel.value;
-        onChange();
-      }
-    }, options.map(([v, l]) => {
-      const o = h("option", { value: v }, [l]);
-      if (String(obj[key]) === v) o.selected = true;
-      return o;
-    }));
-    return h("label", { class: "ctl ctl-num" }, [h("span", { class: "ctl-lbl" }, [label]), sel]);
-  }
-  function check(label, obj, key) {
-    const input = h("input", { type: "checkbox" });
-    input.checked = !!obj[key];
-    input.addEventListener("change", () => {
-      obj[key] = input.checked;
-      onChange();
-    });
-    return h("label", { class: "ctl ctl-check" }, [input, h("span", {}, [label])]);
-  }
-  function amenagementGroup() {
-    const am = params.amenagement || (params.amenagement = {});
-    const labels = [["plancher", "Plancher isol\xE9"], ["electricite", "\xC9lectricit\xE9 (multiprise + \xE9clairage)"], ["chauffage", "Chauffage"], ["store", "Store"], ["finition_interieure", "Finition int\xE9rieure"]];
-    return labels.filter(([k]) => am[k]).map(([k, l]) => check(l, am[k], "actif"));
-  }
-  function dalleGroup() {
-    const d = params.dalle_cm;
-    const off = d.decalage_cm || (d.decalage_cm = { x: 0, y: 0 });
-    return [
-      slider("C\xF4t\xE9 avant", d, "avant", 100, 500),
-      slider("C\xF4t\xE9 droit", d, "droite", 50, 500),
-      slider("C\xF4t\xE9 gauche", d, "gauche", 50, 500),
-      slider("Pan arri\xE8re gauche (petit)", d, "arriere_gauche", 0, 500),
-      slider("Pan arri\xE8re droit (grand)", d, "arriere_droite", 0, 500),
-      slider("Passage arri\xE8re vis\xE9 (le long du grand pan)", d, "passage_souhaite_cm", 0, 100),
-      slider("Abri : distance au mur gauche", off, "x", 0, 150),
-      slider("Abri : distance au bord avant de la dalle", off, "y", 0, 150)
-    ];
-  }
-  function priceControls() {
-    const pr = params.prix_indicatifs_eur || {};
-    return Object.keys(pr).filter((k) => !k.startsWith("_") && typeof pr[k] === "number").map((k) => num(k.replace(/_/g, " "), pr, k, 1, "5.5em"));
-  }
-  function windowsGroup() {
-    const list = params.fenetres || (params.fenetres = []);
-    const body = h("div", { class: "openings" });
-    const rerender = () => {
-      renderPanel();
-      onChange();
-    };
-    list.forEach((w, i) => {
-      const faceSel = h(
-        "select",
-        { onchange: () => {
-          w.face = faceSel.value;
-          onChange();
-        } },
-        FACES.map(([v, l]) => {
-          const o = h("option", { value: v }, [l]);
-          if (w.face === v) o.selected = true;
-          return o;
-        })
-      );
-      if (typeof w.position !== "number") {
-        const faceLen = w.face === "A" || w.face === "B" ? +params.emprise_cm.avant_A : +params.emprise_cm.gauche_G;
-        w.position = Math.round(opening_start_cm(w, faceLen));
-      }
-      body.append(h("div", { class: "opening-card" }, [
-        h("div", { class: "ctl-row" }, [
-          h("b", {}, [`Fen\xEAtre ${i + 1}`]),
-          faceSel,
-          h("button", { class: "btn-mini", title: "Supprimer", onclick: () => {
-            list.splice(i, 1);
-            rerender();
-          } }, ["\u2715"])
-        ]),
-        slider("Largeur", w, "largeur_cm", 40, 140),
-        slider("Hauteur", w, "hauteur_cm", 40, 140),
-        slider("All\xE8ge (bas / sol)", w, "allege_cm", 60, 160),
-        slider("Position depuis le d\xE9but de la face", w, "position", 0, 400),
-        check("Ouvrante (oscillo-battante)", w, "ouvrant")
-      ]));
-    });
-    body.append(h("button", { class: "btn btn-ghost btn-add", onclick: () => {
-      list.push({ face: "D", largeur_cm: 80, hauteur_cm: 110, allege_cm: 95, position: 110, ouvrant: false });
-      rerender();
-    } }, ["+ Ajouter une fen\xEAtre"]));
-    return body;
-  }
-  function renderPanel() {
-    container.innerHTML = "";
-    const e = params.emprise_cm;
-    const deb = params.toit.debord_cm;
-    container.append(
-      group("Emprise & murs (cm)", [
-        slider("Largeur \u2014 face avant (A)", e, "avant_A", 100, 400),
-        slider("Profondeur \u2014 face gauche (G)", e, "gauche_G", 100, 400),
-        slider("Hauteur des murs (arri\xE8re)", params.murs, "hauteur_cm", 180, 300)
-      ]),
-      ...params.dalle_cm ? [group("Dalle existante (cm)", dalleGroup())] : [],
-      group("Toit", [
-        slider("Rehausse avant = chute", params.toit, "pente_chute_cm", 5, 60),
-        h("div", { class: "ctl-row" }, [
-          h("span", { class: "ctl-lbl ctl-lbl-wide" }, ["D\xE9bords (cm)"]),
-          ...["avant", "arriere", "gauche", "droite"].map((k) => {
-            const input = h("input", { type: "number", step: 1, value: deb[k] ?? 0, style: "width:4.5em" });
-            input.addEventListener("input", () => {
-              deb[k] = input.value === "" ? 0 : Number(input.value);
-              onChange();
-            });
-            return h("label", { class: "ctl-inline" }, [k.replace("arriere", "arr."), input]);
-          })
-        ])
-      ]),
-      group("Porte", [
-        slider("Largeur", params.porte, "largeur_cm", 60, 140),
-        slider("Hauteur", params.porte, "hauteur_cm", 180, 230),
-        select("Position sur la face avant", params.porte, "position", POSITIONS)
-      ]),
-      group("Fen\xEAtres", [windowsGroup()], (params.fenetres || []).length > 0),
-      group("Am\xE9nagement", amenagementGroup()),
-      group("Panneaux", [
-        slider("Largeur utile", params.panneau, "largeur_utile_cm", 80, 120),
-        slider("Chute / pertes", params.divers, "facteur_chute_pct", 0, 30, 1, "%")
-      ]),
-      group("Prix indicatifs (\u20AC)", priceControls(), false)
-    );
-  }
-  renderPanel();
-  return { refresh: renderPanel };
-}
-
-// site/src/main.ts
-var clone = (o) => JSON.parse(JSON.stringify(o));
+// site/src/abri_main.ts
 document.addEventListener("DOMContentLoaded", () => {
-  const DEFAULTS = window.SHED_PARAMS;
-  if (!DEFAULTS) {
+  const params = window.SHED_PARAMS;
+  if (!params) {
     console.error("params.js manquant (window.SHED_PARAMS).");
     return;
   }
-  const params = clone(DEFAULTS);
-  let core = buildCore(params);
-  renderAll(core, params);
-  let viewer = null;
-  const viewerEl = document.getElementById("viewer");
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
+  rend_abri(abri);
+  const boite = document.getElementById("viewer");
+  let vue = null;
   try {
-    if (viewerEl) viewer = createViewer(viewerEl, core.model3d);
+    if (boite && abri.core.modele3d) vue = createAbriViewer(boite, abri.core.modele3d);
   } catch (e) {
-    if (viewerEl) viewerEl.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Voir les plans ci-dessous.</p>';
+    if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
-  const onChange = () => {
-    try {
-      core = buildCore(params);
-      renderAll(core, params);
-      if (viewer) viewer.rebuild(core.model3d);
-      setStatus("\u2713 Mod\xE8le, plans et chiffres mis \xE0 jour en direct.", "#2a8");
-    } catch (e) {
-      setStatus("\u2717 Param\xE8tre invalide : " + (e?.message || e), "#c0392b");
-      console.error(e);
-    }
-  };
-  const controls = buildControls(document.getElementById("controls"), params, onChange);
-  const reset = document.getElementById("cfg-reset");
-  if (reset) reset.addEventListener("click", () => {
-    const fresh = clone(DEFAULTS);
-    for (const k of Object.keys(params)) delete params[k];
-    Object.assign(params, fresh);
-    controls.refresh();
-    onChange();
-    setStatus("R\xE9initialis\xE9 aux valeurs publi\xE9es.", "#888");
-  });
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes"]) {
+    const c = document.getElementById("voir-" + nom);
+    if (c) c.addEventListener("change", () => vue && vue.montrer(nom, c.checked));
+  }
   window.setTimeout(() => {
-    const v = document.getElementById("viewer");
-    if (v && !v.querySelector("canvas") && !v.textContent.trim()) {
-      v.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible ici (WebGL requis, ou librairie bloqu\xE9e). Les plans plus bas restent enti\xE8rement valables.</p>';
-    }
+    if (boite && !boite.querySelector("canvas") && !boite.textContent.trim()) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible ici (WebGL requis, ou librairie bloqu\xE9e). Les plans plus bas restent enti\xE8rement valables.</p>';
   }, 4e3);
 });
-function setStatus(msg, color) {
-  const s = document.getElementById("cfg-status");
-  if (s) {
-    s.textContent = msg;
-    s.style.color = color;
-  }
-}

@@ -1,12 +1,12 @@
 # Abri de jardin : le bureau à cinq murs, version 4 (toit vers le fond, gouttière derrière)
 
-> Généré par `npm run emit` depuis `params.json` (bloc `abri_v4`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri-v3.md](abri-v3.md). Autres formes étudiées : [variantes.md](variantes.md).
+> Généré par `npm run emit` depuis `params.json` (bloc `abri_v4`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri.md](abri.md). Autres formes étudiées : [variantes.md](variantes.md).
 
 ![implantation sur la dalle](site/assets/modele-v4-implantation.svg)
 
 ## Ce qui change par rapport à la version 3
 
-| | version 3 ([abri-v3.md](abri-v3.md)) | **version 4** |
+| | version 3 ([abri.md](abri.md)) | **version 4** |
 |---|---|---|
 | murs (extérieur) | 5 m² | 5 m² |
 | intérieur | **4,48 m²** | **4,48 m²** |

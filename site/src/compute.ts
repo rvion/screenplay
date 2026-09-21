@@ -1561,6 +1561,7 @@ export function buildCore(p: Params) {
   const v13 = vars.find((v: any) => v.id === 13 && v.bureaux);
   const modele: any = v13 ? modele_trapeze(p, v13) : null;
   if (modele) modele.budget = budget_modele(p, v13, modele);
+  const modele3d = modele && g.dalle ? modele3d_abri(p, g, v13, modele) : null;
   if (modele) {
     svg["modele-implantation"] = plan_dalle_svg(g, false, v13, modele);
     svg["modele-sol"] = modele_sol_svg(p, v13, modele);
@@ -1569,7 +1570,7 @@ export function buildCore(p: Params) {
     for (const f of modele.faces) svg[`modele-facade-${f.cle}`] = modele_facade_svg(modele, f);
   }
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
-  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, svg };
+  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg };
 }
 
 /* ----------------------------------------------------------------- */
@@ -1624,7 +1625,7 @@ export function variantes_md(p: Params, core: any): string {
   md += `\n`;
   for (const v of vs) {
     const [pour, contre] = AVIS[v.id] || [[], []];
-    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? " · **retenue : plans complets dans [abri.md](abri.md)**" : ""}\n\n`;
+    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? (version_principale(p) ? ` · **première forme retenue : plans dans [${nom_page(1, version_principale(p))}](${nom_page(1, version_principale(p))})** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](abri.md)` : " · **retenue : plans complets dans [abri.md](abri.md)**") : ""}\n\n`;
     md += `![option ${v.id}](site/assets/variante-${v.id}.svg)\n\n`;
     md += `| | murs (extérieur) | intérieur |\n|---|---|---|\n`;
     md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
@@ -1753,6 +1754,8 @@ export function modele_trapeze(p: Params, v: any) {
     rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
     toit: {
       contour: contour.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]), aire_m2: rnd(poly_area(contour) / 1e4, 2),
+      // plan du toit : hauteur du dessous du toit = haut_cm au depart de la pente, bas_cm au bout de la course
+      plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd(droite ? x0 : y0, 1), course_cm: rnd(course, 1), haut_cm: H + c, bas_cm: H },
       panneaux: panneaux_toit, debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) }, gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)),
         troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
         longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1), descente: ((): Pt => {
@@ -1765,6 +1768,34 @@ export function modele_trapeze(p: Params, v: any) {
     panneaux_mur_a_commander: panneaux_mur,
     formalites: formalites(p, v.aire_m2, rnd(poly_area(contour) / 1e4, 2), v.aire_interieure_m2),
     angles_deg: v.angles_deg,
+  };
+}
+
+// scene 3D de l'abri retenu : dalle, murs de propriete, murs (panneaux, ouvertures, rehausse), toit, gouttiere, mobilier.
+// cm, repere de la dalle ; pur (la scene Three.js vit dans viewer_abri.ts)
+export function modele3d_abri(p: Params, g: any, v: any, m: any) {
+  const d = g.dalle, [ox, oy] = d.decalage_cm, abs = (z: Pt): Pt => [z[0] + ox, z[1] + oy];
+  const pl = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
+  const sec = m.rehausse.section_mm;
+  return {
+    dalle: d.polygone.map(abs),
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: d.mur_epaisseur_cm })) : [],
+    epaisseur_cm: +p.panneau.epaisseur_mm / 10,
+    sol: { polygone: m.interieur, epaisseur_cm: pl },
+    murs: m.faces.map((f: any) => ({
+      cle: f.cle, nom: f.nom, de: f.de, a: f.a, longueur_cm: f.longueur_cm, hauteur_mur_cm: f.hauteur_mur_cm,
+      hauteur_debut_cm: f.hauteur_debut_cm, hauteur_fin_cm: f.hauteur_fin_cm,
+      panneaux: f.panneaux.map((pn: any) => ({ id: pn.id, debut_cm: pn.debut_cm, largeur_cm: pn.largeur_cm })),
+      ouvertures: f.ouvertures,
+    })),
+    rehausse_epaisseur_cm: +sec[0] / 10,
+    toit: { contour: m.toit.contour, plan: m.toit.plan, epaisseur_cm: +p.panneau.epaisseur_mm / 10, panneaux: m.toit.panneaux.map((t: any) => ({ id: t.id, polygone: t.polygone })) },
+    gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
+    mobilier: {
+      bureaux: (v.bureaux || []).map((b: any) => ({ cote: b.cote, polygone: b.polygone })),
+      sieges: (v.sieges || []).filter((st: any) => st.tient !== false).map((st: any) => ({ type: st.type, polygone: st.polygone })),
+      lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
+    },
   };
 }
 
@@ -2034,6 +2065,10 @@ export function modele_facade_svg(m: any, f: any): string {
 /* Page de l'abri retenu (markdown, genere par le CLI)                */
 /* ----------------------------------------------------------------- */
 // jeu de parametres de la variante proposee : params + surcouche abri_v2.params (listes remplacees)
+// page d'une version : sans version principale, la version 1 est abri.md ; avec, c'est la principale
+export const nom_page = (n: number, principale = 0) => (principale ? (n === principale ? "abri.md" : `abri-v${n}.md`) : n > 1 ? `abri-v${n}.md` : "abri.md");
+export const version_principale = (p: Params): number => { const m = /^abri_v(\d+)$/.exec(p.abri_principal || ""); return m && p[p.abri_principal] ? +m[1] : 0; };
+
 // blocs abri_v2, abri_v3... de params.json, dans l'ordre des numeros
 export function versions_abri(p: Params): { n: number; cle: string }[] {
   return Object.keys(p).map((cle) => ({ cle, m: /^abri_v(\d+)$/.exec(cle) })).filter((x) => x.m && p[x.cle] && p[x.cle].params)
@@ -2054,7 +2089,7 @@ export function params_v2(p: Params, cle = "abri_v2"): Params | null {
 }
 
 // position de la descente en mots, d'apres ses coordonnees dans l'emprise de l'abri
-function ou_descente(m: any): string {
+export function ou_descente(m: any): string {
   const xs = m.faces.flatMap((f: any) => [f.de[0], f.a[0]]), ys = m.faces.flatMap((f: any) => [f.de[1], f.a[1]]);
   const [x, y] = m.toit.gouttiere.descente, mx = (Math.min(...xs) + Math.max(...xs)) / 2, y0 = Math.min(...ys), y1 = Math.max(...ys);
   const cote = x > mx ? "droit" : "gauche";
@@ -2062,8 +2097,44 @@ function ou_descente(m: any): string {
   return y > y0 + (y1 - y0) * 0.85 ? `au coin arrière ${cote}` : `à l'arrière du mur ${cote}, à l'entrée du passage`;
 }
 
+// valeurs calculees que les textes d'une variante citent par {champ} ; base = l'abri auquel on la compare
+export function injecteur(v: any, m: any, base: any): (s: string) => string {
+  const fr = (x: number) => String(x).replace(".", ",");
+  const po = v.porte, derriere = v.passages.find((q: any) => q.cote === "arriere_droite");
+  const opts = { base };
+  const valeurs: Record<string, string> = {
+    arriere_m2: v.arriere ? fr(v.arriere.aire_m2) : "?", arriere_profondeur_cm: v.arriere ? fz(v.arriere.profondeur_max_cm) : "?",
+    passage_cm: fz(Math.floor(derriere.cm)), porte_cm: fz(po.largeur_cm),
+    murs_m2: fr(v.aire_m2), interieur_m2: fr(v.aire_interieure_m2), sol_libre_m2: fr(v.sol_libre_m2),
+    gauche_cm: fz(Math.min(...v.polygone.map((z: Pt) => z[0]))),
+    debord_droite_cm: fz(m.toit.debord_cm.droite), debord_avant_cm: fz(m.toit.debord_cm.avant), debord_arriere_cm: fz(m.toit.debord_cm.arriere),
+  };
+  if (opts.base) {
+    const vb = opts.base.variantes.find((x: any) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q: any) => q.cote === "arriere_droite");
+    Object.assign(valeurs, {
+      base_murs_m2: fr(vb.aire_m2), base_interieur_m2: fr(vb.aire_interieure_m2), base_arriere_m2: vb.arriere ? fr(vb.arriere.aire_m2) : "?",
+      base_passage_cm: fz(Math.floor(pb.cm)), gain_interieur_m2: fr(rnd(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
+      gain_sol_libre_m2: fr(rnd(v.sol_libre_m2 - vb.sol_libre_m2, 2)), ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
+      base_debord_droite_cm: fz(mb.toit.debord_cm.droite),
+      gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), base_pente_pourcent: fr(mb.pente.pourcent),
+      portee_m: fr(rnd(m.portee_cm / 100, 1)), base_portee_m: fr(rnd(mb.portee_cm / 100, 1)), descente: ou_descente(m), base_descente: ou_descente(mb),
+      panneaux_toit: String(m.toit.panneaux.length), base_panneaux_toit: String(mb.toit.panneaux.length),
+      hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers), base_madriers: String(mb.rehausse.nb_madriers),
+    });
+  }
+  const injecte = (s: string) => s.replace(/\{(\w+)\}/g, (tout, k) => (k in valeurs ? valeurs[k] : tout));
+  return injecte;
+}
+
+// textes d'un bloc abri_vN, champs remplaces : { atouts, pertes, notes, hors_modele }
+export function textes_variante(bloc: any, core: any, base: any) {
+  const v = core.variantes.find((x: any) => x.id === 13), injecte = injecteur(v, core.modele, base);
+  const liste = (k: string): string[] => (bloc[k] || []).map(injecte);
+  return { atouts: liste("atouts"), pertes: liste("pertes"), notes: liste("notes"), hors_modele: liste("hors_modele") };
+}
+
 // tableau compare de deux abris (memes fonctions, deux jeux de parametres)
-function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number, ep: number, n = 2, depuis = 1): string {
+function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number, ep: number, n = 2, depuis = 1, principale = 0): string {
   const fr = (x: number) => String(x).replace(".", ",");
   const eur = (x: number) => `${Math.round(x).toLocaleString("fr-FR").replace(/\u202f|\u00a0/g, " ")} €`;
   const etroites = (m: any) => m.faces.flatMap((f: any) => f.panneaux).filter((pn: any) => pn.largeur_cm < 30).length;
@@ -2096,7 +2167,7 @@ function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number,
     ["budget indicatif HT", (x) => `${eur(x.m.budget.total_eur)} (coque ${eur(x.m.budget.coque_eur)})`],
   ];
   void ep;
-  const page = depuis > 1 ? `abri-v${depuis}.md` : "abri.md";
+  const page = nom_page(depuis, principale);
   let md = `| | version ${depuis} ([${page}](${page})) | **version ${n}** |\n|---|---|---|\n`;
   for (const [nom, f] of lignes) md += `| ${nom} | ${f(a)} | ${f(b)} |\n`;
   return md + "\n";
@@ -2112,37 +2183,20 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
   const derriere = v.passages.find((q: any) => q.cote === "arriere_droite");
   let md = `# ${opts.titre || "Abri de jardin : le bureau trapèze"}\n\n`;
-  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? ` (bloc \`abri_v${opts.version || 2}\`)` : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base ? `Version de départ : [${(opts.depuis || 1) > 1 ? `abri-v${opts.depuis}.md` : "abri.md"}](${(opts.depuis || 1) > 1 ? `abri-v${opts.depuis}.md` : "abri.md"}). ` : ""}Autres formes étudiées : [variantes.md](variantes.md).\n\n`;
+  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? ` (bloc \`abri_v${opts.version || 2}\`)` : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base && !opts.en_fin ? `Version de départ : [${nom_page(opts.depuis || 1, opts.principale)}](${nom_page(opts.depuis || 1, opts.principale)}). ` : ""}${opts.autres || ""}Autres formes étudiées : [variantes.md](variantes.md).\n\n`;
   md += `![implantation sur la dalle](site/assets/${img("modele-implantation")}.svg)\n\n`;
+  // la comparaison ouvre la page d'une variante, et ferme celle de l'abri retenu (en_fin)
+  let pourquoi = "";
   if (opts.base) {
-    md += `## Ce qui change par rapport à la version ${opts.depuis || 1}\n\n`;
-    md += compare_md({ m: opts.base.modele, v: opts.base.variantes.find((x: any) => x.id === 13) }, { m, v }, seuil, ep, opts.version || 2, opts.depuis || 1);
-    const valeurs: Record<string, string> = {
-      arriere_m2: v.arriere ? fr(v.arriere.aire_m2) : "?", arriere_profondeur_cm: v.arriere ? fz(v.arriere.profondeur_max_cm) : "?",
-      passage_cm: fz(Math.floor(derriere.cm)), porte_cm: fz(po.largeur_cm),
-      murs_m2: fr(v.aire_m2), interieur_m2: fr(v.aire_interieure_m2), sol_libre_m2: fr(v.sol_libre_m2),
-      gauche_cm: fz(Math.min(...v.polygone.map((z: Pt) => z[0]))),
-      debord_droite_cm: fz(m.toit.debord_cm.droite), debord_avant_cm: fz(m.toit.debord_cm.avant), debord_arriere_cm: fz(m.toit.debord_cm.arriere),
-    };
-    {
-      const vb = opts.base.variantes.find((x: any) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q: any) => q.cote === "arriere_droite");
-      Object.assign(valeurs, {
-        base_murs_m2: fr(vb.aire_m2), base_interieur_m2: fr(vb.aire_interieure_m2), base_arriere_m2: vb.arriere ? fr(vb.arriere.aire_m2) : "?",
-        base_passage_cm: fz(Math.floor(pb.cm)), gain_interieur_m2: fr(rnd(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
-        gain_sol_libre_m2: fr(rnd(v.sol_libre_m2 - vb.sol_libre_m2, 2)), ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
-        base_debord_droite_cm: fz(mb.toit.debord_cm.droite),
-        gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), base_pente_pourcent: fr(mb.pente.pourcent),
-        portee_m: fr(rnd(m.portee_cm / 100, 1)), base_portee_m: fr(rnd(mb.portee_cm / 100, 1)), descente: ou_descente(m), base_descente: ou_descente(mb),
-        panneaux_toit: String(m.toit.panneaux.length), base_panneaux_toit: String(mb.toit.panneaux.length),
-        hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers), base_madriers: String(mb.rehausse.nb_madriers),
-      });
-    }
-    const injecte = (s: string) => s.replace(/\{(\w+)\}/g, (tout, k) => (k in valeurs ? valeurs[k] : tout));
-    if ((opts.atouts || []).length) md += `### Ce que cette disposition apporte\n\n` + opts.atouts.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
-    if ((opts.pertes || []).length) md += `### Ce que la version ${opts.version || 2} perd\n\n` + opts.pertes.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
-    if ((opts.notes || []).length) md += `### Pourquoi\n\n` + opts.notes.map((s: string, i: number) => `${i + 1}. ${injecte(s)}\n`).join("") + `\n`;
-    if ((opts.hors_modele || []).length) md += `### Conseils que les plans ne montrent pas\n\n` + opts.hors_modele.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
+    pourquoi += opts.en_fin ? `## Pourquoi cette version\n\nComparée à la version ${opts.depuis || 1}, dont elle reprend les réglages.\n\n` : `## Ce qui change par rapport à la version ${opts.depuis || 1}\n\n`;
+    pourquoi += compare_md({ m: opts.base.modele, v: opts.base.variantes.find((x: any) => x.id === 13) }, { m, v }, seuil, ep, opts.version || 2, opts.depuis || 1, opts.principale || 0);
+    const injecte = injecteur(v, m, opts.base);
+    if ((opts.atouts || []).length) pourquoi += `### Ce que cette disposition apporte\n\n` + opts.atouts.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
+    if ((opts.pertes || []).length) pourquoi += `### Ce que la version ${opts.version || 2} perd\n\n` + opts.pertes.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
+    if ((opts.notes || []).length) pourquoi += `### Pourquoi\n\n` + opts.notes.map((s: string, i: number) => `${i + 1}. ${injecte(s)}\n`).join("") + `\n`;
+    if ((opts.hors_modele || []).length) pourquoi += `### Conseils que les plans ne montrent pas\n\n` + opts.hors_modele.map((s: string) => `- ${injecte(s)}\n`).join("") + `\n`;
   }
+  if (!opts.en_fin) md += pourquoi;
   md += `## En bref\n\n`;
   md += `- **Dalle existante** : ${fr(core.geometrie.dalle.aire_m2)} m², côtés ${core.geometrie.dalle.cotes_cm.map(fz).join(" / ")} cm, murs de propriété à gauche et au fond.\n`;
   md += `- **${fr(v.aire_interieure_m2)} m² intérieur** (${fr(v.aire_m2)} m² de murs), ${fr(derriere.cm)} cm de passage derrière.\n`;
@@ -2197,5 +2251,6 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   for (const l of B.lignes) md += `| ${l.poste} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} |\n`;
   md += `| **coque** | | | **${eur(B.coque_eur)}** |\n| **aménagement** | | | **${eur(B.amenagement_eur)}** |\n| **total** | | | **${eur(B.total_eur)}** (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}, ±${B.incertitude_pct} %) |\n\n`;
   md += `Prix médians du marché, à confirmer par devis (\`prix_indicatifs_eur\`). Porte et fenêtres au prix des blocs standard.\n`;
+  if (opts.en_fin && pourquoi) md += `\n` + pourquoi;
   return md;
 }
