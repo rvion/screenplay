@@ -133,6 +133,8 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(near(L.D.hauteur_debut_cm, H) && near(L.D.hauteur_fin_cm, H) && !m2.rehausse.pieces.some((r) => r.face === "D"), "v2 : mur droit a " + H + ", sans rehausse");
   ok(near(m2.pente.pourcent, 11.25, 0.06) && near(m2.portee_cm, 200), "v2 : pente 22,5 / 200 = 11,3 %, portee 2,0 m (" + m2.pente.pourcent + " %, " + m2.portee_cm + ")");
   ok(m2.toit.gouttiere.face === "D" && m2.toit.gouttiere.descente[1] < m2.toit.gouttiere.de[1] + 1e-6 || m2.toit.gouttiere.descente[1] <= Math.min(m2.toit.gouttiere.de[1], m2.toit.gouttiere.a[1]) + 1e-6, "v2 : gouttiere sur le mur droit, descente devant");
+  // toit vers la droite : l'eau du fond du toit sort par le fond en biais, il lui faut sa gouttiere aussi
+  ok(m2.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BD" && m.toit.gouttiere.troncons.map((t) => t.face).join("") === "B", "v2 : gouttiere sur le mur droit ET le fond en biais ; v1 : sur le fond seul");
   ok(m2.toit.panneaux.length === 3 && m2.toit.panneaux.every((t) => near(t.largeur_cm, mod)), "v2 : 3 panneaux de toit, tous de 100 de large (aucune bande etroite)");
   ok(m2.toit.panneaux.filter((t) => t.biais && poly_area(t.polygone) < 0.9 * mod * (200 + 25)).length === 1, "v2 : un seul panneau de toit vraiment entame par le biais");
   ok(m2.rehausse.section_mm[1] === 225 && m2.rehausse.nb_madriers <= 2, "v2 : madrier courant 75 x 225, " + m2.rehausse.nb_madriers + " madrier(s)");
@@ -161,6 +163,39 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   ok(page2.includes("site/assets/modele-v2-toit.svg") && !page2.includes("site/assets/modele-toit.svg"), "abri-v2.md pointe vers ses propres plans");
   ok(page2.includes("## Ce qui change par rapport à la version 1") && page2.includes("vers la droite (jardin)"), "abri-v2.md s'ouvre sur le tableau compare");
   ok(!abri_md(base, core).includes("version 1"), "abri.md inchange par les options de la v2");
+}
+
+// version 3 : cinq murs (fond d'un module + pan a 45 deg), 5 cm a gauche, heritee de la version 2
+{
+  const { params_v2, abri_md } = await import(pathToFileURL(out).href);
+  const p2 = params_v2(base), p3 = params_v2(base, "abri_v3");
+  ok(p3.disposition_trapeze.toit.sens === "droite" && p3.disposition_trapeze.porte_vitree === false && p3.dalle_cm.bandes_libres_cm.avant === 1, "v3 : herite des reglages de la v2 (toit a droite, porte pleine, abri avance)");
+  ok(p3.dalle_cm.bandes_libres_cm.gauche === 5 && p2.dalle_cm.bandes_libres_cm.gauche === 12, "v3 : 5 cm a gauche, la v2 garde 12");
+  const c2 = buildCore(p2), c3 = buildCore(p3), m3 = c3.modele, v3 = c3.variantes.find((x) => x.id === 13), v2 = c2.variantes.find((x) => x.id === 13);
+  ok(m3.faces.map((f) => f.cle).join("") === "ADCBG", "v3 : cinq murs A, D, C (pan), B (fond), G");
+  const L = Object.fromEntries(m3.faces.map((f) => [f.cle, f]));
+  // a la main : 200 x 300 moins le coin 100 x 100 / 2 = 5,50 m2 ; pan = 100 x racine(2) = 141,4 ; angles 90 90 135 135 90
+  ok(near(v3.aire_m2, 5.5, 0.001) && near(L.C.longueur_cm, 141.4, 0.05) && near(L.B.longueur_cm, 100), "v3 : 5,50 m² de murs, pan de 141,4, fond de 100 (" + v3.aire_m2 + ", " + L.C.longueur_cm + ")");
+  ok(v3.angles_deg.join() === "90,90,135,135,90", "v3 : angles 90 · 90 · 135 · 135 · 90, aucun angle aigu (" + v3.angles_deg.join(" ") + ")");
+  ok(near(Math.min(...v3.polygone.map((z) => z[0])), 5, 0.05), "v3 : mur gauche a 5 cm du bord de la dalle");
+  const mod = base.panneau.largeur_utile_cm;
+  ok(["A", "D", "B", "G"].every((k) => L[k].panneaux.every((pn) => near(pn.largeur_cm, mod))) && L.C.panneaux.filter((pn) => pn.largeur_cm < mod - 0.05).length === 1, "v3 : A, D, B, G en panneaux entiers, une seule bande recoupee (sur le pan)");
+  const pas = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
+  // a la main : coin (105, 301), mur a y = 223 + 157 x 0,926 = 368,4 ; ecart 67,4 x 0,734 = 49,5
+  ok(near(pas(v3), 49.5, 0.6), "v3 : passage derriere 49,5 cm, au coin du fond (" + pas(v3) + ")");
+  ok(v3.aire_interieure_m2 > v2.aire_interieure_m2 + 0.4, "v3 : +" + (v3.aire_interieure_m2 - v2.aire_interieure_m2).toFixed(2) + " m² d'interieur sur la v2");
+  ok(v3.arriere && v3.arriere.polygones.length === 2 && v3.arriere.aire_m2 < v2.arriere.aire_m2, "v3 : rangement cache plus petit que la v2 (" + v3.arriere.aire_m2 + " contre " + v2.arriere.aire_m2 + " m²), sur deux murs de fond");
+  // le toit penche a droite : l'eau sort par D et par le pan C, pas par le fond B
+  ok(m3.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "CD", "v3 : gouttiere sur le pan C et le mur droit D");
+  ok(near(L.B.hauteur_debut_cm, (L.C.hauteur_fin_cm), 0.05) && L.C.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H + 22.5, "v3 : hauteurs continues du mur droit (215) au mur gauche (237,5) en passant par C puis B");
+  ok(m3.rehausse.pieces.map((r) => r.face).sort().join("") === "ABCG", "v3 : rehausse sur A, C, B, G (rien sur le mur droit)");
+  ok(["modele-facade-C", "modele-facade-B"].every((k) => c3.svg[k] && c3.svg[k].startsWith("<svg")), "v3 : une elevation par mur, pan C compris");
+  ok(v3.porte.tient !== false && v3.fenetres.every((f) => f.tient !== false) && v3.lit_pliant.tient === true, "v3 : porte, fenetres et lit pliant tiennent");
+  const b3 = base.abri_v3, page3 = abri_md(p3, c3, { prefixe: "modele-v3-", version: 3, depuis: 2, titre: b3.titre, atouts: b3.atouts, pertes: b3.pertes, notes: b3.notes, hors_modele: b3.hors_modele, base: c2 });
+  ok(page3.includes("## Ce qui change par rapport à la version 2") && page3.includes("| | version 2 ([abri-v2.md](abri-v2.md)) | **version 3** |"), "abri-v3.md se compare a la version 2");
+  ok(page3.includes("**5 murs**") && page3.includes("site/assets/modele-v3-facade-C.svg") && page3.includes("5 angles"), "abri-v3.md : 5 murs, 5 angles, l'elevation du pan");
+  ok(!/\{\w+\}/.test(page3) && page3.includes("déclaration préalable"), "abri-v3.md : tous les {champs} remplaces, et la declaration prealable annoncee");
+  ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
 }
 
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }

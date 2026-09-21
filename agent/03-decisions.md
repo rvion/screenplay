@@ -289,3 +289,18 @@ son débord de 25 cm au-dessus de la porte ne la fait pas basculer. *Réserves i
 protégé ou abords d'un monument historique (déclaration préalable même sous le seuil), et le PLU
 (hauteur, implantation, distance aux limites) s'applique de toute façon. *Corrige* D21 ; *complète*
 D27 et D28.
+
+## D30 — Version 3 : cinq murs, fond d'équerre d'un module et pan à 45°
+Troisième variante, héritée de la version 2 (`herite`) et comparée à elle : le mur du fond devient
+d'équerre sur **100 cm**, puis un pan rejoint le haut du mur droit. Avec gauche 300, droite 200 et
+fond 100 il reste un coin de 100 × 100 : le pan fait **exactement 45°** et 141,4 cm, sans cote
+ajustée. La bande libre gauche passe de 12 à **5 cm**. *Ce que le calcul donne :* 5,50 m² de murs
+(déclaration préalable), 4,95 m² d'intérieur (+0,49), plus aucun angle aigu (deux angles de 135°
+identiques), une seule bande de panneau recoupée, passage 49,4 cm presque constant car le pan longe
+le grand pan de la dalle (42,8°). *Ce qu'il coûte :* le seuil de 5 m², un mur et un angle de plus,
+une gouttière en deux tronçons, et le rangement caché derrière l'abri qui passe de 1,89 à 1,41 m².
+Le glissement de 7 cm vers la gauche rend au passage ce que le cinquième mur lui prenait (44,7 cm
+sans lui). *Pourquoi le modèle a été généralisé plutôt que contourné :* lettres de faces (C),
+gouttière sur tous les bords d'égout, zones cachées multiples et héritage de variantes servent à
+toute forme future. *Le choix entre les versions reste ouvert.*
+

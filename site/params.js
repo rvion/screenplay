@@ -177,7 +177,7 @@ window.SHED_PARAMS = {
       "**Trois murs au module de 100** (façade 200, droite 200, gauche 300) : la façade et le mur gauche ne sont que des panneaux entiers. Le mur gauche longe le mur de propriété à 12 cm : une fois monté, on n'y accède plus, il ne doit porter aucune recoupe. La seule bande à recouper est sur le fond en biais, qu'on atteint par le passage.",
       "**5,00 m² de murs** : au seuil sans formalité (emprise et plancher ≤ 5 m²), au lieu d'une déclaration préalable pour 0,37 m² de murs en plus. Le prix : 0,35 m² d'intérieur en moins, pris surtout dans le coin aigu du fond.",
       "**Abri avancé de 4 cm** (bande libre avant 1 au lieu de 5) : la porte n'est plus en façade, cette bande ne sert plus. Le passage derrière l'abri retrouve 50 cm.",
-      "**Toit vers la droite, côté jardin**, au lieu du fond : gouttière et descente accessibles tous les jours, récupérateur d'eau possible, plus une goutte dans le passage arrière ni au pied du mur de propriété (aujourd'hui toute l'eau du toit arrive au coin le plus enfermé).",
+      "**Toit vers la droite, côté jardin**, au lieu du fond : descente devant, côté jardin, accessible tous les jours, récupérateur d'eau possible (aujourd'hui toute l'eau du toit arrive au coin le plus enfermé, au pied du mur de propriété). **Attention :** l'eau du fond du toit sort par le mur du fond en biais, pas par le mur droit. La gouttière doit donc courir aussi le long du fond, en pente naturelle vers le coin droit où elle rejoint celle du mur droit (le modèle la compte sur les deux bords : voir le tableau). Sans ce tronçon, cette eau tomberait dans le passage arrière.",
       "**Portée du toit 2,0 m** au lieu de 3,1 m : les panneaux vont du mur gauche au mur droit. C'était l'hypothèse la plus fragile du projet (H6).",
       "**Chute 22,5 cm sur 2 m = 11 %** : le madrier courant 75 × 225 suffit, plus besoin d'un 75 × 300 introuvable en stock. Le mur droit (porte) ne reçoit aucune rehausse, le mur gauche aveugle est le mur haut.",
       "**Toit en 3 panneaux de 100 de large, sans bande étroite** (la version 1 a un panneau de toit de 18 cm) : T1 entier, T2 écorné d'un petit coin sous le débord, T3 coupé une fois en biais le long du fond. Rives avant et fond affleurantes, fermées par une bavette.",
@@ -186,12 +186,59 @@ window.SHED_PARAMS = {
       "**Deux fenêtres de 80**, une par panneau entier de façade, l'ouvrante à gauche : en diagonale de la porte pour la ventilation traversante."
     ],
     "hors_modele": [
+      "La gouttière a **deux tronçons et un angle** (fond en biais, puis mur droit) : pièce d'angle à prévoir à la commande, le budget ne compte qu'un forfait.",
       "Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.",
       "Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.",
       "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 12 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
       "**Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.",
       "Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.",
       "À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm."
+    ]
+  },
+  "abri_v3": {
+    "_comment": "Version 3 = version 2 (herite) + un cinquieme mur : le fond d'equerre sur un module, puis un pan a 45 degres jusqu'au haut du mur droit ; et 5 cm seulement entre l'abri et le bord gauche de la dalle. compare_a = la version a laquelle abri-v3.md se compare. Les {champs} des textes sont remplaces par des valeurs calculees.",
+    "herite": "abri_v2",
+    "compare_a": 2,
+    "titre": "Abri de jardin : le bureau à cinq murs, version 3 (fond d'équerre et pan à 45°)",
+    "params": {
+      "dalle_cm": {
+        "bandes_libres_cm": {
+          "gauche": 5
+        }
+      },
+      "disposition_trapeze": {
+        "cotes_cm": {
+          "avant": 200,
+          "droite": 200,
+          "gauche": 300,
+          "fond": 100
+        }
+      }
+    },
+    "atouts": [
+      "**{gain_interieur_m2} m² d'intérieur en plus** que la version 2 ({interieur_m2} au lieu de {base_interieur_m2} m²), dont {gain_sol_libre_m2} m² de sol libre : le fond de la pièce devient une vraie travée d'équerre, large d'un mètre, au lieu de finir en pointe.",
+      "**Plus aucun angle aigu.** Les deux angles qui ne sont pas droits sont identiques, 135° : un seul profil d'angle plié à commander en deux exemplaires, et un bout de bureau gauche d'équerre contre le mur du fond.",
+      "**Une seule recoupe de panneau dans tout l'abri.** Façade 200, droite 200, fond 100, gauche 300 : des panneaux entiers. Seul le pan à 45° (141,4 cm) demande une bande, et il donne sur le passage, donc accessible.",
+      "**Le pan à 45° longe le mur de propriété** (incliné à 42,8°) : le passage derrière garde une largeur presque constante, {passage_cm} cm au plus étroit, au lieu de s'ouvrir en entonnoir. La tondeuse manuelle y passe comme dans la version 2.",
+      "**5 cm au lieu de 12 contre le bord gauche** : l'abri glisse de 7 cm vers le mur, et ses deux coins arrière s'éloignent d'autant du grand pan. C'est ce qui rend au passage les centimètres que le cinquième mur lui prenait.",
+      "Tout ce que la version 2 apporte reste vrai ici : porte pleine sur le côté, à l'abri des regards de l'étage voisin ; lumière de côté sur les écrans du bureau gauche ; toit vers le jardin, portée de 2 m, madrier courant. Voir [abri-v2.md](abri-v2.md)."
+    ],
+    "pertes": [
+      "**Au-dessus du seuil** : {murs_m2} m² de murs au lieu de {base_murs_m2}. Il faut une déclaration préalable, et la taxe d'aménagement s'applique probablement (quelques centaines d'euros, une fois). C'est le prix du cinquième mur, et il est connu d'avance.",
+      "**Le rangement caché derrière l'abri fond** : {arriere_m2} m² au lieu de {base_arriere_m2} m², passage compris. L'abri occupe le fond de la dalle que la version 2 laissait aux outils. La tondeuse manuelle et les outils à manche y tiennent encore, contre le mur de propriété ; les sacs, les pots et l'échelle beaucoup moins. C'est l'argument « pas de second abri » qui s'affaiblit.",
+      "**Un mur, un angle et une pièce de rehausse de plus**, et une gouttière en deux tronçons avec un angle ({gouttiere_cm} cm en tout) : l'eau du fond du toit sort par le pan à 45°, il faut donc la recueillir là aussi pour qu'elle ne tombe pas dans le passage.",
+      "**Budget** : {ecart_budget_eur} € d'écart avec la version 2 (voir le tableau), hors taxe d'aménagement.",
+      "Le lit de 190 rabattable contre un mur ne tient toujours pas : le fond fait 100 cm et le pan 141 cm. Lit pliant posé au sol, comme en version 2."
+    ],
+    "notes": [
+      "**La forme se ferme toute seule sur le module** : mur gauche 300, mur droit 200, fond 100, il reste un coin de 100 × 100 à fermer, donc un pan à exactement 45° de 141,4 cm. Aucune cote n'est ajustée pour y arriver.",
+      "**5 cm à gauche, c'est peu mais ça tient** : le mur gauche se monte à plat puis se lève (voir les conseils de la version 2), on ne visse rien dans ce vide. Il faut le fermer devant par une bavette et au fond par un grillage.",
+      "**Pourquoi comparer à la version 2** : la version 3 en reprend tous les réglages (`herite`), seuls la forme et la bande gauche changent. Le tableau isole donc l'effet du cinquième mur."
+    ],
+    "hors_modele": [
+      "Le modèle dessine la gouttière sur les deux bords d'égout, mais pas sa pièce d'angle à 135° ni la pente à lui donner vers la descente : à prévoir à la commande.",
+      "Le pan à 45° reçoit une pièce de rehausse en biais dont la hauteur varie le long du mur : c'est une coupe de plus dans le madrier, pas une difficulté.",
+      "Avant de déposer la déclaration préalable, vérifier au PLU la règle d'implantation par rapport à la limite (à 5 cm du mur de propriété, l'abri n'est ni en limite ni à 3 m)."
     ]
   },
   "reglementaire": {

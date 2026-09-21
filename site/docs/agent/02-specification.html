@@ -182,7 +182,7 @@ est le plus étroit (recoupe).</li>
 <code>https://rvion.github.io/screenplay/docs/abri-v2.html</code>. <code>site/docs/index.html</code> les liste
 (README, puis tri naturel : abri, abri-v2, abri-v3… ; puis la spécification).</li>
 <li><strong>Rien à déclarer</strong> pour une nouvelle page : <code>npm run emit</code> prend les <code>.md</code> de <code>git ls-files</code>
-plus ceux qu&#39;il vient d&#39;écrire. <strong>git fait foi</strong> : un fichier ignoré (<code>CLAUDE.local.md</code>,
+et les nouveaux <code>.md</code> que git n&#39;ignore pas (<code>--others --exclude-standard</code>). <strong>git fait foi</strong> : un fichier ignoré (<code>CLAUDE.local.md</code>,
 <code>STATUS.md</code>) ne peut pas être publié ; <code>CLAUDE*.md</code> et <code>STATUS*.md</code> sont exclus par nom en plus.</li>
 <li>Rendu par <code>site/src/docs.ts</code> (<strong>côté Node seulement</strong>, <code>marked</code> en devDependency : le bundle du
 navigateur n&#39;en dépend pas, le site reste statique et marche en <code>file://</code>). Une seule passe de
@@ -198,6 +198,13 @@ rangement), rendus avant <code>pertes</code>. Les <code>{champs}</code> y sont r
 <code>arriere</code> = dalle au-delà du mur du fond et dans la largeur de l&#39;abri, donc invisible depuis la
 façade ; hachurée en vert sur le plan d&#39;implantation. <code>disposition_trapeze.porte_vitree = false</code>
 donne une porte pleine (prix <code>porte_pleine</code>, dessin et libellés).</li>
+<li>Le modèle de l&#39;abri retenu accepte <strong>N murs</strong> : <code>cotes_cm.fond</code> ajoute un mur du fond d&#39;équerre
+sur le mur gauche, relié au haut du mur droit par un pan (face <strong>C</strong>, entre D et B) ; élévations,
+angles, rehausse, débit et page suivent le nombre de faces. La <strong>gouttière</strong> court sur tous les
+bords par où l&#39;eau sort (normale extérieure dans le sens de la pente : <code>gouttiere.troncons</code>).
+L&#39;espace caché derrière l&#39;abri se calcule sur un ou deux murs de fond (union des zones).
+Une variante peut <strong>hériter</strong> d&#39;une autre (<code>herite</code>) et choisir sa base de comparaison
+(<code>compare_a</code>) : <code>abri_v3</code> = <code>abri_v2</code> + cinq murs + 5 cm à gauche, comparée à la version 2.</li>
 <li>Plusieurs variantes : tout bloc <code>abri_vN</code> de <code>params.json</code> (<code>versions_abri</code>) donne <code>abri-vN.md</code>
 et ses plans <code>modele-vN-*.svg</code>, comparés à la version 1.</li>
 </ul>

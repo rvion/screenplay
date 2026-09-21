@@ -83,7 +83,7 @@ ok(morts.length === 0, "aucun lien, image, ancre ou lien vers le depot mort dans
 // ---- garde : site/docs/ = rendu frais des .md suivis par git (emit oublie, page orpheline)
 {
   const params = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
-  const suivis = execFileSync("git", ["ls-files", "--", "*.md"], { cwd: ROOT }).toString().split("\n").filter(Boolean).filter(est_publie).filter((c) => existsSync(join(ROOT, c)));
+  const suivis = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "--", "*.md"], { cwd: ROOT }).toString().split("\n").filter(Boolean).filter(est_publie).filter((c) => existsSync(join(ROOT, c)));
   const frais = construit_docs(suivis.map((chemin) => ({ chemin, md: readFileSync(join(ROOT, chemin), "utf8") })), params.projet.depot_url);
   const disque = parcours(DOCS).map((f) => relative(DOCS, f)).sort(), attendu = Object.keys(frais).sort();
   ok(disque.join() === attendu.join(), "site/docs/ contient exactement une page par .md suivi + l'index (" + disque.length + " fichiers)");

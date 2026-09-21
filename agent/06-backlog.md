@@ -1,6 +1,8 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
+- [ ] **Abri : version 3 ?** (D30) `abri-v3.md` : cinq murs, pan à 45°, 4,95 m² intérieur, plus d'angle
+      aigu ; mais 5,50 m² de murs (déclaration préalable) et rangement caché réduit à 1,41 m².
 - [ ] **Abri : version 1 ou version 2** (D28). `abri-v2.md` compare les deux : la v2 est au seuil
       de 5 m², en panneaux entiers sur 3 faces, toit vers le jardin (portée 2 m) ; elle perd 0,35 m²
       d'intérieur et le lit rabattable contre le fond. On peut aussi ne prendre que certains points.

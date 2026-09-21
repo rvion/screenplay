@@ -124,7 +124,7 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   `https://rvion.github.io/screenplay/docs/abri-v2.html`. `site/docs/index.html` les liste
   (README, puis tri naturel : abri, abri-v2, abri-v3… ; puis la spécification).
 - **Rien à déclarer** pour une nouvelle page : `npm run emit` prend les `.md` de `git ls-files`
-  plus ceux qu'il vient d'écrire. **git fait foi** : un fichier ignoré (`CLAUDE.local.md`,
+  et les nouveaux `.md` que git n'ignore pas (`--others --exclude-standard`). **git fait foi** : un fichier ignoré (`CLAUDE.local.md`,
   `STATUS.md`) ne peut pas être publié ; `CLAUDE*.md` et `STATUS*.md` sont exclus par nom en plus.
 - Rendu par `site/src/docs.ts` (**côté Node seulement**, `marked` en devDependency : le bundle du
   navigateur n'en dépend pas, le site reste statique et marche en `file://`). Une seule passe de
@@ -140,6 +140,13 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   `arriere` = dalle au-delà du mur du fond et dans la largeur de l'abri, donc invisible depuis la
   façade ; hachurée en vert sur le plan d'implantation. `disposition_trapeze.porte_vitree = false`
   donne une porte pleine (prix `porte_pleine`, dessin et libellés).
+- Le modèle de l'abri retenu accepte **N murs** : `cotes_cm.fond` ajoute un mur du fond d'équerre
+  sur le mur gauche, relié au haut du mur droit par un pan (face **C**, entre D et B) ; élévations,
+  angles, rehausse, débit et page suivent le nombre de faces. La **gouttière** court sur tous les
+  bords par où l'eau sort (normale extérieure dans le sens de la pente : `gouttiere.troncons`).
+  L'espace caché derrière l'abri se calcule sur un ou deux murs de fond (union des zones).
+  Une variante peut **hériter** d'une autre (`herite`) et choisir sa base de comparaison
+  (`compare_a`) : `abri_v3` = `abri_v2` + cinq murs + 5 cm à gauche, comparée à la version 2.
 - Plusieurs variantes : tout bloc `abri_vN` de `params.json` (`versions_abri`) donne `abri-vN.md`
   et ses plans `modele-vN-*.svg`, comparés à la version 1.
 

@@ -723,15 +723,18 @@ function variantes(p, g) {
   });
   const dalle_abs = g.dalle.polygone.map(([x, y]) => [x + ox, y + oy]);
   const derriere_abri = (r) => {
-    const fonds = r.map((a2, i) => i).filter((i) => nom_cote(r[i], r[(i + 1) % r.length]).startsWith("fond"));
-    if (fonds.length !== 1) return null;
-    const a = r[fonds[0]], b = r[(fonds[0] + 1) % r.length], xmax = Math.max(...r.map((z) => z[0]));
-    let zone = clip_half(dalle_abs, a, b, false);
-    zone = clip_half(zone, [xmax, -1e4], [xmax, 1e4], true);
-    if (zone.length < 3) return null;
-    const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-    const recul = (z) => -((b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0])) / l;
-    return { aire_m2: rnd(poly_area(zone) / 1e4, 2), profondeur_max_cm: rnd(Math.max(...zone.map(recul)), 0), polygone: zone.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+    const fonds = r.map((a, i) => i).filter((i) => nom_cote(r[i], r[(i + 1) % r.length]).startsWith("fond"));
+    if (fonds.length < 1 || fonds.length > 2) return null;
+    const xmax = Math.max(...r.map((z) => z[0]));
+    const zones = fonds.map((i) => clip_half(clip_half(dalle_abs, r[i], r[(i + 1) % r.length], false), [xmax, -1e4], [xmax, 1e4], true)).filter((z) => z.length >= 3);
+    if (!zones.length) return null;
+    const commun = zones.length === 2 ? poly_area(clip_convex(zones[0], zones[1])) : 0;
+    const aire = zones.reduce((s, z) => s + poly_area(z), 0) - commun;
+    const a_l_abri = (z) => Math.min(...r.map((a, i) => {
+      const f = pied(z, a, r[(i + 1) % r.length]);
+      return Math.hypot(z[0] - f[0], z[1] - f[1]);
+    }));
+    return { aire_m2: rnd(aire / 1e4, 2), profondeur_max_cm: rnd(Math.max(...zones.flat().map(a_l_abri)), 0), polygones: zones.map((z) => z.map(([x, y]) => [rnd(x, 1), rnd(y, 1)])) };
   };
   const forme = (id, titre, note, q) => {
     const k = q.reduce((m, v, i) => v[1] < q[m][1] - 1e-6 || Math.abs(v[1] - q[m][1]) <= 1e-6 && v[0] < q[m][0] ? i : m, 0);
@@ -820,8 +823,9 @@ function variantes(p, g) {
     const vise = +p.dalle_cm.passage_souhaite_cm || 0;
     const fixe = p.disposition_trapeze && p.disposition_trapeze.cotes_cm;
     if (fixe) {
-      const [fa, fd, fg] = [+fixe.avant, +fixe.droite, +fixe.gauche];
-      out.push(forme(13, `trap\xE8ze aux cotes ${fz(fa)} / ${fz(fd)} / ${fz(fg)}`, `fa\xE7ade ${fz(fa)}, mur droit ${fz(fd)}, mur gauche ${fz(fg)} : trois murs d'\xE9querre cal\xE9s sur le module de ${fz(mod)}, le fond en biais en d\xE9coule`, [Z[0], [Z[0][0] + fa, Z[0][1]], [Z[0][0] + fa, Z[0][1] + fd], [Z[0][0], Z[0][1] + fg]]));
+      const [fa, fd, fg] = [+fixe.avant, +fixe.droite, +fixe.gauche], ff = +fixe.fond || 0;
+      if (ff > 0 && ff < fa) out.push(forme(13, `cinq murs aux cotes ${fz(fa)} / ${fz(fd)} / ${fz(ff)} / ${fz(fg)}`, `fa\xE7ade ${fz(fa)}, mur droit ${fz(fd)}, mur du fond ${fz(ff)} d'\xE9querre sur le mur gauche de ${fz(fg)}, et un pan \xE0 ${f1(Math.atan2(fg - fd, fa - ff) * 180 / Math.PI)}\xB0 entre les deux`, [Z[0], [Z[0][0] + fa, Z[0][1]], [Z[0][0] + fa, Z[0][1] + fd], [Z[0][0] + ff, Z[0][1] + fg], [Z[0][0], Z[0][1] + fg]]));
+      else out.push(forme(13, `trap\xE8ze aux cotes ${fz(fa)} / ${fz(fd)} / ${fz(fg)}`, `fa\xE7ade ${fz(fa)}, mur droit ${fz(fd)}, mur gauche ${fz(fg)} : trois murs d'\xE9querre cal\xE9s sur le module de ${fz(mod)}, le fond en biais en d\xE9coule`, [Z[0], [Z[0][0] + fa, Z[0][1]], [Z[0][0] + fa, Z[0][1] + fd], [Z[0][0], Z[0][1] + fg]]));
     } else if (vise > 0) {
       const derriere = (q) => {
         const w = passages(q).find((x) => x.cote === "arriere_droite");
@@ -1292,16 +1296,20 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null) {
   });
   if (m) {
     svg += poly(m.toit.contour.map(P), "none", "#7a6f5a", 1.2, "6 4");
-    const g0 = P(m.toit.gouttiere.de), g1 = P(m.toit.gouttiere.a), dsc = P(m.toit.gouttiere.descente);
-    svg += line(g0[0], g0[1], g1[0], g1[1], "#1b6fa8", 4);
+    const dsc = P(m.toit.gouttiere.descente);
+    for (const tr of m.toit.gouttiere.troncons) {
+      const g0 = P(tr.de), g1 = P(tr.a);
+      svg += line(g0[0], g0[1], g1[0], g1[1], "#1b6fa8", 4);
+    }
     svg += `<circle cx="${f1(dsc[0])}" cy="${f1(dsc[1])}" r="5" fill="#1b6fa8"/>
 `;
   }
   if (m && v && v.arriere) {
     svg += `<defs><pattern id="cache" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#6b8e23" stroke-width="1.6"/></pattern></defs>
 `;
-    svg += poly(v.arriere.polygone.map(P), "url(#cache)", "#6b8e23", 1);
-    const zx = v.arriere.polygone.map((z) => z[0]), zy = v.arriere.polygone.map((z) => z[1]);
+    for (const zone of v.arriere.polygones) svg += poly(zone.map(P), "url(#cache)", "#6b8e23", 1);
+    const derniere = v.arriere.polygones[v.arriere.polygones.length - 1];
+    const zx = derniere.map((z) => z[0]), zy = derniere.map((z) => z[1]);
     const c = P([(Math.min(...zx) + Math.max(...zx)) / 2 - 20, (Math.min(...zy) + Math.max(...zy)) / 2 + 12]);
     svg += text(c[0], c[1], `rangement cach\xE9`, "middle", "#4f6b18", 11, "bold") + text(c[0], c[1] + 13, `${v.arriere.aire_m2} m\xB2`, "middle", "#4f6b18", 11, "bold");
   }
@@ -1627,7 +1635,9 @@ function modele_trapeze(p, v) {
   const h2 = (z) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
   const porte_h = v.porte && v.porte.hauteur_cm ? +v.porte.hauteur_cm : +(d.porte_hauteur_cm || p.porte.hauteur_cm);
   const faces = q.map((a, i) => {
-    const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), F = lettre(v.noms_cotes[i]);
+    const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const deux_fonds = v.noms_cotes.filter((nm) => lettre(nm) === "B").length > 1;
+    const F = deux_fonds && v.noms_cotes[i] === "fond en biais" ? "C" : lettre(v.noms_cotes[i]);
     const panneaux = [];
     for (let s = 0, k = 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd(s, 1), largeur_cm: rnd(Math.min(mod, L - s), 1) });
     const ouvertures = [];
@@ -1640,7 +1650,7 @@ function modele_trapeze(p, v) {
   const barres = ranger_rehausse(pieces, section, stock);
   const deb = t.debord_cm || { avant: 10, arriere: 10, cotes: 0 };
   const cotes = +deb.cotes || 0;
-  const decal = faces.map((f) => -(f.cle === "A" ? +deb.avant : f.cle === "B" ? +deb.arriere : f.cle === "D" ? +(deb.droite ?? cotes) : +(deb.gauche ?? cotes)));
+  const decal = faces.map((f) => -(f.cle === "A" ? +deb.avant : f.cle === "B" || f.cle === "C" ? +deb.arriere : f.cle === "D" ? +(deb.droite ?? cotes) : +(deb.gauche ?? cotes)));
   const contour = inset_ordre(q, decal);
   const rampant = Math.sqrt(1 + (c / course) ** 2);
   const xmin = Math.min(...contour.map((z) => z[0])), xmax = Math.max(...contour.map((z) => z[0]));
@@ -1679,6 +1689,10 @@ function modele_trapeze(p, v) {
   const fB = faces.findIndex((f) => f.cle === (droite ? "D" : "B"));
   const g0 = contour[fB], g1 = contour[(fB + 1) % n];
   const bas = droite ? g0[1] < g1[1] ? g0 : g1 : g0[1] > g1[1] ? g0 : g1;
+  const egouts = contour.map((a, i) => ({ a, b: contour[(i + 1) % n], cle: faces[i].cle })).filter(({ a, b }) => {
+    const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / l, ny = -(b[0] - a[0]) / l;
+    return (droite ? nx : ny) > 0.2;
+  });
   return {
     hauteur_mur_cm: H,
     chute_cm: c,
@@ -1695,7 +1709,14 @@ function modele_trapeze(p, v) {
       aire_m2: rnd(poly_area(contour) / 1e4, 2),
       panneaux: panneaux_toit,
       debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) },
-      gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(g1[0] - g0[0], g1[1] - g0[1]), 1), descente: bas.map((z) => rnd(z, 1)) }
+      gouttiere: {
+        face: droite ? "D" : "B",
+        de: g0.map((z) => rnd(z, 1)),
+        a: g1.map((z) => rnd(z, 1)),
+        troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
+        longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1),
+        descente: bas.map((z) => rnd(z, 1))
+      }
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
@@ -1710,7 +1731,8 @@ function budget_modele(p, v, m) {
   const toit_m2 = rnd(m.toit.panneaux.reduce((s, t) => s + mod * t.longueur_cm / 100, 0), 2);
   const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
   const angles_h = m.hauteurs_coins_cm.reduce((s, h2) => s + h2, 0) / 100;
-  const cles_rives = m.sens === "droite" ? ["A", "B"] : ["D", "G"];
+  const egout = new Set(m.toit.gouttiere.troncons.map((t) => t.face));
+  const cles_rives = (m.sens === "droite" ? ["A", "B", "C"] : ["D", "G", "C"]).filter((k) => !egout.has(k));
   const rives = m.faces.filter((f) => cles_rives.includes(f.cle)).reduce((s, f) => s + f.longueur_cm, 0) / 100;
   const profils = rnd(2 * angles_h + perim + rives, 1);
   const fen = v.fenetres || [];
@@ -1867,8 +1889,11 @@ function modele_toit_svg(v, m) {
     }
   }
   svg += poly(v.polygone.map(P), "none", "#2b5d8a", 1.2, "5 4");
-  const g0 = P(T.gouttiere.de), g1 = P(T.gouttiere.a), dsc = P(T.gouttiere.descente);
-  svg += line(g0[0], g0[1], g1[0], g1[1], "#1b6fa8", 6);
+  const dsc = P(T.gouttiere.descente);
+  for (const tr of T.gouttiere.troncons) {
+    const g0 = P(tr.de), g1 = P(tr.a);
+    svg += line(g0[0], g0[1], g1[0], g1[1], "#1b6fa8", 6);
+  }
   svg += `<circle cx="${f1(dsc[0])}" cy="${f1(dsc[1])}" r="7" fill="#1b6fa8"/>
 `;
   svg += text(dsc[0] + 12, dsc[1] - 10, "descente", "start", "#1b6fa8", 11, "bold");

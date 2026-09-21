@@ -38,12 +38,16 @@ function emit(p: any) {
   writeFileSync(join(ROOT, "abri.md"), abri_md(p, core));
   // variantes proposees (blocs abri_v2, abri_v3...) : memes plans sous modele-vN-, et une page comparee chacune
   const generes = ["variantes.md", "abri.md"];
+  const cores: Record<number, any> = { 1: core };
   for (const { n, cle } of versions_abri(p)) {
     const pn = params_v2(p, cle)!, coren = buildCore(pn), bloc = p[cle], prefixe = `modele-v${n}-`;
+    cores[n] = coren;
+    // compare_a : version a laquelle la page se compare (1 par defaut), deja calculee car les numeros montent
+    const depuis = cores[+bloc.compare_a] ? +bloc.compare_a : 1;
     for (const [name, content] of Object.entries(coren.svg)) {
       if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", prefixe) + ".svg"), content as string);
     }
-    writeFileSync(join(ROOT, `abri-v${n}.md`), abri_md(pn, coren, { prefixe, version: n, titre: bloc.titre, atouts: bloc.atouts, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: core }));
+    writeFileSync(join(ROOT, `abri-v${n}.md`), abri_md(pn, coren, { prefixe, version: n, titre: bloc.titre, atouts: bloc.atouts, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: cores[depuis], depuis }));
     generes.push(`abri-v${n}.md`);
   }
   emitDocs(p, generes);
@@ -54,7 +58,8 @@ function emit(p: any) {
 // site/docs/ : une page HTML par markdown SUIVI PAR GIT (plus ceux que ce run vient d'ecrire) + un index.
 // git fait foi : un fichier ignore (CLAUDE.local.md, STATUS.md) ne peut pas etre publie par accident.
 function emitDocs(p: any, generes: string[]) {
-  const suivis = execFileSync("git", ["ls-files", "--", "*.md"], { cwd: ROOT }).toString().split("\n").filter(Boolean);
+  // suivis + nouveaux non ignores : une page fraichement generee est publiee avant meme son premier commit
+  const suivis = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "--", "*.md"], { cwd: ROOT }).toString().split("\n").filter(Boolean);
   const chemins = [...new Set([...suivis, ...generes])].filter(est_publie).filter((c) => existsSync(join(ROOT, c)));
   const pages = construit_docs(chemins.map((chemin) => ({ chemin, md: readFileSync(join(ROOT, chemin), "utf8") })), p.projet.depot_url);
   const dir = join(SITE, "docs");
