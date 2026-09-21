@@ -250,3 +250,16 @@ rabattable ne tient pas contre un fond de 224 cm : il lui faut 244 cm). *Écart�
 `disposition_trapeze` en place (la version 1 est en cours de réglage) ; une page écrite à la main
 (chiffres non vérifiables). *Le choix entre les deux versions reste ouvert* (backlog).
 
+## D29 — Chaque document Markdown a sa page sur le site, avec un index
+Les documents du projet (`abri.md`, `abri-v2.md`, `variantes.md`…) ne se lisaient que sur GitHub.
+`npm run emit` écrit désormais `site/docs/` : une page HTML par `.md` suivi par git et un index,
+pour partager une adresse `rvion.github.io/screenplay/docs/…`. La liste vient de `git ls-files`,
+pas d'une déclaration : une future `abri-v3.md` est publiée sans rien toucher, et un fichier
+ignoré (chemins privés de `CLAUDE.local.md`) ne peut pas fuiter. Rendu à la génération par
+`marked` (devDependency) : aucun script de plus dans le navigateur, D4 et la règle `file://`
+tiennent. Pages hors navigation et en `noindex` tant que le projet n'est pas annoncé.
+*Écarté :* rendre le markdown dans le navigateur (dépendance au runtime, `fetch` interdit en
+`file://`) ; un petit moteur markdown maison (le README contient du HTML et des tableaux) ; une
+liste de pages tenue à la main (oubliée à la première v3). Les blocs `abri_vN` sont généralisés
+dans le même mouvement (`versions_abri`).
+

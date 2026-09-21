@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Journal des décisions (ADR léger)</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/03-decisions.md">Source : agent/03-decisions.md</a></nav>
+<main class="doc-main">
+<h1 id="journal-des-décisions-adr-léger">Journal des décisions (ADR léger)</h1>
+<p>Format : décision · contexte · raison · alternatives écartées.</p>
+<h2 id="d1--paramsjson-comme-source-unique-de-vérité">D1 — <code>params.json</code> comme source unique de vérité</h2>
+<p>Toutes les cotes y vivent ; le reste est généré. <em>Pourquoi :</em> éviter les incohérences
+plan/débit/3D, rendre le projet réellement paramétrique (B9). <em>Écarté :</em> coter à la main
+dans le SVG / le HTML.</p>
+<h2 id="d2--génération-en-python-stdlib--remplacée-par-d14">D2 — Génération en Python stdlib  <em>(remplacée par D14)</em></h2>
+<p><code>scripts/generate.py</code> produisait SVG + <code>data.js</code> + <code>derived.json</code>. <em>Pourquoi :</em> zéro install,
+reproductible, lisible. <em>Écarté :</em> OpenSCAD (binaire absent de l&#39;environnement), chaîne npm.
+<strong>Superseded par D14</strong> : la logique a été portée en TypeScript (calcul côté client en direct) et
+<code>generate.py</code> a été retiré.</p>
+<h2 id="d3--rendu-3d-via-threejs-cdn-lisant-windowshed">D3 — Rendu 3D via Three.js (CDN) lisant <code>window.SHED</code></h2>
+<p><em>Pourquoi :</em> « jolis rendus » interactifs (B10) sans binaire de rendu headless, toujours
+synchro avec les paramètres. <em>Écarté :</em> PNG pré-rendus (nécessite un moteur), images figées.</p>
+<h2 id="d4--données-injectées-via-datajs-et-non-fetch">D4 — Données injectées via <code>data.js</code> (et non <code>fetch</code>)</h2>
+<p><em>Pourquoi :</em> <code>fetch</code> d&#39;un JSON échoue en <code>file://</code> (CORS) ; <code>data.js</code> marche en local <strong>et</strong>
+sur Pages. <code>derived.json</code> reste produit pour les outils.</p>
+<h2 id="d5--panneaux-muraux-verticaux">D5 — Panneaux muraux verticaux</h2>
+<p><em>Pourquoi :</em> gère simplement la tête en biais des faces G/D/C (une coupe d&#39;arase par panneau)
+et le calcul du nombre de panneaux. <em>Écarté :</em> pose horizontale (panneaux longs, abouts en
+biais plus délicats sur une si petite emprise).</p>
+<h2 id="d6--pente-relevée-de-10--25-cm--10--après-confirmation">D6 — Pente relevée de 10 → 25 cm (≈ 10 %) après confirmation</h2>
+<p>Le brief demandait ~10 cm (≈ 4 %), <strong>sous le minimum usuel</strong> des panneaux de toiture.
+Après signalement du risque, l&#39;utilisateur a validé de corriger : <code>pente_chute_cm = 25</code>
+(≈ 10,2 %, 5,8°), dans la plage admise. Hauteur arrière ramenée à 215 cm (headroom OK).
+<em>Pourquoi :</em> éviter stagnation / infiltration aux joints. <em>À vérifier :</em> mini exact du
+fabricant de panneaux. Paramètre unique <code>toit.pente_chute_cm</code> si nouvel ajustement.</p>
+<h2 id="d7--âme-pir-60-mm-usage-chauffé--insister-sur-ventilation">D7 — Âme PIR, 60 mm, usage chauffé ⇒ insister sur ventilation</h2>
+<p><em>Pourquoi :</em> parements acier = pare-vapeur ; le risque se déplace vers la condensation aux
+ponts thermiques. La VMC/aérateurs devient <strong>indispensable</strong>, pas optionnelle.</p>
+<h2 id="d8--porte-sur-la-face-a-ouverture-extérieure-charnière-gauche">D8 — Porte sur la face A, ouverture extérieure, charnière gauche</h2>
+<p><em>Pourquoi :</em> A est la façade d&#39;entrée la plus longue exposée ; ouverture extérieure = B5.
+<em>À confirmer :</em> position exacte (centrée par défaut) et sens de charnière.</p>
+<h2 id="d9--publication-github-pages-via-actions-dossier-site">D9 — Publication GitHub Pages via Actions, dossier <code>site/</code></h2>
+<p><em>Pourquoi :</em> « adresse simple » <code>rvion.github.io/screenplay</code>, déploiement auto à chaque
+push, régénération possible en CI. <em>Écarté :</em> branche <code>gh-pages</code> manuelle.</p>
+<h2 id="d10--claudemd-racine-référence-agent-via">D10 — <code>CLAUDE.md</code> racine référence <code>agent/*</code> via <code>@</code></h2>
+<p><em>Pourquoi :</em> demande explicite (B11) ; charge la spec dans le contexte de l&#39;agent
+automatiquement.</p>
+<h2 id="d11--ouvertures-généralisées-en-liste-paramétrique">D11 — Ouvertures généralisées en liste paramétrique</h2>
+<p>La porte (cas particulier) devient une entrée d&#39;une liste <code>ouvertures[]</code> (porte + fenêtres).
+<em>Pourquoi :</em> ajouter/déplacer des fenêtres sans toucher au code ; déduction débit, plans,
+élévations et 3D pilotés par la même donnée. <em>Défaut :</em> 1 porte (A) + 1 fenêtre (D) + 1 (B).
+<em>Écarté :</em> coder chaque ouverture en dur.</p>
+<h2 id="d12--scène-3d-enrichie-sol-dalle-débordante-rail-nervures-gouttière">D12 — Scène 3D enrichie (sol, dalle débordante, rail, nervures, gouttière)</h2>
+<p>Ajout d&#39;un sol enherbé, d&#39;une <strong>dalle béton blanche avec débord</strong>, d&#39;un <strong>rail de pied</strong>
+saillant, des <strong>nervures de toiture</strong> et d&#39;une <strong>gouttière arrière + descente</strong>. Murs percés
+de vrais trous pour chaque ouverture (généralisation du mur-porte). <em>Pourquoi :</em> rendu plus
+lisible et réaliste (demande utilisateur). <em>Compromis :</em> débord de dalle/toit approximé par
+dilatation radiale (pas d&#39;offset mitré), suffisant visuellement.</p>
+<h2 id="d13--budget-indicatif--éditeur-de-config-interactif--étendu-par-d14">D13 — Budget indicatif + éditeur de config interactif  <em>(étendu par D14)</em></h2>
+<p>Prix dans <code>params.json</code> (<code>prix_indicatifs_eur</code>) → <code>budget</code> calculé, affiché en widget + liens
+fournisseurs (exemples, sans affiliation). Première version : un éditeur JSON rebâtissait <strong>seulement
+le 3D</strong> côté client, le reste restant généré par Python. <strong>Étendu par D14</strong> : désormais <em>tout</em> (plans
+SVG, tableaux, budget, 3D) est recalculé côté client par <code>compute.ts</code>, piloté par un panneau de
+contrôles (sliders / éditeur d&#39;ouvertures) plutôt qu&#39;un textarea JSON.</p>
+<h2 id="d14--port-complet-en-typescript-python-retiré-site-100--interactif">D14 — Port complet en TypeScript, Python retiré, site 100 % interactif</h2>
+<p>Toute la logique de <code>generate.py</code> a été portée dans <code>site/src/compute.ts</code> (<strong>pur</strong> : sans DOM ni
+Three), bundlée par <strong>esbuild</strong> (<code>site/app.js</code>) et réutilisée par un <strong>CLI Node</strong> (<code>cli.ts</code>, mode
+<code>--emit</code> pour les artefacts versionnés, <code>--json</code> pour les tests). Le site recalcule <strong>tout en
+direct</strong> depuis un panneau de contrôles. <em>Pourquoi :</em> une seule source de logique (fin de la double
+implémentation Python+JS de D13), interactivité totale demandée par l&#39;utilisateur, typage.
+<em>Validation :</em> la parité <strong>exacte</strong> TS == Python (données + 7 SVG, arrondi <em>half-even</em> compris) a
+été prouvée par tests avant de retirer <code>generate.py</code> ; l&#39;oracle Python est remplacé par des
+<strong>snapshots golden</strong> (<code>tests/snapshots/*.json</code>) + un <strong>smoke-test DOM</strong> jsdom. <em>Écarté :</em> garder
+Python comme générateur (duplication, deux langages à synchroniser).</p>
+<h2 id="d15--câblage-corvion--claudemd-réduit-à-deux-lignes-routeur-agentindexmd">D15 — Câblage corvion : <code>CLAUDE.md</code> réduit à deux lignes, routeur <code>agent/index.md</code></h2>
+<p><code>CLAUDE.md</code> ne contient plus que deux imports : <code>@./CLAUDE.local.md</code> (fichier <strong>gitignoré</strong>,
+propre à la machine de Rémi, qui charge <code>~/dev/corvion/wiki/index.md</code>) puis <code>@./agent/index.md</code>.
+Tout l&#39;ancien contenu de <code>CLAUDE.md</code> (description, règles d&#39;or, commandes, <code>@</code> vers les pages
+de spec) vit désormais dans <code>agent/index.md</code>, le routeur du dépôt. <em>Pourquoi :</em> opt-in au wiki
+corvion (identité + capacités de l&#39;agent) sans exposer un chemin privé dans un dépôt public ;
+l&#39;ordre des deux lignes est sémantique (contexte de base d&#39;abord, docs du dépôt ensuite pour
+qu&#39;elles priment). Un clone étranger ignore silencieusement l&#39;import manquant et ne charge que
+<code>agent/</code>. Règle machine : SK003 de <code>shipkit check</code>. <em>Complète D10</em> (le <code>@</code> vers <code>agent/*</code> passe
+par <code>agent/index.md</code>). <em>Écarté :</em> garder le contenu dans <code>CLAUDE.md</code> (invisible au graphe
+<code>agent/</code> du hub) ; mettre l&#39;import local en ligne 2 (inverse l&#39;ordre).
+Dans la foulée, <code>shipkit init</code> a câblé le dépôt : <code>repo.config.ts</code> (visibilité <code>public</code>), scripts
+<code>test</code>/<code>typecheck</code> routés par <code>shipkit ci</code> (<code>*:raw</code> = l&#39;outil brut, utilisé par la CI GitHub),
+<code>.vscode/tasks.json</code> (hub sur 4885), <code>.claude/settings.json</code> (silencieux d&#39;attribution + une seule
+porte d&#39;entrée pour les runners), <code>rvlib-shipkit</code> en devDependency.</p>
+<h2 id="d16--emprise-rectangulaire-abandon-du-coin-coupé">D16 — Emprise rectangulaire (abandon du coin coupé)</h2>
+<p>Le bâtiment devient un <strong>rectangle A × G</strong> à 4 faces ; le coin coupé de la dalle n&#39;est plus suivi
+par les murs. <code>dalle_cm</code> conserve les mesures réelles, uniquement pour calculer la partie de
+l&#39;emprise <strong>hors dalle</strong> (triangle 90 × 86 cm par défaut) et l&#39;afficher (plan, 3D, vigilance).
+<em>Pourquoi :</em> « l&#39;angle est une mauvaise idée, un carré est mieux, faisons plus simple » : 4 angles à
+90°, profils standard, aucune coupe d&#39;about en biais, moins de pièces. <em>Écarté :</em> réduire d&#39;office
+l&#39;emprise à 230 × 160 pour tenir sur la dalle (3,7 m², trop petit) — c&#39;est à l&#39;utilisateur de
+trancher entre compléter la dalle et réduire G. <em>Remplace</em> les sommets <code>Dfin</code>/<code>Bfin</code> et la face C.</p>
+<h2 id="d17--pente-par-rehausse--murs-rectangulaires--2-triangles--1-bandeau">D17 — Pente par rehausse : murs rectangulaires + 2 triangles + 1 bandeau</h2>
+<p>Tous les panneaux de mur sont des <strong>rectangles identiques</strong> de hauteur <code>murs.hauteur_cm</code> (coupes
+droites). La pente vient d&#39;une <strong>rehausse</strong> : une bande <code>G × chute</code> coupée <strong>en diagonale</strong> donne
+les deux triangles des faces G et D (le second tourné de 180° dans son plan, même parement dehors),
+plus un bandeau <code>A × chute</code> sur la face A ; le mur B reste à H. Les deux bandes sortent d&#39;un seul
+panneau (<code>debit.rehausse</code>, plan de coupe <code>plan-rehausse.svg</code>). <em>Pourquoi :</em> les coupes d&#39;arase
+en biais sur chaque panneau (D5) étaient « bizarres » ; ici une seule coupe en biais dans tout
+le projet. <em>Écarté :</em> garder l&#39;arase par panneau ; poser les panneaux latéraux horizontaux.
+<em>Remplace</em> D5 pour la tête des murs (la pose verticale est conservée).</p>
+<h2 id="d18--une-seule-ouverture--la-porte-vitrée">D18 — Une seule ouverture : la porte vitrée</h2>
+<p><code>ouvertures[]</code> (D11) est remplacé par un objet <code>porte</code> unique ; les fenêtres par défaut sont
+retirées, ainsi que l&#39;éditeur d&#39;ouvertures du site. La logique interne reste une liste
+(<code>resolve_openings</code>) pour réintroduire des fenêtres sans refonte. <em>Pourquoi :</em> demande explicite
+(« pas de fenêtre pour l&#39;instant, une seule porte comme source de lumière ») ; moins de pièces,
+moins de déperditions, budget réduit. <em>Complète</em> D8.</p>
+<h2 id="d19--panneaux-60-mm-autoportants-épaisseur-fixée-site-allégé">D19 — Panneaux 60 mm autoportants, épaisseur fixée, site allégé</h2>
+<p>L&#39;épaisseur n&#39;est plus un réglage du site : <strong>60 mm</strong> est la valeur du projet, choisie parce que
+ces panneaux sont <strong>autoportants</strong> (pas d&#39;ossature secondaire, seulement rail de pied + profils
+d&#39;angle). Le site est réduit : réglages emprise/murs/toit/porte/panneaux (prix repliés), montage
+en 6 étapes, vigilance recentrée (débord de dalle, portée du toit, pente, condensation, porte).
+<em>Pourquoi :</em> « le site est trop d&#39;étapes, trop complexe, trop cher » ; une épaisseur plus fine
+imposerait une ossature. <em>À vérifier :</em> portée libre du toit (~2,8 m) dans le tableau du
+fabricant. <em>Complète</em> D7 ; <em>rend caduc</em> le choix 40/60/80/100 de D13/D14.</p>
+<h2 id="d20--retour-d39une-fenêtre-face-d-liste-fenetres-séparée-de-la-porte">D20 — Retour d&#39;une fenêtre (face D), liste <code>fenetres[]</code> séparée de la porte</h2>
+<p>Après D18 (porte seule), l&#39;utilisateur demande une fenêtre sur la face droite. <code>params.json</code>
+reçoit une liste <code>fenetres[]</code> (une fenêtre 80 × 80, allège 110, face D, à 110 cm de l&#39;avant),
+distincte de l&#39;objet <code>porte</code>. <code>position</code> accepte désormais un <strong>nombre</strong> (distance en cm) pour
+caler la fenêtre <strong>dans un seul panneau</strong> (le 2e, 100–200 cm) et ne jamais chevaucher un joint.
+Le site propose une carte par fenêtre (face + curseurs) et un bouton d&#39;ajout. <em>Pourquoi :</em> lumière
+côté droit ; coût contenu (+250 € indicatif) et un seul panneau découpé. <em>Écarté :</em> revenir à la
+liste unique <code>ouvertures[]</code> de D11 (la porte a des règles propres : allège 0, vantail, seuil).
+<em>Amende</em> D18 (« seule ouverture » ne tient plus) ; <em>complète</em> D11.</p>
+<h2 id="d21--emprise-200--240-48-m²-débords-10-cm-pas-d39angle-pour-gagner-04-m²">D21 — Emprise 200 × 240 (4,8 m²), débords 10 cm, pas d&#39;angle pour gagner 0,4 m²</h2>
+<p>Le terrain laisse ~2,00 × 2,40 m si l&#39;on veut <strong>faire le tour</strong> de l&#39;abri ; atteindre 5 m² imposait
+de reprendre l&#39;angle coupé. Choix : <strong>200 × 240</strong>, débords ramenés à 10 cm, petit triangle
+(~54 × 51 cm) de dalle à combler. <em>Pourquoi :</em> l&#39;angle rapporte ~0,4 m² intérieur (une bande de
+30 cm) contre deux angles obtus, des profils sur mesure, la perte du tour (entretien gouttière,
+distance aux limites) et le passage au-dessus de 5 m². <em>Réglementaire :</em> ≤ 5 m² d&#39;emprise au sol
+et de surface de plancher = aucune formalité ; l&#39;emprise au sol compte les débords, donc 220 × 260
+= 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie. Le site affiche les deux
+chiffres (carte « Seuil des 5 m² »). <em>Écarté :</em> 230 × 246 (0,39 m² hors dalle, pas de tour),
+200 × 190 (seul rectangle entièrement sur la dalle, 3,8 m², trop petit). <em>Précise</em> D16.</p>
+<h2 id="d22--toit-à-2-panneaux-entiers-débords-latéraux-0-et-bloc-porte-au-module">D22 — Toit à 2 panneaux entiers (débords latéraux 0) et bloc-porte au module</h2>
+<p>Deux simplifications de débit. (1) Débords latéraux ramenés à 0 : le toit fait exactement <code>A</code>
+= 200 de large, soit <strong>2 panneaux entiers</strong> au lieu de 2 + une bande de 20 cm ; la rive est fermée
+par une bavette affleurante (pratique standard). (2) La porte devient un <strong>bloc-porte 100 × 215</strong>,
+dormant compris, aux cotes d&#39;un module : il <strong>remplace le panneau A2</strong> au lieu de laisser deux
+bandes de 5 cm à découper de part et d&#39;autre d&#39;une porte de 90. Règle codée
+(<code>panel_replaced_by</code>) : une ouverture allège 0, pleine hauteur, couvrant tout un module retire ce
+panneau du débit, du 3D et des étiquettes. <em>Effet :</em> 9 panneaux de mur + 2 de toit, commande
+~29,7 m², budget ~2 820 € HT. <em>Écarté :</em> garder 10 cm de débord latéral (3e panneau à refendre) ;
+porte 90 dans un panneau (chutes, bandes fragiles). <em>Complète</em> D17/D18.</p>
+<h2 id="d23--rehausse-en-bois-deux-fenêtres-aménagement-chiffré---simple-abordable-robuste-agréable">D23 — Rehausse en bois, deux fenêtres, aménagement chiffré : « simple, abordable, robuste, agréable »</h2>
+<p>L&#39;utilisateur précise l&#39;objectif : pas le moins cher, mais un bureau agréable au quotidien.
+(1) <strong>Rehausse en madrier 75 × 225</strong> (<code>rehausse.materiau = &quot;bois&quot;</code>) : un madrier coupé en
+diagonale = R2/R3, un droit = R1 ; chute ramenée à 22,5 cm (9,4 %, &gt; 5°). Le bois se coupe à la
+scie circulaire, tient les vis et fait <strong>lisse haute</strong> entre murs et toit — le point faible
+structurel des triangles de panneau disparaît. (2) <strong>Deux fenêtres 80 × 110</strong> : ouvrante face D
+(ventilation traversante avec la porte), fixe face G ; prix distincts. (3) <strong>Bloc-porte alu</strong>
+avec serrure à 900 €, panneaux mur à <strong>fixation cachée</strong>, toit <strong>clair</strong>. (4) Bloc <code>amenagement</code>
+(plancher isolé, multiprise + éclairage sur le câble existant, chauffage, store, finition
+intérieure) : cases à cocher, budget en deux groupes <strong>coque / aménagement</strong>, plancher en 3D.
+<em>Écarté :</em> supprimer la gouttière (le débord de 10 cm goutte sur la dalle qui dépasse) ;
+tableau électrique (câble déjà en place). <em>Effet :</em> coque ~3 340 €, aménagement ~570 €, total
+~3 920 € HT. <em>Complète</em> D17 (rehausse), D20 (fenêtres), D22.</p>
+<h2 id="d24--dalle-mesurée-260--220-réglable-sur-le-site">D24 — Dalle mesurée 260 × 220, réglable sur le site</h2>
+<p>Deux cotes mesurées : <strong>260</strong> de large vue de face, <strong>220</strong> sur le côté droit (le plus court). Les
+deux autres ne sont pas mesurées : elles sont <strong>déduites en conservant la coupe 90 × 86</strong> du
+premier relevé (gauche 306, arrière jusqu&#39;à la coupe 170), les deux relevés différant exactement
+de +30 en largeur et +60 en profondeur. L&#39;abri est <strong>centré en largeur</strong> (<code>decalage_cm.x = 30</code>),
+2 cm devant : rien hors dalle, et 30 cm de dalle de chaque côté pour en faire le tour. Le site
+reçoit un groupe <strong>Dalle</strong> (4 cotes + position de l&#39;abri) : plan de sol, 3D et carte de vigilance
+suivent en direct. <code>compute.ts</code> borne <code>arriere_jusqu_coupe ≤ avant</code> et <code>droite_jusqu_coupe ≤ gauche</code>. <em>Pourquoi :</em> la dalle était la seule donnée du projet non réglable, et c&#39;est celle qui
+reste incertaine. <em>Écarté :</em> caler l&#39;abri à droite (<code>x = 58</code> ⇒ 21 × 20 cm hors dalle) ; garder
+<code>x = 2</code> (58 cm de dalle d&#39;un seul côté). <em>Remplace</em> les valeurs provisoires du 2026-09-06.</p>
+<h2 id="d25--dalle-décrite-par-ses-5-longueurs-relevées-pointe-trouvée-par-triangulation">D25 — Dalle décrite par ses 5 longueurs relevées, pointe trouvée par triangulation</h2>
+<p>Le relevé au mètre (croquis du 2026-09-19 : 262 / 223 / 324 / 104 / 258, contrôle 260) montre que
+la dalle n&#39;est <strong>pas</strong> un rectangle à coin coupé : l&#39;arrière est fait de <strong>deux pans obliques</strong> qui
+se rejoignent en pointe. <code>dalle_cm</code> passe de 4 cotes (<code>avant</code>, <code>gauche</code>, <code>droite_jusqu_coupe</code>,
+<code>arriere_jusqu_coupe</code>) à <strong>5 longueurs mesurables</strong> (<code>avant</code>, <code>droite</code>, <code>gauche</code>,
+<code>arriere_gauche</code>, <code>arriere_droite</code>) ; la pointe est calculée par triangulation depuis les hauts
+des deux côtés. La partie hors dalle n&#39;est plus une formule de triangle mais un <strong>découpage de
+polygone</strong> (emprise − emprise ∩ dalle), valable quel que soit le côté qui déborde.
+<em>Pourquoi :</em> les paramètres sont ce qu&#39;un mètre ruban mesure ; aucune coordonnée à calculer à la
+main, aucun angle à relever. <em>Hypothèse :</em> angles avant droits (le contrôle 260 contre 262 le
+confirme à 2 cm près). <em>Écarté :</em> liste libre de sommets (x, y) (illisible, non mesurable) ;
+garder l&#39;ancien modèle avec un arrière horizontal (faux de 74 cm à la pointe). <em>Remplace</em> les
+cotes déduites de D24 (gauche 306, coupe 90 × 86 : fausses) ; le groupe <strong>Dalle</strong> du site et le
+centrage de l&#39;abri restent.</p>
+<h2 id="d26--murs-de-propriété-abri-le-long-du-mur-gauche-passage-arrière-mesuré">D26 — Murs de propriété, abri le long du mur gauche, passage arrière mesuré</h2>
+<p>Le côté gauche et les deux pans du fond de la dalle <strong>sont</strong> le mur de propriété. L&#39;abri
+<strong>longe le mur gauche</strong> (<code>decalage_cm.x = 2</code>) : tout l&#39;espace libre va à droite (60 cm de dalle,
+puis le jardin), et l&#39;accès à l&#39;arrière se fait par une <strong>bande le long du pan de 258</strong>. Cette
+bande devient une grandeur calculée (<code>dalle.passage</code>), cotée sur le plan, affichée en vigilance,
+avec la profondeur maximale qui garde le passage visé (<code>passage_souhaite_cm</code>, 45). <em>Pourquoi :</em>
+« optimiser pour la dalle qu&#39;on a » : la contrainte réelle n&#39;est pas de tenir sur la dalle mais de
+garder l&#39;arrière accessible (gouttière et descente sont sur la face B). <em>Constat :</em> à 200 × 240
+la bande fait 26,8 cm, on ne passe pas ; 200 × 215 donne 45 cm, 200 × 200 donne 56 cm avec 4 faces
+en panneaux entiers. <strong>Le choix de la profondeur reste ouvert</strong> (backlog). <em>Écarté :</em> abri centré
+(D24 : 31 cm perdus contre un mur, et le coin du toit touchait le pan de 258). <em>Conséquence à
+traiter :</em> la fenêtre fixe de la face G regarde désormais un mur à 2 cm. <em>Amende</em> D24 (position).</p>
+<h2 id="d27--abri-retenu--trapèze-de-l39option-13-plans-2d-générés">D27 — Abri retenu : trapèze de l&#39;option 13, plans 2D générés</h2>
+<p>Parmi les formes de <code>variantes(p, g)</code>, l&#39;utilisateur retient le <strong>trapèze</strong> : façade et mur droit
+d&#39;équerre, un seul mur en biais au fond, et ~50 cm de passage derrière l&#39;abri comme seule contrainte
+du fond (la bande de 45 cm sur le petit pan de 104 était une erreur, ramenée à 12). Le mur droit
+recule jusqu&#39;à ~4,8 m² intérieur (<code>disposition_trapeze.interieur_vise_m2</code>) : façade 218, droite
+178,8, fond 256,6, gauche 314,1, 5,37 m² de murs. Porte de 65 sur le <strong>mur droit</strong>, chambranle de
+5, cadre à 5 cm de la face intérieure du mur du fond et 5 cm sous le haut du mur (passage 65 × 205).
+Bureau en L : 60 cm sur tout le mur gauche, 50 cm sur toute la façade, qui ne porte que deux
+fenêtres 80 × 110 (allège 95, une par module). <code>modele_trapeze(p, v)</code> en tire faces, panneaux,
+rehausse, toit et gouttière, et 7 plans (<code>modele-*.svg</code>). <em>Choix par défaut, à confirmer :</em> toit
+<strong>vers l&#39;arrière</strong> (côté haut au jardin, bas contre les murs de propriété, descente au coin arrière
+gauche) et <strong>chute 30 cm</strong> (5,5° sur 314 cm ; 22,5 donnait 4,1°, sous le mini usuel), donc madrier
+75 × 300. <em>Écarté :</em> toit perpendiculaire au fond (le plus de coupes), toit vers la droite (côté haut
+contre la propriété). <em>Reste sur l&#39;ancien rectangle :</em> débit, achats, budget et 3D (priorité aux
+plans 2D, demande explicite). <em>Amende</em> D21 (emprise), D26 (passage).
+<em>Précisé ensuite :</em> lit 75 × 190 minimum, rabattable contre le mur du fond, aucun dégagement devant la
+porte (elle ouvre dehors) ; une seule fenêtre de façade, la droite, élargie à 100 (fixe) ; <code>abri.md</code>
+devient le document complet de l&#39;abri (implantation sur la dalle, plans, débit, budget).</p>
+<h2 id="d28--variante--version-2--de-l39abri-retenu-générée-à-côté-de-la-version-1">D28 — Variante « version 2 » de l&#39;abri retenu, générée à côté de la version 1</h2>
+<p>L&#39;abri retenu (D27) a été dimensionné par une cible d&#39;intérieur (4,8 m²). Une relecture propose de
+le dimensionner par <strong>les panneaux, le seuil et l&#39;eau</strong> : trois murs au module (200 / 200 / 300,
+soit 5,00 m² de murs), abri avancé de 4 cm, <strong>toit vers la droite</strong> (égout côté jardin, portée
+2 m, madrier courant 75 × 225), débord de 25 cm sur la porte, porte de 80, deux fenêtres de 80.
+Plutôt que de remplacer la version 1, la variante est une <strong>surcouche de paramètres</strong> (<code>abri_v2</code>)
+rejouée par les mêmes fonctions : <code>abri-v2.md</code> s&#39;ouvre sur un tableau comparé <strong>calculé</strong>, et dit
+aussi ce que la variante perd. <em>Pourquoi :</em> deux versions dessinées par le même code se comparent
+sans débat sur les chiffres ; le tableau a d&#39;ailleurs corrigé la proposition (la v2 coûte un peu
+plus à cause de la fenêtre ouvrante, deux panneaux de toit portent un biais, et un lit de 190
+rabattable ne tient pas contre un fond de 224 cm : il lui faut 244 cm). <em>Écarté :</em> modifier
+<code>disposition_trapeze</code> en place (la version 1 est en cours de réglage) ; une page écrite à la main
+(chiffres non vérifiables). <em>Le choix entre les deux versions reste ouvert</em> (backlog).</p>
+<h2 id="d29--chaque-document-markdown-a-sa-page-sur-le-site-avec-un-index">D29 — Chaque document Markdown a sa page sur le site, avec un index</h2>
+<p>Les documents du projet (<code>abri.md</code>, <code>abri-v2.md</code>, <code>variantes.md</code>…) ne se lisaient que sur GitHub.
+<code>npm run emit</code> écrit désormais <code>site/docs/</code> : une page HTML par <code>.md</code> suivi par git et un index,
+pour partager une adresse <code>rvion.github.io/screenplay/docs/…</code>. La liste vient de <code>git ls-files</code>,
+pas d&#39;une déclaration : une future <code>abri-v3.md</code> est publiée sans rien toucher, et un fichier
+ignoré (chemins privés de <code>CLAUDE.local.md</code>) ne peut pas fuiter. Rendu à la génération par
+<code>marked</code> (devDependency) : aucun script de plus dans le navigateur, D4 et la règle <code>file://</code>
+tiennent. Pages hors navigation et en <code>noindex</code> tant que le projet n&#39;est pas annoncé.
+<em>Écarté :</em> rendre le markdown dans le navigateur (dépendance au runtime, <code>fetch</code> interdit en
+<code>file://</code>) ; un petit moteur markdown maison (le README contient du HTML et des tableaux) ; une
+liste de pages tenue à la main (oubliée à la première v3). Les blocs <code>abri_vN</code> sont généralisés
+dans le même mouvement (<code>versions_abri</code>).</p>
+</main>
+</body>
+</html>

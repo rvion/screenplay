@@ -1,0 +1,30 @@
+/* pages de documents (site/docs/) : le markdown du depot, rendu lisible et partageable */
+.doc-bar { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; padding: .7rem 1.5rem; background: #2b5d8a; font-size: .92rem; }
+.doc-bar a { color: #fff; text-decoration: none; opacity: .92; }
+.doc-bar a:hover { text-decoration: underline; opacity: 1; }
+.doc-bar a:first-child { font-weight: 600; }
+.doc-main { max-width: 980px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+.doc-main h1 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); line-height: 1.25; margin: .6rem 0 1rem; }
+.doc-main h2 { margin-top: 2.4rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); color: var(--accent); }
+.doc-main h3 { margin-top: 1.8rem; }
+.doc-main img { max-width: 100%; height: auto; display: block; margin: 1rem auto; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.doc-main blockquote { margin: 1rem 0; padding: .6rem 1rem; border-left: 4px solid var(--line); color: var(--muted); background: var(--card); border-radius: 0 var(--radius) var(--radius) 0; }
+.doc-main blockquote p { margin: .2rem 0; }
+.doc-main code { background: #efefe8; padding: .08em .35em; border-radius: 4px; font-size: .92em; }
+.doc-main pre { background: #1f2933; color: #f3f4f6; padding: 1rem; border-radius: var(--radius); overflow-x: auto; }
+.doc-main pre code { background: none; padding: 0; color: inherit; }
+.doc-main li { margin: .25rem 0; }
+.doc-main a { color: var(--accent); }
+.doc-table { overflow-x: auto; margin: 1rem 0; }
+.doc-main table { border-collapse: collapse; width: 100%; background: var(--card); font-size: .94rem; }
+.doc-main th, .doc-main td { border: 1px solid var(--line); padding: .45rem .7rem; text-align: left; vertical-align: top; }
+.doc-main th { background: #f1f1ea; }
+.doc-main tr:nth-child(even) td { background: #fafaf6; }
+.doc-note { color: var(--muted); margin-top: -.4rem; }
+.doc-index { list-style: none; padding: 0; display: grid; gap: .7rem; }
+.doc-index li { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem 1rem; margin: 0; }
+.doc-index a { font-weight: 600; font-size: 1.05rem; color: var(--accent); text-decoration: none; }
+.doc-index a:hover { text-decoration: underline; }
+.doc-file { margin-left: .6rem; color: var(--muted); font-size: .85rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.doc-resume { display: block; color: var(--muted); font-size: .92rem; margin-top: .2rem; }
+@media print { .doc-bar { display: none; } .doc-main { max-width: none; padding: 0; } }

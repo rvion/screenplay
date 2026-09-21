@@ -109,8 +109,14 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
 
 // variante proposee (abri_v2) : murs au module, sous le seuil, toit vers la droite
 {
-  const { params_v2 } = await import(pathToFileURL(out).href);
+  const { params_v2, versions_abri } = await import(pathToFileURL(out).href);
   const p2 = params_v2(base);
+  {
+    // un bloc abri_v3 de plus est pris sans rien declarer, dans l'ordre des numeros
+    const p = JSON.parse(JSON.stringify(base)); p.abri_v10 = { params: {} }; p.abri_v3 = { params: { disposition_trapeze: { porte_largeur_cm: 90 } } }; p.abri_vide = {};
+    ok(versions_abri(p).map((x) => x.cle).join() === "abri_v2,abri_v3,abri_v10", "variantes : abri_v2, abri_v3, abri_v10 dans l'ordre, blocs sans params ignores");
+    ok(params_v2(p, "abri_v3").disposition_trapeze.porte_largeur_cm === 90 && params_v2(p, "abri_v3").disposition_trapeze.toit.sens === "arriere", "abri_v3 : sa surcouche seule, pas celle de la v2");
+  }
   ok(!!p2 && base.disposition_trapeze.toit.sens !== "droite", "abri_v2 : surcouche fusionnee sans toucher aux parametres de base");
   const c2 = buildCore(p2), m2 = c2.modele, v2 = c2.variantes.find((x) => x.id === 13), mod = base.panneau.largeur_utile_cm;
   const L = Object.fromEntries(m2.faces.map((f) => [f.cle, f]));

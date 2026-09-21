@@ -1963,19 +1963,25 @@ export function modele_facade_svg(m: any, f: any): string {
 /* Page de l'abri retenu (markdown, genere par le CLI)                */
 /* ----------------------------------------------------------------- */
 // jeu de parametres de la variante proposee : params + surcouche abri_v2.params (listes remplacees)
-export function params_v2(p: Params): Params | null {
-  if (!p.abri_v2 || !p.abri_v2.params) return null;
+// blocs abri_v2, abri_v3... de params.json, dans l'ordre des numeros
+export function versions_abri(p: Params): { n: number; cle: string }[] {
+  return Object.keys(p).map((cle) => ({ cle, m: /^abri_v(\d+)$/.exec(cle) })).filter((x) => x.m && p[x.cle] && p[x.cle].params)
+    .map((x) => ({ n: +x.m![1], cle: x.cle })).sort((a, b) => a.n - b.n);
+}
+
+export function params_v2(p: Params, cle = "abri_v2"): Params | null {
+  if (!p[cle] || !p[cle].params) return null;
   const fusion = (a: any, b: any): any => {
     if (Array.isArray(b) || b === null || typeof b !== "object") return JSON.parse(JSON.stringify(b));
     const out: any = a && typeof a === "object" && !Array.isArray(a) ? { ...a } : {};
     for (const k of Object.keys(b)) out[k] = fusion(out[k], b[k]);
     return out;
   };
-  return fusion(JSON.parse(JSON.stringify(p)), p.abri_v2.params);
+  return fusion(JSON.parse(JSON.stringify(p)), p[cle].params);
 }
 
 // tableau compare de deux abris (memes fonctions, deux jeux de parametres)
-function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number, ep: number): string {
+function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number, ep: number, n = 2): string {
   const fr = (x: number) => String(x).replace(".", ",");
   const eur = (x: number) => `${Math.round(x).toLocaleString("fr-FR").replace(/\u202f|\u00a0/g, " ")} €`;
   const etroites = (m: any) => m.faces.flatMap((f: any) => f.panneaux).filter((pn: any) => pn.largeur_cm < 30).length;
@@ -2005,7 +2011,7 @@ function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number,
     ["budget indicatif HT", (x) => `${eur(x.m.budget.total_eur)} (coque ${eur(x.m.budget.coque_eur)})`],
   ];
   void ep;
-  let md = `| | version 1 ([abri.md](abri.md)) | **version 2** |\n|---|---|---|\n`;
+  let md = `| | version 1 ([abri.md](abri.md)) | **version ${n}** |\n|---|---|---|\n`;
   for (const [nom, f] of lignes) md += `| ${nom} | ${f(a)} | ${f(b)} |\n`;
   return md + "\n";
 }
@@ -2020,12 +2026,12 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
   const derriere = v.passages.find((q: any) => q.cote === "arriere_droite");
   let md = `# ${opts.titre || "Abri de jardin : le bureau trapèze"}\n\n`;
-  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? " (bloc `abri_v2`)" : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base ? "Version de départ : [abri.md](abri.md). " : ""}Autres formes étudiées : [variantes.md](variantes.md).\n\n`;
+  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? ` (bloc \`abri_v${opts.version || 2}\`)` : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base ? "Version de départ : [abri.md](abri.md). " : ""}Autres formes étudiées : [variantes.md](variantes.md).\n\n`;
   md += `![implantation sur la dalle](site/assets/${img("modele-implantation")}.svg)\n\n`;
   if (opts.base) {
     md += `## Ce qui change par rapport à la version 1\n\n`;
-    md += compare_md({ m: opts.base.modele, v: opts.base.variantes.find((x: any) => x.id === 13) }, { m, v }, seuil, ep);
-    if ((opts.pertes || []).length) md += `### Ce que la version 2 perd\n\n` + opts.pertes.map((s: string) => `- ${s}\n`).join("") + `\n`;
+    md += compare_md({ m: opts.base.modele, v: opts.base.variantes.find((x: any) => x.id === 13) }, { m, v }, seuil, ep, opts.version || 2);
+    if ((opts.pertes || []).length) md += `### Ce que la version ${opts.version || 2} perd\n\n` + opts.pertes.map((s: string) => `- ${s}\n`).join("") + `\n`;
     if ((opts.notes || []).length) md += `### Pourquoi\n\n` + opts.notes.map((s: string, i: number) => `${i + 1}. ${s}\n`).join("") + `\n`;
     if ((opts.hors_modele || []).length) md += `### Conseils que les plans ne montrent pas\n\n` + opts.hors_modele.map((s: string) => `- ${s}\n`).join("") + `\n`;
   }

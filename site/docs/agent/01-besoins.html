@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Besoins (exprimés par l'utilisateur)</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/01-besoins.md">Source : agent/01-besoins.md</a></nav>
+<main class="doc-main">
+<h1 id="besoins-exprimés-par-l39utilisateur">Besoins (exprimés par l&#39;utilisateur)</h1>
+<p>Source : brief vocal + réponses aux questions de cadrage (2026-06), <strong>révisés le 2026-09-06</strong>
+(simplification : rectangle, rehausse, porte seule, 60 mm autoportant).</p>
+<h2 id="objectif-formulé-le-2026-09-06">Objectif (formulé le 2026-09-06)</h2>
+<p><strong>Simple, abordable, robuste, agréable à utiliser tous les jours.</strong> Pas « le moins cher » : un
+bureau qu&#39;on aime, pas un abri.</p>
+<h2 id="fonctionnels">Fonctionnels</h2>
+<ul>
+<li><strong>B1 — Forme.</strong> <strong>Rectangle, 4 faces</strong> (révisé : le coin coupé de la dalle n&#39;est plus suivi,
+« un carré est mieux, faisons plus simple »). Nommage :
+<strong>A</strong> = avant, <strong>D</strong> = droite, <strong>B</strong> = arrière, <strong>G</strong> = gauche, <strong>T</strong> = toiture.</li>
+<li><strong>B2 — Surface.</strong> Environ <strong>5 m²</strong> au sol.</li>
+<li><strong>B3 — Dalle réelle</strong> (déjà coulée), relevée au mètre le 2026-09-19 : Avant <strong>262</strong>, Droite
+<strong>223</strong>, Gauche <strong>324</strong>, puis deux pans à l&#39;arrière qui se rejoignent en pointe : <strong>104</strong> (depuis
+le haut du côté gauche) et <strong>258</strong> (jusqu&#39;au haut du côté droit). Contrôle : <strong>260</strong> de large à
+hauteur du coin droit. Pentagone à pointe arrière, profond de ~398 cm à la pointe. <strong>Emprise
+retenue : 200 × 240</strong> (4,8 m²) : on peut <strong>en faire le tour</strong> (contrainte du terrain), on
+reste sous 5 m² de murs. Le côté gauche (324) et les deux pans du fond (104, 258)
+<strong>longent le mur de propriété</strong> : on ne passe pas derrière. L&#39;abri <strong>longe le mur gauche</strong> pour
+garder une <strong>bande de passage le long du pan de 258</strong> vers l&#39;arrière de l&#39;abri (on n&#39;ira presque
+jamais, mais l&#39;endroit doit rester accessible). <strong>Optimiser pour cette dalle</strong> est la priorité ;
+la dalle, la position et le passage visé se règlent sur le site. L&#39;angle coupé pour atteindre
+5,3 m² a été jugé non rentable (+0,4 m² intérieur contre 2 angles obtus et pas de tour).</li>
+<li><strong>B4 — Murs &amp; toit</strong> en <strong>panneaux sandwich 60 mm autoportants</strong> : pas d&#39;ossature secondaire
+(« on m&#39;a dit que 6 cm est autoportant »). Seulement rail de pied + profils d&#39;angle.</li>
+<li><strong>B5 — Porte de service vitrée</strong>, <strong>ouvrant vers l&#39;extérieur</strong>, <strong>source principale de
+lumière naturelle</strong>. Depuis le 2026-09-06 : <strong>une fenêtre sur la face droite (D)</strong> par défaut,
+liste <code>fenetres[]</code> paramétrique (vide = aucune).</li>
+<li><strong>B6 — Toit mono-pente</strong> : l&#39;eau s&#39;écoule <strong>vers l&#39;arrière (face B)</strong>.</li>
+<li><strong>B7 — Coupes simples.</strong> Tous les panneaux de mur sont des <strong>rectangles</strong> identiques (coupes
+droites). La pente est obtenue par une <strong>rehausse en bois</strong> : un madrier coupé en diagonale
+(deux coins, faces G et D) + un madrier droit sur la face A. Une seule coupe en biais dans tout
+le projet, dans du bois, et elle sert de lisse haute.</li>
+<li><strong>B13 — Confort quotidien.</strong> Lumière des deux côtés (fenêtre ouvrante à droite, fixe à gauche),
+ventilation traversante, toit clair, plancher isolé, chauffage, store, finitions intérieures.
+<strong>Électricité : un câble arrive déjà par le sol</strong> ⇒ multiprise + éclairage, pas de tableau.</li>
+<li><strong>B8 — Usage</strong> : <strong>pièce à vivre / bureau</strong>, toute l&#39;année, <strong>chauffée</strong> ⇒ isolation soignée
+et gestion de la vapeur/condensation.</li>
+</ul>
+<h2 id="documentaires">Documentaires</h2>
+<ul>
+<li><strong>B9 — Le dépôt contient tous les documents nécessaires</strong> : plans, liste d&#39;achats,
+détails de montage, points de vigilance.</li>
+<li><strong>B10 — Paramétrique</strong> : la géométrie est pilotée par des paramètres.</li>
+<li><strong>B11 — Petit site web, simple</strong> : le site précédent était « trop d&#39;étapes, trop complexe,
+trop cher » ⇒ moins de réglages, montage court, débit lisible, budget réduit.</li>
+<li><strong>B12 — Dossier <code>agent/</code> spec-first</strong>, référencé depuis <code>CLAUDE.md</code> (via <code>agent/index.md</code>).</li>
+</ul>
+<h2 id="décisions-de-cadrage">Décisions de cadrage</h2>
+<ul>
+<li>Épaisseur panneaux : <strong>60 mm</strong> (murs + toit), autoportants.</li>
+<li>Hébergement : <strong>GitHub Pages + README riche</strong>.</li>
+</ul>
+<h2 id="hypothèses-à-valider-par-l39utilisateur">Hypothèses (à valider par l&#39;utilisateur)</h2>
+<ul>
+<li><strong>H1</strong> Hauteur des murs (arrière) <strong>215 cm</strong> ; avant = 215 + 22,5 = <strong>237,5 cm</strong>
+(<code>murs.hauteur_cm</code>, <code>toit.pente_chute_cm</code> = section du madrier 225 mm).</li>
+<li><strong>H2</strong> <strong>Bloc-porte 100 × 215 cm</strong> (dormant compris = un module entier, remplace le panneau A2),
+face A, calé à droite, charnière côté droit. Vantail vitré ~90 cm dedans.</li>
+<li><strong>H3</strong> Largeur utile de panneau <strong>100 cm</strong>, pose <strong>verticale</strong> des panneaux muraux.</li>
+<li><strong>H4</strong> Débords de toit <strong>10 cm devant/derrière, 0 sur les côtés</strong> (toit = 2 panneaux entiers,
+rives affleurantes). Emprise débords inclus 200 × 260 = 5,2 m² ⇒ déclaration préalable
+probable, à confirmer en mairie.</li>
+<li><strong>H5</strong> Âme <strong>PIR</strong>, panneaux mur à <strong>fixation cachée</strong>, toit <strong>couleur claire</strong>.</li>
+<li><strong>H7</strong> Rehausse en madrier <strong>75 × 225 classe 4</strong>, stock 4,8 m (<code>rehausse</code>).</li>
+<li><strong>H6</strong> Portée libre du toit ≈ <strong>2,6 m</strong> sans panne : à confirmer dans le tableau de portées du
+fabricant pour du 60 mm (sinon une panne intermédiaire).</li>
+</ul>
+<h2 id="non-objectifs-pour-l39instant">Non-objectifs (pour l&#39;instant)</h2>
+<ul>
+<li>Calcul réglementaire/structurel signé, étude de sol, déclaration préalable de travaux.</li>
+<li>Électricité / CVC détaillés (mentionnés en vigilance, non chiffrés finement).</li>
+<li>Commande réelle / liens fournisseurs spécifiques.</li>
+</ul>
+</main>
+</body>
+</html>

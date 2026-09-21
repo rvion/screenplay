@@ -12,7 +12,8 @@
     "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",
     "test:dom": "node tests/dom.mjs",
     "test": "shipkit ci --only test",
-    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:dom",
+    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:docs && npm run test:dom",
+    "test:docs": "node tests/docs.mjs",
     "test:modele": "node tests/modele.mjs",
     "test:dalle": "node tests/dalle.mjs",
     "emit": "npm run build:cli && node scripts/build.mjs --emit",
@@ -24,6 +25,7 @@
     "@types/node": "^22.20.0",
     "esbuild": "^0.23.1",
     "jsdom": "^25.0.1",
+    "marked": "^18.0.13",
     "rvlib-shipkit": "^0.38.1",
     "typescript": "^5.5.4"
   },

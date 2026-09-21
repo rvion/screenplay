@@ -9,6 +9,7 @@ screenplay/
 ├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d'abri (SVG inclus)
 ├── abri.md            # GÉNÉRÉ : l'abri retenu (option 13), chiffres + ses 7 plans
 ├── abri-v2.md         # GÉNÉRÉ : variante proposée (bloc abri_v2 de params.json), tableau comparé + ses plans
+│                      # (un bloc abri_v3, abri_v4… donne de même abri-v3.md, abri-v4.md)
 ├── params.json         # cotes par défaut (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
 ├── tsconfig.json
@@ -28,6 +29,8 @@ screenplay/
     ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
     ├── .nojekyll
+    ├── docs.css        # styles des pages de documents (écrit à la main)
+    ├── docs/           # GÉNÉRÉ : une page HTML par .md suivi par git + index.html (adresses à partager)
     ├── assets/*.svg    # GÉNÉRÉS : plan-sol, plan-toit, plan-rehausse, facade-{A,D,B,G}
     └── data/derived.json # GÉNÉRÉ (référence)
 ```

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Backlog &amp; questions ouvertes</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/06-backlog.md">Source : agent/06-backlog.md</a></nav>
+<main class="doc-main">
+<h1 id="backlog--questions-ouvertes">Backlog &amp; questions ouvertes</h1>
+<h2 id="à-trancher-avec-l39utilisateur">À trancher avec l&#39;utilisateur</h2>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>Abri : version 1 ou version 2</strong> (D28). <code>abri-v2.md</code> compare les deux : la v2 est au seuil
+de 5 m², en panneaux entiers sur 3 faces, toit vers le jardin (portée 2 m) ; elle perd 0,35 m²
+d&#39;intérieur et le lit rabattable contre le fond. On peut aussi ne prendre que certains points.</li>
+<li><input disabled="" type="checkbox"> <strong>Toit de l&#39;abri retenu</strong> (D27) : sens (vers l&#39;arrière par défaut) et chute (30 cm par défaut,
+5,5° ; madrier 75 × 300 à trouver en classe 4, sinon deux pièces superposées).</li>
+<li><input disabled="" type="checkbox"> <strong>Débit, achats, budget et 3D</strong> suivent encore le rectangle 200 × 240 : les porter sur
+<code>modele_trapeze</code> (plan : <code>tmp/20260919-224925-modele-trapeze.md</code>).</li>
+<li><input disabled="" type="checkbox"> <strong>Bande de 18 cm</strong> en façade (A3) et bande T3 de 18 cm au toit : acceptables, ou décaler les
+modules ?</li>
+<li><input disabled="" type="checkbox"> <strong>Forme de l&#39;abri dans la zone utile</strong> : 13 options dessinées (<code>site/assets/variante-{1..13}.svg</code>,
+section « Formes » du site, résumé dans <code>variantes.md</code>). Recommandations : option 12 (coin
+coupé au module, sous le seuil, murs gauche et fond en panneaux entiers), option 5 (coin
+coupé, 5,94 m², avec déclaration) ou option 1 (200 × 200, le plus simple). Le choix remplace l&#39;emprise rectangulaire actuelle.</li>
+<li><input disabled="" type="checkbox"> <strong>Profondeur de l&#39;abri contre passage arrière</strong> (D26) : 200 × 240 ⇒ bande de 27 cm, on ne
+passe pas. 200 × 215 ⇒ 45 cm (mais un module de 15 cm sur D et G). 200 × 200 ⇒ 56 cm, 4 faces
+en panneaux entiers, 4,0 m². À trancher ; le site montre la bande en direct.</li>
+<li><input disabled="" type="checkbox"> <strong>Fenêtre fixe de la face G</strong> : elle regarde le mur de propriété à 2 cm. La déplacer
+(module A1 côté jardin, ou face B vers l&#39;arrière) ou la supprimer.</li>
+<li><input disabled="" type="checkbox"> <strong>Mur de propriété</strong> : mesurer sa hauteur (<code>mur_hauteur_cm</code>, 180 supposé). S&#39;il dépasse
+215 cm, le débord de toit arrière doit aussi dégager le mur.</li>
+<li><input disabled="" type="checkbox"> <strong>Formalités</strong> : 4,8 m² de murs mais 5,2 m² débords inclus ⇒ vérifier en mairie si une
+déclaration préalable est due (et la distance aux limites du PLU).</li>
+<li><input disabled="" type="checkbox"> <strong>Portée du toit</strong> ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
+fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.</li>
+<li><input disabled="" type="checkbox"> <strong>Pente</strong> : 22,5 cm (≈ 9,4 %, 5,4°). Vérifier la mini exacte du fabricant de panneaux toiture.</li>
+<li><input disabled="" type="checkbox"> <strong>Hauteur des murs</strong> réelle souhaitée (hypothèse 215 arrière / 240 avant).</li>
+<li><input disabled="" type="checkbox"> <strong>Bloc-porte</strong> : confirmer chez le menuisier un bloc 100 × 215 dormant compris (vantail ~90),
+sens de charnière.</li>
+<li><input disabled="" type="checkbox"> <strong>Madrier 75 × 225</strong> : vérifier la disponibilité en classe 4 (sinon 63 × 225 ou traitement
+sur place) et le larmier qui le couvre à l&#39;extérieur.</li>
+<li><input disabled="" type="checkbox"> <strong>Exposition</strong> : orienter la fenêtre ouvrante et le store selon le soleil réel (sud/ouest).</li>
+<li><input disabled="" type="checkbox"> <strong>Largeur utile de panneau</strong> réelle du fournisseur (100 vs 115 cm).</li>
+<li><input disabled="" type="checkbox"> <strong>Âme</strong> : PIR vs laine de roche.</li>
+<li><input disabled="" type="checkbox"> Besoin <strong>électricité / chauffage / plancher</strong> à intégrer (bureau) ?</li>
+</ul>
+<h2 id="améliorations-possibles-non-bloquantes">Améliorations possibles (non bloquantes)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Élévations : cotes des joints de panneaux et de la porte plus détaillées.</li>
+<li><input disabled="" type="checkbox"> Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).</li>
+<li><input disabled="" type="checkbox"> Bilan thermique chiffré (vitrages, ponts thermiques, rehausse bois).</li>
+<li><input disabled="" type="checkbox"> Export PDF imprimable du cahier (via le site, <code>@media print</code>).</li>
+<li><input disabled="" type="checkbox"> Vérifier le rendu 3D dans un vrai navigateur (non validé dans l&#39;environnement de build).</li>
+<li><input disabled="" type="checkbox"> Renommer la branche par défaut (<code>claude/garden-shed-docs-n7eq2b</code> → <code>main</code>) et mettre à jour
+<code>pages.yml</code> (aucune branche <code>main</code>/<code>master</code> n&#39;existe aujourd&#39;hui).</li>
+</ul>
+<h2 id="fait-2026-09-19">Fait (2026-09-19)</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>Dalle relevée au mètre</strong> (262 / 223 / 324 / 104 / 258) et réglable sur le site (D24, D25).</li>
+</ul>
+<h2 id="fait-2026-09-06-simplification">Fait (2026-09-06, simplification)</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>Rectangle 4 faces</strong> au lieu du pentagone à coin coupé ; dalle réelle conservée en
+<code>dalle_cm</code> pour calculer le débord. Emprise finale <strong>200 × 240</strong> (D21).</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Rehausse</strong> : murs rectangulaires + 1 bande coupée en diagonale (2 triangles) + 1 bandeau ;
+plan de coupe SVG dédié ; joints dessinés en 3D et sur les élévations.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Rehausse bois + 2 fenêtres + aménagement chiffré</strong> (D23).</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Porte + liste <code>fenetres[]</code></strong> (une fenêtre face D par défaut, D20) ; contrôles réduits ;
+montage en 6 étapes ; épaisseur fixée à 60 mm autoportant ; prix médians 2026 + livraison.</li>
+<li><input checked="" disabled="" type="checkbox"> Ouvertures paramétriques, 3D enrichie, budget + fournisseurs, éditeur interactif, port TS
+complet (historique, cf. D11–D14).</li>
+</ul>
+<h2 id="dette--limites-connues">Dette / limites connues</h2>
+<ul>
+<li>Prix = médians marché 2026 (fourniture seule, HT), pas des devis. Longueurs de stock non
+modélisées : si le fournisseur ne coupe pas à longueur, compter +15–30 % sur la ligne murs.</li>
+<li>Quantités de visserie / accessoires = estimations à recouper avec le fabricant.</li>
+<li>Pas de validation structurelle (vent/neige/charge) — hors périmètre actuel.</li>
+<li><code>npm test</code> / <code>npm run typecheck</code> passent par <code>shipkit ci</code> ; les variantes <code>:raw</code> lancent
+directement les tests Node.</li>
+</ul>
+</main>
+</body>
+</html>

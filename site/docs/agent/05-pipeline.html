@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pipeline &amp; exploitation</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/05-pipeline.md">Source : agent/05-pipeline.md</a></nav>
+<main class="doc-main">
+<h1 id="pipeline--exploitation">Pipeline &amp; exploitation</h1>
+<h2 id="arborescence">Arborescence</h2>
+<pre><code>screenplay/
+├── CLAUDE.md            # 2 lignes : @./CLAUDE.local.md puis @./agent/index.md (cf. D15)
+├── CLAUDE.local.md     # GITIGNORÉ, machine de Rémi : @~/dev/corvion/wiki/index.md
+├── README.md           # cahier lisible sur GitHub (public)
+├── variantes.md       # GÉNÉRÉ par npm run emit : résumé des formes d&#39;abri (SVG inclus)
+├── abri.md            # GÉNÉRÉ : l&#39;abri retenu (option 13), chiffres + ses 7 plans
+├── abri-v2.md         # GÉNÉRÉ : variante proposée (bloc abri_v2 de params.json), tableau comparé + ses plans
+│                      # (un bloc abri_v3, abri_v4… donne de même abri-v3.md, abri-v4.md)
+├── params.json         # cotes par défaut (source unique des dimensions, en cm)
+├── package.json        # scripts npm (build / emit / test / typecheck)
+├── tsconfig.json
+├── agent/              # spec-first : index.md (routeur, chargé par CLAUDE.md) + vision, besoins,
+│                       # spec, décisions, géométrie, pipeline, backlog, handoff
+├── tests/
+│   ├── snapshot.mjs    # snapshots golden de compute.ts (remplace l&#39;oracle Python)
+│   ├── cases.mjs       # jeux de params partagés
+│   ├── dalle.mjs       # dalle, zone utile, variantes de forme
+│   ├── modele.mjs      # modèle 2D de l&#39;abri retenu (faces, rehausse, toit, plans)
+│   ├── dom.mjs         # smoke-test DOM (jsdom)
+│   └── snapshots/*.json
+└── site/               # GitHub Pages (publié tel quel)
+    ├── index.html
+    ├── style.css
+    ├── src/            # TypeScript : compute (logique pure) + viewer/render/controls/main + cli
+    ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts)
+    ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
+    ├── .nojekyll
+    ├── docs.css        # styles des pages de documents (écrit à la main)
+    ├── docs/           # GÉNÉRÉ : une page HTML par .md suivi par git + index.html (adresses à partager)
+    ├── assets/*.svg    # GÉNÉRÉS : plan-sol, plan-toit, plan-rehausse, facade-{A,D,B,G}
+    └── data/derived.json # GÉNÉRÉ (référence)
+</code></pre>
+<h2 id="régénérer">Régénérer</h2>
+<pre><code class="language-bash">npm ci                         # une fois (esbuild, typescript, jsdom)
+npm run build                  # bundle src/main.ts -&gt; site/app.js
+npm run emit                   # cli.ts --emit : params.js + assets/*.svg + derived.json + cache-bust
+npm run test:raw               # snapshots golden + smoke DOM (npm test passe par shipkit ci) (routé par shipkit ; test:raw = brut)
+shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré
+</code></pre>
+<p>La CI GitHub (<code>pages.yml</code>) appelle <code>npm run test:raw</code> : shipkit (bun) n&#39;y est pas installé.
+Les fichiers générés (<code>app.js</code>, <code>params.js</code>, <code>assets/*.svg</code>, <code>data/derived.json</code>) sont <strong>commités</strong>
+pour que le site fonctionne même sans CI. Si un changement de calcul est <strong>voulu</strong> :
+<code>npm run snapshot:update</code>.</p>
+<h2 id="prévisualiser-le-site-en-local">Prévisualiser le site en local</h2>
+<pre><code class="language-bash">python3 -m http.server -d site 8000   # puis http://localhost:8000
+</code></pre>
+<p>(ou ouvrir <code>site/index.html</code> directement : <code>params.js</code> évite tout besoin de serveur.)</p>
+<h2 id="publication-github-pages">Publication GitHub Pages</h2>
+<ul>
+<li>Workflow : <code>.github/workflows/pages.yml</code> build le TS, lance les tests, puis déploie <code>site/</code>.</li>
+<li>Activation : <em>Settings → Pages → Source = GitHub Actions</em> (une fois).</li>
+<li>URL résultante : <code>https://rvion.github.io/screenplay/</code>.</li>
+</ul>
+<h2 id="invariants-à-préserver">Invariants à préserver</h2>
+<ol>
+<li>Aucun chiffre métier en dur : cotes dans <code>params.json</code>, logique dans <code>compute.ts</code>.</li>
+<li><code>compute.ts</code> reste <strong>pur</strong> (aucun <code>import</code> de DOM ni de Three) pour tourner navigateur + Node.</li>
+<li>Le site doit marcher en <code>file://</code> (donc <code>params.js</code>, pas de <code>fetch</code>).</li>
+<li>La 3D doit échouer proprement sans WebGL (les plans restent lisibles).</li>
+<li>Quand on touche la géométrie/calcul : mettre à jour <code>agent/04-geometrie.md</code>, relancer
+<code>npm run build &amp;&amp; npm run emit</code>, et vérifier/mettre à jour les snapshots (<code>npm run test:raw</code>).</li>
+</ol>
+</main>
+</body>
+</html>

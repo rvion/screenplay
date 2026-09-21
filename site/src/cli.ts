@@ -2,11 +2,13 @@
 //   node scripts/build.mjs --json [params.json]   -> imprime buildCore en JSON
 //   node scripts/build.mjs --emit [params.json]   -> ecrit site/assets/*.svg, params.js, derived.json
 // Bundle via : npm run build:cli  (esbuild -> scripts/build.mjs)
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md, abri_md, params_v2 } from "./compute";
+import { buildCore, variantes_md, abri_md, params_v2, versions_abri } from "./compute";
+import { construit_docs, est_publie } from "./docs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -34,17 +36,33 @@ function emit(p: any) {
     JSON.stringify(p, null, 2) + ";\n");
   writeFileSync(join(ROOT, "variantes.md"), variantes_md(p, core));
   writeFileSync(join(ROOT, "abri.md"), abri_md(p, core));
-  // variante proposee (bloc abri_v2) : memes plans, prefixes modele-v2-, et une page comparee
-  const p2 = params_v2(p);
-  if (p2) {
-    const core2 = buildCore(p2);
-    for (const [name, content] of Object.entries(core2.svg)) {
-      if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", "modele-v2-") + ".svg"), content as string);
+  // variantes proposees (blocs abri_v2, abri_v3...) : memes plans sous modele-vN-, et une page comparee chacune
+  const generes = ["variantes.md", "abri.md"];
+  for (const { n, cle } of versions_abri(p)) {
+    const pn = params_v2(p, cle)!, coren = buildCore(pn), bloc = p[cle], prefixe = `modele-v${n}-`;
+    for (const [name, content] of Object.entries(coren.svg)) {
+      if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", prefixe) + ".svg"), content as string);
     }
-    writeFileSync(join(ROOT, "abri-v2.md"), abri_md(p2, core2, { prefixe: "modele-v2-", titre: p.abri_v2.titre, pertes: p.abri_v2.pertes, notes: p.abri_v2.notes, hors_modele: p.abri_v2.hors_modele, base: core }));
+    writeFileSync(join(ROOT, `abri-v${n}.md`), abri_md(pn, coren, { prefixe, version: n, titre: bloc.titre, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: core }));
+    generes.push(`abri-v${n}.md`);
   }
+  emitDocs(p, generes);
   stamp();
   return core;
+}
+
+// site/docs/ : une page HTML par markdown SUIVI PAR GIT (plus ceux que ce run vient d'ecrire) + un index.
+// git fait foi : un fichier ignore (CLAUDE.local.md, STATUS.md) ne peut pas etre publie par accident.
+function emitDocs(p: any, generes: string[]) {
+  const suivis = execFileSync("git", ["ls-files", "--", "*.md"], { cwd: ROOT }).toString().split("\n").filter(Boolean);
+  const chemins = [...new Set([...suivis, ...generes])].filter(est_publie).filter((c) => existsSync(join(ROOT, c)));
+  const pages = construit_docs(chemins.map((chemin) => ({ chemin, md: readFileSync(join(ROOT, chemin), "utf8") })), p.projet.depot_url);
+  const dir = join(SITE, "docs");
+  rmSync(dir, { recursive: true, force: true });                   // une page dont le .md a disparu ne survit pas
+  for (const [nom, html] of Object.entries(pages)) {
+    mkdirSync(dirname(join(dir, nom)), { recursive: true });
+    writeFileSync(join(dir, nom), html);
+  }
 }
 
 // Cache-bust : reecrit ?v=<hash> sur style.css / app.js / params.js dans index.html.

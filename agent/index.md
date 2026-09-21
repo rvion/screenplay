@@ -43,6 +43,9 @@ Toute la spécification vit dans ce dossier — la mettre à jour AVANT de chang
 5. Le site doit fonctionner en `file://` (données via `params.js`, pas de `fetch`) et
    **dégrader proprement** sans WebGL.
 6. Si tu modifies la géométrie, mets à jour `04-geometrie.md`.
+7. **Tout `.md` suivi par git est publié** sous `site/docs/` (une page + l'index, adresses à
+   partager). Après avoir édité ou ajouté un `.md` : `npm run emit`, puis committer `site/docs/`.
+   `tests/docs.mjs` échoue si une page n'est plus à jour ou si un lien y est mort.
 
 ## Où lire avant de toucher…
 

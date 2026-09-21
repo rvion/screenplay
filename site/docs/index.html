@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Documents du projet</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="index.html">Tous les documents</a><a href="../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay">Le dépôt</a></nav>
+<main class="doc-main">
+<h1 id="documents-du-projet">Documents du projet</h1>
+<p>Chaque fichier Markdown du dépôt a ici sa page, à une adresse stable à partager. La liste se refait à chaque <code>npm run emit</code> : une nouvelle version (<code>abri-v3.md</code>…) y apparaît toute seule.</p>
+<h2 id="documents">Documents</h2>
+<p class="doc-note">Les pages du projet, générées depuis les paramètres.</p>
+<ul class="doc-index">
+<li><a href="readme.html">🏡 Abri de jardin — panneaux sandwich</a><span class="doc-file">README.md</span><span class="doc-resume">Conception paramétrique, spec-first et auto-documentée d'un petit abri / bureau de jardin (2,00 × 2,40 m, 4,8 m²) rectangulaire, murs et toit en panneaux sandwich 60…</span></li>
+<li><a href="abri.html">Abri de jardin : le bureau trapèze</a><span class="doc-file">abri.md</span><span class="doc-resume">Murs 5,37 m² · intérieur 4,81 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,41 m² · hauteur sous plafond 2,39 m devant, 2,09 m au plus bas (plancher isolé déduit).</span></li>
+<li><a href="abri-v2.html">Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)</a><span class="doc-file">abri-v2.md</span><span class="doc-resume">Murs 5 m² · intérieur 4,46 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,21 m² · hauteur sous plafond 2,32 m devant, 2,09 m au plus bas (plancher isolé déduit).</span></li>
+<li><a href="variantes.html">Formes d'abri possibles sur la dalle</a><span class="doc-file">variantes.md</span><span class="doc-resume">rectangle en panneaux entiers · 2 × 2 modules de 100 : aucune recoupe, angles droits</span></li>
+</ul>
+<h2 id="spécification">Spécification</h2>
+<p class="doc-note">Le dossier agent/ : besoins, décisions, géométrie, pipeline, questions ouvertes.</p>
+<ul class="doc-index">
+<li><a href="agent/00-vision.html">Vision</a><span class="doc-file">agent/00-vision.md</span></li>
+<li><a href="agent/01-besoins.html">Besoins (exprimés par l'utilisateur)</a><span class="doc-file">agent/01-besoins.md</span><span class="doc-resume">Source : brief vocal + réponses aux questions de cadrage (2026-06), révisés le 2026-09-06 (simplification : rectangle, rehausse, porte seule, 60 mm autoportant).</span></li>
+<li><a href="agent/02-specification.html">Spécification</a><span class="doc-file">agent/02-specification.md</span></li>
+<li><a href="agent/03-decisions.html">Journal des décisions (ADR léger)</a><span class="doc-file">agent/03-decisions.md</span><span class="doc-resume">Format : décision · contexte · raison · alternatives écartées.</span></li>
+<li><a href="agent/04-geometrie.html">Géométrie (détail mathématique)</a><span class="doc-file">agent/04-geometrie.md</span><span class="doc-resume">Hors dalle = aire de l'emprise − aire de (emprise ∩ dalle), par découpage de polygone (Sutherland–Hodgman), valable pour tout débord (arrière, côtés, avant). Pour le…</span></li>
+<li><a href="agent/05-pipeline.html">Pipeline &amp; exploitation</a><span class="doc-file">agent/05-pipeline.md</span></li>
+<li><a href="agent/06-backlog.html">Backlog &amp; questions ouvertes</a><span class="doc-file">agent/06-backlog.md</span></li>
+<li><a href="agent/handoff.html">Handoff</a><span class="doc-file">agent/handoff.md</span><span class="doc-resume">Travail en cours laissé par la session précédente. Une section AAAA-MM-JJ = un offload à reprendre ; la session qui le reprend supprime la section (la suppression…</span></li>
+<li><a href="agent/index.html">screenplay — abri de jardin / bureau paramétrique</a><span class="doc-file">agent/index.md</span><span class="doc-resume">Conception, plans, débit, budget et modèle 3D d'un petit bureau de jardin (rectangle 200 × 240, panneaux sandwich 60 mm autoportants, pente par rehausse bois,…</span></li>
+</ul>
+</main>
+</body>
+</html>

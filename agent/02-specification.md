@@ -111,6 +111,25 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
   plan de rehausse et dans le tableau de débit (`debit.*.pieces`). Le dernier panneau d'une face
   est le plus étroit (recoupe).
 
+## Documents partageables (`site/docs/`)
+- Chaque fichier **Markdown suivi par git** (racine : `README.md`, `variantes.md`, `abri.md`,
+  `abri-vN.md` ; et `agent/*.md`) a sa page HTML sous `site/docs/`, donc une adresse stable :
+  `https://rvion.github.io/screenplay/docs/abri-v2.html`. `site/docs/index.html` les liste
+  (README, puis tri naturel : abri, abri-v2, abri-v3… ; puis la spécification).
+- **Rien à déclarer** pour une nouvelle page : `npm run emit` prend les `.md` de `git ls-files`
+  plus ceux qu'il vient d'écrire. **git fait foi** : un fichier ignoré (`CLAUDE.local.md`,
+  `STATUS.md`) ne peut pas être publié ; `CLAUDE*.md` et `STATUS*.md` sont exclus par nom en plus.
+- Rendu par `site/src/docs.ts` (**côté Node seulement**, `marked` en devDependency : le bundle du
+  navigateur n'en dépend pas, le site reste statique et marche en `file://`). Une seule passe de
+  réécriture des liens : fichier sous `site/` → chemin du site ; `.md` publié → sa page ; tout le
+  reste → le dépôt (`projet.depot_url`). Titres ancrés façon GitHub (les `#option-1` marchent).
+- **Cachées pour l'instant** : aucune entrée dans la navigation du site, `noindex` sur chaque page.
+- Le dossier est **vidé puis réécrit** à chaque emit (pas de page orpheline). `tests/docs.mjs`
+  garde : pages à jour avec leur `.md`, une page par `.md` suivi, aucun lien, image, ancre ou lien
+  vers le dépôt mort (la garde est d'abord essayée sur un échantillon cassé).
+- Plusieurs variantes : tout bloc `abri_vN` de `params.json` (`versions_abri`) donne `abri-vN.md`
+  et ses plans `modele-vN-*.svg`, comparés à la version 1.
+
 ## Contraintes techniques
 - Logique **TypeScript pure** dans `compute.ts` ; build esbuild.
 - Fonctionne en `file://`.

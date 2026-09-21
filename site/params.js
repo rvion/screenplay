@@ -4,7 +4,8 @@ window.SHED_PARAMS = {
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
     "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
-    "auteur": "Remi Vion"
+    "auteur": "Remi Vion",
+    "depot_url": "https://github.com/rvion/screenplay"
   },
   "emprise_cm": {
     "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (262 de large, 223 a droite, pointe arriere).",

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Spécification</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/02-specification.md">Source : agent/02-specification.md</a></nav>
+<main class="doc-main">
+<h1 id="spécification">Spécification</h1>
+<h2 id="repère-et-conventions">Repère et conventions</h2>
+<ul>
+<li>Cotes en <strong>centimètres</strong> dans <code>params.json</code> (mètres dans le modèle 3D).</li>
+<li>Repère plan : origine au coin <strong>avant-gauche</strong>, <code>x</code> vers la <strong>droite</strong>, <code>y</code> vers
+l&#39;<strong>arrière</strong>. Hauteur <code>z</code> (ou <code>Y</code> monde Three.js) vers le haut.</li>
+<li>Faces : <strong>A</strong> avant, <strong>D</strong> droite, <strong>B</strong> arrière, <strong>G</strong> gauche (ordre antihoraire du rectangle),
+<strong>T</strong> toiture, <strong>R</strong> rehausse (dans le débit).</li>
+</ul>
+<h2 id="géométrie-voir-04-geometriemd">Géométrie (voir <code>04-geometrie.md</code>)</h2>
+<ul>
+<li>Emprise <strong>rectangulaire</strong> <code>A × G</code> (<code>emprise_cm.avant_A</code>, <code>emprise_cm.gauche_G</code>).</li>
+<li>Sommets : <code>FL=(0,0)</code>, <code>FR=(A,0)</code>, <code>BR=(A,G)</code>, <code>BL=(0,G)</code>.</li>
+<li><code>dalle_cm</code> décrit la dalle <strong>réelle</strong> par les <strong>5 longueurs relevées au mètre</strong> (<code>avant</code>,
+<code>droite</code>, <code>gauche</code>, <code>arriere_gauche</code>, <code>arriere_droite</code>) + <code>decalage_cm</code> (position de l&#39;abri sur
+la dalle). La pointe arrière est trouvée par triangulation. Elle ne pilote pas le bâtiment :
+elle sert à calculer la <strong>partie de l&#39;emprise hors dalle</strong> (découpage de polygone, tout débord
+compte), affichée sur le plan de sol, en 3D et en vigilance. Tout est réglable sur le site ;
+des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.</li>
+<li><code>dalle_cm.murs_mitoyens</code> : côtés qui sont le <strong>mur de propriété</strong> (gauche + les deux pans du
+fond). Dessinés en trait brun épais sur le plan et en volume en 3D (<code>mur_hauteur_cm</code>,
+hypothèse à mesurer). <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
+point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
+garde <code>passage_souhaite_cm</code>. Carte <strong>Passage derrière l&#39;abri</strong> en vigilance. Un débord hors
+dalle contre un mur est signalé comme impossible à combler.</li>
+</ul>
+<h2 id="murs--tous-rectangulaires">Murs — tous rectangulaires</h2>
+<ul>
+<li>Panneaux sandwich <strong>verticaux</strong>, largeur utile <code>panneau.largeur_utile_cm</code>, hauteur unique
+<code>murs.hauteur_cm</code> (= hauteur arrière). <strong>Coupes droites uniquement.</strong></li>
+<li>Nombre de panneaux/face = <code>ceil(longueur / largeur_utile)</code>.</li>
+<li>Autoportants (60 mm) : pas d&#39;ossature, rail de pied + profils d&#39;angle à 90°.</li>
+</ul>
+<h2 id="rehausse--la-pente-sans-coupe-d39arase-en-bois">Rehausse — la pente sans coupe d&#39;arase, en bois</h2>
+<ul>
+<li>Chute <code>toit.pente_chute_cm</code> = hauteur de la rehausse à l&#39;avant = hauteur de la section du
+madrier (<code>rehausse.section_mm</code>, 75 × 225 ⇒ 22,5 cm).</li>
+<li><code>rehausse.materiau = &quot;bois&quot;</code> (défaut) : <strong>R2+R3</strong> = un madrier de longueur <code>G</code> coupé <strong>en
+diagonale</strong> ⇒ 2 coins identiques sur les murs <strong>G</strong> et <strong>D</strong> (le second tourné de 180°) ;
+<strong>R1</strong> = un madrier droit de longueur <code>A</code> sur le mur <strong>A</strong>. Le mur <strong>B</strong> ne reçoit rien.
+Posés sur le chant des panneaux (butyle), vissés, ils font <strong>lisse haute</strong> entre murs et toit.
+Débit : <code>ceil((A+G)/longueur_stock)</code> madrier(s) (<code>debit.rehausse.nb_madriers</code>).</li>
+<li><code>rehausse.materiau = &quot;panneau&quot;</code> : ancienne variante, deux bandes tirées d&#39;un panneau mur
+(<code>2·chute ≤ largeur_utile</code>), toujours calculée pour comparaison.</li>
+</ul>
+<h2 id="toiture--face-t">Toiture — face T</h2>
+<ul>
+<li>Mono-pente, plan unique : <code>h(y) = hauteur_cm + chute · (1 − y/G)</code>, avant haut → arrière bas.</li>
+<li>Rectangle débordant <code>(A + débords G/D) × (G + débords avant/arrière)</code> ; panneaux dans le sens
+de la pente, longueur = rampant du rectangle débordant. <strong>Débords latéraux = 0 par défaut</strong> :
+le toit fait exactement <code>A</code> de large ⇒ <code>A / largeur_utile</code> panneaux entiers (2), rive fermée
+par une bavette affleurante.</li>
+<li>Finition <strong>toit</strong> (nervures hautes) : produit différent des panneaux de mur.</li>
+<li>Gouttière sur toute la face <strong>B</strong>, une descente à un angle arrière.</li>
+</ul>
+<h2 id="ouvertures--porte--fenêtres">Ouvertures : porte + fenêtres</h2>
+<ul>
+<li>Objet <code>porte</code> dans <code>params.json</code> : <code>face</code> (A), <code>largeur_cm</code>, <code>hauteur_cm</code>, <code>position</code>,
+<code>marge_bord_cm</code>. Vitrée, ouvrant <strong>extérieur</strong>, source principale de lumière. Rendue en 3D
+avec un vantail entrouvert.</li>
+<li><strong>Bloc-porte au module</strong> : par défaut <code>largeur_cm</code> = largeur utile (100) et <code>hauteur_cm</code> =
+hauteur des murs (215), calé à droite sans marge ⇒ la porte <strong>remplace le panneau A2</strong>
+(<code>panel_replaced_by</code>) : il sort du débit, du 3D et des étiquettes (« A2 = bloc-porte »).
+Règle générale : un panneau est remplacé quand une ouverture allège 0, pleine hauteur, couvre
+toute sa largeur.</li>
+<li>Liste <code>fenetres[]</code> (vide = aucune) : <code>face</code>, <code>largeur_cm</code>, <code>hauteur_cm</code>, <code>allege_cm</code>,
+<code>position</code>, <code>ouvrant</code>. Défaut : <strong>deux fenêtres 80 × 110, allège 95</strong> — une <strong>ouvrante</strong>
+(oscillo-battante) face D dans le module D2 (110–190), une <strong>fixe</strong> face G dans le module G2
+(110–190 depuis l&#39;arrière, la face G se parcourant BL→FL) : lumière des deux côtés, ventilation traversante avec la porte. Jamais à cheval sur
+un joint. Prix distincts <code>fenetre_fixe</code> / <code>fenetre_ouvrante</code>.</li>
+<li><code>position</code> accepte <code>gauche</code>/<code>centre</code>/<code>droite</code> (+ marge) <strong>ou un nombre</strong> = distance en cm
+depuis le début de la face. Le site convertit en nombre au premier affichage du curseur.</li>
+<li>Toute ouverture est déduite du net des murs, dessinée (plan de sol + élévation), rendue en 3D
+(trou réel + vitrage), comptée en achats et au budget (<code>prix_indicatifs_eur.fenetre</code>).</li>
+</ul>
+<h2 id="aménagement-confort-au-quotidien">Aménagement (confort au quotidien)</h2>
+<p>Bloc <code>amenagement</code> : <code>plancher</code> (épaisseur, prix/m² sur <code>aire_interieure_m2</code>), <code>electricite</code>
+(câble déjà présent par le sol : multiprise + éclairage, pas de tableau), <code>chauffage</code>, <code>store</code>,
+<code>finition_interieure</code>. Chaque poste a <code>actif</code> (case à cocher sur le site) et compte au budget
+dans un groupe <strong>Aménagement</strong> distinct de la <strong>Coque</strong> (<code>budget.coque_eur</code>,
+<code>budget.amenagement_eur</code>). Le plancher est dessiné en 3D. Panneaux mur commandés en <strong>fixation
+cachée</strong> (surcoût <code>fixation_cachee_m2</code>), toit en <strong>couleur claire</strong> (chaleur d&#39;été).</p>
+<h2 id="calcul--livrables-sitesrccomputets">Calcul &amp; livrables (<code>site/src/compute.ts</code>)</h2>
+<p><code>buildCore(params)</code> (pur, sans DOM/Three) produit géométrie + débit + achats + budget + modèle 3D
+<strong>et</strong> les 30 SVG. Consommé en direct par le site et par le CLI Node <code>site/src/cli.ts --emit</code> :</p>
+<div class="doc-table"><table>
+<thead>
+<tr>
+<th>Sortie</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>site/params.js</code></td>
+<td><code>window.SHED_PARAMS</code> : cotes par défaut (marche en <code>file://</code>)</td>
+</tr>
+<tr>
+<td><code>site/data/derived.json</code></td>
+<td>géométrie + débit + achats + budget + modèle 3D en JSON</td>
+</tr>
+<tr>
+<td><code>site/assets/plan-sol.svg</code></td>
+<td>plan de sol coté, dalle réelle en pointillé avec ses 5 cotes en gris, partie hors dalle hachurée</td>
+</tr>
+<tr>
+<td><code>site/assets/plan-dalle.svg</code></td>
+<td>dalle seule vue de dessus : cote de chaque côté, angle intérieur à chaque sommet (<code>dalle.angles_deg</code>), position de la pointe, murs de propriété, abri en fantôme</td>
+</tr>
+<tr>
+<td><code>site/assets/plan-dalle-bandes.svg</code></td>
+<td>même plan + bande libre le long de chaque côté (<code>dalle_cm.bandes_libres_cm</code>), zone utile au centre avec ses cotes et son aire (<code>dalle.zone_utile</code>)</td>
+</tr>
+<tr>
+<td><code>site/assets/variante-{1..13}.svg</code></td>
+<td>formes d&#39;abri possibles dans la zone utile (<code>variantes(p, g)</code>, porte sur le côté avant) : 1 rectangle en modules entiers, 2 plus grand rectangle, 3 rectangle pleine largeur, 4 coin coupé plafonné à <code>reglementaire.seuil_sans_formalite_m2</code>, 5 coin coupé pleine profondeur, 6 toute la zone, 7 plus grand rectangle à orientation libre (<code>plus_grand_rectangle</code>, sans contrainte de porte ; avec la zone par défaut il retombe sur l&#39;option 2, toute rotation perd de 0,5 à 1,1 m²). 8 plus grand quadrilatère gardant le mur avant (<code>plus_grand_k_gone</code> : ses sommets sont des sommets de la zone), 9 trapèze à mur arrière en biais, 10 le même trapèze dont le mur droit glisse vers la gauche le long du mur arrière jusqu&#39;au seuil (le passage ne peut que s&#39;élargir), 11 le même trapèze dont le mur arrière pivote vers le bas autour de son coin gauche jusqu&#39;au seuil (la pince au bout du grand pan s&#39;élargit), 12 coin coupé <strong>au module</strong> : mur gauche et mur du fond en panneaux entiers (<code>i × j</code> modules, le plus grand couple sous le seuil dont le coin arrière tient dans la zone), façade sur toute la largeur de la zone, pan coupé parallèle au grand pan tiré depuis le bout du mur du fond (les deux murs difficiles d&#39;accès n&#39;ont aucune recoupe, le pan coupé tombe sous la seule bande de toit recoupée), 13 trapèze pleine largeur dont le mur arrière part du haut du côté gauche et pivote jusqu&#39;à garder <code>dalle_cm.passage_souhaite_cm</code> derrière l&#39;abri (vraie distance au grand pan, seule contrainte du fond : il peut dépasser la bande du grand pan près du bout du mur), aménagé par <code>disposition_trapeze</code> (porte sur le côté droit, bureau en L sur tout le mur gauche et toute la façade, sol libre calculé ; <code>sieges</code> : fauteuil 70 × 70 devant le bureau gauche et tabouret 30 × 30 devant celui de façade, posés sur la plus longue partie libre du bord du bureau ; <code>lit_pliant</code> : emprise dépliée en pointillé, cherchée hors de l&#39;accès à la porte et des bureaux, et seulement si le sol libre ne suffit pas, le pied sous un bureau quand <code>sous_bureau</code>). Chaque variante porte ses <code>passages</code> (par mur du fond : vraie distance entre la forme et le segment de mur, extrémités du mur comprises, cotée sur le plan). Chaque plan garde la dalle entière, les bandes et la zone</td>
+</tr>
+<tr>
+<td><code>abri-v2.md</code> + <code>site/assets/modele-v2-*.svg</code></td>
+<td><strong>variante proposée de l&#39;abri retenu</strong> : <code>params.json</code> porte un bloc <code>abri_v2</code> dont <code>params</code> est une <strong>surcouche</strong> (fusion en profondeur par <code>params_v2</code>, les listes sont remplacées). Le CLI rejoue <code>buildCore</code> sur ce second jeu et écrit les mêmes plans sous le préfixe <code>modele-v2-</code>, plus une page qui s&#39;ouvre sur un <strong>tableau comparé calculé</strong> (<code>compare_md</code> : surfaces, formalités, côtés, faces en panneaux entiers, bandes étroites, passage, sens du toit, pente, portée, panneaux de toit, gouttière, rehausse, porte, fenêtres, lit, budget), puis <code>pertes</code>, <code>notes</code> (le pourquoi) et <code>hors_modele</code> (conseils non dessinés). Aucun chiffre du tableau n&#39;est saisi. Le modèle accepte pour cela : <code>disposition_trapeze.cotes_cm</code> (façade, droite, gauche imposées, le fond en découle, à la place du solveur d&#39;intérieur visé), <code>toit.sens = &quot;droite&quot;</code> (haut contre le mur gauche, égout et descente côté jardin, panneaux de toit du mur gauche au mur droit, <code>portee_cm</code> = largeur) et des débords par face (<code>debord_cm.droite</code>, <code>debord_cm.gauche</code>)</td>
+</tr>
+<tr>
+<td><code>site/assets/modele-implantation.svg</code></td>
+<td>l&#39;abri retenu <strong>sur la dalle réelle</strong> (côtés, angles, murs de propriété), toit et gouttière, distances aux bords de la dalle, passages derrière ; première image d&#39;<code>abri.md</code></td>
+</tr>
+<tr>
+<td><code>site/assets/modele-{sol,toit,rehausse}.svg</code>, <code>modele-facade-{A,D,B,G}.svg</code></td>
+<td><strong>plans de l&#39;abri retenu</strong> (option 13, <code>modele_trapeze</code>, D27) : plan de sol (murs 6 cm, ouvertures et chambranle, chaîne de cotes, cotes intérieures, bureau en L), toiture (panneaux dans le sens de la pente, rampant, gouttière, descente, pente), débit de la rehausse (pièces rangées dans les madriers, deux coins complémentaires partagent une coupe en biais), élévations vues de l&#39;extérieur (panneaux, rehausse, porte avec cadre, fenêtres, hauteurs aux deux bouts)</td>
+</tr>
+<tr>
+<td><code>site/assets/plan-toit.svg</code></td>
+<td>plan de toiture (panneaux, sens d&#39;écoulement, rampant)</td>
+</tr>
+<tr>
+<td><code>site/assets/plan-rehausse.svg</code></td>
+<td><strong>plan de coupe de la rehausse</strong> : madrier coupé en diagonale + madrier droit (ou bande de panneau)</td>
+</tr>
+<tr>
+<td><code>site/assets/facade-{A,D,B,G}.svg</code></td>
+<td>élévations : rectangles de mur + joints + rehausse + porte</td>
+</tr>
+</tbody></table></div>
+<h2 id="site-site">Site (<code>site/</code>)</h2>
+<ul>
+<li><code>index.html</code> + <code>style.css</code> + <code>app.js</code> (bundle esbuild de <code>src/</code>, Three.js via CDN).</li>
+<li>Sections : Aperçu (KPIs + tableau des faces), 3D, <strong>Réglages</strong> (emprise, murs, <strong>dalle</strong>, toit,
+porte, fenêtres, aménagement, panneaux ; prix repliés), Plans, Débit, Achats, Budget (coque /
+aménagement), <strong>Confort au quotidien</strong>, <strong>Montage en 6 étapes</strong>, Vigilance (dont chaleur d&#39;été).</li>
+<li>Volontairement court : une carte par fenêtre (face + 4 curseurs), pas de choix d&#39;épaisseur
+(60 mm fixé).</li>
+<li>Tout est recalculé en direct (pas de chiffre en dur, pas de <code>fetch</code>). Dégrade proprement sans
+WebGL (message + plans).</li>
+<li>3D : dalle réelle (pointe arrière visible), rail, murs percés, <strong>chaque panneau dessiné avec ses
+bords sombres et son étiquette imprimée au centre</strong> (A1, A2, D1… ; R1 bandeau, R2/R3 triangles ;
+T1… toiture), porte + fenêtre vitrées, toit débordant nervuré, gouttière B.</li>
+<li><strong>Étiquettes de pièces</strong> : les mêmes ids apparaissent sur les élévations, le plan de toiture, le
+plan de rehausse et dans le tableau de débit (<code>debit.*.pieces</code>). Le dernier panneau d&#39;une face
+est le plus étroit (recoupe).</li>
+</ul>
+<h2 id="documents-partageables-sitedocs">Documents partageables (<code>site/docs/</code>)</h2>
+<ul>
+<li>Chaque fichier <strong>Markdown suivi par git</strong> (racine : <code>README.md</code>, <code>variantes.md</code>, <code>abri.md</code>,
+<code>abri-vN.md</code> ; et <code>agent/*.md</code>) a sa page HTML sous <code>site/docs/</code>, donc une adresse stable :
+<code>https://rvion.github.io/screenplay/docs/abri-v2.html</code>. <code>site/docs/index.html</code> les liste
+(README, puis tri naturel : abri, abri-v2, abri-v3… ; puis la spécification).</li>
+<li><strong>Rien à déclarer</strong> pour une nouvelle page : <code>npm run emit</code> prend les <code>.md</code> de <code>git ls-files</code>
+plus ceux qu&#39;il vient d&#39;écrire. <strong>git fait foi</strong> : un fichier ignoré (<code>CLAUDE.local.md</code>,
+<code>STATUS.md</code>) ne peut pas être publié ; <code>CLAUDE*.md</code> et <code>STATUS*.md</code> sont exclus par nom en plus.</li>
+<li>Rendu par <code>site/src/docs.ts</code> (<strong>côté Node seulement</strong>, <code>marked</code> en devDependency : le bundle du
+navigateur n&#39;en dépend pas, le site reste statique et marche en <code>file://</code>). Une seule passe de
+réécriture des liens : fichier sous <code>site/</code> → chemin du site ; <code>.md</code> publié → sa page ; tout le
+reste → le dépôt (<code>projet.depot_url</code>). Titres ancrés façon GitHub (les <code>#option-1</code> marchent).</li>
+<li><strong>Cachées pour l&#39;instant</strong> : aucune entrée dans la navigation du site, <code>noindex</code> sur chaque page.</li>
+<li>Le dossier est <strong>vidé puis réécrit</strong> à chaque emit (pas de page orpheline). <code>tests/docs.mjs</code>
+garde : pages à jour avec leur <code>.md</code>, une page par <code>.md</code> suivi, aucun lien, image, ancre ou lien
+vers le dépôt mort (la garde est d&#39;abord essayée sur un échantillon cassé).</li>
+<li>Plusieurs variantes : tout bloc <code>abri_vN</code> de <code>params.json</code> (<code>versions_abri</code>) donne <code>abri-vN.md</code>
+et ses plans <code>modele-vN-*.svg</code>, comparés à la version 1.</li>
+</ul>
+<h2 id="contraintes-techniques">Contraintes techniques</h2>
+<ul>
+<li>Logique <strong>TypeScript pure</strong> dans <code>compute.ts</code> ; build esbuild.</li>
+<li>Fonctionne en <code>file://</code>.</li>
+<li>Tests : snapshots golden (<code>compute.ts</code>) + smoke DOM (jsdom) — <code>npm run test:raw</code>
+(<code>npm test</code> passe par <code>shipkit ci</code>).</li>
+<li>Publication : GitHub Pages (Actions) — voir <code>05-pipeline.md</code>.</li>
+</ul>
+</main>
+</body>
+</html>

@@ -2,7 +2,8 @@
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
     "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
-    "auteur": "Remi Vion"
+    "auteur": "Remi Vion",
+    "depot_url": "https://github.com/rvion/screenplay"
   },
   "geometrie": {
     "verts": [

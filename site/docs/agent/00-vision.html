@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Vision</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/00-vision.md">Source : agent/00-vision.md</a></nav>
+<main class="doc-main">
+<h1 id="vision">Vision</h1>
+<h2 id="pourquoi-ce-dépôt">Pourquoi ce dépôt</h2>
+<p>Concevoir, documenter et chiffrer un <strong>petit abri de jardin / bureau</strong> que Rémi veut
+construire <strong>lui-même</strong> sur une <strong>dalle béton déjà coulée</strong> au fond de son jardin.
+Le dépôt est la <strong>source unique</strong> du projet : plans, débit matière, liste d&#39;achats,
+cahier de montage et points de vigilance — le tout <strong>paramétrique</strong> et publié sur un
+<strong>petit site web</strong> lisible et illustré.</p>
+<h2 id="principes">Principes</h2>
+<ol>
+<li><strong>Spec-first.</strong> On écrit la spécification et les décisions <em>avant</em> le code. Ce dossier
+<code>agent/</code> est la mémoire de conception ; il fait foi sur le « pourquoi ».</li>
+<li><strong>Source unique de vérité.</strong> Toutes les cotes vivent dans <code>params.json</code>. Aucun chiffre
+n&#39;est saisi à la main ailleurs : plans, tableaux et modèle 3D sont <strong>générés</strong>.</li>
+<li><strong>Paramétrique.</strong> Changer une mesure ⇒ le site recalcule <strong>en direct</strong> plans, débit, budget
+et modèle 3D (et <code>npm run emit</code> regénère les artefacts versionnés). La dalle existe déjà mais
+la géométrie reste pilotée par paramètres pour itérer.</li>
+<li><strong>Zéro dépendance lourde au runtime.</strong> Logique en <strong>TypeScript</strong> bundlée par esbuild (un seul
+<code>site/app.js</code>, pas de framework) ; rendu 3D via Three.js (CDN).
+Doit fonctionner hors-ligne (<code>file://</code>) et sur GitHub Pages.</li>
+<li><strong>Lisible par un humain non-pro du bâtiment.</strong> Le livrable explique aussi <em>à quoi faire
+attention</em> (pente, portée du toit, condensation, débord de dalle, porte extérieure).</li>
+<li><strong>Le plus simple qui marche.</strong> Rectangle, coupes droites, une seule ouverture, aucune
+ossature : moins de pièces, moins d&#39;étapes, moins cher.</li>
+</ol>
+<h2 id="définition-de--terminé">Définition de « terminé »</h2>
+<ul>
+<li><code>params.json</code> décrit l&#39;abri réel ; <code>site/src/compute.ts</code> produit plans + débit + achats + data 3D.</li>
+<li>Le site <code>site/</code> affiche tout joliment (KPIs, 3D, plans, tableaux, montage, vigilance).</li>
+<li>Le <code>README.md</code> est lisible directement sur GitHub une fois le dépôt public.</li>
+<li>Ce dossier <code>agent/</code> documente besoins, spec, décisions, géométrie, pipeline et backlog.</li>
+</ul>
+</main>
+</body>
+</html>

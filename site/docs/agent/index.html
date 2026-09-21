@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>screenplay — abri de jardin / bureau paramétrique</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="doc">
+<nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/index.md">Source : agent/index.md</a></nav>
+<main class="doc-main">
+<h1 id="screenplay--abri-de-jardin--bureau-paramétrique">screenplay — abri de jardin / bureau paramétrique</h1>
+<p>Conception, plans, débit, budget et modèle 3D d&#39;un petit bureau de jardin (rectangle 200 × 240,
+panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,
+aménagement chiffré) que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
+abordable, robuste, agréable tous les jours. Projet
+<strong>spec-first</strong> : la conception est écrite <em>avant</em> le code, dans ce dossier <code>agent/</code>.
+Stack : TypeScript pur (<code>site/src/compute.ts</code>) bundlé par esbuild en un seul <code>site/app.js</code>,
+Three.js via CDN, tests Node (snapshots golden + jsdom), publication GitHub Pages.</p>
+<h2 id="quick-start">Quick start</h2>
+<pre><code class="language-bash">npm ci                                 # installe esbuild / typescript / jsdom (dev)
+npm run build &amp;&amp; npm run emit          # bundle l&#39;app + régénère params.js, SVG, derived.json
+npm test                               # snapshots golden + smoke DOM, via shipkit (test:raw = brut)
+npm run typecheck                      # tsc --noEmit, via shipkit (typecheck:raw = brut)
+shipkit ci                             # LA porte : typecheck + test + imports + cycles + règles SK*
+python3 -m http.server -d site 8000    # prévisualise le site → http://localhost:8000
+</code></pre>
+<p>Site public : <a href="https://rvion.github.io/screenplay/">https://rvion.github.io/screenplay/</a></p>
+<p>Toute la spécification vit dans ce dossier — la mettre à jour AVANT de changer le code.</p>
+<p><strong>Chargé à chaque session</strong> (la spec complète fait foi sur le « pourquoi » et les invariants) :</p>
+<p>@00-vision.md
+@01-besoins.md
+@02-specification.md
+@03-decisions.md
+@04-geometrie.md
+@05-pipeline.md
+@06-backlog.md</p>
+<h2 id="règles-d39or">Règles d&#39;or</h2>
+<ol>
+<li><strong><code>params.json</code> est la source unique de vérité des cotes.</strong> Aucune cote en dur ailleurs.</li>
+<li><strong><code>site/src/compute.ts</code> est la source unique de la logique</strong> (géométrie, débit, plans SVG,
+budget, modèle 3D). Le site la rejoue en direct ; le CLI Node la réutilise. Reste <strong>pur</strong>
+(aucun <code>import</code> de DOM ni de Three) pour tourner navigateur <strong>et</strong> Node.</li>
+<li>Après toute édition de <code>compute.ts</code> : <code>npm run build</code> (bundle esbuild → <code>site/app.js</code>) puis
+<code>npm run emit</code> (regénère <code>site/params.js</code>, <code>site/assets/*.svg</code>, <code>site/data/derived.json</code> +
+cache-bust). <strong>Committer les fichiers générés.</strong> Lancer <code>npm test</code> (snapshots + smoke DOM).</li>
+<li>Si un changement de calcul est <strong>voulu</strong>, mettre à jour les snapshots : <code>npm run snapshot:update</code>.</li>
+<li>Le site doit fonctionner en <code>file://</code> (données via <code>params.js</code>, pas de <code>fetch</code>) et
+<strong>dégrader proprement</strong> sans WebGL.</li>
+<li>Si tu modifies la géométrie, mets à jour <code>04-geometrie.md</code>.</li>
+<li><strong>Tout <code>.md</code> suivi par git est publié</strong> sous <code>site/docs/</code> (une page + l&#39;index, adresses à
+partager). Après avoir édité ou ajouté un <code>.md</code> : <code>npm run emit</code>, puis committer <code>site/docs/</code>.
+<code>tests/docs.mjs</code> échoue si une page n&#39;est plus à jour ou si un lien y est mort.</li>
+</ol>
+<h2 id="où-lire-avant-de-toucher">Où lire avant de toucher…</h2>
+<div class="doc-table"><table>
+<thead>
+<tr>
+<th>surface</th>
+<th>doc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TRAVAIL EN COURS de la session précédente : lire EN PREMIER, agir, puis vider</td>
+<td><code>agent/handoff.md</code></td>
+</tr>
+<tr>
+<td>pourquoi ce projet, définition de « terminé »</td>
+<td><code>agent/00-vision.md</code></td>
+</tr>
+<tr>
+<td>besoins, hypothèses à valider, non-objectifs</td>
+<td><code>agent/01-besoins.md</code></td>
+</tr>
+<tr>
+<td><code>compute.ts</code>, livrables, sections du site, contraintes techniques</td>
+<td><code>agent/02-specification.md</code></td>
+</tr>
+<tr>
+<td>pourquoi une chose est comme elle est (ADR)</td>
+<td><code>agent/03-decisions.md</code></td>
+</tr>
+<tr>
+<td><code>emprise_cm</code>, <code>dalle_cm</code>, rehausse (triangles + bandeau), toiture</td>
+<td><code>agent/04-geometrie.md</code></td>
+</tr>
+<tr>
+<td>arborescence, <code>npm run build/emit</code>, fichiers générés, Pages</td>
+<td><code>agent/05-pipeline.md</code></td>
+</tr>
+<tr>
+<td>questions ouvertes, améliorations, dette</td>
+<td><code>agent/06-backlog.md</code></td>
+</tr>
+</tbody></table></div>
+</main>
+</body>
+</html>
