@@ -58,7 +58,7 @@ Les fichiers générés (<code>app.js</code>, <code>params.js</code>, <code>asse
 pour que le site fonctionne même sans CI. Si un changement de calcul est <strong>voulu</strong> :
 <code>npm run snapshot:update</code>.</p>
 <h2 id="prévisualiser-le-site-en-local">Prévisualiser le site en local</h2>
-<pre><code class="language-bash">python3 -m http.server -d site 8000   # puis http://localhost:8000
+<pre><code class="language-bash">npm run site   # puis http://localhost:5885 (documents : http://localhost:5885/docs/)
 </code></pre>
 <p>(ou ouvrir <code>site/index.html</code> directement : <code>params.js</code> évite tout besoin de serveur.)</p>
 <h2 id="publication-github-pages">Publication GitHub Pages</h2>

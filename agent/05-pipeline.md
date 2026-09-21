@@ -51,7 +51,7 @@ pour que le site fonctionne même sans CI. Si un changement de calcul est **voul
 
 ## Prévisualiser le site en local
 ```bash
-python3 -m http.server -d site 8000   # puis http://localhost:8000
+npm run site   # puis http://localhost:5885 (documents : http://localhost:5885/docs/)
 ```
 (ou ouvrir `site/index.html` directement : `params.js` évite tout besoin de serveur.)
 

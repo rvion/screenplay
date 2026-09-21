@@ -11,8 +11,9 @@
     "typecheck:raw": "tsc --noEmit",
     "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",
     "test:dom": "node tests/dom.mjs",
+    "test:ports": "node tests/ports.mjs",
     "test": "shipkit ci --only test",
-    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:formalites && npm run test:docs && npm run test:dom",
+    "test:raw": "npm run test:snapshot && npm run test:dalle && npm run test:modele && npm run test:formalites && npm run test:docs && npm run test:ports && npm run test:dom",
     "test:formalites": "node tests/formalites.mjs",
     "test:docs": "node tests/docs.mjs",
     "test:modele": "node tests/modele.mjs",
@@ -20,6 +21,7 @@
     "emit": "npm run build:cli && node scripts/build.mjs --emit",
     "test:snapshot": "node tests/snapshot.mjs",
     "snapshot:update": "UPDATE=1 node tests/snapshot.mjs",
+    "site": "python3 -m http.server -d site 5885",
     "hub": "bun --watch node_modules/rvlib-shipkit/src/cli.ts serve"
   },
   "devDependencies": {

@@ -18,8 +18,9 @@ description: Prove a change in THIS project actually works — drive the real fl
   `site/src/compute.ts` edit, `build` + `emit` are mandatory and the regenerated files
   (`site/app.js`, `site/params.js`, `site/assets/*.svg`, `site/data/derived.json`) are committed —
   `git status` clean after emit = nothing drifted.
-- Local preview: `python3 -m http.server -d site 8000` (check first:
-  `curl -s localhost:8000 >/dev/null && echo up`) → http://localhost:8000. Also open
+- Local preview: `npm run site` (check first:
+  `curl -s localhost:5885 >/dev/null && echo up`) → http://localhost:5885, documents under
+  `/docs/`. The port is this repo's own (hub port + 1000), never a common default. Also open
   `site/index.html` as `file://` — it MUST work with no server (params.js, no fetch).
 - Live URL after the Pages workflow: https://rvion.github.io/screenplay/ (curl 200 + drive the
   sliders: KPIs, plans SVG, tables and 3D all recompute).

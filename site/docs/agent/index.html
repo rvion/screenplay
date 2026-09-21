@@ -25,7 +25,7 @@ npm run build &amp;&amp; npm run emit          # bundle l&#39;app + régénère 
 npm test                               # snapshots golden + smoke DOM, via shipkit (test:raw = brut)
 npm run typecheck                      # tsc --noEmit, via shipkit (typecheck:raw = brut)
 shipkit ci                             # LA porte : typecheck + test + imports + cycles + règles SK*
-python3 -m http.server -d site 8000    # prévisualise le site → http://localhost:8000
+npm run site                           # prévisualise le site → http://localhost:5885 (port propre au dépôt)
 </code></pre>
 <p>Site public : <a href="https://rvion.github.io/screenplay/">https://rvion.github.io/screenplay/</a></p>
 <p>Toute la spécification vit dans ce dossier — la mettre à jour AVANT de changer le code.</p>

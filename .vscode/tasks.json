@@ -43,10 +43,12 @@
       },
       {
          "label": "🌐  site",
-         "detail": "Sert site/ en local — http://localhost:8000 (fichiers générés : npm run build && npm run emit)",
+         // le port vit a UN seul endroit : le script "site" de package.json (5885 = port du hub + 1000).
+         // jamais 8000, 8080, 3000 ou 5173 : ce sont les ports par defaut des autres projets de la machine
+         "detail": "Sert site/ en local — http://localhost:5885 (documents : /docs/ ; fichiers générés : npm run build && npm run emit)",
          "type": "process",
-         "command": "python3",
-         "args": ["-m", "http.server", "-d", "site", "8000"],
+         "command": "npm",
+         "args": ["run", "site"],
          "options": { "cwd": "${workspaceFolder}" },
          "isBackground": true,
          "presentation": { "reveal": "never", "close": false },

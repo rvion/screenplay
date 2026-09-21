@@ -70,7 +70,7 @@ npm ci                              # esbuild + typescript + jsdom (dev)
 $EDITOR params.json                 # éditer les cotes par défaut
 npm run build && npm run emit       # bundle l'app + regénère params.js, SVG, derived.json
 npm run test:raw                    # snapshots golden + smoke DOM
-python3 -m http.server -d site 8000 # prévisualiser (ou ouvrir site/index.html)
+npm run site                        # prévisualiser sur http://localhost:5885 (ou ouvrir site/index.html)
 ```
 
 Toute la logique vit dans [`site/src/compute.ts`](site/src/compute.ts) (géométrie, débit,
