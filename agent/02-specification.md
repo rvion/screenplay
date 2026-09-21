@@ -95,6 +95,13 @@ cachée** (surcoût `fixation_cachee_m2`), toit en **couleur claire** (chaleur d
 | `site/assets/plan-rehausse.svg` | **plan de coupe de la rehausse** : madrier coupé en diagonale + madrier droit (ou bande de panneau) |
 | `site/assets/facade-{A,D,B,G}.svg` | élévations : rectangles de mur + joints + rehausse + porte |
 
+## Formalités (`formalites(p, …)`)
+`reglementaire` (params) porte les deux seuils (5 puis 20 m²), la référence de l'article et
+`debords_sur_poteaux`. `formalites()` en tire `emprise_au_sol_m2` (celle des **murs** : les débords
+de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_plancher_m2`,
+`formalite` et les réserves ; `geometrie.formalites` (rectangle) et `modele.formalites` (trapèze)
+l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `tests/formalites.mjs`.
+
 ## Site (`site/`)
 - `index.html` + `style.css` + `app.js` (bundle esbuild de `src/`, Three.js via CDN).
 - Sections : Aperçu (KPIs + tableau des faces), 3D, **Réglages** (emprise, murs, **dalle**, toit,

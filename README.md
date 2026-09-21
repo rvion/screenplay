@@ -24,7 +24,7 @@ Objectif : **simple, abordable, robuste, agréable tous les jours**.
 
 | | |
 |---|---|
-| **Emprise** | **200 × 240 cm** = **4,8 m²** (5,2 m² débords inclus) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
+| **Emprise** | **200 × 240 cm** = **4,8 m²** (projection toit compris 5,2 m², qui ne compte pas dans l'emprise au sol) · 4 faces : **A** avant · **D** droite · **B** arrière · **G** gauche · on peut en faire le tour |
 | **Panneaux** | sandwich **60 mm autoportants**, âme PIR, fixation cachée, pose verticale, **9 panneaux de 215 cm** (le module A2 est pris par le bloc-porte) |
 | **Rehausse** | **1 madrier 75 × 225** de 4,8 m : 240 coupé en diagonale (2 coins) + 200 droit ; sert de lisse haute |
 | **Toit** | **mono-pente vers l'arrière**, rehausse 22,5 cm (**≈ 9,4 %**, 5,4°), **2 panneaux toiture entiers** de ~2,61 m, couleur claire, rives affleurantes |
@@ -103,8 +103,11 @@ La conception détaillée vit dans [`agent/`](agent/) :
 
 - **Dalle** : relevée au mètre (5 longueurs) ; la dalle et la position de
   l'abri se règlent sur le site, qui affiche en direct toute partie de l'emprise hors dalle.
-- **Seuil des 5 m²** : 4,8 m² de murs, 5,2 m² débords inclus. Jusqu'à 5 m² d'emprise au sol
-  (débords compris) : aucune formalité ; au-delà : déclaration préalable. À confirmer en mairie.
+- **Seuil des 5 m²** : emprise au sol = emprise des **murs** (4,8 m²). D'après l'article R*420-1 du
+  Code de l'urbanisme, les débords de toiture sont **exclus** de l'emprise au sol tant qu'ils ne sont
+  pas soutenus par des poteaux, piliers ou encorbellements. Jusqu'à 5 m² d'emprise au sol *et* de
+  surface de plancher : aucune formalité ; de 5 à 20 m² : déclaration préalable. Réserves : secteur
+  protégé ou abords d'un monument historique (déclaration préalable quand même), et le PLU.
 - **Portée du toit** ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
   (neige/vent), sinon ajouter une panne.
 - **Pente du toit** : 22,5 cm ≈ **9,4 %** (5,4°). Vérifier la pente mini du fabricant.

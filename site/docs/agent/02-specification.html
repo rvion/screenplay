@@ -152,6 +152,12 @@ cachée</strong> (surcoût <code>fixation_cachee_m2</code>), toit en <strong>cou
 <td>élévations : rectangles de mur + joints + rehausse + porte</td>
 </tr>
 </tbody></table></div>
+<h2 id="formalités-formalitesp">Formalités (<code>formalites(p, …)</code>)</h2>
+<p><code>reglementaire</code> (params) porte les deux seuils (5 puis 20 m²), la référence de l&#39;article et
+<code>debords_sur_poteaux</code>. <code>formalites()</code> en tire <code>emprise_au_sol_m2</code> (celle des <strong>murs</strong> : les débords
+de toiture sont exclus tant qu&#39;aucun poteau ne les porte, R*420-1), <code>surface_plancher_m2</code>,
+<code>formalite</code> et les réserves ; <code>geometrie.formalites</code> (rectangle) et <code>modele.formalites</code> (trapèze)
+l&#39;exposent, le site et les pages <code>abri*.md</code> n&#39;affichent que ce calcul. Garde : <code>tests/formalites.mjs</code>.</p>
 <h2 id="site-site">Site (<code>site/</code>)</h2>
 <ul>
 <li><code>index.html</code> + <code>style.css</code> + <code>app.js</code> (bundle esbuild de <code>src/</code>, Three.js via CDN).</li>

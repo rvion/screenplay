@@ -157,6 +157,25 @@ function rear_edge_y(slab, x) {
   }
   return best;
 }
+function formalites(p, emprise_murs_m2, emprise_debords_m2, surface_plancher_m2) {
+  const rg = p.reglementaire || {};
+  const sur_poteaux = !!rg.debords_sur_poteaux;
+  const s1 = +(rg.seuil_sans_formalite_m2 ?? 5), s2 = +(rg.seuil_declaration_m2 ?? 20);
+  const emprise = sur_poteaux ? emprise_debords_m2 : emprise_murs_m2;
+  const retenue = Math.max(emprise, surface_plancher_m2);
+  return {
+    emprise_au_sol_m2: rnd(emprise, 2),
+    emprise_debords_inclus_m2: rnd(emprise_debords_m2, 2),
+    surface_plancher_m2: rnd(surface_plancher_m2, 2),
+    debords_comptes: sur_poteaux,
+    seuil_sans_formalite_m2: s1,
+    seuil_declaration_m2: s2,
+    formalite: retenue <= s1 ? "aucune" : retenue <= s2 ? "declaration prealable" : "permis de construire",
+    libelle: retenue <= s1 ? "aucune formalit\xE9" : retenue <= s2 ? "d\xE9claration pr\xE9alable" : "permis de construire",
+    reserve: "secteur prot\xE9g\xE9 ou abords d'un monument historique : d\xE9claration pr\xE9alable m\xEAme sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas",
+    reference: rg.reference || "Code de l'urbanisme R*420-1, R421-2, R421-9"
+  };
+}
 function geometry(p) {
   const A = +p.emprise_cm.avant_A, G = +p.emprise_cm.gauche_G;
   const FL = [0, 0], FR = [A, 0], BR = [A, G], BL = [0, G];
@@ -298,7 +317,8 @@ function geometry(p) {
     hauteur_avant_cm: rnd(H + drop, 1),
     hauteur_arriere_cm: H,
     faces,
-    dalle
+    dalle,
+    formalites: formalites(p, rnd(A * G / 1e4, 2), rnd((A + +p.toit.debord_cm.gauche + +p.toit.debord_cm.droite) * (G + +p.toit.debord_cm.avant + +p.toit.debord_cm.arriere) / 1e4, 2), rnd((A - 2 * +p.panneau.epaisseur_mm / 10) * (G - 2 * +p.panneau.epaisseur_mm / 10) / 1e4, 2))
   };
 }
 function opening_start_cm(o, face_len) {
@@ -1658,6 +1678,7 @@ function modele_trapeze(p, v) {
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
+    formalites: formalites(p, v.aire_m2, rnd(poly_area(contour) / 1e4, 2), v.aire_interieure_m2),
     angles_deg: v.angles_deg
   };
 }
@@ -2367,10 +2388,12 @@ function renderVigilance(core, p) {
   setText("v-pente-deg", pente.degres + "\xB0");
   setText("v-portee", (core.debit.toit.portee_cm / 100).toFixed(2) + " m");
   setText("v-ep", String(p.panneau.epaisseur_mm));
-  setText("v-emprise", String(g.aire_m2));
   setText("v-emprise-deb", String(g.emprise_debords_m2));
+  setText("v-emprise", String(g.formalites.emprise_au_sol_m2));
   const seuil = document.getElementById("v-seuil");
-  if (seuil) seuil.textContent = g.emprise_debords_m2 <= 5 ? "sous le seuil des 5 m\xB2 d\xE9bords inclus : a priori aucune formalit\xE9." : g.aire_m2 <= 5 ? "murs sous 5 m\xB2 mais d\xE9bords inclus au-dessus : selon la lecture de la mairie, d\xE9claration pr\xE9alable possible." : "au-dessus de 5 m\xB2 : d\xE9claration pr\xE9alable \xE0 pr\xE9voir.";
+  const F = g.formalites;
+  setText("v-plancher", String(F.surface_plancher_m2));
+  if (seuil) seuil.textContent = F.formalite === "aucune" ? "aucune formalit\xE9 a priori, \xE0 confirmer en mairie." : `${F.libelle} \xE0 d\xE9poser.`;
   const card = document.getElementById("v-dalle");
   if (card && d) {
     card.hidden = !d.hors_dalle;

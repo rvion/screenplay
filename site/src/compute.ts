@@ -200,6 +200,31 @@ function rear_edge_y(slab: Pt[], x: number): number {
 }
 
 /* ----------------------------------------------------------------- */
+/* Formalites (Code de l'urbanisme)                                    */
+/* ----------------------------------------------------------------- */
+// R*420-1 : l'emprise au sol exclut les debords de toiture tant qu'ils ne sont pas soutenus par des
+// poteaux, piliers ou encorbellements. R421-2 / R421-9 : dispense jusqu'a 5 m2 d'emprise ET de
+// surface de plancher, declaration prealable jusqu'a 20, permis au-dela.
+export function formalites(p: Params, emprise_murs_m2: number, emprise_debords_m2: number, surface_plancher_m2: number) {
+  const rg = p.reglementaire || {};
+  const sur_poteaux = !!rg.debords_sur_poteaux;
+  const s1 = +(rg.seuil_sans_formalite_m2 ?? 5), s2 = +(rg.seuil_declaration_m2 ?? 20);
+  const emprise = sur_poteaux ? emprise_debords_m2 : emprise_murs_m2;
+  const retenue = Math.max(emprise, surface_plancher_m2);
+  return {
+    emprise_au_sol_m2: rnd(emprise, 2),
+    emprise_debords_inclus_m2: rnd(emprise_debords_m2, 2),
+    surface_plancher_m2: rnd(surface_plancher_m2, 2),
+    debords_comptes: sur_poteaux,
+    seuil_sans_formalite_m2: s1, seuil_declaration_m2: s2,
+    formalite: retenue <= s1 ? "aucune" : retenue <= s2 ? "declaration prealable" : "permis de construire",
+    libelle: retenue <= s1 ? "aucune formalité" : retenue <= s2 ? "déclaration préalable" : "permis de construire",
+    reserve: "secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas",
+    reference: rg.reference || "Code de l'urbanisme R*420-1, R421-2, R421-9",
+  };
+}
+
+/* ----------------------------------------------------------------- */
 /* Geometrie                                                          */
 /* ----------------------------------------------------------------- */
 export function geometry(p: Params) {
@@ -333,6 +358,7 @@ export function geometry(p: Params) {
     hauteur_arriere_cm: H,
     faces,
     dalle,
+    formalites: formalites(p, rnd(A * G / 1e4, 2), rnd((A + (+p.toit.debord_cm.gauche) + (+p.toit.debord_cm.droite)) * (G + (+p.toit.debord_cm.avant) + (+p.toit.debord_cm.arriere)) / 1e4, 2), rnd((A - 2 * (+p.panneau.epaisseur_mm) / 10) * (G - 2 * (+p.panneau.epaisseur_mm) / 10) / 1e4, 2)),
   };
 }
 
@@ -1694,6 +1720,7 @@ export function modele_trapeze(p: Params, v: any) {
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
+    formalites: formalites(p, v.aire_m2, rnd(poly_area(contour) / 1e4, 2), v.aire_interieure_m2),
     angles_deg: v.angles_deg,
   };
 }
@@ -1991,7 +2018,8 @@ function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number,
   const lignes: [string, (x: { m: any; v: any }) => string][] = [
     ["murs (extérieur)", (x) => `${fr(x.v.aire_m2)} m²`],
     ["intérieur", (x) => `**${fr(x.v.aire_interieure_m2)} m²**`],
-    [`formalités (seuil ${fz(seuil)} m² de murs)`, (x) => (x.v.aire_m2 <= seuil ? "aucune a priori" : "déclaration préalable probable")],
+    ["emprise au sol (débords de toit exclus, R*420-1)", (x) => `${fr(x.m.formalites.emprise_au_sol_m2)} m²`],
+    [`formalités (seuils ${fz(seuil)} puis 20 m²)`, (x) => x.m.formalites.libelle],
     ["côtés A · D · B · G", (x) => x.m.faces.map((f: any) => fr(f.longueur_cm)).join(" · ") + " cm"],
     ["faces en panneaux entiers", (x) => entiers(x.m)],
     ["bandes de mur de moins de 30 cm", (x) => String(etroites(x.m))],
@@ -2042,12 +2070,13 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   md += droite ? `- **Toit** mono-pente vers la droite (jardin), ${fr(m.pente.degres)}° : ${fr(Math.max(...m.hauteurs_coins_cm))} cm contre le mur gauche, ${fr(Math.min(...m.hauteurs_coins_cm))} cm côté porte.\n`
     : `- **Toit** mono-pente vers le fond, ${fr(m.pente.degres)}° : ${fr(m.hauteurs_coins_cm[0])} cm devant, ${fr(Math.min(...m.hauteurs_coins_cm))} cm au plus bas.\n`;
   md += `- **Porte** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **${v.fenetres.length === 1 ? `une fenêtre de ${fz(v.fenetres[0].largeur_cm)}` : `${v.fenetres.length} fenêtres`}** en façade, **bureau en L** sur la façade et le mur gauche${lp && lp.replie ? `, **lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le fond` : ""}.\n`;
-  md += `- **Budget indicatif** : ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)} HT (coque ${eur(B.coque_eur)}, aménagement ${eur(B.amenagement_eur)}).\n\n`;
+  md += `- **Budget indicatif** : ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)} HT (coque ${eur(B.coque_eur)}, aménagement ${eur(B.amenagement_eur)}).\n`;
+  md += `- **Formalités** : emprise au sol ${fr(m.formalites.emprise_au_sol_m2)} m², surface de plancher ${fr(m.formalites.surface_plancher_m2)} m² ⇒ ${m.formalites.libelle}.\n\n`;
   md += `## À trancher\n\n`;
   const stock_courant = +m.rehausse.section_mm[1] <= 225;
   md += `- **Toit** : ${droite ? "vers la droite (jardin)" : "vers l'arrière"}, chute ${fr(m.chute_cm)} cm (${fr(m.pente.degres)}°)${droite ? "" : " = choix par défaut"}. Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 ${stock_courant ? ": section courante, à vérifier en classe 4" : "à trouver (sinon deux pièces superposées)"}.\n`;
-  md += v.aire_m2 <= seuil ? `- **Formalités** : ${fr(v.aire_m2)} m² de murs, au seuil de ${fz(seuil)} m² : aucune formalité a priori, à confirmer en mairie ; distance aux limites du PLU à vérifier quand même.\n`
-    : `- **Formalités** : ${fr(v.aire_m2)} m² de murs, au-dessus du seuil de ${fz(seuil)} m² : déclaration préalable probable ; distance aux limites du PLU à vérifier en mairie.\n`;
+  const F = m.formalites;
+  md += `- **Formalités** : emprise au sol **${fr(F.emprise_au_sol_m2)} m²**${F.debords_comptes ? " (débords inclus : ils sont portés par des poteaux)" : ` (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : ${F.reference.split(" :")[0]})`}, surface de plancher ${fr(F.surface_plancher_m2)} m² ⇒ **${F.libelle}** (seuils ${fz(F.seuil_sans_formalite_m2)} puis ${fz(F.seuil_declaration_m2)} m²). ${F.reserve}.\n`;
   if (lp && lp.replie) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le mur du fond : déplié, ${lp.sous_bureau_cm2 > 0 ? "son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et " : ""}il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).\n`;
   else if (lp) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}** : déplié au milieu${lp.sous_bureau_cm2 > 0 ? ", le pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", fauteuil et tabouret rangés" : ""}.\n`;
   const pleine = (v.fenetres || []).filter((f: any) => f.largeur_cm >= +p.panneau.largeur_utile_cm - 0.05);

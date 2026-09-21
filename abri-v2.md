@@ -10,7 +10,8 @@
 |---|---|---|
 | murs (extérieur) | 5,37 m² | 5 m² |
 | intérieur | **4,81 m²** | **4,46 m²** |
-| formalités (seuil 5 m² de murs) | déclaration préalable probable | aucune a priori |
+| emprise au sol (débords de toit exclus, R*420-1) | 5,37 m² | 5 m² |
+| formalités (seuils 5 puis 20 m²) | déclaration préalable | aucune formalité |
 | côtés A · D · B · G | 218 · 178,8 · 256,6 · 314,1 cm | 200 · 200 · 223,6 · 300 cm |
 | faces en panneaux entiers | aucune | A, D, G |
 | bandes de mur de moins de 30 cm | 2 | 1 |
@@ -66,11 +67,12 @@
 - **Toit** mono-pente vers la droite (jardin), 6,42° : 237,5 cm contre le mur gauche, 215 cm côté porte.
 - **Porte** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
 - **Budget indicatif** : 3 532 € à 4 778 € HT (coque 3 574 €, aménagement 581 €).
+- **Formalités** : emprise au sol 5 m², surface de plancher 4,46 m² ⇒ aucune formalité.
 
 ## À trancher
 
 - **Toit** : vers la droite (jardin), chute 22,5 cm (6,42°). Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
-- **Formalités** : 5 m² de murs, au seuil de 5 m² : aucune formalité a priori, à confirmer en mairie ; distance aux limites du PLU à vérifier quand même.
+- **Formalités** : emprise au sol **5 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,46 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
 - **Lit 75 × 190** : déplié au milieu, le pied sous un bureau, fauteuil et tabouret rangés.
 - **Portée du toit** (~2 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (116,6°, 63,4°) : profils d'angle pliés sur mesure.

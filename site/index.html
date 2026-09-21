@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Abri de jardin · panneaux sandwich</title>
   <meta name="description" content="Plans, débit, liste d'achats et cahier de montage d'un abri de jardin rectangulaire en panneaux sandwich 60 mm autoportants." />
-  <link rel="stylesheet" href="style.css?v=1fa3066a" />
+  <link rel="stylesheet" href="style.css?v=dffc348d" />
   <script type="importmap">
   {
     "imports": {
@@ -230,11 +230,16 @@
       </div>
       <div class="card warn">
         <h3>📐 Seuil des 5 m² (formalités)</h3>
-        <p>Emprise des murs <b><span id="v-emprise"></span> m²</b>, débords de toit inclus
-        <b><span id="v-emprise-deb"></span> m²</b>. En France (hors secteur protégé), jusqu'à 5 m²
-        d'emprise au sol et de surface de plancher : aucune formalité ; de 5 à 20 m² : déclaration
-        préalable. L'emprise au sol compte <b>tous débords inclus</b>. Ici :
-        <b><span id="v-seuil"></span></b> À confirmer en mairie (PLU, distance aux limites).</p>
+        <p>Emprise au sol <b><span id="v-emprise"></span> m²</b> = l'emprise des murs : d'après
+        l'<b>article R*420-1 du Code de l'urbanisme</b>, les débords de toiture en sont
+        <b>exclus</b> tant qu'ils ne sont pas soutenus par des poteaux, piliers ou encorbellements
+        (ici, simples débords en l'air ; toit compris, la projection ferait
+        <span id="v-emprise-deb"></span> m², chiffre qui ne compte pas). Surface de plancher
+        <b><span id="v-plancher"></span> m²</b>. Jusqu'à 5 m² d'emprise au sol <i>et</i> de surface
+        de plancher : aucune formalité ; de 5 à 20 m² : déclaration préalable. Ici :
+        <b><span id="v-seuil"></span></b> En secteur protégé ou aux abords d'un monument historique,
+        une déclaration préalable est due même sous le seuil ; le PLU (implantation, hauteur,
+        distance aux limites) s'applique de toute façon.</p>
       </div>
       <div class="card warn">
         <h3>📏 Panneaux <span id="v-ep"></span> mm autoportants &amp; portée du toit</h3>
@@ -276,7 +281,7 @@
     technique et la spécification (<code>agent/</code>).</p>
   </footer>
 
-  <script src="params.js?v=1fa3066a"></script>
-  <script type="module" src="app.js?v=1fa3066a"></script>
+  <script src="params.js?v=dffc348d"></script>
+  <script type="module" src="app.js?v=dffc348d"></script>
 </body>
 </html>

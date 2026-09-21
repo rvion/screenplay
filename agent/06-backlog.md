@@ -21,8 +21,9 @@
       (module A1 côté jardin, ou face B vers l'arrière) ou la supprimer.
 - [ ] **Mur de propriété** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé). S'il dépasse
       215 cm, le débord de toit arrière doit aussi dégager le mur.
-- [ ] **Formalités** : 4,8 m² de murs mais 5,2 m² débords inclus ⇒ vérifier en mairie si une
-      déclaration préalable est due (et la distance aux limites du PLU).
+- [ ] **Formalités** : l'emprise au sol est celle des murs, débords de toiture exclus (R*420-1,
+      D29). Reste à vérifier en mairie : secteur protégé / abords MH (déclaration préalable même
+      sous 5 m²) et la distance aux limites du PLU.
 - [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
       fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.
 - [ ] **Pente** : 22,5 cm (≈ 9,4 %, 5,4°). Vérifier la mini exacte du fabricant de panneaux toiture.

@@ -268,6 +268,18 @@
    "hors_dalle_m2": 0,
    "hors_dalle_polygones": [],
    "hors_dalle_contre_mur": false
+  },
+  "formalites": {
+   "emprise_au_sol_m2": 3.68,
+   "emprise_debords_inclus_m2": 4.14,
+   "surface_plancher_m2": 3.23,
+   "debords_comptes": false,
+   "seuil_sans_formalite_m2": 5,
+   "seuil_declaration_m2": 20,
+   "formalite": "aucune",
+   "libelle": "aucune formalité",
+   "reserve": "secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas",
+   "reference": "Code de l'urbanisme R*420-1 : l'emprise au sol est la projection verticale du volume de la construction, MAIS les debords de toiture en sont exclus tant qu'ils ne sont PAS soutenus par des poteaux, piliers ou encorbellements. Seuils : R421-2 (dispense jusqu'a 5 m2 d'emprise au sol ET de surface de plancher), R421-9 (declaration prealable de 5 a 20 m2), au-dela permis de construire. Surface de plancher : R111-22 (nu interieur, sous plafond >= 1,80 m)."
   }
  },
  "debit": {

@@ -107,10 +107,12 @@ function renderVigilance(core: Core, p: Params) {
   setText("v-pente-deg", pente.degres + "°");
   setText("v-portee", (core.debit.toit.portee_cm / 100).toFixed(2) + " m");
   setText("v-ep", String(p.panneau.epaisseur_mm));
-  setText("v-emprise", String(g.aire_m2));
   setText("v-emprise-deb", String(g.emprise_debords_m2));
+  setText("v-emprise", String(g.formalites.emprise_au_sol_m2));
   const seuil = document.getElementById("v-seuil");
-  if (seuil) seuil.textContent = g.emprise_debords_m2 <= 5 ? "sous le seuil des 5 m² débords inclus : a priori aucune formalité." : g.aire_m2 <= 5 ? "murs sous 5 m² mais débords inclus au-dessus : selon la lecture de la mairie, déclaration préalable possible." : "au-dessus de 5 m² : déclaration préalable à prévoir.";
+  const F = g.formalites;
+  setText("v-plancher", String(F.surface_plancher_m2));
+  if (seuil) seuil.textContent = F.formalite === "aucune" ? "aucune formalité a priori, à confirmer en mairie." : `${F.libelle} à déposer.`;
   const card = document.getElementById("v-dalle");
   if (card && d) {
     card.hidden = !d.hors_dalle;

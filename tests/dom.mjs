@@ -40,7 +40,9 @@ ok($("#plan-plan-rehausse").querySelector("svg") !== null, "plan de rehausse SVG
 ok($("#v-dalle").hidden === true, "vigilance dalle masquee (rien hors dalle)");
 ok($("#cover").textContent.includes("cm"), "largeur utile affichee");
 ok($("#v-pente").textContent.includes("%"), "pente vigilance affichee");
-ok(/m²|seuil/.test($("#v-seuil").textContent), "seuil 5 m2 affiche");
+ok(/formalité|déclaration|permis/.test($("#v-seuil").textContent), "formalite annoncee dans la carte du seuil");
+// R*420-1 : la carte affiche l'emprise des MURS, pas la projection debords compris
+ok($("#v-emprise").textContent === String(params.emprise_cm.avant_A * params.emprise_cm.gauche_G / 1e4) && $("#v-emprise").textContent !== $("#v-emprise-deb").textContent, "emprise au sol affichee = celle des murs (" + $("#v-emprise").textContent + "), distincte de la projection debords compris (" + $("#v-emprise-deb").textContent + ")");
 
 // controles presents
 const ranges = $("#controls").querySelectorAll('input[type=range]');

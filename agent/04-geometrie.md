@@ -17,7 +17,8 @@ BL = (0, G)   = (0,   240)   coin arrière-gauche
 ```
 Rectangle antihoraire : `FL → FR → BR → BL`. Faces : A = FL→FR (200), D = FR→BR (240),
 B = BR→BL (200), G = BL→FL (240). Périmètre = 2(A+G) = **880 cm**. Aire = A·G = **4,80 m²**.
-Emprise débords inclus (10 cm devant/derrière, 0 sur les côtés) : 200 × 260 = **5,20 m²**
+Projection toit compris (10 cm devant/derrière, 0 sur les côtés) : 200 × 260 = **5,20 m²** — calculée
+pour information : les débords de toiture n'entrent pas dans l'emprise au sol (R*420-1, D29)
 (`emprise_debords_m2`).
 
 ## Dalle réelle (`dalle_cm`) et partie hors dalle

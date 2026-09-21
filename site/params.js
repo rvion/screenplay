@@ -190,7 +190,10 @@ window.SHED_PARAMS = {
   },
   "reglementaire": {
     "seuil_sans_formalite_m2": 5,
-    "_comment": "Emprise au sol et surface de plancher jusqu'a ce seuil : aucune formalite (a confirmer en mairie, et le PLU s'applique quand meme). Sert a l'option 4 des variantes de forme."
+    "seuil_declaration_m2": 20,
+    "debords_sur_poteaux": false,
+    "reference": "Code de l'urbanisme R*420-1 : l'emprise au sol est la projection verticale du volume de la construction, MAIS les debords de toiture en sont exclus tant qu'ils ne sont PAS soutenus par des poteaux, piliers ou encorbellements. Seuils : R421-2 (dispense jusqu'a 5 m2 d'emprise au sol ET de surface de plancher), R421-9 (declaration prealable de 5 a 20 m2), au-dela permis de construire. Surface de plancher : R111-22 (nu interieur, sous plafond >= 1,80 m).",
+    "_comment": "Notre toit n'a aucun poteau : debords_sur_poteaux = false, donc l'emprise au sol = l'emprise des MURS, debords exclus. Mettre true si un poteau, un pilier ou un encorbellement vient un jour porter un debord : l'emprise au sol integrerait alors ce debord. Reserve : en secteur protege / abords de monument historique, une declaration prealable est due meme sous le seuil."
   },
   "panneau": {
     "epaisseur_mm": 60,

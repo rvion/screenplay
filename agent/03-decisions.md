@@ -147,9 +147,10 @@ de reprendre l'angle coupé. Choix : **200 × 240**, débords ramenés à 10 cm,
 (~54 × 51 cm) de dalle à combler. *Pourquoi :* l'angle rapporte ~0,4 m² intérieur (une bande de
 30 cm) contre deux angles obtus, des profils sur mesure, la perte du tour (entretien gouttière,
 distance aux limites) et le passage au-dessus de 5 m². *Réglementaire :* ≤ 5 m² d'emprise au sol
-et de surface de plancher = aucune formalité ; l'emprise au sol compte les débords, donc 220 × 260
-= 5,72 m² ⇒ déclaration préalable probable, à confirmer en mairie. Le site affiche les deux
-chiffres (carte « Seuil des 5 m² »). *Écarté :* 230 × 246 (0,39 m² hors dalle, pas de tour),
+et de surface de plancher = aucune formalité. ⚠️ **La phrase « l'emprise au sol compte les débords »
+était FAUSSE** (elle donnait 220 × 260 = 5,72 m² ⇒ déclaration préalable) : l'article R*420-1 exclut
+les débords de toiture de l'emprise au sol tant qu'aucun poteau, pilier ou encorbellement ne les
+porte. **Corrigé par D29**, qui fait foi. *Écarté :* 230 × 246 (0,39 m² hors dalle, pas de tour),
 200 × 190 (seul rectangle entièrement sur la dalle, 3,8 m², trop petit). *Précise* D16.
 
 ## D22 — Toit à 2 panneaux entiers (débords latéraux 0) et bloc-porte au module
@@ -263,3 +264,22 @@ tiennent. Pages hors navigation et en `noindex` tant que le projet n'est pas ann
 liste de pages tenue à la main (oubliée à la première v3). Les blocs `abri_vN` sont généralisés
 dans le même mouvement (`versions_abri`).
 
+## D29 — Emprise au sol : les débords de toiture n'y entrent pas (correction de D21)
+**Article R*420-1 du Code de l'urbanisme** : l'emprise au sol est la projection verticale du volume
+de la construction, **exclusion faite des débords de toiture** tant qu'ils ne sont **pas soutenus par
+des poteaux, piliers ou encorbellements**. Notre toit ne repose sur aucun poteau : l'emprise au sol
+est donc celle des **murs**, et les 10 à 25 cm de débord n'y entrent pas. D21, `01-besoins` (H4),
+le backlog, le `README` et la carte « Seuil des 5 m² » du site disaient l'inverse depuis le
+2026-09-06 : chiffre gonflé (5,2 puis 5,72 m²) et déclaration préalable annoncée à tort.
+*Pourquoi cette correction est mécanique et pas seulement rédactionnelle :* `reglementaire` porte la
+règle, ses deux seuils (5 puis 20 m²), la référence de l'article et le commutateur
+`debords_sur_poteaux` ; `formalites(p, …)` en déduit `emprise_au_sol_m2`, `surface_plancher_m2` et
+la formalité, pour l'ancien rectangle comme pour le modèle trapèze ; `tests/formalites.mjs` est une
+**garde** : elle exige que compter les débords fasse basculer en déclaration préalable quand le
+commutateur est vrai, et qu'un simple débord en l'air ne change rien quand il est faux.
+*Conséquence sur le projet :* la version 1 (5,37 m² de murs) reste au-dessus du seuil, mais parce
+que ses **murs** dépassent 5 m², pas à cause du toit ; la version 2 (5,00 m² pile) est dispensée, et
+son débord de 25 cm au-dessus de la porte ne la fait pas basculer. *Réserves inchangées :* secteur
+protégé ou abords d'un monument historique (déclaration préalable même sous le seuil), et le PLU
+(hauteur, implantation, distance aux limites) s'applique de toute façon. *Corrige* D21 ; *complète*
+D27 et D28.

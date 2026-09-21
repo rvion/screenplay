@@ -58,8 +58,10 @@ bureau qu'on aime, pas un abri.
   face A, calé à droite, charnière côté droit. Vantail vitré ~90 cm dedans.
 - **H3** Largeur utile de panneau **100 cm**, pose **verticale** des panneaux muraux.
 - **H4** Débords de toit **10 cm devant/derrière, 0 sur les côtés** (toit = 2 panneaux entiers,
-  rives affleurantes). Emprise débords inclus 200 × 260 = 5,2 m² ⇒ déclaration préalable
-  probable, à confirmer en mairie.
+  rives affleurantes). Emprise au sol = celle des **murs** (200 × 240 = 4,8 m²) :
+  les débords de toiture n'entrent pas dans l'emprise au sol tant qu'aucun poteau ne les porte
+  (R*420-1, cf. D29). La projection toit compris (200 × 260 = 5,2 m²) est calculée mais ne sert pas
+  au seuil.
 - **H5** Âme **PIR**, panneaux mur à **fixation cachée**, toit **couleur claire**.
 - **H7** Rehausse en madrier **75 × 225 classe 4**, stock 4,8 m (`rehausse`).
 - **H6** Portée libre du toit ≈ **2,6 m** sans panne : à confirmer dans le tableau de portées du
