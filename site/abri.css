@@ -51,6 +51,8 @@ thead th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; 
 tbody tr:nth-child(even) td { background: #fafbfc; }
 td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 td.regle { color: var(--muted); font-size: .8rem; }
+.note-prix { color: #7a8591; }
+a.source { font-size: .74rem; white-space: nowrap; }
 table.fiche th { width: 11.5em; font-weight: 600; color: var(--muted); font-size: .8rem; white-space: nowrap; }
 table.fiche td { font-variant-numeric: tabular-nums; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }

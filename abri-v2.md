@@ -30,7 +30,7 @@
 | fenêtres en façade | 100 fixe | 80 ouvrante + 80 fixe |
 | sol libre hors bureaux | 2,41 m² | 2,21 m² |
 | lit | 75 × 190, rabattable contre le fond | 75 × 190, pliant, posé au sol libre |
-| budget indicatif HT | 3 461 € (coque 3 186 €) | 3 119 € (coque 2 865 €) |
+| budget indicatif HT | 3 680 € (coque 3 452 €) | 3 001 € (coque 2 789 €) |
 
 ### Ce que cette disposition apporte
 
@@ -75,7 +75,7 @@
 - **4 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 200, fond en biais 223,6, gauche 300 cm.
 - **Toit** mono-pente vers la droite (jardin), 6,42° : 237,5 cm contre le mur gauche, 215 cm côté porte.
 - **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Matériaux** : 3 119 € TTC (2 651 € à 3 587 €), sans main-d'œuvre ni livraison ; équipement optionnel 259 €.
+- **Matériaux** : 3 001 € TTC (2 551 € à 3 451 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,46 m² ⇒ aucune formalité.
 
@@ -161,7 +161,7 @@ Murs 5 m² · intérieur 4,46 m² (murs de 6 cm retirés) · sol libre hors bure
 
 Débords : 15 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur de propriété, rives avant et fond affleurantes (bavette de rive). Surface couverte 5,29 m².
 
-### Rehausse bois (madrier 75 × 225, stock 480 cm)
+### Rehausse bois (madrier 75 × 225, stock 450 cm)
 
 | pièce | face | longueur | hauteur début → fin |
 |---|---|---|---|
@@ -169,7 +169,7 @@ Débords : 15 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | R2 | B | 223,6 cm | 0 → 22,5 cm |
 | R3 | G | 300 cm | 22,5 → 22,5 cm |
 
-**2 madriers** : n°1 = R3 (chute 180 cm) ; n°2 = R2 + R1 (chute 256,4 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
+**2 madriers** : n°1 = R3 (chute 150 cm) ; n°2 = R2 + R1 (chute 226,4 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
 
 ### Gouttière et profils
 
@@ -197,95 +197,95 @@ Débords : 15 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 
-### Panneaux · 1 157 €
+### Panneaux · 1 231 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 21,5 m² | 42 € | 903 € | 10 panneaux entiers à commander (les bandes recoupées sortent des chutes) |
-| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 6,34 m² | 40 € | 254 € | 3 panneaux coupés à longueur : T1 216,4 cm, T2 216,4 cm, T3 201,3 cm |
+| Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 21,5 m² | 44 € | 946 € | 10 panneaux entiers à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
+| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 6,34 m² | 45 € | 285 € | 3 panneaux coupés à longueur : T1 216,4 cm, T2 216,4 cm, T3 201,3 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
 
-### Bois · 159 €
+### Bois · 157 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Madrier 75 × 225 classe 4 (rehausse, lisse haute) *(prix à confirmer)* | 9,6 ml | 14 € | 134 € | 2 pièce(s) de 480 cm |
-| Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 5 ml | 5 € | 25 € | deux montants + une traverse haute |
+| Madrier 75 × 225 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
+| Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 5 ml | 5 € | 25 € | deux montants + une traverse haute. pas de prix releve |
 
-### Profils et bavettes · 413 €
+### Profils et bavettes · 425 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Profil de départ en U (rail de pied) *(prix à confirmer)* | 8,34 ml | 9 € | 75 € | périmètre des murs moins le cadre de la porte |
-| Profils d'angle à 90°, extérieur + intérieur *(prix à confirmer)* | 9,05 ml | 10 € | 91 € | 2 angles droits, hauteur finie de chaque coin, deux faces |
-| Profils d'angle pliés sur mesure (116,6°, 63,4°), extérieur + intérieur *(prix à confirmer)* | 9,05 ml | 18 € | 163 € | 2 angles non droits, deux faces |
-| Bandes de rive de toit *(prix à confirmer)* | 2,15 ml | 12 € | 26 € | bords du toit parallèles à la pente |
-| Bavette de tête (bord haut du toit) *(prix à confirmer)* | 3 ml | 12 € | 36 € | bord haut du toit |
-| Closoirs mousse sous les nervures *(prix à confirmer)* | 7,33 ml | 3 € | 22 € | bord haut + bord d'égout |
+| Profil de départ en U (rail de pied) *(prix à confirmer)* | 8,34 ml | 12 € | 100 € | périmètre des murs moins le cadre de la porte. 4,86 EUR HT la longueur de 0,5 m ([source](https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs)) |
+| Profils d'angle à 90°, extérieur + intérieur | 9,05 ml | 10 € | 91 € | 2 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
+| Profils d'angle pliés sur mesure (116,6°, 63,4°), extérieur + intérieur *(prix à confirmer)* | 9,05 ml | 15 € | 136 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
+| Bandes de rive de toit | 2,15 ml | 14 € | 30 € | bords du toit parallèles à la pente. 12,90 EUR/m en longueurs de 2,1 m ([source](https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html)) |
+| Bavette de tête (bord haut du toit) | 3 ml | 14 € | 42 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
+| Closoirs mousse sous les nervures *(prix à confirmer)* | 7,33 ml | 4 € | 26 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
 
-### Fixations · 50 €
+### Fixations · 117 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) *(prix à confirmer)* | 0,27 cent | 45 € | 12 € | 3 panneaux × 2 appuis × 4 vis, +10 % |
-| Vis de couture (recouvrements de panneaux, bavettes, profils) *(prix à confirmer)* | 0,64 cent | 12 € | 8 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 % |
-| Vis autoperceuses de panneaux de mur (pied et tête) *(prix à confirmer)* | 0,66 cent | 25 € | 17 € | 10 panneaux × 2 extrémités × 3 vis, +10 % |
-| Chevilles ou goujons pour fixer le rail dans la dalle *(prix à confirmer)* | 21 u | 1 € | 13 € | une tous les 50 cm |
+| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) | 0,27 cent | 90 € | 24 € | 3 panneaux × 2 appuis × 4 vis, +10 %. inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois. ([source](https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/)) |
+| Vis de couture (recouvrements de panneaux, bavettes, profils) | 0,64 cent | 35 € | 22 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 %. 4,8 x 20 : de 24 a 45 EUR le cent ([source](https://www.toletome.fr/les-produits-tole-to-me/accessoires-de-fixation/visserie/vis-de-couture-en-acier-(4-8-x-20).html)) |
+| Vis autoperceuses de panneaux de mur (pied et tête) | 0,66 cent | 90 € | 59 € | 10 panneaux × 2 extrémités × 3 vis, +10 %. vis 6,3 x 100 + rondelle + cache de couleur ([source](https://www.tolesmoinscheres.com/produit/100-fixations-pour-panneau-sandwich-de-bardage)) |
+| Chevilles ou goujons pour fixer le rail dans la dalle | 21 u | 1 € | 12 € | une tous les 50 cm. goujons 8 x 80 : 55,90 EUR la boite de 100 ([source](https://www.toutbrico.com/goujons-d-ancrage/7242-boite-100-goujons-d-ancrage-8-x-80mm-zingue-batifix-3700013413404.html)) |
 
-### Étanchéité · 127 €
+### Étanchéité · 177 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Bande d'arase sous le rail de pied *(prix à confirmer)* | 9,24 ml | 2 € | 14 € | périmètre des murs |
-| Bande butyle (joints de panneaux, tête de mur sous la rehausse) *(prix à confirmer)* | 26,14 ml | 1 € | 31 € | 6 joints de mur × 2,2 m + périmètre + recouvrements de toit |
-| Mastic polyuréthane ou MS polymère, cartouches *(prix à confirmer)* | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures |
-| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,3 ml | 3 € | 28 € | tour de la porte et des fenêtres |
-| Mousse polyuréthane expansive, bombes *(prix à confirmer)* | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles |
+| Bande d'arase sous le rail de pied | 9,24 ml | 1 € | 5 € | périmètre des murs. rouleau de 30 m x 30 cm : 16,90 EUR ([source](https://www.bricodepot.fr/catalogue/bande-darase-long-30-m-larg-30-cm-500-microns/prod59812/)) |
+| Bande butyle (joints de panneaux, tête de mur sous la rehausse) | 26,14 ml | 2 € | 39 € | 6 joints de mur × 2,2 m + périmètre + recouvrements de toit. rouleau de 13 m : 19,66 EUR ([source](https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/)) |
+| Mastic polyuréthane ou MS polymère, cartouches | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures. MS polymere de 6,50 a 13 EUR ; Sikaflex 11FC environ 11,50 EUR ([source](https://www.maxoutil.com/mastic-ms-polymere-parabond-600-dl-chemicals-cartouche-de-290-ml-40001000.html)) |
+| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,3 ml | 7 € | 79 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
+| Mousse polyuréthane expansive, bombes | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles. 750 ml : de 7,90 a 9,90 EUR ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/isolation-et-cloison/etancheite/mousse-expansive)) |
 
-### Ouvertures · 820 €
+### Ouvertures · 519 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Porte de service pleine isolée 80 × 205 cm, avec dormant *(prix à confirmer)* | 1 u | 450 € | 450 € | une porte |
-| Fenêtre fixe PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 150 € | 150 € | fenêtres fixes |
-| Fenêtre oscillo-battante PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 220 € | 220 € | fenêtres ouvrantes |
+| Porte de service pleine isolée 80 × 205 cm, avec dormant | 1 u | 199 € | 199 € | une porte. bloc-porte de service PVC plein 205 x 80 avec dormant, serrure 5 points, Ud 1,6. Les tailles standard sont 205 ou 215 x 80 ou 90 ; 100 de large n'existe pas en standard. ([source](https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/)) |
+| Fenêtre fixe PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 165 € | 165 € | fenêtres fixes. 80 x 80 n'est pas une taille de stock : chassis fixe sur mesure, 4 a 5 semaines ([source](https://www.brico-fenetre.com/fr_FR/p/chassis-fixe-simple-pvc-gamme-confort)) |
+| Fenêtre oscillo-battante PVC double vitrage 80 × 80 cm | 1 u | 155 € | 155 € | fenêtres ouvrantes. 80 x 80 sur mesure a partir de 155 EUR, port en plus. En stock : 80 de large x 75 de haut (2 vantaux) 119 EUR, x 105 de haut 129 EUR (Brico Depot). ([source](https://www.fenetre24.com/fenetre-pvc-80x80-cm.php)) |
 
-### Eaux pluviales · 99 €
+### Eaux pluviales · 96 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Gouttière demi-ronde *(prix à confirmer)* | 4,33 ml | 6 € | 26 € | 2 tronçon(s) : D 192,5 cm + B 240,4 cm |
-| Crochets de gouttière *(prix à confirmer)* | 10 u | 3 € | 25 € | un tous les 50 cm |
-| Naissance, fonds, angle, coudes et colliers (lot) *(prix à confirmer)* | 1 lot | 35 € | 35 € | un angle, une naissance, deux fonds, deux coudes, deux colliers |
-| Tuyau de descente *(prix à confirmer)* | 2,15 ml | 6 € | 13 € | hauteur du mur côté égout |
+| Gouttière demi-ronde | 4,33 ml | 5 € | 20 € | 2 tronçon(s) : D 192,5 cm + B 240,4 cm. PVC demi-ronde de 25 : 9,40 EUR les 2 m (zinc : 22,50 EUR les 2 m) ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/gros-oeuvre-et-evacuation-des-eaux/evacuation-des-eaux-de-pluie/gouttiere-pvc)) |
+| Crochets de gouttière | 10 u | 2 € | 20 € | un tous les 50 cm ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
+| Naissance, fonds, angle, coudes et colliers (lot) | 1 lot | 45 € | 45 € | un angle, une naissance, deux fonds, deux coudes, deux colliers. naissance 14 + 2 fonds 6 + jonction ou angle 5 + 2 coudes 11 + 3 colliers 8 ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
+| Tuyau de descente | 2,15 ml | 5 € | 11 € | hauteur du mur côté égout. tube de 80 : 10 EUR les 2 m ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
 
-### Plancher isolé · 254 €
+### Plancher isolé · 212 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Lambourdes traitées (entraxe 40 cm) *(prix à confirmer)* | 13 ml | 2 € | 26 € | surface intérieure ÷ 0,40 m, +10 % |
-| Isolant rigide 40 mm entre lambourdes *(prix à confirmer)* | 4,68 m² | 12 € | 56 € | surface intérieure, +5 % |
-| Film polyéthylène sous le plancher *(prix à confirmer)* | 5,13 m² | 1 € | 5 € | surface intérieure, +15 % de recouvrements |
-| Dalles OSB3 18 mm rainurées *(prix à confirmer)* | 4,91 m² | 14 € | 69 € | surface intérieure, +10 % de chutes |
-| Revêtement de sol (vinyle ou stratifié) *(prix à confirmer)* | 4,91 m² | 20 € | 98 € | surface intérieure, +10 % de chutes |
+| Lambourdes traitées (entraxe 40 cm) | 13 ml | 3 € | 43 € | surface intérieure ÷ 0,40 m, +10 %. classe 4, 45 x 70, 2,70 m : 8,90 EUR ([source](https://www.bricodepot.fr/catalogue/lambourde-en-bois-classe-4-2700-x-70-x-45-mm/prod97284/)) |
+| Isolant rigide 40 mm entre lambourdes | 4,68 m² | 7 € | 35 € | surface intérieure, +5 %. polystyrene extrude 40 mm ([source](https://www.leroymerlin.fr/produits/materiaux/isolation/plaque-polystyrene/polystyrene-extrude/polystyrene-extrude-40-mm-prix-p.html)) |
+| Film polyéthylène sous le plancher | 5,13 m² | 1 € | 5 € | surface intérieure, +15 % de recouvrements. rouleau de 20 m2 : 19,90 EUR ([source](https://www.bricodepot.fr/catalogue/rouleau-pare-vapeur-ep-015-mm-20-m-l-200cm-x-l-1000cm/prod90796/)) |
+| Dalles OSB3 18 mm rainurées | 4,91 m² | 11 € | 55 € | surface intérieure, +10 % de chutes. dalle OSB3 18 mm 2500 x 675 : 18,95 EUR ([source](https://www.lamaison.fr/0275785.html)) |
+| Revêtement de sol (vinyle ou stratifié) | 4,91 m² | 15 € | 74 € | surface intérieure, +10 % de chutes. vinyle rigide a clipser ; stratifie des 5 EUR/m2 ([source](https://www.bricodepot.fr/produits/carrelage-stratifie-et-parquet/stratifie-parquet-et-sol-vinyle-pvc)) |
 
-### Équipement (optionnel) · 259 €
+### Équipement (optionnel) · 216 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Grilles ou entrées d'air murales *(prix à confirmer)* | 2 u | 15 € | 30 € | une basse, une haute, sur deux murs opposés |
-| Goulotte électrique 2 m *(prix à confirmer)* | 3 u | 8 € | 24 € | la moitié du périmètre, en longueurs de 2 m |
-| Multiprise parafoudre *(prix à confirmer)* | 1 u | 25 € | 25 € | sur le câble déjà en place |
-| Réglette ou plafonnier LED *(prix à confirmer)* | 1 u | 30 € | 30 € | un point lumineux |
-| Radiateur panneau 750 W à thermostat *(prix à confirmer)* | 1 u | 90 € | 90 € | bureau chauffé toute l'année |
-| Stores des fenêtres de façade *(prix à confirmer)* | 2 u | 30 € | 60 € | un par fenêtre |
+| Grilles ou entrées d'air murales | 2 u | 8 € | 16 € | une basse, une haute, sur deux murs opposés. grille avec moustiquaire, de 4 a 16 EUR ; un extracteur hygroreglable coute 95 EUR ([source](https://www.bricodepot.fr/produits/chauffage-clim-et-ventilation/climatisation-et-confort-thermique/vmc-et-extracteur-d-air/grille-d-aeration)) |
+| Goulotte électrique 2 m | 3 u | 15 € | 45 € | la moitié du périmètre, en longueurs de 2 m. 60 x 40, longueur de 2 m ([source](https://www.bricodepot.fr/produits/electricite/installation-electrique/goulotte-plinthe-et-moulure-electrique/goulotte-electrique)) |
+| Multiprise parafoudre *(prix à confirmer)* | 1 u | 20 € | 20 € | sur le câble déjà en place. pas de prix lu, 15 a 30 EUR |
+| Réglette ou plafonnier LED | 1 u | 10 € | 10 € | un point lumineux. reglette LED 120 cm 36 W : 6,90 EUR ([source](https://www.bricodepot.fr/p/3501709011368/reglette-led-etanche-36w-120-cm-blanc-neutre-4000k-2400-lm-ip65)) |
+| Radiateur panneau 750 W à thermostat | 1 u | 65 € | 65 € | bureau chauffé toute l'année. panneau acier 750 W, thermostat, detection de fenetre ouverte ([source](https://www.bricodepot.fr/catalogue/radiateur-acier-jaina-blanc-750-w/prod87074/)) |
+| Stores des fenêtres de façade *(prix à confirmer)* | 2 u | 30 € | 60 € | un par fenêtre. pas de prix releve |
 
-### Consommables · 40 €
+### Consommables · 67 €
 
-| matériau | quantité | prix unitaire | montant | comment c'est compté |
+| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Lame de scie circulaire pour métal (coupe à froid des panneaux) *(prix à confirmer)* | 1 u | 40 € | 40 € | jamais de meuleuse : elle brûle le laquage et la mousse |
+| Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
 
-**Total des matériaux : 3 119 € TTC** (fourchette 2 651 € à 3 587 €, ±15 %). Équipement optionnel en plus : 259 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 3 001 € TTC** (fourchette 2 551 € à 3 451 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -293,8 +293,11 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 
 ### Avant de commander
 
-- Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici) : tout le calepinage en dépend.
-- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2 m ici ; et la **pente minimale** (11,2 % ici).
+- Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.
+- **Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.
+- Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
+- Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.
+- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2 m ici ; et la **pente minimale** (11,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 116,6° et 63,4° **pliés sur mesure**, en même temps que les panneaux.
 - Vérifier au PLU la règle d'implantation près de la limite (l'abri est à 10 cm du mur de propriété).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.

@@ -37,7 +37,7 @@ function nomenclature_abri(p, v, m) {
   const pose = (groupe, cle, poste, qte, regle, optionnel = false) => {
     const e = prix[cle] || {}, pu = +e.pu || 0, q = rnd(qte, 2);
     if (q <= 0) return;
-    lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source, optionnel });
+    lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source || !!e.incertain, source: e.source || "", note: e.note || "", optionnel });
   };
   pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(mod * 100)} \xD7 ${fz(H * 100)} cm`, n_murs * mod * H, `${n_murs} panneaux entiers \xE0 commander (les bandes recoup\xE9es sortent des chutes)`);
   pose("Panneaux", "panneau_toit_m2", `Panneaux sandwich de toiture ${ep} mm, nervur\xE9s, teinte claire`, toit_m2, `${n_toit} panneaux coup\xE9s \xE0 longueur : ${m.toit.panneaux.map((x) => `${x.id} ${fz(x.longueur_cm)} cm`).join(", ")}`);
@@ -113,8 +113,11 @@ function guide_montage(p, v, m) {
   const face_porte = po ? m.faces[po.cote] : null, passage = v.passages.find((x) => x.cote === "arriere_droite");
   const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
   const avantTout = [
-    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici) : tout le calepinage en d\xE9pend.`,
-    `Faire confirmer la **port\xE9e** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramen\xE9e \xE0 ${fz(m.portee_cm / 200)} m par la panne interm\xE9diaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici).`,
+    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici, la largeur de tous les panneaux de 60 mm relev\xE9s) : tout le calepinage en d\xE9pend.`,
+    "**Acheter des panneaux en petite quantit\xE9 est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m\xB2 ou un paquet entier de panneaux de 6 \xE0 7,5 m. Demander un devis \xAB coup\xE9 \xE0 longueur, petite quantit\xE9 \xBB \xE0 deux sp\xE9cialistes et \xE0 un n\xE9goce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le d\xE9bit.",
+    `Rehausse : le madrier ${m.rehausse.section_mm.join(" \xD7 ")} ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 \xD7 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans cons\xE9quence) ou prot\xE9ger un classe 2 par la bavette.`,
+    "Fen\xEAtres : 80 \xD7 80 n'est pas une taille de stock (sur mesure, 4 \xE0 5 semaines). En stock il existe du 80 de large \xD7 75 ou 105 de haut. Porte : le bloc de service plein 205 \xD7 80 avec dormant est un article de stock.",
+    `Faire confirmer la **port\xE9e** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramen\xE9e \xE0 ${fz(m.portee_cm / 200)} m par la panne interm\xE9diaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans p\xE9n\xE9tration ni recouvrement en bout).`,
     `Commander les panneaux de toit **coup\xE9s \xE0 longueur**, et les profils des angles de ${speciaux.join(" et ") || "90\xB0"} **pli\xE9s sur mesure**, en m\xEAme temps que les panneaux.`,
     `V\xE9rifier au PLU la r\xE8gle d'implantation pr\xE8s de la limite (l'abri est \xE0 ${fz(gauche)} cm du mur de propri\xE9t\xE9).`,
     "Pr\xE9voir deux personnes pour lever les murs et poser le toit, et une journ\xE9e sans vent : un panneau de 2 m\xB2 est une voile."
@@ -2448,7 +2451,7 @@ function rend_abri(a) {
     m.toit.panneaux.map((t) => [`<b>${t.id}</b>`, `${fr2(t.largeur_cm)} cm`, `${fr2(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`])
   );
   table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [`<b>${r.id}</b>`, r.face, `${fr2(r.L)} cm`, `${fr2(r.h0)} \u2192 ${fr2(r.h1)} cm`]));
-  html("materiaux", B.groupes.map((gr) => `<h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>comment c'est compt\xE9</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}</td></tr>`).join("")}</tbody></table></div>`).join(""));
+  html("materiaux", B.groupes.map((gr) => `<h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>comment c'est compt\xE9 \xB7 d'o\xF9 vient le prix</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div>`).join(""));
   html("materiaux-total", `<b>Total des mat\xE9riaux : ${eur(B.materiaux_eur)} TTC</b> (fourchette ${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}). \xC9quipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}.` : ""} Ni main-d'\u0153uvre ni forfait : seulement ce qu'on ach\xE8te.`);
   const Gd = m.guide, cle_cases = `abri-v${a.version}-cases`;
   let faites = {};

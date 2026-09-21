@@ -57,6 +57,7 @@
     "titre": "Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)",
     "params": {
       "dalle_cm": { "bandes_libres_cm": { "avant": 1, "gauche": 10 } },
+      "rehausse": { "longueur_stock_cm": 450, "_comment": "les madriers classe 4 se vendent en 4 m ou 4,5 m, pas en 4,8 m" },
       "disposition_trapeze": {
         "cotes_cm": { "avant": 200, "droite": 200, "gauche": 300 },
         "porte_largeur_cm": 80,
@@ -257,212 +258,254 @@
     "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
   },
   "prix_materiaux_eur_ttc": {
-    "_comment": "Prix des MATERIAUX, TTC, pour un particulier, en France. Ni main-d'oeuvre ni forfait ; la livraison est a part et hors total. Chaque article : pu (prix unitaire), unite, source (adresse ou le prix a ete releve), note. Un article sans source est marque 'prix a confirmer' sur le site et dans abri.md. Les quantites sont calculees par site/src/chantier.ts.",
+    "_comment": "Prix des MATERIAUX, TTC, pour un particulier, en France, releves en septembre 2026. Ni main-d'oeuvre ni forfait ; la livraison est a part et hors total. Chaque article : pu (prix unitaire), unite, source (page ou le prix a ete lu), note, incertain (une seule source, ou prix deduit). Un article sans source, ou incertain, est marque 'prix a confirmer' sur le site et dans abri.md. Les quantites sont calculees par site/src/chantier.ts.",
     "incertitude_pct": 15,
     "panneau_mur_m2": {
-      "pu": 42,
+      "pu": 44,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70",
+      "note": "fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m.",
+      "incertain": true
     },
     "panneau_toit_m2": {
-      "pu": 40,
+      "pu": 45,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128",
+      "note": "35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande.",
+      "incertain": true
     },
     "madrier_ml": {
-      "pu": 14,
+      "pu": 14.7,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4",
+      "note": "classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m)."
     },
     "panne_ml": {
-      "pu": 10,
+      "pu": 9,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4",
+      "note": "68 x 145 classe 4 : 6,20 EUR/m ; 75 x 145 rabote : 17 EUR/m"
     },
     "chevron_cadre_ml": {
       "pu": 5,
       "unite": "ml",
-      "note": ""
+      "note": "pas de prix releve"
     },
     "profil_pied_ml": {
-      "pu": 9,
+      "pu": 12,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs",
+      "note": "4,86 EUR HT la longueur de 0,5 m",
+      "incertain": true
     },
     "angle_standard_ml": {
       "pu": 10,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
+      "note": "7,92 EUR HT le metre, tole 0,75 mm"
     },
     "angle_sur_mesure_ml": {
-      "pu": 18,
+      "pu": 15,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
+      "note": "aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer",
+      "incertain": true
     },
     "bande_rive_ml": {
-      "pu": 12,
+      "pu": 14,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html",
+      "note": "12,90 EUR/m en longueurs de 2,1 m"
     },
     "bandeau_haut_ml": {
-      "pu": 12,
+      "pu": 14,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html",
+      "note": "solin ou faitiere 2,10 m : 29 EUR"
     },
     "closoir_ml": {
-      "pu": 3,
+      "pu": 3.5,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html",
+      "note": "rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi",
+      "incertain": true
     },
     "vis_toit_100": {
-      "pu": 45,
+      "pu": 90,
       "unite": "cent",
-      "note": ""
+      "source": "https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/",
+      "note": "inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois."
     },
     "vis_couture_100": {
-      "pu": 12,
+      "pu": 35,
       "unite": "cent",
-      "note": ""
+      "source": "https://www.toletome.fr/les-produits-tole-to-me/accessoires-de-fixation/visserie/vis-de-couture-en-acier-(4-8-x-20).html",
+      "note": "4,8 x 20 : de 24 a 45 EUR le cent"
     },
     "vis_mur_100": {
-      "pu": 25,
+      "pu": 90,
       "unite": "cent",
-      "note": ""
+      "source": "https://www.tolesmoinscheres.com/produit/100-fixations-pour-panneau-sandwich-de-bardage",
+      "note": "vis 6,3 x 100 + rondelle + cache de couleur"
     },
     "cheville_beton_u": {
-      "pu": 0.6,
+      "pu": 0.56,
       "unite": "u",
-      "note": ""
+      "source": "https://www.toutbrico.com/goujons-d-ancrage/7242-boite-100-goujons-d-ancrage-8-x-80mm-zingue-batifix-3700013413404.html",
+      "note": "goujons 8 x 80 : 55,90 EUR la boite de 100"
     },
     "bande_arase_ml": {
-      "pu": 1.5,
+      "pu": 0.56,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.bricodepot.fr/catalogue/bande-darase-long-30-m-larg-30-cm-500-microns/prod59812/",
+      "note": "rouleau de 30 m x 30 cm : 16,90 EUR"
     },
     "butyle_ml": {
-      "pu": 1.2,
+      "pu": 1.5,
       "unite": "ml",
-      "note": ""
+      "source": "https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/",
+      "note": "rouleau de 13 m : 19,66 EUR"
     },
     "mastic_cartouche": {
       "pu": 9,
       "unite": "cartouche",
-      "note": ""
+      "source": "https://www.maxoutil.com/mastic-ms-polymere-parabond-600-dl-chemicals-cartouche-de-290-ml-40001000.html",
+      "note": "MS polymere de 6,50 a 13 EUR ; Sikaflex 11FC environ 11,50 EUR"
     },
     "bande_comprimee_ml": {
-      "pu": 2.5,
+      "pu": 7,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825",
+      "note": "rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs",
+      "incertain": true
     },
     "mousse_pu_u": {
       "pu": 9,
       "unite": "bombe",
-      "note": ""
+      "source": "https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/isolation-et-cloison/etancheite/mousse-expansive",
+      "note": "750 ml : de 7,90 a 9,90 EUR"
     },
     "porte_pleine_u": {
-      "pu": 450,
+      "pu": 199,
       "unite": "u",
-      "note": ""
+      "source": "https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/",
+      "note": "bloc-porte de service PVC plein 205 x 80 avec dormant, serrure 5 points, Ud 1,6. Les tailles standard sont 205 ou 215 x 80 ou 90 ; 100 de large n'existe pas en standard."
     },
     "porte_vitree_u": {
       "pu": 900,
       "unite": "u",
-      "note": ""
+      "note": "pas de prix releve (l'abri retenu a une porte pleine)"
     },
     "fenetre_fixe_u": {
-      "pu": 150,
+      "pu": 165,
       "unite": "u",
-      "note": ""
+      "source": "https://www.brico-fenetre.com/fr_FR/p/chassis-fixe-simple-pvc-gamme-confort",
+      "note": "80 x 80 n'est pas une taille de stock : chassis fixe sur mesure, 4 a 5 semaines",
+      "incertain": true
     },
     "fenetre_ob_u": {
-      "pu": 220,
+      "pu": 155,
       "unite": "u",
-      "note": ""
+      "source": "https://www.fenetre24.com/fenetre-pvc-80x80-cm.php",
+      "note": "80 x 80 sur mesure a partir de 155 EUR, port en plus. En stock : 80 de large x 75 de haut (2 vantaux) 119 EUR, x 105 de haut 129 EUR (Brico Depot)."
     },
     "gouttiere_ml": {
-      "pu": 6,
+      "pu": 4.7,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/gros-oeuvre-et-evacuation-des-eaux/evacuation-des-eaux-de-pluie/gouttiere-pvc",
+      "note": "PVC demi-ronde de 25 : 9,40 EUR les 2 m (zinc : 22,50 EUR les 2 m)"
     },
     "gouttiere_crochet_u": {
-      "pu": 2.5,
+      "pu": 2,
       "unite": "u",
-      "note": ""
+      "source": "https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris"
     },
     "gouttiere_accessoires_u": {
-      "pu": 35,
+      "pu": 45,
       "unite": "lot",
-      "note": ""
+      "source": "https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris",
+      "note": "naissance 14 + 2 fonds 6 + jonction ou angle 5 + 2 coudes 11 + 3 colliers 8"
     },
     "descente_ml": {
-      "pu": 6,
+      "pu": 5,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris",
+      "note": "tube de 80 : 10 EUR les 2 m"
     },
     "lambourde_ml": {
-      "pu": 2,
+      "pu": 3.3,
       "unite": "ml",
-      "note": ""
+      "source": "https://www.bricodepot.fr/catalogue/lambourde-en-bois-classe-4-2700-x-70-x-45-mm/prod97284/",
+      "note": "classe 4, 45 x 70, 2,70 m : 8,90 EUR"
     },
     "isolant_sol_m2": {
-      "pu": 12,
+      "pu": 7.43,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.leroymerlin.fr/produits/materiaux/isolation/plaque-polystyrene/polystyrene-extrude/polystyrene-extrude-40-mm-prix-p.html",
+      "note": "polystyrene extrude 40 mm"
     },
     "film_pe_m2": {
       "pu": 1,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.bricodepot.fr/catalogue/rouleau-pare-vapeur-ep-015-mm-20-m-l-200cm-x-l-1000cm/prod90796/",
+      "note": "rouleau de 20 m2 : 19,90 EUR"
     },
     "osb_m2": {
-      "pu": 14,
+      "pu": 11.23,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.lamaison.fr/0275785.html",
+      "note": "dalle OSB3 18 mm 2500 x 675 : 18,95 EUR"
     },
     "revetement_sol_m2": {
-      "pu": 20,
+      "pu": 15,
       "unite": "m²",
-      "note": ""
+      "source": "https://www.bricodepot.fr/produits/carrelage-stratifie-et-parquet/stratifie-parquet-et-sol-vinyle-pvc",
+      "note": "vinyle rigide a clipser ; stratifie des 5 EUR/m2"
     },
     "aerateur_u": {
-      "pu": 15,
-      "unite": "u",
-      "note": ""
-    },
-    "goulotte_u": {
       "pu": 8,
       "unite": "u",
-      "note": ""
+      "source": "https://www.bricodepot.fr/produits/chauffage-clim-et-ventilation/climatisation-et-confort-thermique/vmc-et-extracteur-d-air/grille-d-aeration",
+      "note": "grille avec moustiquaire, de 4 a 16 EUR ; un extracteur hygroreglable coute 95 EUR"
+    },
+    "goulotte_u": {
+      "pu": 14.9,
+      "unite": "u",
+      "source": "https://www.bricodepot.fr/produits/electricite/installation-electrique/goulotte-plinthe-et-moulure-electrique/goulotte-electrique",
+      "note": "60 x 40, longueur de 2 m"
     },
     "multiprise_u": {
-      "pu": 25,
+      "pu": 20,
       "unite": "u",
-      "note": ""
+      "note": "pas de prix lu, 15 a 30 EUR"
     },
     "eclairage_u": {
-      "pu": 30,
+      "pu": 10,
       "unite": "u",
-      "note": ""
+      "source": "https://www.bricodepot.fr/p/3501709011368/reglette-led-etanche-36w-120-cm-blanc-neutre-4000k-2400-lm-ip65",
+      "note": "reglette LED 120 cm 36 W : 6,90 EUR"
     },
     "radiateur_u": {
-      "pu": 90,
+      "pu": 64.9,
       "unite": "u",
-      "note": ""
+      "source": "https://www.bricodepot.fr/catalogue/radiateur-acier-jaina-blanc-750-w/prod87074/",
+      "note": "panneau acier 750 W, thermostat, detection de fenetre ouverte"
     },
     "store_u": {
       "pu": 30,
       "unite": "u",
-      "note": ""
+      "note": "pas de prix releve"
     },
     "lame_metal_u": {
-      "pu": 40,
+      "pu": 67,
       "unite": "u",
-      "note": ""
+      "source": "https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html",
+      "note": "Bosch Expert for Sandwich Panel, 36 dents"
     },
     "livraison_panneaux": {
       "pu": 250,
       "unite": "forfait",
-      "note": "service, affiche a part, jamais dans le total des materiaux"
+      "note": "service, affiche a part, jamais dans le total des materiaux. Aucun tarif public : sur devis, selon la quantite et la distance."
     }
   },
   "prix_indicatifs_eur": {

@@ -1,9 +1,14 @@
 # Backlog & questions ouvertes
 
 ## À trancher avec l'utilisateur
-- [ ] **Prix des matériaux** (D36) : les articles marqués « prix à confirmer » n'ont pas encore de
-      source. Demander deux devis de panneaux (mur et toit, coupés à longueur, profils pliés) :
-      c'est la moitié du total.
+- [ ] **Devis de panneaux** (D36) : prix relevés en ligne le 2026-09-22, avec leur source. Restent
+      « à confirmer » les panneaux (les vendeurs les moins chers imposent 100 m² ou un paquet
+      entier : demander deux devis « petite quantité, coupé à longueur » et un négoce local), les
+      profils pliés à 135°, les fenêtres 80 × 80 (hors stock). C'est la moitié du total.
+- [ ] **Fenêtres : 80 × 80 sur mesure, ou 80 × 75 de stock ?** Le 80 de large × 75 de haut existe en
+      stock à 119 €, sans délai ; le 80 × 80 se fait sur mesure (environ 155 €, 4 à 5 semaines).
+- [ ] **Rehausse** : le 75 × 225 n'existe en stock qu'en classe 2. Prendre du 70 × 220 classe 4 (la
+      chute passe de 22,5 à 22 cm) ou protéger un classe 2 par la bavette ?
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
       lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
       navigateur, pas encore par l'œil de Rémi.

@@ -7,7 +7,7 @@ const fr = (x: number) => String(x).replace(".", ",");
 const fz = (x: number) => fr(rnd(x, 1));
 const haut = (n: number) => Math.ceil(n - 1e-9);
 
-export interface LigneMateriau { groupe: string; poste: string; qte: number; unite: string; pu_eur: number; montant_eur: number; regle: string; a_confirmer: boolean; optionnel: boolean }
+export interface LigneMateriau { groupe: string; poste: string; qte: number; unite: string; pu_eur: number; montant_eur: number; regle: string; a_confirmer: boolean; source: string; note: string; optionnel: boolean }
 
 // bords du toit : egout (l'eau sort), haut (cote oppose), rive (les autres)
 function bords_toit(m: any) {
@@ -41,7 +41,7 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   const pose = (groupe: string, cle: string, poste: string, qte: number, regle: string, optionnel = false) => {
     const e = prix[cle] || {}, pu = +e.pu || 0, q = rnd(qte, 2);
     if (q <= 0) return;
-    lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source, optionnel });
+    lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source || !!e.incertain, source: e.source || "", note: e.note || "", optionnel });
   };
   // --- panneaux
   pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(mod * 100)} × ${fz(H * 100)} cm`, n_murs * mod * H, `${n_murs} panneaux entiers à commander (les bandes recoupées sortent des chutes)`);
@@ -123,8 +123,11 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
   const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
 
   const avantTout = [
-    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici) : tout le calepinage en dépend.`,
-    `Faire confirmer la **portée** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramenée à ${fz(m.portee_cm / 200)} m par la panne intermédiaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici).`,
+    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.`,
+    "**Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.",
+    `Rehausse : le madrier ${m.rehausse.section_mm.join(" × ")} ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.`,
+    "Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.",
+    `Faire confirmer la **portée** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramenée à ${fz(m.portee_cm / 200)} m par la panne intermédiaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).`,
     `Commander les panneaux de toit **coupés à longueur**, et les profils des angles de ${speciaux.join(" et ") || "90°"} **pliés sur mesure**, en même temps que les panneaux.`,
     `Vérifier au PLU la règle d'implantation près de la limite (l'abri est à ${fz(gauche)} cm du mur de propriété).`,
     "Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.",

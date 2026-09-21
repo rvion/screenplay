@@ -2222,8 +2222,8 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   if (lp) md += `| lit ${lp.replie ? "rabattable" : "pliant"} (déplié) | ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} cm | ${!lp.tient ? "**NE TIENT PAS**" : lp.replie ? `contre le mur du fond (replié : ${fz(lp.epaisseur_replie_cm)} cm), ${lp.sous_bureau_cm2 > 0 ? "pied sous le bureau gauche" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}` : `au milieu${lp.sous_bureau_cm2 > 0 ? ", pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}`} |\n`;
   md += `\n## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)\n\n`;
   for (const gr of B.groupes) {
-    md += `### ${gr.nom} · ${eur(gr.total_eur)}\n\n| matériau | quantité | prix unitaire | montant | comment c'est compté |\n|---|---|---|---|---|\n`;
-    for (const l of B.lignes.filter((x: any) => x.groupe === gr.nom)) md += `| ${l.poste}${l.a_confirmer ? " *(prix à confirmer)*" : ""} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} | ${l.regle} |\n`;
+    md += `### ${gr.nom} · ${eur(gr.total_eur)}\n\n| matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |\n|---|---|---|---|---|\n`;
+    for (const l of B.lignes.filter((x: any) => x.groupe === gr.nom)) md += `| ${l.poste}${l.a_confirmer ? " *(prix à confirmer)*" : ""} | ${fr(l.qte)} ${l.unite} | ${eur(l.pu_eur)} | ${eur(l.montant_eur)} | ${l.regle}${l.note ? `. ${l.note}` : ""}${l.source ? ` ([source](${l.source}))` : ""} |\n`;
     md += `\n`;
   }
   md += `**Total des matériaux : ${eur(B.materiaux_eur)} TTC** (fourchette ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}, ±${B.incertitude_pct} %). Équipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h: any) => `${h.poste} ≈ ${eur(h.montant_eur)}`).join(", ")}.` : ""}\n\n`;
