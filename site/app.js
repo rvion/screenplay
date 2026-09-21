@@ -1639,7 +1639,10 @@ function modele_trapeze(p, v) {
     const deux_fonds = v.noms_cotes.filter((nm) => lettre(nm) === "B").length > 1;
     const F = deux_fonds && v.noms_cotes[i] === "fond en biais" ? "C" : lettre(v.noms_cotes[i]);
     const panneaux = [];
-    for (let s = 0, k = 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd(s, 1), largeur_cm: rnd(Math.min(mod, L - s), 1) });
+    const reste = L - Math.floor((L + 0.05) / mod) * mod;
+    const tete = (d.panneaux_depuis_la_fin || []).includes(v.noms_cotes[i]) && reste > 0.05 ? reste : 0;
+    if (tete) panneaux.push({ id: `${F}1`, debut_cm: 0, largeur_cm: rnd(tete, 1) });
+    for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd(s, 1), largeur_cm: rnd(Math.min(mod, L - s), 1) });
     const ouvertures = [];
     if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
     for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });

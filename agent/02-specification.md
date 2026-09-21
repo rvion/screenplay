@@ -145,6 +145,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   angles, rehausse, débit et page suivent le nombre de faces. La **gouttière** court sur tous les
   bords par où l'eau sort (normale extérieure dans le sens de la pente : `gouttiere.troncons`).
   L'espace caché derrière l'abri se calcule sur un ou deux murs de fond (union des zones).
+  `panneaux_depuis_la_fin` (liste de murs) place la bande recoupée d'un mur **en tête** : sur le
+  mur de la porte, le module entier du fond reçoit tout le cadre et la bande reste pleine.
   Une variante peut **hériter** d'une autre (`herite`) et choisir sa base de comparaison
   (`compare_a`) : `abri_v3` = `abri_v2` + cinq murs, comparée à la version 2 ; `abri_v4` = `abri_v3` +
   toit vers le fond, comparée à la version 3. `toit.descente` (`droite`/`gauche`) place la descente

@@ -203,6 +203,8 @@ sur le mur gauche, relié au haut du mur droit par un pan (face <strong>C</stron
 angles, rehausse, débit et page suivent le nombre de faces. La <strong>gouttière</strong> court sur tous les
 bords par où l&#39;eau sort (normale extérieure dans le sens de la pente : <code>gouttiere.troncons</code>).
 L&#39;espace caché derrière l&#39;abri se calcule sur un ou deux murs de fond (union des zones).
+<code>panneaux_depuis_la_fin</code> (liste de murs) place la bande recoupée d&#39;un mur <strong>en tête</strong> : sur le
+mur de la porte, le module entier du fond reçoit tout le cadre et la bande reste pleine.
 Une variante peut <strong>hériter</strong> d&#39;une autre (<code>herite</code>) et choisir sa base de comparaison
 (<code>compare_a</code>) : <code>abri_v3</code> = <code>abri_v2</code> + cinq murs, comparée à la version 2 ; <code>abri_v4</code> = <code>abri_v3</code> +
 toit vers le fond, comparée à la version 3. <code>toit.descente</code> (<code>droite</code>/<code>gauche</code>) place la descente

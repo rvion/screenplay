@@ -170,21 +170,34 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
 {
   const { params_v2, abri_md } = await import(pathToFileURL(out).href);
   const p2 = params_v2(base), p3 = params_v2(base, "abri_v3");
-  ok(p3.disposition_trapeze.toit.sens === "droite" && p3.disposition_trapeze.porte_vitree === false && p3.dalle_cm.bandes_libres_cm.avant === 1, "v3 : herite des reglages de la v2 (toit a droite, porte pleine, abri avance)");
+  ok(p3.disposition_trapeze.toit.sens === "droite" && p3.disposition_trapeze.porte_vitree === false && p3.disposition_trapeze.fenetres.length === 2, "v3 : herite des reglages de la v2 (toit a droite, porte pleine, fenetres)");
+  ok(p3.dalle_cm.bandes_libres_cm.avant === 10 && p2.dalle_cm.bandes_libres_cm.avant === 1, "v3 : 10 cm de dalle devant (la v2 reste a 1)");
   ok(p3.dalle_cm.bandes_libres_cm.gauche === 10 && p2.dalle_cm.bandes_libres_cm.gauche === 10 && base.dalle_cm.bandes_libres_cm.gauche === 12, "v2 et v3 : 10 cm a gauche (la v1 garde 12)");
   const c2 = buildCore(p2), c3 = buildCore(p3), m3 = c3.modele, v3 = c3.variantes.find((x) => x.id === 13), v2 = c2.variantes.find((x) => x.id === 13);
   ok(m3.faces.map((f) => f.cle).join("") === "ADCBG", "v3 : cinq murs A, D, C (pan), B (fond), G");
   const L = Object.fromEntries(m3.faces.map((f) => [f.cle, f]));
-  // a la main : 200 x 300 moins le coin 100 x 100 / 2 = 5,50 m2 ; pan = 100 x racine(2) = 141,4 ; angles 90 90 135 135 90
-  ok(near(v3.aire_m2, 5.5, 0.001) && near(L.C.longueur_cm, 141.4, 0.05) && near(L.B.longueur_cm, 100), "v3 : 5,50 m² de murs, pan de 141,4, fond de 100 (" + v3.aire_m2 + ", " + L.C.longueur_cm + ")");
+  // a la main : 200 x 275 moins le coin 100 x 100 / 2 = 5,00 m2 ; pan = 100 x racine(2) = 141,4 ; angles 90 90 135 135 90
+  ok(near(L.G.longueur_cm, 275) && near(L.D.longueur_cm, 175) && near(L.A.longueur_cm, 200), "v3 : facade 200, mur droit 175, mur gauche 275");
+  ok(near(v3.aire_m2, 5, 0.001) && v3.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && near(L.C.longueur_cm, 141.4, 0.05) && near(L.B.longueur_cm, 100), "v3 : 5,00 m² de murs, au seuil ; pan de 141,4, fond de 100 (" + v3.aire_m2 + ", " + L.C.longueur_cm + ")");
+  {
+    // le meme abri raccourci de 20 au lieu de 25 depasse le seuil : c'est la raison du 25
+    const p20 = params_v2(base, "abri_v3"); Object.assign(p20.disposition_trapeze.cotes_cm, { droite: 180, gauche: 280 });
+    ok(near(buildCore(p20).variantes.find((x) => x.id === 13).aire_m2, 5.1, 0.001), "v3 : a 280 / 180 l'abri ferait 5,10 m², au-dessus du seuil");
+  }
+  ok(near(Math.min(...v3.polygone.map((z) => z[1])), 10, 0.05), "v3 : facade a 10 cm du bord avant de la dalle");
   ok(v3.angles_deg.join() === "90,90,135,135,90", "v3 : angles 90 · 90 · 135 · 135 · 90, aucun angle aigu (" + v3.angles_deg.join(" ") + ")");
   ok(near(Math.min(...v3.polygone.map((z) => z[0])), 10, 0.05), "v3 : mur gauche a 10 cm du bord de la dalle");
   const mod = base.panneau.largeur_utile_cm;
-  ok(["A", "D", "B", "G"].every((k) => L[k].panneaux.every((pn) => near(pn.largeur_cm, mod))) && L.C.panneaux.filter((pn) => pn.largeur_cm < mod - 0.05).length === 1, "v3 : A, D, B, G en panneaux entiers, une seule bande recoupee (sur le pan)");
+  ok(["A", "B"].every((k) => L[k].panneaux.every((pn) => near(pn.largeur_cm, mod))), "v3 : facade et mur du fond en panneaux entiers");
+  ok(["D", "C", "G"].every((k) => L[k].panneaux.filter((pn) => pn.largeur_cm < mod - 0.05).length === 1), "v3 : une bande recoupee sur D, sur C et sur G");
+  // mur de la porte : la bande de 75 est en tete (cote facade), le module entier du fond recoit tout le cadre
+  ok(near(L.D.panneaux[0].largeur_cm, 75) && near(L.D.panneaux[1].largeur_cm, mod) && near(L.D.panneaux[1].debut_cm, 75), "v3 : mur droit = bande de 75 cote facade, puis le module de la porte");
+  ok(v3.porte.debut_cm - v3.porte.chambranle_cm >= 75 - 0.05 && L.D.panneaux[0].decoupes.length === 0, "v3 : le cadre de la porte tient dans le module du fond, la bande de tete reste pleine (cadre a partir de " + (v3.porte.debut_cm - v3.porte.chambranle_cm) + ")");
+  ok(near(L.G.panneaux[L.G.panneaux.length - 1].largeur_cm, 75) && near(L.G.panneaux[0].largeur_cm, mod), "v3 : mur gauche, bande de 75 en bout cote facade");
   const pas = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
-  // a la main : coin (110, 301), mur a y = 223 + 152 x 0,926 = 363,8 ; ecart 62,8 x 0,734 = 46,0
-  ok(near(pas(v3), 46.0, 0.6), "v3 : passage derriere 46 cm, au coin du fond (" + pas(v3) + ")");
-  ok(v3.aire_interieure_m2 > v2.aire_interieure_m2 + 0.4, "v3 : +" + (v3.aire_interieure_m2 - v2.aire_interieure_m2).toFixed(2) + " m² d'interieur sur la v2");
+  // a la main : coin (110, 285), mur a y = 223 + 152 x 0,926 = 363,8 ; ecart 78,8 x 0,734 = 57,8
+  ok(near(pas(v3), 57.8, 0.6) && pas(v3) > pas(v2), "v3 : passage derriere 57,8 cm au coin du fond, plus large que la v2 (" + pas(v3) + " contre " + pas(v2) + ")");
+  ok(near(v3.aire_interieure_m2, v2.aire_interieure_m2, 0.1) && v3.sol_libre_m2 > v2.sol_libre_m2, "v3 : meme interieur que la v2 (" + v3.aire_interieure_m2 + " contre " + v2.aire_interieure_m2 + "), plus de sol libre");
   ok(v3.arriere && v3.arriere.polygones.length === 2 && v3.arriere.aire_m2 < v2.arriere.aire_m2, "v3 : rangement cache plus petit que la v2 (" + v3.arriere.aire_m2 + " contre " + v2.arriere.aire_m2 + " m²), sur deux murs de fond");
   // le toit penche a droite : l'eau sort par D et par le pan C, pas par le fond B
   ok(m3.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "CD", "v3 : gouttiere sur le pan C et le mur droit D");
@@ -195,7 +208,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   const b3 = base.abri_v3, page3 = abri_md(p3, c3, { prefixe: "modele-v3-", version: 3, depuis: 2, titre: b3.titre, atouts: b3.atouts, pertes: b3.pertes, notes: b3.notes, hors_modele: b3.hors_modele, base: c2 });
   ok(page3.includes("## Ce qui change par rapport à la version 2") && page3.includes("| | version 2 ([abri-v2.md](abri-v2.md)) | **version 3** |"), "abri-v3.md se compare a la version 2");
   ok(page3.includes("**5 murs**") && page3.includes("site/assets/modele-v3-facade-C.svg") && page3.includes("5 angles"), "abri-v3.md : 5 murs, 5 angles, l'elevation du pan");
-  ok(!/\{\w+\}/.test(page3) && page3.includes("déclaration préalable"), "abri-v3.md : tous les {champs} remplaces, et la declaration prealable annoncee");
+  ok(!/\{\w+\}/.test(page3) && page3.includes("aucune formalité"), "abri-v3.md : tous les {champs} remplaces, et aucune formalite annoncee");
   ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
 }
 
@@ -215,10 +228,10 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Budget indicatif", "## 
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
   ok(JSON.stringify(v4.polygone) === JSON.stringify(v3.polygone) && v4.aire_interieure_m2 === v3.aire_interieure_m2, "v4 : meme forme et meme interieur que la v3");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22,5 sur 300 de profondeur : facade 237,5 ; a y = 200, 215 + 22,5 / 3 = 222,5 ; fond 215
+  // a la main, chute 22,5 sur 275 de profondeur : facade 237,5 ; au haut du mur droit (175) 215 + 22,5 x 100 / 275 = 223,2 ; fond 215
   ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
-  ok(near(L.D.hauteur_fin_cm, 222.5, 0.05) && near(L.C.hauteur_debut_cm, 222.5, 0.05) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 222,5, pan 222,5 -> 215, fond a 215");
-  ok(near(m4.pente.pourcent, 7.5, 0.06) && near(m4.portee_cm, 300), "v4 : pente 22,5 / 300 = 7,5 %, portee 3 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  ok(near(L.D.hauteur_fin_cm, 223.2, 0.06) && near(L.C.hauteur_debut_cm, 223.2, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 223,2, pan 223,2 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 8.2, 0.06) && near(m4.portee_cm, 275), "v4 : pente 22,5 / 275 = 8,2 %, portee 2,75 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);

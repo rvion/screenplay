@@ -321,3 +321,16 @@ sans bonne place (coincée au coin arrière gauche, ou à l'entrée du passage c
 un tuyau à ramener au jardin). Les deux sens restent proposés côte à côte (`abri-v3.md`,
 `abri-v4.md`).
 
+## D32 — Version 3 réduite : murs 275 et 175, 10 cm de dalle à gauche et devant, 5,00 m²
+La version 3 plaisait mais était « un peu trop grande ». Demande : environ 20 cm de moins sur les
+murs gauche et droit, et 10 cm de dalle visibles à gauche **et devant**. Retenu : **25 cm** de moins
+(gauche 275, droite 175). *Pourquoi 25 et pas 20 :* à 280 / 180 l'abri fait 5,10 m² de murs, soit
+une déclaration préalable pour 0,10 m² ; à 275 / 175 il fait **5,00 m²**, sans formalité. Les deux
+murs raccourcis de la même longueur, le pan reste un vrai 45° (141,4 cm). *Ce que le calcul
+donne :* 4,48 m² d'intérieur (la version 2 en a 4,46), passage arrière **57,8 cm** (l'abri recule
+de 9 cm mais son fond avance de 16), rangement caché 1,74 m². *Ce que ça coûte :* les murs gauche
+et droit ne sont plus au module, chacun porte une bande de 75 cm. Celle du mur droit est placée en
+tête (`panneaux_depuis_la_fin`) pour que le module entier du fond reçoive tout le cadre de la
+porte ; celle du mur gauche tombe en bout côté façade, accessible. La version 4 hérite de tout
+(portée 2,75 m, pente 8,2 %). *Amende D30 et D31* (cotes et passage de la version 3).
+
