@@ -52,6 +52,8 @@ export function applique_etats(vue: AbriViewer, e: Etats) {
   vue.montrer("murs", e.murs > 0); vue.montrer("murs_coupes", e.murs === 2);
 }
 export const LITS_MURAUX_MAX = 6;
+// taille de la silhouette d'echelle, en metres
+export const TAILLE_PERSONNE = 1.85;
 export type Masquable = "toit" | "mobilier" | "lit" | `lit${number}` | `bureaux${number}` | "sieges" | "sieges_mi" | "sieges_ranges" | `sieges_ranges${number}` | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | `personne_couchee${number}` | "porte" | "porte_fermee" | "cloture" | "murs" | "murs_coupes";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
@@ -290,13 +292,20 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
         };
         pose(battant(1.15), groupes.porte || groupe("porte"));
         pose(battant(0), groupes.porte_fermee || groupe("porte_fermee"));
-        // silhouette de 1,80 m pour l'echelle (cachee au depart) : devant la porte, ou dedans a 60 cm du seuil
+        // silhouette de 1,85 m pour l'echelle (cachee au depart) : devant la porte, ou dedans a 60 cm du seuil
         const matP = mat(COUL.personne, { roughness: 0.9 });
         const silhouette = (z: number, y: number, decale = 0) => {
           const corps = new THREE.Group();
-          for (const dx of [-0.09, 0.09]) { const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP); jambe.position.set(dx, 0.42, 0); corps.add(ombre(jambe)); }
-          const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP); tronc.position.y = 0.84 + 0.33; corps.add(ombre(tronc));
-          const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP); tete.position.y = 1.8 - 0.115; corps.add(ombre(tete));
+          const jambe_h = 0.84 * (TAILLE_PERSONNE / 1.8), tronc_h = 0.66 * (TAILLE_PERSONNE / 1.8);
+          for (const dx of [-0.09, 0.09]) { const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, jambe_h, 10), matP); jambe.position.set(dx, jambe_h / 2, 0); corps.add(ombre(jambe)); }
+          const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, tronc_h, 0.22), matP); tronc.position.y = jambe_h + tronc_h / 2; corps.add(ombre(tronc));
+          const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP); tete.position.y = TAILLE_PERSONNE - 0.115; corps.add(ombre(tete));
+          // sa taille, ecrite sur le torse : une etiquette qui fait toujours face a la camera
+          const tx = etiquette(`${Math.round(TAILLE_PERSONNE * 100)} cm`);
+          if (tx) {
+            const plaque = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, transparent: true, depthWrite: false, depthTest: false }));
+            plaque.scale.set(0.34, 0.17, 1); plaque.position.set(0, 1.17, 0.13); corps.add(plaque);
+          }
           corps.position.set((s0 + s1) / 200 + decale, y, z);
           return corps;
         };

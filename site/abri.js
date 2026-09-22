@@ -1945,6 +1945,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       return;
     }
     const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
+    const plancher_cm = pp.amenagement && pp.amenagement.plancher && pp.amenagement.plancher.actif ? +pp.amenagement.plancher.epaisseur_cm : 0;
     const passage = v.passages.find((q) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
     const gauche = Math.min(...v.polygone.map((z) => z[0])), avant = Math.min(...v.polygone.map((z) => z[1]));
     const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z) => z[0]));
@@ -1960,6 +1961,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
       `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}`,
       `murs ${fait(cote(m.hauteur_mur_cm))}, fa\xEEte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
+      `sous plafond ${fait(`${cote(Math.round((Math.min(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)} \u2192 ${cote(Math.round((Math.max(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)}`)} (plancher isol\xE9 de ${cote(plancher_cm)} d\xE9duit)`,
       `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`,
       `mat\xE9riaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`
     ].join(" \xB7 ") + ".");
@@ -2205,6 +2207,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("murs_coupes", e.murs === 2);
   }
   var LITS_MURAUX_MAX = 6;
+  var TAILLE_PERSONNE = 1.85;
   var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
   function etiquette(txt) {
     if (typeof document === "undefined") return null;
@@ -2498,17 +2501,25 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
           const matP = mat(COUL.personne, { roughness: 0.9 });
           const silhouette = (z, y, decale = 0) => {
             const corps = new THREE.Group();
+            const jambe_h = 0.84 * (TAILLE_PERSONNE / 1.8), tronc_h = 0.66 * (TAILLE_PERSONNE / 1.8);
             for (const dx of [-0.09, 0.09]) {
-              const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
-              jambe.position.set(dx, 0.42, 0);
+              const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, jambe_h, 10), matP);
+              jambe.position.set(dx, jambe_h / 2, 0);
               corps.add(ombre(jambe));
             }
-            const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP);
-            tronc.position.y = 0.84 + 0.33;
+            const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, tronc_h, 0.22), matP);
+            tronc.position.y = jambe_h + tronc_h / 2;
             corps.add(ombre(tronc));
             const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP);
-            tete.position.y = 1.8 - 0.115;
+            tete.position.y = TAILLE_PERSONNE - 0.115;
             corps.add(ombre(tete));
+            const tx = etiquette(`${Math.round(TAILLE_PERSONNE * 100)} cm`);
+            if (tx) {
+              const plaque = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, transparent: true, depthWrite: false, depthTest: false }));
+              plaque.scale.set(0.34, 0.17, 1);
+              plaque.position.set(0, 1.17, 0.13);
+              corps.add(plaque);
+            }
             corps.position.set((s0 + s1) / 200 + decale, y, z);
             return corps;
           };

@@ -164,8 +164,9 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   `e / tan(angle / 2)` : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
-  panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** pour l'échelle, devant la porte ou à
-  60 cm du seuil dedans, sur le plancher. Les **options** sont une colonne de textes posée sur la vue, en
+  panneau (au-dessus des fenêtres), et une **silhouette de 1,85 m** (`TAILLE_PERSONNE`, sa taille écrite sur le
+  torse) pour l'échelle, devant la porte ou à 60 cm du seuil dedans, sur le plancher, dont l'épaisseur
+  réelle (`amenagement.plancher.epaisseur_cm`) est celle du modèle. Les **options** sont une colonne de textes posée sur la vue, en
   bas à gauche (icône, libellé fixe, autant de points que d'états, le point actif en bleu ; la pilule de
   verre n'apparaît qu'au survol) : toit, murs, porte, lit, personne, mobilier, repères, clôture. **Rendu** : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
   contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),

@@ -102,7 +102,7 @@ window.SHED_PARAMS = {
         "gauche": 0,
         "droite": 0
       },
-      "descente": "droite",
+      "descente": "gauche",
       "panne_intermediaire": false
     },
     "rehausse_section_mm": [
@@ -112,15 +112,11 @@ window.SHED_PARAMS = {
     "bureaux": [
       {
         "cote": "gauche",
-        "profondeur_cm": 80
+        "profondeur_cm": 70
       },
       {
         "cote": "avant",
         "profondeur_cm": 50
-      },
-      {
-        "cote": "fond",
-        "profondeur_cm": 30
       }
     ],
     "lit_pliant": {
@@ -169,10 +165,10 @@ window.SHED_PARAMS = {
       }
     ],
     "cotes_cm": {
-      "avant": 205,
-      "droite": 180,
-      "gauche": 250,
-      "fond": 135
+      "avant": 210,
+      "droite": 178,
+      "gauche": 248,
+      "fond": 140
     },
     "porte_vitree": false,
     "lit_pliant_2": {
@@ -193,8 +189,7 @@ window.SHED_PARAMS = {
         "longueur_cm": 190,
         "tete": "droite",
         "bureaux": [
-          "gauche",
-          "fond"
+          "gauche"
         ],
         "position": "fin",
         "bureaux_entiers": true,
@@ -280,9 +275,9 @@ window.SHED_PARAMS = {
   "amenagement": {
     "plancher": {
       "actif": true,
-      "epaisseur_cm": 6,
+      "epaisseur_cm": 10,
       "prix_m2_eur": 45,
-      "description": "plancher isole : lambourdes + 40 mm d'isolant + OSB + sol vinyle/parquet"
+      "description": "plancher isole sur la dalle : 60 mm de PIR entre lambourdes, OSB 22 mm, revetement 5 mm (10 cm au total, pris sur la hauteur sous plafond)"
     }
   },
   "prix_materiaux_eur_ttc": {

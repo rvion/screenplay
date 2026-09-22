@@ -38,35 +38,37 @@ Le **passage** derrière l'abri est la vraie distance entre la forme et chaque m
 (`v.passages`, extrémités du mur comprises), visée : `passage_souhaite_cm`.
 
 ## L'abri : option 13 à cotes imposées (`modele_trapeze`)
-`disposition_trapeze.cotes_cm` impose façade 205, droite 180, gauche 250 et un mur du fond de 135
+`disposition_trapeze.cotes_cm` impose façade 210, droite 178, gauche 248 et un mur du fond de 140
 d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout du fond. Contour :
-`(10,10) → (215,10) → (215,190) → (145,260) → (10,260)` : 10 cm de dalle à gauche et devant, 47 à droite.
+`(10,10) → (220,10) → (220,188) → (150,258) → (10,258)` : 10 cm de dalle à gauche et devant, 42 à droite.
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 205 | 237,5 → 237,5 | 100 + 100 + 5 |
-| D droite | 180 | 237,5 → 221,3 | 80 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan à 45° | 99 | 221,3 → 215 | 99 (un seul panneau, aucune bande) |
-| B fond | 135 | 215 → 215 | 100 + 35 |
-| G gauche | 250 | 215 → 237,5 | 100 + 100 + 50 |
+| A façade | 210 | 237,5 → 237,5 | 100 + 100 + 10 |
+| D droite | 178 | 237,5 → 221,4 | 78 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan à 45° | 99 | 221,4 → 215 | 99 (un seul panneau, aucune bande) |
+| B fond | 140 | 215 → 215 | 100 + 40 |
+| G gauche | 248 | 215 → 237,5 | 100 + 100 + 48 |
 
-- Angles **90 / 90 / 135 / 135 / 90**. Murs **4,88 m²** ⇒ **aucune formalité** (seuil 5 m²),
-  intérieur 4,37 m², sol libre hors bureaux et lit 1,72 m². Cotes intérieures : façade **193**,
-  droite 171,5, pan 94, fond 126,5, gauche 238. Passage derrière : 52,3 cm au grand pan, 64,8 au
-  petit pan. Matériaux 2 853 € TTC.
-- **La façade de 193 dedans porte le lit** : 190 de long, donc **3 cm de jeu seulement**. C'est la
-  cote du matelas : un cadre de lit du commerce mesure 195 à 200, il faut donc un sommier au ras du
-  matelas, ou un plateau construit sur place.
-- **Le mur droit de 180 dégage la porte** : la baie est **entièrement libre**, même avec une porte
+- Angles **90 / 90 / 135 / 135 / 90**. Murs **4,96 m²** ⇒ **aucune formalité** (seuil 5 m²),
+  intérieur 4,45 m², sol libre hors bureau et lit 2,16 m². Cotes intérieures : façade **198**,
+  droite 169,5, pan 94, fond 131,5, gauche 236. Passage derrière : 50,4 cm au grand pan, 66,8 au
+  petit pan. Matériaux 2 861 € TTC.
+- **Le plancher isolé prend 10 cm** (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
+  la hauteur sous plafond tombe à **2,05 m au plus bas et 2,28 m en façade**, et c'est cette hauteur
+  que montre le modèle 3D.
+- **La façade de 198 dedans porte le lit** : 190 de long, donc 8 cm de jeu pour le cadre.
+- **Le mur droit de 178 dégage la porte** : la baie est **entièrement libre**, même avec une porte
   de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
-- **Toit plan vers le fond** : `H` = 215, `c` = 22,5, `D` = 250 ⇒ pente **9 %** (5,14°), portée 2,5 m.
-  **3 panneaux de toit** (100 × 261, 100 × 261 en biais, bande de 5 × 198 en biais).
+- **Toit plan vers le fond** : `H` = 215, `c` = 22,5, `D` = 248 ⇒ pente **9,1 %** (5,18°), portée 2,48 m.
+  **3 panneaux de toit** (100 × 259, 100 × 259 en biais, bande de 10 × 201 en biais).
 - **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
-- **Gouttière** derrière l'abri, sur le pan C et le fond B ; descente au bout droit.
+- **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
+  (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
 - **Porte** pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
   **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade.
-- **Mobilier** : bureau gauche **80 de profondeur sur 238 cm** (trois écrans de 27" = 190), tablette
-  de 30 sur le mur du fond, bureau de façade 50 ; lit pliant 70 × 190 (`lit_pliant`,
+- **Mobilier** : bureau gauche **70 de profondeur sur 236 cm** (trois écrans de 27" = 190), seul
+  bureau de la disposition ; bureau de façade 50 dans la disposition pliante ; lit pliant 70 × 190 (`lit_pliant`,
   `lit_pliant_2`) ; un lit à demeure (`lits_muraux`) : **v3**, lit **80 × 190** le long de la façade,
   calé à droite (`position: "fin"`), **tête côté porte** : couché, les pieds vont vers le bureau
   gauche et ses écrans, et le plateau du bureau passe **au-dessus du pied du lit** sans être coupé
