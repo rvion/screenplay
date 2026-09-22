@@ -8,7 +8,11 @@ const fz = (x: number) => fr(Math.round(x * 10) / 10);
 const eur = (x: number) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} €`;
 const echappe = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 // une cote (nombre + unite) et un repere de face ou de panneau (A, D1, T2, R3) : un style unique sur toute la page
-const cote = (x: number | string, u = "cm") => `<span class="cote">${typeof x === "number" ? fr(x) : x}${u ? `<span class="u">${u}</span>` : ""}</span>`;
+// un nombre seul est coupe en partie entiere et decimales (dans un tableau, les entiers s'alignent, les decimales sont plus petites)
+const cote = (x: number | string, u = "cm") => {
+  const [n, d] = typeof x === "number" ? fr(x).split(",") : [x, undefined];
+  return `<span class="cote"><span class="n">${n}</span>${d !== undefined ? `<span class="d">,${d}</span>` : ""}${u ? `<span class="u">${u}</span>` : ""}</span>`;
+};
 const face = (id: string) => `<span class="face">${id}</span>`;
 
 // markdown en ligne des textes de params.json : gras, code, liens (un .md publie pointe vers sa page de docs/)

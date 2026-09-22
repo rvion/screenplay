@@ -2438,7 +2438,10 @@ var fr2 = (x) => String(x).replace(".", ",");
 var fz3 = (x) => fr2(Math.round(x * 10) / 10);
 var eur = (x) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} \u20AC`;
 var echappe = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-var cote = (x, u = "cm") => `<span class="cote">${typeof x === "number" ? fr2(x) : x}${u ? `<span class="u">${u}</span>` : ""}</span>`;
+var cote = (x, u = "cm") => {
+  const [n, d] = typeof x === "number" ? fr2(x).split(",") : [x, void 0];
+  return `<span class="cote"><span class="n">${n}</span>${d !== void 0 ? `<span class="d">,${d}</span>` : ""}${u ? `<span class="u">${u}</span>` : ""}</span>`;
+};
 var face = (id) => `<span class="face">${id}</span>`;
 function md_en_ligne(s) {
   return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
