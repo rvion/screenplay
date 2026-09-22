@@ -52,7 +52,7 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 208 | 237 → 237 | 100 + 100 + 8 |
+| A façade | 208 | 237 → 237 | 115 + 93 (panneaux de 115) |
 | D droite | 180 | 237 → 221,2 | 80 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
 | C pan en biais | 100 | 221,2 → 215 | 100 (un panneau entier, aucune coupe) |
 | B fond | 136,6 | 215 → 215 | 100 + 36,6 |
@@ -71,7 +71,10 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 - **Le mur droit de 180 dégage la porte** : la baie est **entièrement libre**, même avec une porte
   de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
 - **Toit plan vers le fond** : `H` = 215, `c` = 22, `D` = 250 ⇒ pente **8,8 %** (5,03°), portée 2,50 m.
-  **3 panneaux de toit** (100 × 261, 100 × 261 en biais, bande de 8 × 201 en biais).
+  **2 panneaux de toit de 115** (115 × 261, 93 × 261 en biais).
+- **Panneaux de 115 en façade et au toit** (`panneau.largeur_utile_par_face_cm`), 100 sur les autres murs :
+  deux pièces au lieu de trois, plus de bande de 8. Deux références chez le fournisseur ; une chute ne
+  sert qu'à un panneau de la même largeur. Fenêtres recentrées : une par panneau de façade (17,5 et 121,5).
 - **Rehausse** (madrier **70 × 220 classe 4**, la section vendue en stock ; chute 22) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.

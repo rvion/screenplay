@@ -5,8 +5,7 @@
 <polygon points="215.0,406.2 340.0,406.2 340.0,137.5 215.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
 <text x="277.5" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G2</text>
 <polygon points="340.0,406.2 402.5,406.2 402.5,137.5 340.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
-<text x="371.2" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G3</text>
-<text x="371.2" y="174.0" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">50</text>
+<text x="371.2" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G3 · 50</text>
 <polygon points="90.0,137.5 402.5,137.5 402.5,110.0 90.0,137.5" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
 <text x="246.2" y="128.0" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R4 · rehausse 0 → 22</text>
 <line x1="90.0" y1="410.2" x2="90.0" y2="430.2" stroke="#aaa" stroke-width="0.7"/>

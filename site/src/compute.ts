@@ -1021,6 +1021,8 @@ export function modele_trapeze(p: Params, v: any) {
   const d = p.disposition_trapeze, t = (d && d.toit) || {};
   const q: Pt[] = v.polygone, n = q.length;
   const H = +p.murs.hauteur_cm, c = +t.chute_cm, mod = +p.panneau.largeur_utile_cm;
+  // largeur utile par face (A..G, T = toit) quand elle differe de la largeur courante
+  const par_face = p.panneau.largeur_utile_par_face_cm || {}, mod_de = (F: string) => +(par_face[F] ?? mod);
   const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
   const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
   // sens = arriere : haut devant, bas au fond ; sens = droite : haut contre le mur gauche, bas cote jardin
@@ -1031,7 +1033,7 @@ export function modele_trapeze(p: Params, v: any) {
     const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
     const deux_fonds = v.noms_cotes.filter((nm: string) => lettre(nm) === "B").length > 1;
     const F = deux_fonds && v.noms_cotes[i] === "fond en biais" ? "C" : lettre(v.noms_cotes[i]);
-    const panneaux: any[] = [];
+    const panneaux: any[] = [], mod = mod_de(F);
     // panneaux_depuis_la_fin : les modules entiers partent du bout du mur, la bande recoupee vient en tete
     // (mur de la porte : le module entier du fond recoit le cadre, la bande reste pleine cote facade)
     const reste = L - Math.floor((L + 0.05) / mod) * mod;
@@ -1041,7 +1043,7 @@ export function modele_trapeze(p: Params, v: any) {
     const ouvertures: any[] = [];
     if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
     for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
-    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h(a), 1), hauteur_fin_cm: rnd(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
+    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h(a), 1), hauteur_fin_cm: rnd(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
   });
   const sec = d.rehausse_section_mm || p.rehausse.section_mm, section = +sec[1] / 10, stock = +p.rehausse.longueur_stock_cm;
   const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05)
@@ -1055,10 +1057,10 @@ export function modele_trapeze(p: Params, v: any) {
   const rampant = Math.sqrt(1 + (c / course) ** 2);
   const xmin = Math.min(...contour.map((z) => z[0])), xmax = Math.max(...contour.map((z) => z[0]));
   const ymin = Math.min(...contour.map((z) => z[1])), ymax = Math.max(...contour.map((z) => z[1]));
-  const panneaux_toit: any[] = [];
+  const panneaux_toit: any[] = [], mod_t = mod_de("T");
   // bandes d'un module, dans le sens de la pente : le long de y (sens arriere) ou de x (sens droite)
-  for (let s = droite ? ymin : xmin, k = 1, fin = droite ? ymax : xmax; s < fin - 0.05; s += mod, k++) {
-    const s1 = Math.min(s + mod, fin);
+  for (let s = droite ? ymin : xmin, k = 1, fin = droite ? ymax : xmax; s < fin - 0.05; s += mod_t, k++) {
+    const s1 = Math.min(s + mod_t, fin);
     let pc = droite ? clip_half(contour, [-1e4, s], [1e4, s], true) : clip_half(contour, [s, 1e4], [s, -1e4], true);
     pc = droite ? clip_half(pc, [1e4, s1], [-1e4, s1], true) : clip_half(pc, [s1, -1e4], [s1, 1e4], true);
     const le_long = pc.map((z) => z[droite ? 0 : 1]);
@@ -1066,13 +1068,14 @@ export function modele_trapeze(p: Params, v: any) {
     panneaux_toit.push({ id: `T${k}`, largeur_cm: rnd(s1 - s, 1), longueur_cm: rnd((Math.max(...le_long) - Math.min(...le_long)) * rampant, 1), biais, polygone: pc.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]) });
   }
   // debit murs : bandes etroites tirees des chutes des panneaux deja recoupes (first-fit), sinon d'un panneau neuf
-  const bandes = faces.flatMap((f) => f.panneaux.map((pn: any) => ({ face: f.cle, ...pn }))).sort((x, y) => y.largeur_cm - x.largeur_cm);
-  const chutes: number[] = [];
+  // une chute ne sert qu'a un panneau de la meme reference (meme largeur utile)
+  const bandes = faces.flatMap((f) => f.panneaux.map((pn: any) => ({ face: f.cle, mod: f.module_cm, ...pn }))).sort((x, y) => y.largeur_cm - x.largeur_cm);
+  const chutes: { mod: number; reste: number }[] = [], par_largeur: Record<string, number> = {};
   let panneaux_mur = 0;
   for (const b of bandes) {
-    const k = b.largeur_cm < mod - 0.05 ? chutes.findIndex((c) => c >= b.largeur_cm - 1e-6) : -1;
-    if (k >= 0) { b.source = "chute"; chutes[k] -= b.largeur_cm; }
-    else { panneaux_mur++; b.source = "neuf"; if (mod - b.largeur_cm > 5) chutes.push(mod - b.largeur_cm); }
+    const k = b.largeur_cm < b.mod - 0.05 ? chutes.findIndex((c) => c.mod === b.mod && c.reste >= b.largeur_cm - 1e-6) : -1;
+    if (k >= 0) { b.source = "chute"; chutes[k].reste -= b.largeur_cm; }
+    else { panneaux_mur++; par_largeur[b.mod] = (par_largeur[b.mod] || 0) + 1; b.source = "neuf"; if (b.mod - b.largeur_cm > 5) chutes.push({ mod: b.mod, reste: b.mod - b.largeur_cm }); }
   }
   for (const f of faces) for (const pn of f.panneaux) {
     const b = bandes.find((x) => x.id === pn.id);
@@ -1100,7 +1103,7 @@ export function modele_trapeze(p: Params, v: any) {
       contour: contour.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]), aire_m2: rnd(poly_area(contour) / 1e4, 2),
       // plan du toit : hauteur du dessous du toit = haut_cm au depart de la pente, bas_cm au bout de la course
       plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd(droite ? x0 : y0, 1), course_cm: rnd(course, 1), haut_cm: H + c, bas_cm: H },
-      panneaux: panneaux_toit, debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) }, gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)),
+      panneaux: panneaux_toit, module_cm: mod_t, debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) }, gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)),
         troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
         longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1), descente: ((): Pt => {
           if (t.descente !== "droite" && t.descente !== "gauche") return bas;
@@ -1110,6 +1113,7 @@ export function modele_trapeze(p: Params, v: any) {
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
+    panneaux_mur_par_largeur: par_largeur,
     // aires exactes : le seuil ne s'arrondit pas, formalites() n'arrondit que l'affichage
     formalites: formalites(p, poly_area(v.polygone) / 1e4, poly_area(contour) / 1e4, v.aire_interieure_m2),
     angles_deg: v.angles_deg,
@@ -1459,8 +1463,9 @@ export function modele_facade_svg(m: any, f: any, sans_entete = false, largeur_c
   for (const pn of f.panneaux) {
     svg += poly([P(pn.debut_cm, 0), P(pn.debut_cm + pn.largeur_cm, 0), P(pn.debut_cm + pn.largeur_cm, Hm), P(pn.debut_cm, Hm)], "#eef2f6", "#2b5d8a", 1.5);
     const c = P(pn.debut_cm + pn.largeur_cm / 2, Hm - 18);
-    svg += text(c[0], c[1], pn.id, "middle", "#2b5d8a", 12, "bold");
-    if (pn.largeur_cm < +m.faces[0].panneaux[0].largeur_cm - 0.05 || pn.largeur_cm < 99.95) svg += text(c[0], c[1] + 14, `${fz(pn.largeur_cm)}`, "middle", "#2b5d8a", 10);
+    // un panneau recoupe porte sa largeur sur la ligne de son repere (une fenetre peut couvrir la ligne du dessous)
+    const recoupe = pn.largeur_cm < f.module_cm - 0.05;
+    svg += text(c[0], c[1], recoupe ? `${pn.id} · ${fz(pn.largeur_cm)}` : pn.id, "middle", "#2b5d8a", 12, "bold");
   }
   if (Math.max(h0, h1) > Hm + 0.05) {
     const pc = m.rehausse.pieces.find((x: any) => x.face === f.cle);
@@ -1574,7 +1579,8 @@ export function abri_md(p: Params, core: any): string {
   md += `\nMurs ${fr(v.aire_m2)} m² · intérieur ${fr(v.aire_interieure_m2)} m² (murs de ${fz(ep)} cm retirés) · sol libre hors bureaux ${fr(v.sol_libre_m2)} m² · hauteur sous plafond ${fr(rnd((m.hauteurs_coins_cm[0] - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m devant, ${fr(rnd((Math.min(...m.hauteurs_coins_cm) - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m au plus bas (plancher isolé déduit).\n\n`;
   md += `## Débit\n\n### Panneaux de mur (hauteur ${fz(m.hauteur_mur_cm)} cm, pose verticale)\n\n| pièce | largeur | provenance | découpe |\n|---|---|---|---|\n`;
   for (const f of m.faces) for (const pn of f.panneaux) md += `| ${pn.id} | ${fr(pn.largeur_cm)} cm | ${pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < 99.95 ? "panneau recoupé" : "panneau entier"} | ${pn.decoupes.length ? pn.decoupes.join(", ") : "–"} |\n`;
-  md += `\n**${m.panneaux_mur_a_commander} panneaux de mur** de ${fz(+p.panneau.largeur_utile_cm)} × ${fz(m.hauteur_mur_cm)} à commander (les bandes étroites sortent des chutes).\n\n`;
+  const par_l = Object.entries(m.panneaux_mur_par_largeur || { [+p.panneau.largeur_utile_cm]: m.panneaux_mur_a_commander }).sort((a: any, b: any) => +a[0] - +b[0]);
+  md += `\n**${m.panneaux_mur_a_commander} panneaux de mur** à commander, ${par_l.map(([l, n]) => `${n} de ${fz(+l)} × ${fz(m.hauteur_mur_cm)}`).join(" et ")} (les bandes étroites sortent des chutes).\n\n`;
   md += `### Panneaux de toit (dans le sens de la pente, longueur = rampant)\n\n| pièce | largeur | longueur à commander | coupe |\n|---|---|---|---|\n`;
   for (const t of m.toit.panneaux) md += `| ${t.id} | ${fr(t.largeur_cm)} cm | ${fr(t.longueur_cm)} cm | ${t.largeur_cm < 99.95 ? "refendu en largeur, " : ""}${t.biais ? (droite ? "un bord en biais le long du mur du fond" : "bout arrière en biais") : "entier, coupes droites"} |\n`;
   const db = m.toit.debord_cm;

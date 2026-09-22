@@ -20,7 +20,7 @@ vit dans `03-decisions.md`, l'historique dans git.
 - [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237 en façade).
 - [ ] **Porte de service 70 × 200** : relever le prix du 70 en magasin (199 € noté, celui du 80) et prendre une serrure multipoint.
 - [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).
-- [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
+- [ ] **Largeur utile de panneau** : 115 retenu pour la façade et le toit, 100 ailleurs ; le faire confirmer au devis.
 - [ ] **Âme** : PIR vs laine de roche.
 
 ## Défauts connus

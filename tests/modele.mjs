@@ -204,6 +204,16 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
+// panneaux de 115 en facade et au toit, 100 ailleurs : facade et toit en deux pieces, chaque fenetre dans un seul panneau
+{
+  const c115 = buildCore(actuel), m115 = c115.modele, A = m115.faces.find((f) => f.cle === "A");
+  ok(JSON.stringify(A.panneaux.map((x) => x.largeur_cm)) === "[115,93]" && JSON.stringify(m115.toit.panneaux.map((t) => t.largeur_cm)) === "[115,93]", "panneaux : facade 115 + 93, toit 115 + 93 (" + A.panneaux.map((x) => x.largeur_cm) + " / " + m115.toit.panneaux.map((t) => t.largeur_cm) + ")");
+  ok(m115.faces.filter((f) => f.cle !== "A").every((f) => f.panneaux.every((x) => x.largeur_cm <= 100)), "panneaux : 100 sur les autres murs");
+  const fen = A.ouvertures.filter((o) => o.type === "fenetre");
+  ok(fen.length === 2 && fen.every((o) => A.panneaux.some((x) => o.debut_cm >= x.debut_cm && o.debut_cm + o.largeur_cm <= x.debut_cm + x.largeur_cm)), "fenetres : chacune dans un seul panneau de facade, jamais sur le joint");
+  const lignes = c115.nomenclature ? c115.nomenclature : null; void lignes;
+  ok(m115.panneaux_mur_par_largeur && m115.panneaux_mur_par_largeur["115"] >= 1 && m115.panneaux_mur_par_largeur["100"] >= 1, "debit : panneaux de mur comptes par largeur (" + JSON.stringify(m115.panneaux_mur_par_largeur) + ")");
+}
 // porte : bloc de service exterieur de 70 hors tout, dormant compris (pas de cadre bois), 200 de haut,
 // a 10 cm de la face interieure du pan C ; le lit laisse la baie libre
 {
@@ -241,7 +251,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);
   ok(m4.toit.gouttiere.descente[0] === Math.min(...bouts.map((z) => z[0])), "v4 : descente au bout gauche de la gouttiere, coin G/B (" + m4.toit.gouttiere.descente + ")");
-  ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 8) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 8), deux coupes en biais");
+  ok(m4.toit.panneaux.length === 2 && near(m4.toit.panneaux[0].largeur_cm, 115) && near(m4.toit.panneaux[1].largeur_cm, 93) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit (115 et 93), une coupe en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const page4 = abri_md(p4, c4);
   ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme"), "abri.md : tous les {champs} remplaces, les raisons en fin de page");

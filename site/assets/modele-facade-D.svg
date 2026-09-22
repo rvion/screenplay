@@ -1,8 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 405 496" font-family="system-ui,sans-serif" font-size="13">
 <rect width="405" height="496" fill="#fbfbf8"/>
 <polygon points="90.0,406.2 190.0,406.2 190.0,137.5 90.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
-<text x="140.0" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">D1</text>
-<text x="140.0" y="174.0" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">80</text>
+<text x="140.0" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">D1 · 80</text>
 <polygon points="190.0,406.2 315.0,406.2 315.0,137.5 190.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
 <text x="252.5" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">D2</text>
 <polygon points="90.0,137.5 315.0,137.5 315.0,129.8 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>

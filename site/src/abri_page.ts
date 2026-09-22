@@ -139,9 +139,9 @@ export function rend_abri(a: Abri) {
 
   // debit
   table("debit-murs", ["pièce", "largeur", "provenance", "découpe"],
-    m.faces.flatMap((f: any) => f.panneaux.map((pn: any) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoupé" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "–"])), [2, 3]);
+    m.faces.flatMap((f: any) => f.panneaux.map((pn: any) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < (f.module_cm || mod) - 0.05 ? "panneau recoupé" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "–"])), [2, 3]);
   table("debit-toit", ["pièce", "largeur", "longueur", "coupe"],
-    m.toit.panneaux.map((t: any) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]), [3]);
+    m.toit.panneaux.map((t: any) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < (m.toit.module_cm || mod) - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]), [3]);
   table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} → ${cote(r.h1)}`]), [3]);
 
   // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait

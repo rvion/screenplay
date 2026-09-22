@@ -71,7 +71,7 @@
     const mod = +p.panneau.largeur_utile_cm / 100, H = m.hauteur_mur_cm / 100, ep = +p.panneau.epaisseur_mm;
     const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
     const n_murs = m.panneaux_mur_a_commander, n_toit = m.toit.panneaux.length;
-    const toit_m2 = m.toit.panneaux.reduce((s, x) => s + mod * x.longueur_cm / 100, 0);
+    const mod_t = (m.toit.module_cm || mod * 100) / 100, toit_m2 = m.toit.panneaux.reduce((s, x) => s + mod_t * x.longueur_cm / 100, 0);
     const joints_murs = m.faces.reduce((s, f) => s + Math.max(0, f.panneaux.length - 1), 0);
     const angles_droits = m.angles_deg.map((g, i) => ({ g, h: m.hauteurs_coins_cm[i] / 100 })).filter((x) => Math.abs(x.g - 90) < 0.5);
     const angles_speciaux = m.angles_deg.map((g, i) => ({ g, h: m.hauteurs_coins_cm[i] / 100 })).filter((x) => Math.abs(x.g - 90) >= 0.5);
@@ -87,7 +87,8 @@
       if (q <= 0) return;
       lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source || !!e.incertain, source: e.source || "", note: e.note || "", optionnel });
     };
-    pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(mod * 100)} \xD7 ${fz(H * 100)} cm`, n_murs * mod * H, `${n_murs} panneaux entiers \xE0 commander (les bandes recoup\xE9es sortent des chutes)`);
+    const par_largeur = m.panneaux_mur_par_largeur || { [mod * 100]: n_murs };
+    for (const [l, n] of Object.entries(par_largeur).sort((a, b) => +a[0] - +b[0])) pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(+l)} \xD7 ${fz(H * 100)} cm`, n * (+l / 100) * H, `${n} panneau(x) entier(s) de ${fz(+l)} \xE0 commander (les bandes recoup\xE9es sortent des chutes)`);
     pose("Panneaux", "panneau_toit_m2", `Panneaux sandwich de toiture ${ep} mm, nervur\xE9s, teinte claire`, toit_m2, `${n_toit} panneaux coup\xE9s \xE0 longueur : ${m.toit.panneaux.map((x) => `${x.id} ${fz(x.longueur_cm)} cm`).join(", ")}`);
     pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" \xD7 ")} classe 4 (rehausse, lisse haute)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pi\xE8ce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
     if (panne) pose("Bois", "panne_ml", "Panne interm\xE9diaire 75 \xD7 150 classe 4, en travers \xE0 mi-profondeur", panne, `port\xE9e du toit ${fz(m.portee_cm / 100)} m : une panne de la longueur de la fa\xE7ade la ram\xE8ne \xE0 ${fz(m.portee_cm / 200)} m`);
@@ -162,7 +163,7 @@
     const face_porte = po ? m.faces[po.cote] : null, passage = v.passages.find((x) => x.cote === "arriere_droite");
     const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
     const avantTout = [
-      `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici, la largeur de tous les panneaux de 60 mm relev\xE9s) : tout le calepinage en d\xE9pend.`,
+      `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici${Object.keys(p.panneau.largeur_utile_par_face_cm || {}).length ? `, ${Object.entries(p.panneau.largeur_utile_par_face_cm).map(([f, l]) => `${fz(+l)} pour ${f === "T" ? "le toit" : "le mur " + f}`).join(", ")}` : ""}) : tout le calepinage en d\xE9pend.`,
       "**Acheter des panneaux en petite quantit\xE9 est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m\xB2 ou un paquet entier de panneaux de 6 \xE0 7,5 m. Demander un devis \xAB coup\xE9 \xE0 longueur, petite quantit\xE9 \xBB \xE0 deux sp\xE9cialistes et \xE0 un n\xE9goce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le d\xE9bit.",
       `Rehausse : le madrier ${m.rehausse.section_mm.join(" \xD7 ")} ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 \xD7 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans cons\xE9quence) ou prot\xE9ger un classe 2 par la bavette.`,
       "Fen\xEAtres et porte sont des articles de stock, sans d\xE9lai : la d\xE9coupe des panneaux se fait aux cotes hors tout lues sur l'article re\xE7u, pas aux cotes nominales.",
@@ -1358,6 +1359,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const d = p.disposition_trapeze, t = d && d.toit || {};
     const q = v.polygone, n = q.length;
     const H = +p.murs.hauteur_cm, c = +t.chute_cm, mod = +p.panneau.largeur_utile_cm;
+    const par_face = p.panneau.largeur_utile_par_face_cm || {}, mod_de = (F) => +(par_face[F] ?? mod);
     const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
     const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
     const droite = t.sens === "droite", course = droite ? Wd : D;
@@ -1367,15 +1369,15 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
       const deux_fonds = v.noms_cotes.filter((nm) => lettre(nm) === "B").length > 1;
       const F = deux_fonds && v.noms_cotes[i] === "fond en biais" ? "C" : lettre(v.noms_cotes[i]);
-      const panneaux = [];
-      const reste = L - Math.floor((L + 0.05) / mod) * mod;
+      const panneaux = [], mod2 = mod_de(F);
+      const reste = L - Math.floor((L + 0.05) / mod2) * mod2;
       const tete = (d.panneaux_depuis_la_fin || []).includes(v.noms_cotes[i]) && reste > 0.05 ? reste : 0;
       if (tete) panneaux.push({ id: `${F}1`, debut_cm: 0, largeur_cm: rnd2(tete, 1) });
-      for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd2(s, 1), largeur_cm: rnd2(Math.min(mod, L - s), 1) });
+      for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod2, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd2(s, 1), largeur_cm: rnd2(Math.min(mod2, L - s), 1) });
       const ouvertures = [];
       if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
       for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
-      return { cle: F, nom: v.noms_cotes[i], de: a, a: b, longueur_cm: rnd2(L, 1), hauteur_debut_cm: rnd2(h(a), 1), hauteur_fin_cm: rnd2(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
+      return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod2, longueur_cm: rnd2(L, 1), hauteur_debut_cm: rnd2(h(a), 1), hauteur_fin_cm: rnd2(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
     });
     const sec = d.rehausse_section_mm || p.rehausse.section_mm, section = +sec[1] / 10, stock = +p.rehausse.longueur_stock_cm;
     const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05).map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd2(f.hauteur_debut_cm - H, 1), h1: rnd2(f.hauteur_fin_cm - H, 1) }));
@@ -1387,9 +1389,9 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const rampant = Math.sqrt(1 + (c / course) ** 2);
     const xmin = Math.min(...contour.map((z) => z[0])), xmax = Math.max(...contour.map((z) => z[0]));
     const ymin = Math.min(...contour.map((z) => z[1])), ymax = Math.max(...contour.map((z) => z[1]));
-    const panneaux_toit = [];
-    for (let s = droite ? ymin : xmin, k = 1, fin = droite ? ymax : xmax; s < fin - 0.05; s += mod, k++) {
-      const s1 = Math.min(s + mod, fin);
+    const panneaux_toit = [], mod_t = mod_de("T");
+    for (let s = droite ? ymin : xmin, k = 1, fin = droite ? ymax : xmax; s < fin - 0.05; s += mod_t, k++) {
+      const s1 = Math.min(s + mod_t, fin);
       let pc = droite ? clip_half(contour, [-1e4, s], [1e4, s], true) : clip_half(contour, [s, 1e4], [s, -1e4], true);
       pc = droite ? clip_half(pc, [1e4, s1], [-1e4, s1], true) : clip_half(pc, [s1, -1e4], [s1, 1e4], true);
       const le_long = pc.map((z) => z[droite ? 0 : 1]);
@@ -1399,18 +1401,19 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       });
       panneaux_toit.push({ id: `T${k}`, largeur_cm: rnd2(s1 - s, 1), longueur_cm: rnd2((Math.max(...le_long) - Math.min(...le_long)) * rampant, 1), biais, polygone: pc.map(([a, b]) => [rnd2(a, 1), rnd2(b, 1)]) });
     }
-    const bandes = faces.flatMap((f) => f.panneaux.map((pn) => ({ face: f.cle, ...pn }))).sort((x, y) => y.largeur_cm - x.largeur_cm);
-    const chutes = [];
+    const bandes = faces.flatMap((f) => f.panneaux.map((pn) => ({ face: f.cle, mod: f.module_cm, ...pn }))).sort((x, y) => y.largeur_cm - x.largeur_cm);
+    const chutes = [], par_largeur = {};
     let panneaux_mur = 0;
     for (const b of bandes) {
-      const k = b.largeur_cm < mod - 0.05 ? chutes.findIndex((c2) => c2 >= b.largeur_cm - 1e-6) : -1;
+      const k = b.largeur_cm < b.mod - 0.05 ? chutes.findIndex((c2) => c2.mod === b.mod && c2.reste >= b.largeur_cm - 1e-6) : -1;
       if (k >= 0) {
         b.source = "chute";
-        chutes[k] -= b.largeur_cm;
+        chutes[k].reste -= b.largeur_cm;
       } else {
         panneaux_mur++;
+        par_largeur[b.mod] = (par_largeur[b.mod] || 0) + 1;
         b.source = "neuf";
-        if (mod - b.largeur_cm > 5) chutes.push(mod - b.largeur_cm);
+        if (b.mod - b.largeur_cm > 5) chutes.push({ mod: b.mod, reste: b.mod - b.largeur_cm });
       }
     }
     for (const f of faces) for (const pn of f.panneaux) {
@@ -1442,6 +1445,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         // plan du toit : hauteur du dessous du toit = haut_cm au depart de la pente, bas_cm au bout de la course
         plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd2(droite ? x0 : y0, 1), course_cm: rnd2(course, 1), haut_cm: H + c, bas_cm: H },
         panneaux: panneaux_toit,
+        module_cm: mod_t,
         debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) },
         gouttiere: {
           face: droite ? "D" : "B",
@@ -1458,6 +1462,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       },
       interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd2(a, 1), rnd2(b, 1)]),
       panneaux_mur_a_commander: panneaux_mur,
+      panneaux_mur_par_largeur: par_largeur,
       // aires exactes : le seuil ne s'arrondit pas, formalites() n'arrondit que l'affichage
       formalites: formalites(p, poly_area(v.polygone) / 1e4, poly_area(contour) / 1e4, v.aire_interieure_m2),
       angles_deg: v.angles_deg
@@ -1797,8 +1802,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     for (const pn of f.panneaux) {
       svg += poly([P(pn.debut_cm, 0), P(pn.debut_cm + pn.largeur_cm, 0), P(pn.debut_cm + pn.largeur_cm, Hm), P(pn.debut_cm, Hm)], "#eef2f6", "#2b5d8a", 1.5);
       const c = P(pn.debut_cm + pn.largeur_cm / 2, Hm - 18);
-      svg += text(c[0], c[1], pn.id, "middle", "#2b5d8a", 12, "bold");
-      if (pn.largeur_cm < +m.faces[0].panneaux[0].largeur_cm - 0.05 || pn.largeur_cm < 99.95) svg += text(c[0], c[1] + 14, `${fz2(pn.largeur_cm)}`, "middle", "#2b5d8a", 10);
+      const recoupe = pn.largeur_cm < f.module_cm - 0.05;
+      svg += text(c[0], c[1], recoupe ? `${pn.id} \xB7 ${fz2(pn.largeur_cm)}` : pn.id, "middle", "#2b5d8a", 12, "bold");
     }
     if (Math.max(h0, h1) > Hm + 0.05) {
       const pc = m.rehausse.pieces.find((x) => x.face === f.cle);
@@ -2071,13 +2076,13 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     table(
       "debit-murs",
       ["pi\xE8ce", "largeur", "provenance", "d\xE9coupe"],
-      m.faces.flatMap((f) => f.panneaux.map((pn) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"])),
+      m.faces.flatMap((f) => f.panneaux.map((pn) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < (f.module_cm || mod) - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"])),
       [2, 3]
     );
     table(
       "debit-toit",
       ["pi\xE8ce", "largeur", "longueur", "coupe"],
-      m.toit.panneaux.map((t) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]),
+      m.toit.panneaux.map((t) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < (m.toit.module_cm || mod) - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]),
       [3]
     );
     table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} \u2192 ${cote(r.h1)}`]), [3]);

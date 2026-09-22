@@ -11,38 +11,38 @@
 <polygon points="145.6,218.0 145.6,330.0 257.6,330.0 257.6,218.0" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
 <text x="201.6" y="270.0" text-anchor="middle" fill="#44445a" font-size="10" font-weight="bold">fauteuil de bureau</text>
 <text x="201.6" y="284.0" text-anchor="middle" fill="#44445a" font-size="9" font-weight="normal">70 × 70</text>
-<polygon points="136.0,570.0 264.0,570.0 264.0,560.4 136.0,560.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
-<polygon points="296.0,570.0 424.0,570.0 424.0,560.4 296.0,560.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
+<polygon points="148.0,570.0 276.0,570.0 276.0,560.4 148.0,560.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
+<polygon points="314.4,570.0 442.4,570.0 442.4,560.4 314.4,560.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <line x1="120.0" y1="574.0" x2="120.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="136.0" y1="574.0" x2="136.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="120.0" y1="598.0" x2="136.0" y2="598.0" stroke="#666" stroke-width="1"/>
+<line x1="148.0" y1="574.0" x2="148.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="120.0" y1="598.0" x2="148.0" y2="598.0" stroke="#666" stroke-width="1"/>
 <line x1="117.0" y1="601.0" x2="123.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<line x1="133.0" y1="601.0" x2="139.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<text x="128.0" y="618.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 128.0 618.0)">10</text>
-<line x1="136.0" y1="574.0" x2="136.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="264.0" y1="574.0" x2="264.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="136.0" y1="598.0" x2="264.0" y2="598.0" stroke="#666" stroke-width="1"/>
-<line x1="133.0" y1="601.0" x2="139.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<line x1="261.0" y1="601.0" x2="267.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<text x="200.0" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 200.0 606.0)">80</text>
-<line x1="264.0" y1="574.0" x2="264.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="296.0" y1="574.0" x2="296.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="264.0" y1="598.0" x2="296.0" y2="598.0" stroke="#666" stroke-width="1"/>
-<line x1="261.0" y1="601.0" x2="267.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<line x1="293.0" y1="601.0" x2="299.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<text x="280.0" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 280.0 606.0)">20</text>
-<line x1="296.0" y1="574.0" x2="296.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="424.0" y1="574.0" x2="424.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="296.0" y1="598.0" x2="424.0" y2="598.0" stroke="#666" stroke-width="1"/>
-<line x1="293.0" y1="601.0" x2="299.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<line x1="421.0" y1="601.0" x2="427.0" y2="595.0" stroke="#666" stroke-width="1"/>
-<text x="360.0" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 360.0 606.0)">80</text>
-<line x1="424.0" y1="574.0" x2="424.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="145.0" y1="601.0" x2="151.0" y2="595.0" stroke="#666" stroke-width="1"/>
+<text x="134.0" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 134.0 606.0)">17.5</text>
+<line x1="148.0" y1="574.0" x2="148.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="276.0" y1="574.0" x2="276.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="148.0" y1="598.0" x2="276.0" y2="598.0" stroke="#666" stroke-width="1"/>
+<line x1="145.0" y1="601.0" x2="151.0" y2="595.0" stroke="#666" stroke-width="1"/>
+<line x1="273.0" y1="601.0" x2="279.0" y2="595.0" stroke="#666" stroke-width="1"/>
+<text x="212.0" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 212.0 606.0)">80</text>
+<line x1="276.0" y1="574.0" x2="276.0" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="314.4" y1="574.0" x2="314.4" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="276.0" y1="598.0" x2="314.4" y2="598.0" stroke="#666" stroke-width="1"/>
+<line x1="273.0" y1="601.0" x2="279.0" y2="595.0" stroke="#666" stroke-width="1"/>
+<line x1="311.4" y1="601.0" x2="317.4" y2="595.0" stroke="#666" stroke-width="1"/>
+<text x="295.2" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 295.2 606.0)">24</text>
+<line x1="314.4" y1="574.0" x2="314.4" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="442.4" y1="574.0" x2="442.4" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="314.4" y1="598.0" x2="442.4" y2="598.0" stroke="#666" stroke-width="1"/>
+<line x1="311.4" y1="601.0" x2="317.4" y2="595.0" stroke="#666" stroke-width="1"/>
+<line x1="439.4" y1="601.0" x2="445.4" y2="595.0" stroke="#666" stroke-width="1"/>
+<text x="378.4" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 378.4 606.0)">80</text>
+<line x1="442.4" y1="574.0" x2="442.4" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="452.8" y1="574.0" x2="452.8" y2="602.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="424.0" y1="598.0" x2="452.8" y2="598.0" stroke="#666" stroke-width="1"/>
-<line x1="421.0" y1="601.0" x2="427.0" y2="595.0" stroke="#666" stroke-width="1"/>
+<line x1="442.4" y1="598.0" x2="452.8" y2="598.0" stroke="#666" stroke-width="1"/>
+<line x1="439.4" y1="601.0" x2="445.4" y2="595.0" stroke="#666" stroke-width="1"/>
 <line x1="449.8" y1="601.0" x2="455.8" y2="595.0" stroke="#666" stroke-width="1"/>
-<text x="438.4" y="606.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 438.4 606.0)">18</text>
+<text x="447.6" y="618.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 447.6 618.0)">6.5</text>
 <line x1="120.0" y1="574.0" x2="120.0" y2="632.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="452.8" y1="574.0" x2="452.8" y2="632.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="120.0" y1="628.0" x2="452.8" y2="628.0" stroke="#2b5d8a" stroke-width="1"/>

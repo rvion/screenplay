@@ -20,6 +20,8 @@
 - Homme de 185 cm, taille écrite sur le torse
 - Nouveaux presets : debout dedans, côté porte, dedans côté porte ouvert, couché
 - Nouveaux réglages de transparence : toit, murs et porte fermée voilés
+- Panneaux de 115 en façade et au toit : deux pièces chacun au lieu de trois, plus de bande de 8 cm
+- Rehausse en madrier 70 × 220 classe 4 (stock) : façade à 237, pente 8,8 %
 - Clôture : troisième état, palissade absente
 - Gaine électrique (Ø4, 85 depuis la gauche, 12 à 16 depuis l'avant de la dalle) sur l'implantation et en 3D
 - Façade à 5 cm du bord de la dalle (au lieu de 10) : la gaine sort dans l'abri ; passage derrière 54,9 cm

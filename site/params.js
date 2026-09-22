@@ -133,7 +133,7 @@ window.SHED_PARAMS = {
         "largeur_cm": 80,
         "hauteur_cm": 75,
         "allege_cm": 115,
-        "position": 10,
+        "position": 17.5,
         "ouvrant": true
       },
       {
@@ -141,7 +141,7 @@ window.SHED_PARAMS = {
         "largeur_cm": 80,
         "hauteur_cm": 75,
         "allege_cm": 115,
-        "position": 110,
+        "position": 121.5,
         "ouvrant": true
       }
     ],
@@ -225,6 +225,11 @@ window.SHED_PARAMS = {
     "autoportant": true,
     "ame": "PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable",
     "largeur_utile_cm": 100,
+    "_largeur_par_face_comment": "Largeur utile quand une face prend une autre reference (A = facade, T = toit) : 115 en facade et au toit, deux pieces au lieu de trois et plus de bande de 8.",
+    "largeur_utile_par_face_cm": {
+      "A": 115,
+      "T": 115
+    },
     "orientation_murs": "verticale",
     "_comment": "60 mm = panneau autoportant (murs ET toit) : pas d'ossature secondaire, seulement un rail de pied et des profils d'angle. largeur_utile = largeur couverte apres recouvrement (souvent 1000 ou 1150 mm selon fabricant). Verifier la portee libre du toit (~2,8 m) dans le tableau du fabricant."
   },

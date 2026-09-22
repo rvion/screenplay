@@ -26,7 +26,7 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   const mod = +p.panneau.largeur_utile_cm / 100, H = m.hauteur_mur_cm / 100, ep = +p.panneau.epaisseur_mm;
   const perim = m.faces.reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100;
   const n_murs = m.panneaux_mur_a_commander, n_toit = m.toit.panneaux.length;
-  const toit_m2 = m.toit.panneaux.reduce((s: number, x: any) => s + mod * x.longueur_cm / 100, 0);
+  const mod_t = (m.toit.module_cm || mod * 100) / 100, toit_m2 = m.toit.panneaux.reduce((s: number, x: any) => s + mod_t * x.longueur_cm / 100, 0);
   const joints_murs = m.faces.reduce((s: number, f: any) => s + Math.max(0, f.panneaux.length - 1), 0);
   const angles_droits = m.angles_deg.map((g: number, i: number) => ({ g, h: m.hauteurs_coins_cm[i] / 100 })).filter((x: any) => Math.abs(x.g - 90) < 0.5);
   const angles_speciaux = m.angles_deg.map((g: number, i: number) => ({ g, h: m.hauteurs_coins_cm[i] / 100 })).filter((x: any) => Math.abs(x.g - 90) >= 0.5);
@@ -44,7 +44,9 @@ export function nomenclature_abri(p: P, v: any, m: any) {
     lignes.push({ groupe, poste, qte: q, unite: e.unite || "u", pu_eur: pu, montant_eur: rnd(q * pu), regle, a_confirmer: !e.source || !!e.incertain, source: e.source || "", note: e.note || "", optionnel });
   };
   // --- panneaux
-  pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(mod * 100)} × ${fz(H * 100)} cm`, n_murs * mod * H, `${n_murs} panneaux entiers à commander (les bandes recoupées sortent des chutes)`);
+  // une ligne par largeur utile : 100 et 115 sont deux references chez le fournisseur
+  const par_largeur: Record<string, number> = m.panneaux_mur_par_largeur || { [mod * 100]: n_murs };
+  for (const [l, n] of Object.entries(par_largeur).sort((a, b) => +a[0] - +b[0])) pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(+l)} × ${fz(H * 100)} cm`, n * (+l / 100) * H, `${n} panneau(x) entier(s) de ${fz(+l)} à commander (les bandes recoupées sortent des chutes)`);
   pose("Panneaux", "panneau_toit_m2", `Panneaux sandwich de toiture ${ep} mm, nervurés, teinte claire`, toit_m2, `${n_toit} panneaux coupés à longueur : ${m.toit.panneaux.map((x: any) => `${x.id} ${fz(x.longueur_cm)} cm`).join(", ")}`);
   // --- bois
   pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 (rehausse, lisse haute)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pièce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
@@ -125,7 +127,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
   const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
 
   const avantTout = [
-    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.`,
+    `Faire confirmer par le fournisseur la **largeur utile** des panneaux (${fz(mod)} cm ici${Object.keys(p.panneau.largeur_utile_par_face_cm || {}).length ? `, ${Object.entries(p.panneau.largeur_utile_par_face_cm).map(([f, l]) => `${fz(+(l as any))} pour ${f === "T" ? "le toit" : "le mur " + f}`).join(", ")}` : ""}) : tout le calepinage en dépend.`,
     "**Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.",
     `Rehausse : le madrier ${m.rehausse.section_mm.join(" × ")} ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.`,
     "Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.",

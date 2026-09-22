@@ -11,7 +11,7 @@
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 100, fond 136,6, gauche 250 cm.
 - **Toit** mono-pente vers le fond, 5,03° : 237 cm devant, 215 cm au plus bas.
 - **Porte pleine** 70 × 200 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Matériaux** : 2 865 € TTC (2 435 € à 3 295 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
+- **Matériaux** : 2 820 € TTC (2 397 € à 3 243 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
 - **Formalités** : emprise au sol 4,95 m², surface de plancher 4,44 m² ⇒ aucune formalité.
 
@@ -78,9 +78,8 @@ Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors b
 
 | pièce | largeur | provenance | découpe |
 |---|---|---|---|
-| A1 | 100 cm | panneau entier | fenêtre 80 × 75 |
-| A2 | 100 cm | panneau entier | fenêtre 80 × 75 |
-| A3 | 8 cm | chute d'un autre panneau | – |
+| A1 | 115 cm | panneau entier | fenêtre 80 × 75 |
+| A2 | 93 cm | panneau recoupé | fenêtre 80 × 75 |
 | D1 | 80 cm | panneau recoupé | – |
 | D2 | 100 cm | panneau entier | porte 70 × 200 |
 | C1 | 100 cm | panneau entier | – |
@@ -90,15 +89,14 @@ Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors b
 | G2 | 100 cm | panneau entier | – |
 | G3 | 50 cm | panneau recoupé | – |
 
-**9 panneaux de mur** de 100 × 215 à commander (les bandes étroites sortent des chutes).
+**9 panneaux de mur** à commander, 7 de 100 × 215 et 2 de 115 × 215 (les bandes étroites sortent des chutes).
 
 ### Panneaux de toit (dans le sens de la pente, longueur = rampant)
 
 | pièce | largeur | longueur à commander | coupe |
 |---|---|---|---|
-| T1 | 100 cm | 261 cm | entier, coupes droites |
-| T2 | 100 cm | 261 cm | bout arrière en biais |
-| T3 | 8 cm | 200,6 cm | refendu en largeur, bout arrière en biais |
+| T1 | 115 cm | 261 cm | entier, coupes droites |
+| T2 | 93 cm | 261 cm | refendu en largeur, bout arrière en biais |
 
 Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surface couverte 5,17 m².
 
@@ -124,8 +122,8 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | ouverture | taille | où | détail |
 |---|---|---|---|
 | porte pleine | 70 × 200 (cadre 70 × 200) | face D, de 97,5 à 167,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 10 cm du mur du fond (face intérieure) et sous le haut du mur |
-| fenêtre oscillo-battante | 80 × 75 | face A, de 10 à 90 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
-| fenêtre oscillo-battante | 80 × 75 | face A, de 110 à 190 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 17,5 à 97,5 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 121,5 à 201,5 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
 
 ## Aménagement
 
@@ -136,12 +134,13 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 
-### Panneaux · 1 176 €
+### Panneaux · 1 149 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 19,35 m² | 44 € | 851 € | 9 panneaux entiers à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
-| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 7,23 m² | 45 € | 325 € | 3 panneaux coupés à longueur : T1 261 cm, T2 261 cm, T3 200,6 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
+| Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 15,05 m² | 44 € | 662 € | 7 panneau(x) entier(s) de 100 à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
+| Panneaux sandwich de mur 60 mm, 115 × 215 cm *(prix à confirmer)* | 4,94 m² | 44 € | 217 € | 2 panneau(x) entier(s) de 115 à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
+| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 6 m² | 45 € | 270 € | 2 panneaux coupés à longueur : T1 261 cm, T2 261 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
 
 ### Bois · 132 €
 
@@ -160,21 +159,21 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Bavette de tête (bord haut du toit) | 2,08 ml | 14 € | 29 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
 | Closoirs mousse sous les nervures *(prix à confirmer)* | 4,44 ml | 4 € | 16 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
 
-### Fixations · 114 €
+### Fixations · 103 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) | 0,27 cent | 90 € | 24 € | 3 panneaux × 2 appuis × 4 vis, +10 %. inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois. ([source](https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/)) |
-| Vis de couture (recouvrements de panneaux, bavettes, profils) | 0,71 cent | 35 € | 25 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 %. 4,8 x 20 : de 24 a 45 EUR le cent ([source](https://www.toletome.fr/les-produits-tole-to-me/accessoires-de-fixation/visserie/vis-de-couture-en-acier-(4-8-x-20).html)) |
+| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) | 0,18 cent | 90 € | 16 € | 2 panneaux × 2 appuis × 4 vis, +10 %. inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois. ([source](https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/)) |
+| Vis de couture (recouvrements de panneaux, bavettes, profils) | 0,64 cent | 35 € | 22 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 %. 4,8 x 20 : de 24 a 45 EUR le cent ([source](https://www.toletome.fr/les-produits-tole-to-me/accessoires-de-fixation/visserie/vis-de-couture-en-acier-(4-8-x-20).html)) |
 | Vis autoperceuses de panneaux de mur (pied et tête) | 0,6 cent | 90 € | 54 € | 9 panneaux × 2 extrémités × 3 vis, +10 %. vis 6,3 x 100 + rondelle + cache de couleur ([source](https://www.tolesmoinscheres.com/produit/100-fixations-pour-panneau-sandwich-de-bardage)) |
 | Chevilles ou goujons pour fixer le rail dans la dalle | 20 u | 1 € | 11 € | une tous les 50 cm. goujons 8 x 80 : 55,90 EUR la boite de 100 ([source](https://www.toutbrico.com/goujons-d-ancrage/7242-boite-100-goujons-d-ancrage-8-x-80mm-zingue-batifix-3700013413404.html)) |
 
-### Étanchéité · 175 €
+### Étanchéité · 168 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Bande d'arase sous le rail de pied | 8,75 ml | 1 € | 5 € | périmètre des murs. rouleau de 30 m x 30 cm : 16,90 EUR ([source](https://www.bricodepot.fr/catalogue/bande-darase-long-30-m-larg-30-cm-500-microns/prod59812/)) |
-| Bande butyle (joints de panneaux, tête de mur sous la rehausse) | 26,65 ml | 2 € | 40 € | 6 joints de mur × 2,2 m + périmètre + recouvrements de toit. rouleau de 13 m : 19,66 EUR ([source](https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/)) |
+| Bande butyle (joints de panneaux, tête de mur sous la rehausse) | 22 ml | 2 € | 33 € | 5 joints de mur × 2,2 m + périmètre + recouvrements de toit. rouleau de 13 m : 19,66 EUR ([source](https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/)) |
 | Mastic polyuréthane ou MS polymère, cartouches | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures. MS polymere de 6,50 a 13 EUR ; Sikaflex 11FC environ 11,50 EUR ([source](https://www.maxoutil.com/mastic-ms-polymere-parabond-600-dl-chemicals-cartouche-de-290-ml-40001000.html)) |
 | Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 10,9 ml | 7 € | 76 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
 | Mousse polyuréthane expansive, bombes | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles. 750 ml : de 7,90 a 9,90 EUR ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/isolation-et-cloison/etancheite/mousse-expansive)) |
@@ -222,7 +221,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
 
-**Total des matériaux : 2 865 € TTC** (fourchette 2 435 € à 3 295 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 2 820 € TTC** (fourchette 2 397 € à 3 243 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -230,7 +229,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 
 ### Avant de commander
 
-- Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.
+- Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici, 115 pour le mur A, 115 pour le toit) : tout le calepinage en dépend.
 - **Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.
 - Rehausse : le madrier 70 × 220 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
 - Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
@@ -283,9 +282,9 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 
 **Outils :** scie circulaire lame métal, rail de guidage, scie sauteuse
 
-1. Bandes de mur : A3 8 cm, D1 80 cm, B2 36,6 cm, G3 50 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
+1. Bandes de mur : A2 93 cm, D1 80 cm, B2 36,6 cm, G3 50 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
 2. Fenêtres : 80 × 75 cm, bas à 115 cm ; 80 × 75 cm, bas à 115 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
-3. Toit : T2, T3 à couper en biais d'après le plan de toiture.
+3. Toit : T2 à couper en biais d'après le plan de toiture.
 4. Rehausse : R1 (mur A, 208 cm, 22 → 22 cm), R2 (mur D, 180 cm, 22 → 6,2 cm), R3 (mur C, 100 cm, 6,2 → 0 cm), R4 (mur G, 250 cm, 0 → 22 cm), tirées de 2 madrier(s) selon le plan de débit.
 
 **À contrôler avant de continuer :**
@@ -318,7 +317,7 @@ On tourne dans un seul sens pour que chaque panneau s'emboîte dans le précéde
 1. Mur B (fond, 136,6 cm) : B1 (100), B2 (36,6).
 2. Mur C (fond en biais, 100 cm) : C1 (100).
 3. Mur D (droite, 180 cm) : D1 (80), D2 (100), en laissant le vide du cadre de porte.
-4. Mur A (façade, 208 cm) : A1 (100), A2 (100), A3 (8).
+4. Mur A (façade, 208 cm) : A1 (115), A2 (93).
 5. Butyle dans chaque emboîtement, panneau serré contre le précédent, vissé au pied dans le rail.
 6. Étayer chaque mur tant que la rehausse n'est pas posée : avant elle, rien ne tient les têtes.
 
@@ -362,7 +361,7 @@ Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que pa
 
 **Outils :** visseuse, 2 personnes, échelle
 
-1. Poser T1 (100 × 261 cm), T2 (100 × 261 cm), T3 (8 × 200,6 cm), en commençant du côté opposé aux vents dominants.
+1. Poser T1 (115 × 261 cm), T2 (93 × 261 cm), en commençant du côté opposé aux vents dominants.
 2. Closoirs mousse sous les nervures, en haut et en bas, avant de visser.
 3. Visser dans la rehausse par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
 4. Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.
@@ -408,7 +407,7 @@ Une fenêtre se fixe dans la tôle des deux faces, jamais dans la mousse.
 
 **Outils :** visseuse, niveau, cales
 
-1. 2 fenêtre(s) en façade : oscillo-battante de 10 à 90 cm ; oscillo-battante de 110 à 190 cm.
+1. 2 fenêtre(s) en façade : oscillo-battante de 17,5 à 97,5 cm ; oscillo-battante de 121,5 à 201,5 cm.
 2. Habiller la tranche de la découpe d'un profil en U ou d'un tasseau, caler la fenêtre, visser par le dormant.
 3. Bande comprimée au pourtour, mastic dehors, bavette d'appui sous la fenêtre.
 
