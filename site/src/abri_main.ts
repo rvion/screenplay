@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
   // bascules : un clic avance l'etat (0/1, ou 0/1/2 pour la personne : dehors puis dedans)
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"] as const) {
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte", "cloture"] as const) {
     const b = document.getElementById("voir-" + nom) as HTMLButtonElement | null;
     if (!b) continue;
     b.addEventListener("click", () => {

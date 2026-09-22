@@ -482,10 +482,10 @@ function geometry(p) {
     const est_mur = (nom) => mitoyens.includes(nom) || nom === "arriere" && mitoyens.some((k) => k.startsWith("arriere"));
     const deb = p.toit.debord_cm, gout = +p.toit.gouttiere_largeur_cm || 0;
     const toit = [[-deb.gauche, -deb.avant], [A + +deb.droite, -deb.avant], [A + +deb.droite, G + +deb.arriere + gout], [-deb.gauche, G + +deb.arriere + gout]];
-    const grillages = d.grillages || [];
+    const grillages = d.grillages || [], palissades = d.palissades || [];
     const murs = noms.map((nom, i) => ({ nom, i })).filter(({ nom }) => est_mur(nom)).map(({ nom, i }) => {
       const a = poly2[i], b = poly2[(i + 1) % poly2.length];
-      return { cote: nom, type: grillages.includes(nom) ? "grillage" : "mur", de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
+      return { cote: nom, type: grillages.includes(nom) ? "grillage" : palissades.includes(nom) ? "palissade" : "mur", de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
     });
     const hors_cm2 = Math.max(0, A * G - poly_area(clip_convex(poly2, rect)));
     const pieces = hors_cm2 > 1 ? outside_pieces(rect, poly2) : [];
@@ -554,6 +554,8 @@ function geometry(p) {
       murs,
       mur_hauteur_cm: +d.mur_hauteur_cm || 0,
       grillage_hauteur_cm: +d.grillage_hauteur_cm || +d.mur_hauteur_cm || 0,
+      palissade_epaisseur_cm: +d.palissade_epaisseur_cm || 4,
+      palissade_travee_cm: +d.palissade_travee_cm || 180,
       mur_epaisseur_cm: +d.mur_epaisseur_cm || 15,
       passage,
       toit_touche_mur: murs.some((w) => w.toit_cm < 0),
@@ -1496,7 +1498,11 @@ function variante_svg(v, P, scale, sobre = false) {
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
   return svg;
 }
-var legende_clotures = (d) => (d.murs || []).some((w) => w.type === "grillage") ? "brun = mur, vert pointill\xE9 = grillage" : "brun = mur de propri\xE9t\xE9";
+var legende_clotures = (d) => {
+  const types = new Set((d.murs || []).map((w) => w.type));
+  const parts = [types.has("palissade") ? "brun = palissade bois" : "", types.has("mur") ? "brun = mur" : "", types.has("grillage") ? "vert pointill\xE9 = grillage" : ""].filter(Boolean);
+  return parts.length ? parts.join(", ") : "brun = mur de propri\xE9t\xE9";
+};
 function entete_implantation(v, d) {
   return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, lignes: [`${legende_clotures(d)} \xB7 orange = distance aux bords \xB7 vert = passage derri\xE8re \xB7 hachures = rangement cach\xE9`] };
 }
@@ -2025,7 +2031,7 @@ function modele3d_abri(p, g, v, m) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
-    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : w.type === "palissade" ? d.palissade_epaisseur_cm : d.mur_epaisseur_cm, travee_cm: d.palissade_travee_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f, i) => ({

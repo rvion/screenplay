@@ -21,10 +21,10 @@ export const VUES = {
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42 },
 } as const;
 export type NomVue = keyof typeof VUES;
-export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee";
+export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee" | "cloture";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
-const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
+const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
 
 // plaque blanche a bord sombre, texte gras : lisible de loin sur un panneau clair comme sur le toit
 function etiquette(txt: string): Vec | null {
@@ -109,6 +109,30 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       const lisse = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, l / 100, 6), matP);
       lisse.rotation.z = Math.PI / 2; lisse.rotation.y = Math.atan2(uy, ux);
       lisse.position.copy(W(w.de[0] + ux * l / 2, w.de[1] + uy * l / 2, w.hauteur_cm)); abri.add(lisse);
+      continue;
+    }
+    if (w.type === "palissade") {
+      // palissade bois : poteaux carres a chaque travee, entre deux poteaux un panneau de planches a sommet bombe
+      const cl = groupes.cloture || groupe("cloture"), e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
+      const matPl = new THREE.MeshStandardMaterial({ color: COUL.palissade, roughness: 0.85, side: THREE.DoubleSide }), matPo = new THREE.MeshStandardMaterial({ color: COUL.poteau, roughness: 0.9 });
+      const nb = Math.max(1, Math.round(l / (w.travee_cm || 180))), travee = l / nb, ang = Math.atan2(uy, ux);
+      for (let k = 0; k <= nb; k++) {
+        const t = k / nb, hp = h + 0.2, poteau = new THREE.Mesh(new THREE.BoxGeometry(0.09, hp, 0.09), matPo);
+        poteau.position.copy(W(w.de[0] + ux * l * t, w.de[1] + uy * l * t, hp / 2 - 0.14)); poteau.rotation.y = ang; cl.add(ombre(poteau));
+      }
+      for (let k = 0; k < nb; k++) {
+        // panneau : rectangle dont le bord haut est un arc bombe (15 cm plus bas aux poteaux qu'au milieu)
+        const L = travee / 100 - 0.09, forme = new THREE.Shape(), bas = 0.08, creux = Math.min(0.15, h * 0.15);
+        forme.moveTo(0, bas); forme.lineTo(L, bas); forme.lineTo(L, h - creux); forme.quadraticCurveTo(L / 2, h + creux, 0, h - creux); forme.closePath();
+        const geo = new THREE.ExtrudeGeometry(forme, { depth: e, bevelEnabled: false });
+        // planches : un joint tous les 12 cm, grave en lignes sombres
+        const joints: number[] = [];
+        for (let x = 0.12; x < L; x += 0.12) joints.push(x, bas, e + 0.001, x, h - creux, e + 0.001);
+        const gj = new THREE.BufferGeometry(); gj.setAttribute("position", new THREE.Float32BufferAttribute(joints, 3));
+        const panneau = new THREE.Group(); panneau.add(ombre(new THREE.Mesh(geo, matPl))); panneau.add(new THREE.LineSegments(gj, new THREE.LineBasicMaterial({ color: 0x5a3d22, transparent: true, opacity: 0.5 })));
+        const t0 = (k * travee + 0.045) / l;
+        panneau.position.copy(W(w.de[0] + ux * l * t0, w.de[1] + uy * l * t0, 0)); panneau.rotation.y = ang; cl.add(panneau);
+      }
       continue;
     }
     const nx = uy * w.epaisseur_cm, ny = -ux * w.epaisseur_cm;
@@ -348,7 +372,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false };
+  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: true };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -363,6 +387,8 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
 
   function montrer(nom: Masquable, oui: boolean) {
     visible[nom] = oui;
+    // cloture : jamais cachee, mais pleine (oui) ou translucide (non), pour voir l'abri derriere
+    if (nom === "cloture") { if (groupes.cloture) groupes.cloture.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } }); return; }
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }

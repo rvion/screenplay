@@ -5,7 +5,7 @@
 <line x1="221.0" y1="161.8" x2="141.5" y2="88.2" stroke="#5b4a3a" stroke-width="5"/>
 <line x1="138.0" y1="88.3" x2="107.4" y2="119.5" stroke="#5b4a3a" stroke-width="5"/>
 <line x1="106.7" y1="121.2" x2="106.7" y2="257.3" stroke="#5b4a3a" stroke-width="5"/>
-<text x="164.2" y="60.0" text-anchor="middle" fill="#5b4a3a" font-size="10" font-weight="normal">brun = mur, vert pointillé = grillage (limite infranchissable)</text>
+<text x="164.2" y="60.0" text-anchor="middle" fill="#5b4a3a" font-size="10" font-weight="normal">brun = palissade bois, vert pointillé = grillage (limite infranchissable)</text>
 <line x1="194.1" y1="155.6" x2="201.7" y2="147.4" stroke="#c0392b" stroke-width="2.5"/>
 <text x="209.7" y="141.4" text-anchor="start" fill="#c0392b" font-size="11" font-weight="bold">passage 27 cm</text>
 <text x="122.4" y="295.3" text-anchor="middle" fill="#8a8170" font-size="10" font-weight="normal">dalle 262</text>

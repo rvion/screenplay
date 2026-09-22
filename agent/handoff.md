@@ -36,6 +36,7 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Barre caméra : reset en tête, icônes verticales, une pilule de verre par curseur, texte nu et tamisé
 - [x] Résumé : un seul dessin (murs, angles, marges hors dalle, passage), sans légende, phrase d'intro sans la marge, quatre lignes de chiffres
 - [x] Vignette « Vue de droite » avec la vue collée par Rémi (remplace la vue de dessus)
+- [x] Palissade bois (pan de 258) : poteaux, planches à sommet bombé, 4 cm ; bouton « clôture » pleine / translucide
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

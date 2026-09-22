@@ -482,10 +482,10 @@ function geometry(p) {
     const est_mur = (nom) => mitoyens.includes(nom) || nom === "arriere" && mitoyens.some((k) => k.startsWith("arriere"));
     const deb = p.toit.debord_cm, gout = +p.toit.gouttiere_largeur_cm || 0;
     const toit = [[-deb.gauche, -deb.avant], [A + +deb.droite, -deb.avant], [A + +deb.droite, G + +deb.arriere + gout], [-deb.gauche, G + +deb.arriere + gout]];
-    const grillages = d.grillages || [];
+    const grillages = d.grillages || [], palissades = d.palissades || [];
     const murs = noms.map((nom, i) => ({ nom, i })).filter(({ nom }) => est_mur(nom)).map(({ nom, i }) => {
       const a = poly2[i], b = poly2[(i + 1) % poly2.length];
-      return { cote: nom, type: grillages.includes(nom) ? "grillage" : "mur", de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
+      return { cote: nom, type: grillages.includes(nom) ? "grillage" : palissades.includes(nom) ? "palissade" : "mur", de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
     });
     const hors_cm2 = Math.max(0, A * G - poly_area(clip_convex(poly2, rect)));
     const pieces = hors_cm2 > 1 ? outside_pieces(rect, poly2) : [];
@@ -554,6 +554,8 @@ function geometry(p) {
       murs,
       mur_hauteur_cm: +d.mur_hauteur_cm || 0,
       grillage_hauteur_cm: +d.grillage_hauteur_cm || +d.mur_hauteur_cm || 0,
+      palissade_epaisseur_cm: +d.palissade_epaisseur_cm || 4,
+      palissade_travee_cm: +d.palissade_travee_cm || 180,
       mur_epaisseur_cm: +d.mur_epaisseur_cm || 15,
       passage,
       toit_touche_mur: murs.some((w) => w.toit_cm < 0),
@@ -1496,7 +1498,11 @@ function variante_svg(v, P, scale, sobre = false) {
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
   return svg;
 }
-var legende_clotures = (d) => (d.murs || []).some((w) => w.type === "grillage") ? "brun = mur, vert pointill\xE9 = grillage" : "brun = mur de propri\xE9t\xE9";
+var legende_clotures = (d) => {
+  const types = new Set((d.murs || []).map((w) => w.type));
+  const parts = [types.has("palissade") ? "brun = palissade bois" : "", types.has("mur") ? "brun = mur" : "", types.has("grillage") ? "vert pointill\xE9 = grillage" : ""].filter(Boolean);
+  return parts.length ? parts.join(", ") : "brun = mur de propri\xE9t\xE9";
+};
 function entete_implantation(v, d) {
   return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, lignes: [`${legende_clotures(d)} \xB7 orange = distance aux bords \xB7 vert = passage derri\xE8re \xB7 hachures = rangement cach\xE9`] };
 }
@@ -2025,7 +2031,7 @@ function modele3d_abri(p, g, v, m) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
-    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : w.type === "palissade" ? d.palissade_epaisseur_cm : d.mur_epaisseur_cm, travee_cm: d.palissade_travee_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f, i) => ({
@@ -2786,7 +2792,7 @@ var VUES = {
   arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42 }
 };
-var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799 };
+var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
 function etiquette(txt) {
   if (typeof document === "undefined") return null;
   const c = document.createElement("canvas");
@@ -2898,6 +2904,38 @@ function peuple_abri(abri, data, visible_demande = {}) {
       lisse.rotation.y = Math.atan2(uy, ux);
       lisse.position.copy(W(w.de[0] + ux * l / 2, w.de[1] + uy * l / 2, w.hauteur_cm));
       abri.add(lisse);
+      continue;
+    }
+    if (w.type === "palissade") {
+      const cl = groupes.cloture || groupe("cloture"), e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
+      const matPl = new THREE.MeshStandardMaterial({ color: COUL.palissade, roughness: 0.85, side: THREE.DoubleSide }), matPo = new THREE.MeshStandardMaterial({ color: COUL.poteau, roughness: 0.9 });
+      const nb = Math.max(1, Math.round(l / (w.travee_cm || 180))), travee = l / nb, ang = Math.atan2(uy, ux);
+      for (let k = 0; k <= nb; k++) {
+        const t = k / nb, hp = h + 0.2, poteau = new THREE.Mesh(new THREE.BoxGeometry(0.09, hp, 0.09), matPo);
+        poteau.position.copy(W(w.de[0] + ux * l * t, w.de[1] + uy * l * t, hp / 2 - 0.14));
+        poteau.rotation.y = ang;
+        cl.add(ombre(poteau));
+      }
+      for (let k = 0; k < nb; k++) {
+        const L = travee / 100 - 0.09, forme = new THREE.Shape(), bas = 0.08, creux = Math.min(0.15, h * 0.15);
+        forme.moveTo(0, bas);
+        forme.lineTo(L, bas);
+        forme.lineTo(L, h - creux);
+        forme.quadraticCurveTo(L / 2, h + creux, 0, h - creux);
+        forme.closePath();
+        const geo = new THREE.ExtrudeGeometry(forme, { depth: e, bevelEnabled: false });
+        const joints = [];
+        for (let x = 0.12; x < L; x += 0.12) joints.push(x, bas, e + 1e-3, x, h - creux, e + 1e-3);
+        const gj = new THREE.BufferGeometry();
+        gj.setAttribute("position", new THREE.Float32BufferAttribute(joints, 3));
+        const panneau = new THREE.Group();
+        panneau.add(ombre(new THREE.Mesh(geo, matPl)));
+        panneau.add(new THREE.LineSegments(gj, new THREE.LineBasicMaterial({ color: 5913890, transparent: true, opacity: 0.5 })));
+        const t0 = (k * travee + 0.045) / l;
+        panneau.position.copy(W(w.de[0] + ux * l * t0, w.de[1] + uy * l * t0, 0));
+        panneau.rotation.y = ang;
+        cl.add(panneau);
+      }
       continue;
     }
     const nx = uy * w.epaisseur_cm, ny = -ux * w.epaisseur_cm;
@@ -3158,7 +3196,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: true };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3175,6 +3213,17 @@ function createAbriViewer(container, data0) {
   rebuild(data0);
   function montrer(nom, oui) {
     visible[nom] = oui;
+    if (nom === "cloture") {
+      if (groupes.cloture) groupes.cloture.traverse((o) => {
+        if (o.isMesh) {
+          o.material.transparent = !oui;
+          o.material.opacity = oui ? 1 : 0.3;
+          o.material.depthWrite = oui;
+          o.castShadow = oui;
+        }
+      });
+      return;
+    }
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }
@@ -3300,7 +3349,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"]) {
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte", "cloture"]) {
     const b = document.getElementById("voir-" + nom);
     if (!b) continue;
     b.addEventListener("click", () => {

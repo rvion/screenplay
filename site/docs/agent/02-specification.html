@@ -32,14 +32,20 @@ compte), affichée sur le plan de sol, en 3D et en vigilance. Tout est réglable
 des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.</li>
 <li><code>dalle_cm.murs_mitoyens</code> : côtés qui sont la <strong>limite de propriété</strong> (gauche + les deux pans du
 fond), infranchissables. <code>dalle_cm.grillages</code> nomme ceux fermés par un <strong>grillage</strong> et non un mur
-(gauche, petit pan de 104) : <code>dalle.murs[].type</code> vaut <code>grillage</code> ou <code>mur</code>. Un mur est un trait brun
-épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
+(gauche, petit pan de 104) et <code>dalle_cm.palissades</code> ceux fermés par une <strong>palissade en bois</strong> (grand pan de<ol start="258">
+<li>: <code>dalle.murs[].type</code> vaut <code>grillage</code>, <code>palissade</code> ou <code>mur</code>. Un mur est un trait brun épais sur le
+plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
+travée (<code>palissade_travee_cm</code>) et entre eux un panneau de planches de <code>palissade_epaisseur_cm</code> à sommet
+bombé, dans le groupe <code>cloture</code> que le bouton « clôture » rend translucide pour voir l&#39;abri derrière ;
+un grillage un pointillé vert sur le plan, et en 3D un treillis
 à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
 translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de <code>grillage_hauteur_cm</code> (100, mesuré) ; le mur
 garde <code>mur_hauteur_cm</code> (180, hypothèse à mesurer). La légende (<code>legende_clotures</code>) et les textes du guide suivent. <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
 point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
 garde <code>passage_souhaite_cm</code>. Carte <strong>Passage derrière l&#39;abri</strong> en vigilance. Un débord hors
 dalle contre un mur est signalé comme impossible à combler.</li>
+</ol>
+</li>
 </ul>
 <h2 id="murs--tous-rectangulaires">Murs — tous rectangulaires</h2>
 <ul>

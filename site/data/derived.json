@@ -204,7 +204,7 @@
       "murs": [
         {
           "cote": "arriere_droite",
-          "type": "mur",
+          "type": "palissade",
           "de": [
             260,
             221
@@ -247,6 +247,8 @@
       ],
       "mur_hauteur_cm": 180,
       "grillage_hauteur_cm": 100,
+      "palissade_epaisseur_cm": 4,
+      "palissade_travee_cm": 180,
       "mur_epaisseur_cm": 15,
       "passage": {
         "cm": 26.8,

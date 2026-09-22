@@ -106,14 +106,17 @@ const bureaux = groupes.mobilier.children.filter((o) => o.isMesh);
 ok(bureaux.length === v.bureaux.length && bureaux.every((o) => near(boite(o).max.y, (d.sol.epaisseur_cm + 75) / 100, 1e-6) && boite(o).min.x >= tout.min.x && boite(o).max.x <= tout.max.x), bureaux.length + " bureaux, plateau a 75 cm du plancher, dans les murs");
 // dalle et murs de propriete
 {
-  const murs_p = d.murs_propriete.filter((w) => w.type === "mur"), grillages = d.murs_propriete.filter((w) => w.type === "grillage");
-  const h = murs_p[0].hauteur_cm / 100, hg = grillages[0].hauteur_cm / 100;
-  const volumes = racine.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry" && near(boite(o).max.y, h, 1e-6) && near(boite(o).min.y, -0.14, 1e-6));
+  const palissades = d.murs_propriete.filter((w) => w.type === "palissade"), grillages = d.murs_propriete.filter((w) => w.type === "grillage");
+  const h = palissades[0].hauteur_cm / 100, hg = grillages[0].hauteur_cm / 100;
   const treillis = racine.children.filter((o) => o.isMesh && o.geometry.type === "PlaneGeometry" && o.material.transparent && near(boite(o).max.y, hg, 1e-6) && near(boite(o).min.y, 0, 1e-6));
   const poteaux = racine.children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry" && near(boite(o).max.y, hg, 1e-3) && near(boite(o).min.y, -0.14, 1e-3));
-  ok(hg === 1 && h === 1.8, "grillage à 1 m (mesuré), mur à 180 cm (hypothèse)");
-  ok(d.murs_propriete.length === 3 && murs_p.length === 1 && murs_p[0].cote === "arriere_droite" && grillages.map((w) => w.cote).sort().join() === "arriere_gauche,gauche", "limites : un mur (grand pan de 258) et deux grillages (gauche, petit pan de 104)");
-  ok(volumes.length === murs_p.length && treillis.length === grillages.length && poteaux.length >= 2 * grillages.length + 1, `3D : ${volumes.length} mur plein de ${murs_p[0].hauteur_cm} cm, ${treillis.length} treillis translucides de ${grillages[0].hauteur_cm} cm, ${poteaux.length} poteaux`);
+  ok(hg === 1 && h === 1.8, "grillage à 1 m (mesuré), palissade à 180 cm (hypothèse)");
+  ok(d.murs_propriete.length === 3 && palissades.length === 1 && palissades[0].cote === "arriere_droite" && grillages.map((w) => w.cote).sort().join() === "arriere_gauche,gauche" && !d.murs_propriete.some((w) => w.type === "mur"), "limites : une palissade bois (grand pan de 258) et deux grillages (gauche, petit pan de 104)");
+  ok(treillis.length === grillages.length && poteaux.length >= 2 * grillages.length + 1, `3D : ${treillis.length} treillis translucides de ${grillages[0].hauteur_cm} cm, ${poteaux.length} poteaux de grillage`);
+  // palissade : groupe cloture, poteaux carres et panneaux bombes de 4 cm, jamais plus haut que h + 15 cm au milieu, pas de volume plein
+  const cl = groupes.cloture, bc = boite(cl), po = cl.children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry"), pan = cl.children.filter((o) => o.isGroup);
+  ok(!!cl && po.length >= 2 && pan.length === po.length - 1 && bc.max.y <= h + 0.16 && bc.max.y > h + 0.05 && pan.every((g) => { const m = g.children.find((o) => o.isMesh); m.geometry.computeBoundingBox(); const b = m.geometry.boundingBox; return b.max.z - b.min.z < 0.05 && b.max.y > h - 0.01; }), `palissade : ${po.length} poteaux, ${pan.length} panneaux bombés, ${palissades[0].epaisseur_cm} cm d'épaisseur, haut à ${(bc.max.y * 100).toFixed(0)} cm`);
+  ok(!racine.children.some((o) => o.isMesh && o.geometry.type === "BufferGeometry" && near(boite(o).max.y, h, 1e-6) && near(boite(o).min.y, -0.14, 1e-6) && (boite(o).max.x - boite(o).min.x) * (boite(o).max.z - boite(o).min.z) > 0.5), "plus aucun mur plein de 15 cm autour de la dalle");
 }
 
 }

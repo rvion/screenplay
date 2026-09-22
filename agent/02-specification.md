@@ -18,8 +18,12 @@
   des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.
 - `dalle_cm.murs_mitoyens` : côtés qui sont la **limite de propriété** (gauche + les deux pans du
   fond), infranchissables. `dalle_cm.grillages` nomme ceux fermés par un **grillage** et non un mur
-  (gauche, petit pan de 104) : `dalle.murs[].type` vaut `grillage` ou `mur`. Un mur est un trait brun
-  épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
+  (gauche, petit pan de 104) et `dalle_cm.palissades` ceux fermés par une **palissade en bois** (grand pan de
+  258) : `dalle.murs[].type` vaut `grillage`, `palissade` ou `mur`. Un mur est un trait brun épais sur le
+  plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
+  travée (`palissade_travee_cm`) et entre eux un panneau de planches de `palissade_epaisseur_cm` à sommet
+  bombé, dans le groupe `cloture` que le bouton « clôture » rend translucide pour voir l'abri derrière ;
+  un grillage un pointillé vert sur le plan, et en 3D un treillis
   à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
   translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur
   garde `mur_hauteur_cm` (180, hypothèse à mesurer). La légende (`legende_clotures`) et les textes du guide suivent. `dalle.passage` = largeur de la bande entre l'abri et le mur du fond au
