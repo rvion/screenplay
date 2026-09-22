@@ -37,6 +37,9 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Résumé : un seul dessin (murs, angles, marges hors dalle, passage), sans légende, phrase d'intro sans la marge, quatre lignes de chiffres
 - [x] Vignette « Vue de droite » avec la vue collée par Rémi (remplace la vue de dessus)
 - [x] Palissade bois (pan de 258) : poteaux, planches à sommet bombé, 4 cm ; bouton « clôture » pleine / translucide
+- [x] Texte caméra plus petit et plus pâle
+- [x] Six vignettes sous les deux colonnes du résumé, la première = vue de départ ; chaque vignette porte ses états d'options ; « copier la vue » copie aussi les états
+- [x] Résumé : paragraphe, dessin plus grand avec légende à côté, puces de chiffres dessous
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

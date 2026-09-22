@@ -13,14 +13,26 @@ export interface AbriViewer {
   etat(): EtatCamera; regler(o: { fov?: number; distance?: number }): void; placer(e: Partial<EtatCamera>): void; surChangement(cb: (e: EtatCamera) => void): void;
 }
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
-// points de vue fixes (metres, cible incluse) : la vue principale et les vignettes
+// etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
+export type Etats = { toit: number; porte: number; mobilier: number; lit: number; etiquettes: number; personne: number; cloture: number };
+export const ETATS_DEFAUT: Etats = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 1 };
+// vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
 export const VUES = {
-  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
-  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
-  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
-  droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42 },
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
+  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
+  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, cloture: 0 } },
+  droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
+  interieur: { titre: "Intérieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
+  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
+// applique un jeu d'etats a la scene (sans toucher aux boutons de la page)
+export function applique_etats(vue: AbriViewer, e: Etats) {
+  vue.montrer("toit", e.toit > 0); vue.montrer("mobilier", e.mobilier > 0); vue.montrer("lit", e.lit > 0); vue.montrer("etiquettes", e.etiquettes > 0);
+  vue.montrer("porte", e.porte === 1); vue.montrer("porte_fermee", e.porte === 2);
+  vue.montrer("personne", e.personne === 1); vue.montrer("personne_dedans", e.personne === 2);
+  vue.montrer("cloture", e.cloture > 0);
+}
 export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee" | "cloture";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
@@ -395,6 +407,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   function voir(vue: NomVue) {
     const v = VUES[vue];
     camera.position.set(...v.position); controls.target.set(...v.cible); regler({ fov: v.fov }); controls.update();
+    applique_etats(viewer, v.etats);
     controls.dispatchEvent({ type: "change" });
   }
   const r2 = (x: number) => Math.round(x * 100) / 100;
@@ -414,11 +427,15 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     controls.dispatchEvent({ type: "change" });
   }
   function surChangement(cb: (e: EtatCamera) => void) { controls.addEventListener("change", () => cb(etat())); }
-  // rendu fixe d'un point de vue dans un petit canvas 2D : un seul contexte WebGL, copie du tampon juste apres le rendu
+  // rendu fixe d'un point de vue dans un petit canvas 2D : un seul contexte WebGL, copie du tampon juste apres le rendu.
+  // la scene prend les etats du point de vue le temps du rendu, puis retrouve les siens
   function vignette(canvas: HTMLCanvasElement, vue: NomVue) {
     const v = VUES[vue], cam = new THREE.PerspectiveCamera(v.fov || 42, camera.aspect, 0.1, 100);
     cam.position.set(...v.position); cam.lookAt(...v.cible);
+    const avant = { ...visible };
+    applique_etats(viewer, v.etats);
     renderer.render(scene, cam);
+    for (const k of Object.keys(avant)) montrer(k as Masquable, avant[k]);
     const ctx = canvas.getContext("2d");
     if (ctx) { canvas.width = 320; canvas.height = Math.round(320 / camera.aspect); ctx.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height); }
   }
@@ -429,5 +446,6 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     renderer.setSize(container.clientWidth, container.clientHeight);
   });
   (function boucle() { requestAnimationFrame(boucle); controls.update(); renderer.render(scene, camera); })();
-  return { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
+  const viewer: AbriViewer = { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
+  return viewer;
 }

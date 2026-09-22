@@ -2612,7 +2612,18 @@ function rend_abri(a) {
     ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
     ["Mat\xE9riaux", `${eur(B.materiaux_eur)} TTC`]
   ];
-  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><dl class="resume-dl">${paires.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("")}</dl></div>`);
+  const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w) => w.type));
+  const legende = [
+    ["trait", "#2b5d8a", "murs, cote ext\xE9rieure"],
+    ["texte", "#b0452a", "angle \xE0 chaque coin"],
+    ["trait", "#b86e1f", "marge jusqu'au bord de la dalle"],
+    ["trait", "#2a8a4a", "passage derri\xE8re l'abri"],
+    ...types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : [],
+    ...types.has("mur") ? [["trait-epais", "#5b4a3a", "mur de propri\xE9t\xE9"]] : [],
+    ...types.has("grillage") ? [["pointille", "#5f8a4a", "grillage (limite)"]] : [],
+    ["aplat", "#f3f1ec", "dalle b\xE9ton"]
+  ];
+  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div><ul class="resume-points">${paires.map(([k, val]) => `<li><b>${k}</b> ${val}</li>`).join("")}</ul>`);
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
@@ -2786,12 +2797,26 @@ function surligne_section() {
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+var ETATS_DEFAUT = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 1 };
 var VUES = {
-  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
-  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
-  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
-  droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42 }
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
+  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
+  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, cloture: 0 } },
+  droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
+  interieur: { titre: "Int\xE9rieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
+  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } }
 };
+function applique_etats(vue, e) {
+  vue.montrer("toit", e.toit > 0);
+  vue.montrer("mobilier", e.mobilier > 0);
+  vue.montrer("lit", e.lit > 0);
+  vue.montrer("etiquettes", e.etiquettes > 0);
+  vue.montrer("porte", e.porte === 1);
+  vue.montrer("porte_fermee", e.porte === 2);
+  vue.montrer("personne", e.personne === 1);
+  vue.montrer("personne_dedans", e.personne === 2);
+  vue.montrer("cloture", e.cloture > 0);
+}
 var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
 function etiquette(txt) {
   if (typeof document === "undefined") return null;
@@ -3233,6 +3258,7 @@ function createAbriViewer(container, data0) {
     controls.target.set(...v.cible);
     regler({ fov: v.fov });
     controls.update();
+    applique_etats(viewer, v.etats);
     controls.dispatchEvent({ type: "change" });
   }
   const r2 = (x) => Math.round(x * 100) / 100;
@@ -3263,7 +3289,10 @@ function createAbriViewer(container, data0) {
     const v = VUES[vue], cam = new THREE.PerspectiveCamera(v.fov || 42, camera.aspect, 0.1, 100);
     cam.position.set(...v.position);
     cam.lookAt(...v.cible);
+    const avant = { ...visible };
+    applique_etats(viewer, v.etats);
     renderer.render(scene, cam);
+    for (const k of Object.keys(avant)) montrer(k, avant[k]);
     const ctx = canvas.getContext("2d");
     if (ctx) {
       canvas.width = 320;
@@ -3281,7 +3310,8 @@ function createAbriViewer(container, data0) {
     controls.update();
     renderer.render(scene, camera);
   })();
-  return { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
+  const viewer = { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
+  return viewer;
 }
 
 // site/src/abri_main.ts
@@ -3303,6 +3333,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
+  const NOMS = ["toit", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"];
+  const bouton = (nom) => document.getElementById("voir-" + nom);
+  const montre_bouton = (nom, etat) => {
+    const b = bouton(nom);
+    if (!b) return;
+    b.dataset.etat = String(etat);
+    b.setAttribute("aria-pressed", String(etat > 0));
+    const lib = b.querySelector("span");
+    if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
+    b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
+  };
+  const etats = () => {
+    const e = { ...ETATS_DEFAUT };
+    for (const n of NOMS) {
+      const b = bouton(n);
+      if (b) e[n] = +(b.dataset.etat || 0);
+    }
+    return e;
+  };
+  const applique = (e) => {
+    for (const n of NOMS) montre_bouton(n, e[n]);
+  };
   const vignettes = [...document.querySelectorAll("#vignettes [data-vue]")];
   const rend_vignettes = () => {
     for (const b of vignettes) {
@@ -3313,9 +3365,13 @@ document.addEventListener("DOMContentLoaded", () => {
   for (const b of vignettes) {
     const titre = b.querySelector("span");
     if (titre) titre.textContent = VUES[b.dataset.vue].titre;
-    b.addEventListener("click", () => vue && vue.voir(b.dataset.vue));
+    b.addEventListener("click", () => {
+      if (vue) {
+        vue.voir(b.dataset.vue);
+        applique(VUES[b.dataset.vue].etats);
+      }
+    });
   }
-  window.requestAnimationFrame(() => window.setTimeout(rend_vignettes, 0));
   const fov = document.getElementById("cam-fov"), dist = document.getElementById("cam-dist"), copier = document.getElementById("cam-copier");
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
   if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
@@ -3336,11 +3392,14 @@ document.addEventListener("DOMContentLoaded", () => {
   affiche_etat();
   const reset = document.getElementById("cam-reset");
   if (reset) reset.addEventListener("click", () => {
-    if (vue) vue.voir("jardin");
+    if (vue) {
+      vue.voir("jardin");
+      applique(VUES.jardin.etats);
+    }
   });
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
-    const texte2 = JSON.stringify(vue.etat());
+    const texte2 = JSON.stringify({ ...vue.etat(), etats: etats() });
     try {
       await navigator.clipboard.writeText(texte2);
       copier.classList.add("copie");

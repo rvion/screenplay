@@ -1,7 +1,7 @@
 // Point d'entree de la page d'accueil : calcule l'abri retenu depuis window.SHED_PARAMS,
 // remplit la page, puis branche la scene 3D (qui echoue proprement sans WebGL).
 import { calcule_abri, rend_abri } from "./abri_page";
-import { createAbriViewer, VUES, type AbriViewer, type NomVue } from "./viewer_abri";
+import { createAbriViewer, applique_etats, VUES, ETATS_DEFAUT, type AbriViewer, type NomVue, type Etats } from "./viewer_abri";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = (window as any).SHED_PARAMS;
@@ -21,15 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent entièrement valables.</p>';
     console.error(e);
   }
-  // vignettes : trois points de vue fixes sous la vue principale ; un clic y amene la camera
+  // boutons d'etat : un clic avance l'etat ; un point de vue les regle tous d'un coup
+  const NOMS = ["toit", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"] as const;
+  const bouton = (nom: string) => document.getElementById("voir-" + nom) as HTMLButtonElement | null;
+  const montre_bouton = (nom: string, etat: number) => {
+    const b = bouton(nom); if (!b) return;
+    b.dataset.etat = String(etat); b.setAttribute("aria-pressed", String(etat > 0));
+    const lib = b.querySelector("span"); if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
+    b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
+  };
+  const etats = (): Etats => { const e: any = { ...ETATS_DEFAUT }; for (const n of NOMS) { const b = bouton(n); if (b) e[n] = +(b.dataset.etat || 0); } return e; };
+  const applique = (e: Etats) => { for (const n of NOMS) montre_bouton(n, e[n]); };
+  // vignettes : les points de vue fixes sous le resume, la premiere est la vue de depart ; un clic regle camera et etats
   const vignettes = [...document.querySelectorAll<HTMLElement>("#vignettes [data-vue]")];
   const rend_vignettes = () => { for (const b of vignettes) { const c = b.querySelector("canvas"); if (vue && c) vue.vignette(c, b.dataset.vue as NomVue); } };
   for (const b of vignettes) {
     const titre = b.querySelector("span"); if (titre) titre.textContent = VUES[b.dataset.vue as NomVue].titre;
-    b.addEventListener("click", () => vue && vue.voir(b.dataset.vue as NomVue));
+    b.addEventListener("click", () => { if (vue) { vue.voir(b.dataset.vue as NomVue); applique(VUES[b.dataset.vue as NomVue].etats); } });
   }
-  // les vignettes attendent la premiere image : la page s'affiche d'abord
-  window.requestAnimationFrame(() => window.setTimeout(rend_vignettes, 0));
   // barre de camera : focale, distance, et « copier la vue » (position, cible, focale, distance en JSON)
   const fov = document.getElementById("cam-fov") as HTMLInputElement | null, dist = document.getElementById("cam-dist") as HTMLInputElement | null, copier = document.getElementById("cam-copier") as HTMLButtonElement | null;
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
@@ -41,10 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dist) dist.addEventListener("input", affiche_etat);
   affiche_etat();
   const reset = document.getElementById("cam-reset");
-  if (reset) reset.addEventListener("click", () => { if (vue) vue.voir("jardin"); });
+  if (reset) reset.addEventListener("click", () => { if (vue) { vue.voir("jardin"); applique(VUES.jardin.etats); } });
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
-    const texte = JSON.stringify(vue.etat());
+    const texte = JSON.stringify({ ...vue.etat(), etats: etats() });
     try { await navigator.clipboard.writeText(texte); copier.classList.add("copie"); } catch { window.prompt("Copier la vue :", texte); }
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });

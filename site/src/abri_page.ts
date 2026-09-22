@@ -133,7 +133,13 @@ export function rend_abri(a: Abri) {
     ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${cote(v.aire_interieure_m2, "m²")} intérieur`],
     ["Matériaux", `${eur(B.materiaux_eur)} TTC`],
   ];
-  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><dl class="resume-dl">${paires.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("")}</dl></div>`);
+  const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w: any) => w.type));
+  const legende = [
+    ["trait", "#2b5d8a", "murs, cote extérieure"], ["texte", "#b0452a", "angle à chaque coin"], ["trait", "#b86e1f", "marge jusqu'au bord de la dalle"], ["trait", "#2a8a4a", "passage derrière l'abri"],
+    ...(types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : []), ...(types.has("mur") ? [["trait-epais", "#5b4a3a", "mur de propriété"]] : []), ...(types.has("grillage") ? [["pointille", "#5f8a4a", "grillage (limite)"]] : []),
+    ["aplat", "#f3f1ec", "dalle béton"],
+  ];
+  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div><ul class="resume-points">${paires.map(([k, val]) => `<li><b>${k}</b> ${val}</li>`).join("")}</ul>`);
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
     m.faces.map((f: any, i: number) => [paire(f.cle, nom_face(f)), cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => paire(pn.id, cote(pn.largeur_cm))).join(", "), cote(m.angles_deg[i], "°")]), [3, 4]);
 

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=b0dd3883" />
+  <link rel="stylesheet" href="abri.css?v=fd4596a2" />
   <script type="importmap">
   {
     "imports": {
@@ -80,12 +80,15 @@
             <button type="button" id="voir-personne" data-etat="0" data-etats="3" aria-pressed="false" title="Personne de 1,80 m : dehors, puis dedans"><svg viewBox="0 0 16 16"><circle cx="8" cy="3.5" r="2" fill="currentColor"/><path d="M5 14V9a3 3 0 0 1 6 0v5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-noms="personne|dehors|dedans">personne</span><i class="points"><b></b><b></b><b></b></i></button>
             <button type="button" id="voir-cloture" data-etat="1" data-etats="2" aria-pressed="true" title="Palissade bois : pleine, ou translucide pour voir l'abri derrière"><svg viewBox="0 0 16 16"><path d="M3 14V5M13 14V5M6 14V6q2-2.5 4 0v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 10h4" stroke="currentColor" stroke-width="1"/></svg><span data-noms="translucide|clôture">clôture</span></button>
           </div>
-          <div class="vignettes" id="vignettes">
-            <button type="button" data-vue="porte"><canvas></canvas><span></span></button>
-            <button type="button" data-vue="arriere"><canvas></canvas><span></span></button>
-            <button type="button" data-vue="droite"><canvas></canvas><span></span></button>
-          </div>
         </div>
+      </div>
+      <div class="vignettes" id="vignettes">
+        <button type="button" data-vue="jardin"><canvas></canvas><span></span></button>
+        <button type="button" data-vue="porte"><canvas></canvas><span></span></button>
+        <button type="button" data-vue="arriere"><canvas></canvas><span></span></button>
+        <button type="button" data-vue="droite"><canvas></canvas><span></span></button>
+        <button type="button" data-vue="interieur"><canvas></canvas><span></span></button>
+        <button type="button" data-vue="lit"><canvas></canvas><span></span></button>
       </div>
     </section>
 
@@ -170,7 +173,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=b0dd3883"></script>
-  <script type="module" src="abri.js?v=b0dd3883"></script>
+  <script src="params.js?v=fd4596a2"></script>
+  <script type="module" src="abri.js?v=fd4596a2"></script>
 </body>
 </html>
