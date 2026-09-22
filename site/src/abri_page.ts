@@ -63,6 +63,10 @@ export function rend_abri(a: Abri) {
   const { p: pp, core, v, m } = a;
   if (!v || !m) { html("fiche", "<tr><td>Aucun abri retenu dans params.json.</td></tr>"); return; }
   const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
+  // le plancher isole se prend sur la hauteur sous plafond
+  const plancher_cm = pp.amenagement && pp.amenagement.plancher && pp.amenagement.plancher.actif ? +pp.amenagement.plancher.epaisseur_cm : 0;
+  // le lit pose a demeure (lits_muraux) : il fait partie du mobilier de l'abri, comme le bureau
+  const lit_pose = (v.lits_muraux || []).find((l: any) => l.tient);
   const passage = v.passages.find((q: any) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
   const gauche = Math.min(...v.polygone.map((z: number[]) => z[0])), avant = Math.min(...v.polygone.map((z: number[]) => z[1]));
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z: number[]) => z[0]));
@@ -80,8 +84,9 @@ export function rend_abri(a: Abri) {
   html("intro", [
     `Bureau de jardin à ${fait(`${NOMBRES[n] || n} murs`)}, panneaux sandwich ${fait(cote(ep))} autoportants, sur la dalle existante`,
     `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`portée ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
-    `porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau en L sur ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}`,
+    `porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau sur ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}${lit_pose ? `, lit ${fait(cote(`${fz(lit_pose.largeur_cm)} × ${fz(lit_pose.longueur_cm)}`))} le long de ${face("A")}` : ""}`,
     `murs ${fait(cote(m.hauteur_mur_cm))}, faîte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
+    `sous plafond ${fait(`${cote(Math.round((Math.min(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)} → ${cote(Math.round((Math.max(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)}`)} (plancher isolé de ${cote(plancher_cm)} déduit)`,
     `${fait(`${cote(v.aire_m2, "m²")} de murs`)}${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${fait(`${cote(v.aire_interieure_m2, "m²")} intérieur`)}`,
     `matériaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`,
   ].join(" · ") + ".");
@@ -161,6 +166,7 @@ export function rend_abri(a: Abri) {
   table("amenagement", ["élément", "taille", "place"], [
     ...v.bureaux.map((b: any) => [`bureau ${b.cote === "avant" ? "de façade" : b.cote}`, cote(`${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de façade" : b.cote}`]),
     ...(v.sieges || []).map((st: any) => [st.type, cote(`${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)}`), `devant le bureau ${st.contre === "avant" ? "de façade" : st.contre}`]),
+    ...(lit_pose ? [[`lit à demeure`, cote(`${fz(lit_pose.largeur_cm)} × ${fz(lit_pose.longueur_cm)}`), `le long de la façade, tête côté porte, pied sous le bureau`]] : []),
     ...(v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? (v.lit_pliant.replie ? "contre un mur" : "déplié au sol libre, sièges rangés") : "ne tient pas"]] : []),
   ], [2]);
 

@@ -38,39 +38,40 @@ Le **passage** derrière l'abri est la vraie distance entre la forme et chaque m
 (`v.passages`, extrémités du mur comprises), visée : `passage_souhaite_cm`.
 
 ## L'abri : option 13 à cotes imposées (`modele_trapeze`)
-`disposition_trapeze.cotes_cm` impose façade 200, droite 175, gauche 275 et un mur du fond de 100
+`disposition_trapeze.cotes_cm` impose façade 210, droite 178, gauche 248 et un mur du fond de 140
 d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout du fond. Contour :
-`(10,10) → (210,10) → (210,185) → (110,285) → (10,285)` : 10 cm de dalle à gauche et devant.
+`(10,10) → (220,10) → (220,188) → (150,258) → (10,258)` : 10 cm de dalle à gauche et devant, 42 à droite.
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 200 | 237,5 → 237,5 | 100 + 100 |
-| D droite | 175 | 237,5 → 223,2 | 75 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan à 45° | 141,4 | 223,2 → 215 | 100 + 41,4 |
-| B fond | 100 | 215 → 215 | 100 |
-| G gauche | 275 | 215 → 237,5 | 100 + 100 + 75 |
+| A façade | 210 | 237,5 → 237,5 | 100 + 100 + 10 |
+| D droite | 178 | 237,5 → 221,4 | 78 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan à 45° | 99 | 221,4 → 215 | 99 (un seul panneau, aucune bande) |
+| B fond | 140 | 215 → 215 | 100 + 40 |
+| G gauche | 248 | 215 → 237,5 | 100 + 100 + 48 |
 
-- Angles **90 / 90 / 135 / 135 / 90**. Murs **5,00 m²** (au seuil), intérieur 4,48 m², sol libre
-  hors bureaux 2,26 m². Passage derrière : 57,8 cm au grand pan, 40,3 cm au petit pan. Espace
-  caché derrière l'abri 1,74 m². **10 panneaux de mur** de 100 × 215 à commander.
-- **Toit plan vers le fond** (`toit.sens = "arriere"`) : `h(y) = H + c·(1 − (y − y0)/D)`, `H` = 215,
-  `c` = 22,5, `D` = profondeur 275 ⇒ pente **8,2 %** (4,68°), portée 2,75 m (panne intermédiaire
-  prévue, `toit.panne_intermediaire`). Débords 5 devant et derrière, 0 sur les côtés : **2 panneaux
-  de toit** 100 × 286, dont un coupé en biais ; 5,22 m² couverts.
-- **Rehausse** (madrier 75 × 225) : R1 façade 22,5 → 22,5, R2 droite 22,5 → 8,2, R3 pan 8,2 → 0,
-  R4 gauche 0 → 22,5 ; rien sur le fond. **2 madriers** de 450.
-- **Gouttière** derrière l'abri, 240,6 cm en deux tronçons (C 138,5 + B 102,1) : les nervures du
-  toit mènent l'eau aux bouts arrière des panneaux. Descente au bout droit (`toit.descente`), à
-  l'entrée du passage.
-- **Porte** pleine 80 × 205 sur D, de 82,5 à 162,5 depuis la façade, chambranle 5 : le cadre tient
-  dans le module entier du fond. **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade : de 10 à 90
-  et de 110 à 190.
-- **Mobilier** : bureau en L (gauche et façade), fauteuil et tabouret, lit pliant 70 × 190 posé au sol
-  libre le long du mur de la porte, pied sous le bureau de façade ; seconde position en biais au fond
-  (`lit_pliant_2`) ; lits à demeure (`lits_muraux`) : v3, lit 70 × 180 le long du mur avant (188 dedans : un 190 n'y
-  tient pas), plus de bureau de façade, le bureau gauche arrêté au lit en bureau d'angle ; v4, lit 90 × 190
-  contre le mur gauche (263 dedans), tête au fond, bureau en L devant : façade 188 × 50 plus un retour de
-  60 × 73 jusqu'au pied du lit, fauteuil rangé sous la façade à droite du lit, tabouret dans le coin du L.
+- Angles **90 / 90 / 135 / 135 / 90**. Murs **4,96 m²** ⇒ **aucune formalité** (seuil 5 m²),
+  intérieur 4,45 m², sol libre hors bureau et lit 2,16 m². Cotes intérieures : façade **198**,
+  droite 169,5, pan 94, fond 131,5, gauche 236. Passage derrière : 50,4 cm au grand pan, 66,8 au
+  petit pan. Matériaux 2 861 € TTC.
+- **Le plancher isolé prend 10 cm** (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
+  la hauteur sous plafond tombe à **2,05 m au plus bas et 2,28 m en façade**, et c'est cette hauteur
+  que montre le modèle 3D.
+- **La façade de 198 dedans porte le lit** : 190 de long, donc 8 cm de jeu pour le cadre.
+- **Le mur droit de 178 dégage la porte** : la baie est **entièrement libre**, même avec une porte
+  de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
+- **Toit plan vers le fond** : `H` = 215, `c` = 22,5, `D` = 248 ⇒ pente **9,1 %** (5,18°), portée 2,48 m.
+  **3 panneaux de toit** (100 × 259, 100 × 259 en biais, bande de 10 × 201 en biais).
+- **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
+- **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
+  (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
+- **Porte** pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
+  **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade.
+- **Mobilier, une seule disposition** : le bureau gauche **70 de profondeur sur 236 cm** (trois écrans
+  de 27" = 190), le fauteuil qui se range dessous et se **centre sur la partie libre** du bureau quand on s'en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27" de 62 × 37 près du mur, un MacBook Pro 16 ouvert, puis un clavier nomade au bord du plateau, aux cotes réelles), et le lit **80 × 190** le long de la façade,
+  calé à droite (`position: "fin"`), **tête côté porte** : couché, les pieds vont vers les écrans, et le
+  plateau passe **au-dessus du pied du lit** sans être coupé (`bureaux_entiers`). Plus de lit pliant ni de
+  bureau de façade : le bouton **mobilier** ne dit plus que l'usage (rien, au bureau, couché).
 
 Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans `etudes/`
 et restent couvertes par les tests via `tests/fixtures/etude-v{1,2,3}.json`.

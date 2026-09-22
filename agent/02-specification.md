@@ -19,11 +19,15 @@
   258) : `dalle.murs[].type` vaut `grillage`, `palissade` ou `mur`. Un mur est un trait brun épais sur le
   plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
   travée (`palissade_travee_cm`) et entre eux un panneau de planches de `palissade_epaisseur_cm` à sommet
-  bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
+  bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » à trois états : translucide, pleine, absente) ;
   les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
-  bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « au bureau » et « lit
-  déplié » sont en murs coupés. Le bouton **mobilier** a six états : rien d'utilisé (fauteuil à moitié
+  bouton « murs » les laisse pleins, les **coupe net à 1 m**, les **voile** (translucides, `voile()`), **retire les faces D et C**
+  (chaque pièce de mur porte la lettre de sa face) ou les cache ; le bouton « toit » a le même état voilé, et le bouton « porte » un quatrième état (fermée et
+  voilée). La vue « au bureau » est en murs coupés, la vue « debout dedans » montre **tout l'abri voilé**,
+  à sa vraie hauteur, et la vue « dedans » regarde par le côté de la porte ouvert (sans les faces D et C, ni toit, ni palissade), assis au bureau.
+  Le lit se lit comme un **canapé** (gros coussins de dossier contre la façade) partout sauf dans la vue
+  « couché », où le couchage (drap, oreiller, plaque de taille) remplace les coussins. Le bouton **mobilier** a trois états (l'usage, le lit étant à demeure) : rien d'utilisé (fauteuil à moitié
   rentré), fauteuil au bureau, **lit v1** le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
   une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), **lit v2** en biais au fond, la tête côté porte (le fauteuil
   et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit), puis les **lits à demeure** de `lits_muraux`,
@@ -56,7 +60,7 @@ supprime tout plan de `site/assets/` qu'il ne produit plus) :
 | `variantes(p, g)` | formes d'abri possibles dans la zone utile, porte sur le côté avant : 1 rectangle en modules entiers, 2 plus grand rectangle, 3 rectangle pleine largeur, 4 et 5 coins coupés, 6 toute la zone, 7 rectangle à orientation libre, 8 plus grand quadrilatère, 9 à 11 trapèzes, 12 coin coupé au module, 13 trapèze pleine largeur aménagé par `disposition_trapeze` (porte, bureau en L, `sieges`, `lit_pliant`, `lit_pliant_2`) ; chaque forme porte ses `passages` (vraie distance à chaque mur du fond). L'option 13 à cotes imposées (`cotes_cm`) est l'abri |
 | `etudes/abri-v{1,2,3}.md` + `site/assets/etudes/v{1,2,3}/*.svg` | **études archivées, figées le 2026-09-22** (D40) : les trois formes qui ont précédé l'abri actuel, avec leurs plans et leurs tableaux comparés. Plus recalculées : leurs paramètres ne sont plus dans `params.json`. Leurs jeux de paramètres fusionnés servent de **fixtures de test** (`tests/fixtures/etude-v{1,2,3}.json`) pour garder couverts les cas à 4 murs, à angle aigu et à toit vers la droite |
 | `site/assets/modele-implantation.svg` | l'abri retenu **sur la dalle réelle** (côtés, angles, murs de propriété), toit et gouttière, distances aux bords de la dalle, passages derrière ; première image d'`abri.md` |
-| `site/assets/modele-{sol,toit,rehausse}.svg`, `modele-facade-{A,D,C,B,G}.svg` | **plans de l'abri** (option 13, `modele_trapeze`, D27) : plan de sol (murs 6 cm, ouvertures et chambranle, chaîne de cotes, cotes intérieures, bureau en L), toiture (panneaux dans le sens de la pente, rampant, gouttière, descente, pente), débit de la rehausse (pièces rangées dans les madriers, deux coins complémentaires partagent une coupe en biais), élévations vues de l'extérieur (panneaux, rehausse, porte avec cadre, fenêtres, hauteurs aux deux bouts) |
+| `site/assets/modele-{sol,toit,rehausse}.svg`, `modele-facade-{A,D,C,B,G}.svg` | **plans de l'abri** (option 13, `modele_trapeze`, D27) : plan de sol (murs 6 cm, ouvertures et chambranle, chaîne de cotes, cotes intérieures ; la disposition réellement retenue : s'il existe un lit à demeure (`lits_muraux`), c'est lui en violet plein, avec ses bureaux par-dessus son pied et ses sièges rangés, sinon le bureau en L et le lit pliant en pointillé), toiture (panneaux dans le sens de la pente, rampant, gouttière, descente, pente), débit de la rehausse (pièces rangées dans les madriers, deux coins complémentaires partagent une coupe en biais), élévations vues de l'extérieur (panneaux, rehausse, porte avec cadre, fenêtres, hauteurs aux deux bouts) |
 
 ## Formalités (`formalites(p, …)`)
 `reglementaire` (params) porte les deux seuils (5 puis 20 m²), la référence de l'article et
@@ -164,8 +168,9 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   `e / tan(angle / 2)` : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
-  panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** pour l'échelle, devant la porte ou à
-  60 cm du seuil dedans, sur le plancher. Les **options** sont une colonne de textes posée sur la vue, en
+  panneau (au-dessus des fenêtres), et une **silhouette de 1,85 m** (`TAILLE_PERSONNE`, sa taille écrite sur le
+  torse) pour l'échelle, devant la porte ou à 60 cm du seuil dedans, sur le plancher, dont l'épaisseur
+  réelle (`amenagement.plancher.epaisseur_cm`) est celle du modèle. Les **options** sont une colonne de textes posée sur la vue, en
   bas à gauche (icône, libellé fixe, autant de points que d'états, le point actif en bleu ; la pilule de
   verre n'apparaît qu'au survol) : toit, murs, porte, lit, personne, mobilier, repères, clôture. **Rendu** : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
   contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),
@@ -176,9 +181,11 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   Sur la vue, une **barre de caméra** fine et translucide (angle 15 à 110°, distance, les valeurs en petit
   sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
   et distance en JSON : c'est ainsi que Rémi transmet un point de vue à régler dans `VUES` ;
-  `window.abri_vue.placer({...})` rejoue un état copié). Sous les deux colonnes du résumé, **neuf vignettes** (`VUES` : jardin = vue de
-  départ, vue de droite, derrière avec le passage, puis six vues de l'intérieur sans toit qui
-  partagent une seule caméra (`DEDANS`) : côté porte, au bureau, lit v1, lit v2, lit v3, lit v4) : des rendus fixes tirés du même contexte WebGL (la scène prend les **états d'options** de la
+  `window.abri_vue.placer({...})` rejoue un état copié). Sous les deux colonnes du résumé, **huit vignettes** (`VUES` : jardin = vue de
+  départ, vue de droite, derrière avec le passage, puis trois vues de l'intérieur qui partagent la
+  caméra `DEDANS` (côté porte, au bureau, debout dedans), et deux qui partagent la caméra `OUVERT`
+  et les parois `PAROIS_OUVERTES` (sans toit, sans les faces D et C, sans palissade) : dedans, assis au
+  bureau, et couché) : des rendus fixes tirés du même contexte WebGL (la scène prend les **états d'options** de la
   vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
   mobilier, lit, repères, personne, clôture) ; un clic règle la caméra **et** les boutons ; la première
   vignette ramène à l'état de départ, comme le bouton reset ; « copier la vue » copie position, cible,

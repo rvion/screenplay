@@ -32,11 +32,15 @@ fond), infranchissables. <code>dalle_cm.grillages</code> nomme ceux fermés par 
 <li>: <code>dalle.murs[].type</code> vaut <code>grillage</code>, <code>palissade</code> ou <code>mur</code>. Un mur est un trait brun épais sur le
 plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
 travée (<code>palissade_travee_cm</code>) et entre eux un panneau de planches de <code>palissade_epaisseur_cm</code> à sommet
-bombé, dans le groupe <code>cloture</code>, <strong>translucide au départ</strong> (bouton « clôture » pour la rendre pleine) ;
+bombé, dans le groupe <code>cloture</code>, <strong>translucide au départ</strong> (bouton « clôture » à trois états : translucide, pleine, absente) ;
 les <strong>parois</strong> (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe <code>murs</code>
 et portent un fondu de coupe injecté dans leurs matériaux (<code>onBeforeCompile</code>, uniform <code>uCoupe</code>) : le
-bouton « murs » les laisse pleins, les <strong>coupe net à 1 m</strong> ou les cache ; les vues « au bureau » et « lit
-déplié » sont en murs coupés. Le bouton <strong>mobilier</strong> a six états : rien d&#39;utilisé (fauteuil à moitié
+bouton « murs » les laisse pleins, les <strong>coupe net à 1 m</strong>, les <strong>voile</strong> (translucides, <code>voile()</code>), <strong>retire les faces D et C</strong>
+(chaque pièce de mur porte la lettre de sa face) ou les cache ; le bouton « toit » a le même état voilé, et le bouton « porte » un quatrième état (fermée et
+voilée). La vue « au bureau » est en murs coupés, la vue « debout dedans » montre <strong>tout l&#39;abri voilé</strong>,
+à sa vraie hauteur, et la vue « dedans » regarde par le côté de la porte ouvert (sans les faces D et C, ni toit, ni palissade), assis au bureau.
+Le lit se lit comme un <strong>canapé</strong> (gros coussins de dossier contre la façade) partout sauf dans la vue
+« couché », où le couchage (drap, oreiller, plaque de taille) remplace les coussins. Le bouton <strong>mobilier</strong> a trois états (l&#39;usage, le lit étant à demeure) : rien d&#39;utilisé (fauteuil à moitié
 rentré), fauteuil au bureau, <strong>lit v1</strong> le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
 une plaque ; le fauteuil et le tabouret sont <strong>rangés sous les bureaux</strong>), <strong>lit v2</strong> en biais au fond, la tête côté porte (le fauteuil
 et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s&#39;il chevauche le lit), puis les <strong>lits à demeure</strong> de <code>lits_muraux</code>,
@@ -98,7 +102,7 @@ supprime tout plan de <code>site/assets/</code> qu&#39;il ne produit plus) :</p>
 </tr>
 <tr>
 <td><code>site/assets/modele-{sol,toit,rehausse}.svg</code>, <code>modele-facade-{A,D,C,B,G}.svg</code></td>
-<td><strong>plans de l&#39;abri</strong> (option 13, <code>modele_trapeze</code>, D27) : plan de sol (murs 6 cm, ouvertures et chambranle, chaîne de cotes, cotes intérieures, bureau en L), toiture (panneaux dans le sens de la pente, rampant, gouttière, descente, pente), débit de la rehausse (pièces rangées dans les madriers, deux coins complémentaires partagent une coupe en biais), élévations vues de l&#39;extérieur (panneaux, rehausse, porte avec cadre, fenêtres, hauteurs aux deux bouts)</td>
+<td><strong>plans de l&#39;abri</strong> (option 13, <code>modele_trapeze</code>, D27) : plan de sol (murs 6 cm, ouvertures et chambranle, chaîne de cotes, cotes intérieures ; la disposition réellement retenue : s&#39;il existe un lit à demeure (<code>lits_muraux</code>), c&#39;est lui en violet plein, avec ses bureaux par-dessus son pied et ses sièges rangés, sinon le bureau en L et le lit pliant en pointillé), toiture (panneaux dans le sens de la pente, rampant, gouttière, descente, pente), débit de la rehausse (pièces rangées dans les madriers, deux coins complémentaires partagent une coupe en biais), élévations vues de l&#39;extérieur (panneaux, rehausse, porte avec cadre, fenêtres, hauteurs aux deux bouts)</td>
 </tr>
 </tbody></table></div>
 <h2 id="formalités-formalitesp">Formalités (<code>formalites(p, …)</code>)</h2>
@@ -209,8 +213,9 @@ rehausse bois, <strong>coupes d&#39;onglet</strong> aux bouts des murs et de la 
 <code>e / tan(angle / 2)</code> : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
 nervuré dans le sens de la pente, gouttière sur chaque bord d&#39;égout, descente,
 bureaux, sièges, lit, <strong>étiquettes</strong> de panneaux sur plaque blanche à bord sombre en haut de chaque
-panneau (au-dessus des fenêtres), et une <strong>silhouette de 1,80 m</strong> pour l&#39;échelle, devant la porte ou à
-60 cm du seuil dedans, sur le plancher. Les <strong>options</strong> sont une colonne de textes posée sur la vue, en
+panneau (au-dessus des fenêtres), et une <strong>silhouette de 1,85 m</strong> (<code>TAILLE_PERSONNE</code>, sa taille écrite sur le
+torse) pour l&#39;échelle, devant la porte ou à 60 cm du seuil dedans, sur le plancher, dont l&#39;épaisseur
+réelle (<code>amenagement.plancher.epaisseur_cm</code>) est celle du modèle. Les <strong>options</strong> sont une colonne de textes posée sur la vue, en
 bas à gauche (icône, libellé fixe, autant de points que d&#39;états, le point actif en bleu ; la pilule de
 verre n&#39;apparaît qu&#39;au survol) : toit, murs, porte, lit, personne, mobilier, repères, clôture. <strong>Rendu</strong> : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
 contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),
@@ -221,9 +226,11 @@ personne a trois états (éteinte, dehors, dedans) marqués par trois points sou
 Sur la vue, une <strong>barre de caméra</strong> fine et translucide (angle 15 à 110°, distance, les valeurs en petit
 sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
 et distance en JSON : c&#39;est ainsi que Rémi transmet un point de vue à régler dans <code>VUES</code> ;
-<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>neuf vignettes</strong> (<code>VUES</code> : jardin = vue de
-départ, vue de droite, derrière avec le passage, puis six vues de l&#39;intérieur sans toit qui
-partagent une seule caméra (<code>DEDANS</code>) : côté porte, au bureau, lit v1, lit v2, lit v3, lit v4) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
+<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>huit vignettes</strong> (<code>VUES</code> : jardin = vue de
+départ, vue de droite, derrière avec le passage, puis trois vues de l&#39;intérieur qui partagent la
+caméra <code>DEDANS</code> (côté porte, au bureau, debout dedans), et deux qui partagent la caméra <code>OUVERT</code>
+et les parois <code>PAROIS_OUVERTES</code> (sans toit, sans les faces D et C, sans palissade) : dedans, assis au
+bureau, et couché) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
 vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
 mobilier, lit, repères, personne, clôture) ; un clic règle la caméra <strong>et</strong> les boutons ; la première
 vignette ramène à l&#39;état de départ, comme le bouton reset ; « copier la vue » copie position, cible,

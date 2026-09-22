@@ -558,3 +558,34 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 `params.json`, un point au bouton et une vignette. *Garde :* `tests/abri3d.mjs` mesure chaque lit (caché au
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l'entrée v4. *Remplace* le
 mécanisme de D46 (la variante v3 reste).
+
+## D49 — Lit 80 x 190 à demeure en façade, sous le seuil
+Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27". Les deux veulent un mur
+long, et aucun mur libre ne prenait un lit de 190 : la façade faisait 188 dedans. Cette branche cherche
+la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écrans couché, rien de
+lumineux au-dessus des écrans) **sans formalité**.
+
+Retenu : **façade 210, droite 178, fond 140, gauche 248**, pan à 45° conservé (A − B = G − D) et long de
+**99 cm**, donc un seul panneau sans bande, emprise **4,96 m²**, donc **aucune formalité**. Le déclic est
+la largeur du lit : un **80 × 190** au lieu d'un 90 s'arrête avant la baie de la porte. Le mur droit de
+178 recule la porte : la baie est **entièrement dégagée**, même avec une porte de 80 de stock. Le lit est
+calé à droite, **tête contre le mur de la porte** : couché, les pieds vont vers le bureau gauche et ses
+écrans. Le bureau gauche fait **70 de profondeur sur 236 cm** (trois écrans = 190) et son plateau (72 cm)
+court **au-dessus du pied du lit** (55 cm) sans être coupé (`bureaux_entiers`). Passage derrière 50,4 et 66,8 cm. Matériaux 2 861 €.
+
+*Ce que ça coûte :* intérieur 4,45 m² au lieu de 4,48, puisque le lit ne se replie plus ; un troisième
+panneau de toit (bande de 10). *Le plancher isolé est passé de 6 à 10 cm* (60 mm de PIR, OSB 22,
+revêtement) : la hauteur sous plafond tombe à 2,05 m au plus bas, et la 3D le montre à l'échelle.
+*Autres réglages :* silhouette à **1,85 m** avec sa taille écrite sur le corps, descente d'eau au **coin
+arrière gauche** (le point le plus reculé), bureau gauche à **70** de profondeur, et plus de tablette au
+fond. *Ce qui a été retiré :* les lits pliants v1 et v2, le lit v4 sur le mur gauche, le bureau de façade et la
+tablette du fond. Il ne reste qu'une disposition : un bureau, un fauteuil, un lit (le tabouret aussi est retiré, le lit sert d'assise d'appoint). Le bouton mobilier ne dit plus que
+l'usage (rien, au bureau, couché) et l'allège des fenêtres passe à 115 pour dégager les écrans.
+
+*Mécanismes ajoutés :* `position: "fin"` (lit calé à l'autre bout de son mur), `bureaux_entiers` (un
+plateau qui passe au-dessus du pied du lit n'est pas coupé), `sieges_decalage_cm`, et la règle de rangement
+qui garde le dossier d'un fauteuil hors du plateau. *Gardes :* `tests/abri3d.mjs` mesure, pour chaque lit à
+demeure, la baie de porte qui reste (55 cm minimum), refuse toute pièce DANS le lit (un plateau au-dessus
+est permis) et toute pièce de siège qui traverse un plateau. *État :* essayé sur la
+branche `test-bed-front-head-right`, **retenu par Rémi le 2026-09-22** : fusionné dans `main` et publié.
+La liste des changements est dans `changelog.md`.

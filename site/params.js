@@ -18,7 +18,7 @@ window.SHED_PARAMS = {
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
         "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
         "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
-        "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
+        "**Un bureau, un lit.** Le bureau court sur tout le mur gauche ({gauche_cm} cm, trois écrans de 27\"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau."
       ],
       "limites": [
         "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).",
@@ -30,6 +30,7 @@ window.SHED_PARAMS = {
       ],
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
+        "Porte : le bloc intérieur de 73 (160 €), un bloc de service extérieur plein de 80 (199 €), ou une porte de service vitrée de 70 (482 €) ?",
         "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
@@ -88,7 +89,7 @@ window.SHED_PARAMS = {
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
-    "porte_largeur_cm": 80,
+    "porte_largeur_cm": 73,
     "porte_chambranle_cm": 5,
     "porte_marge_cm": 5,
     "toit": {
@@ -101,7 +102,7 @@ window.SHED_PARAMS = {
         "gauche": 0,
         "droite": 0
       },
-      "descente": "droite",
+      "descente": "gauche",
       "panne_intermediaire": false
     },
     "rehausse_section_mm": [
@@ -111,37 +112,15 @@ window.SHED_PARAMS = {
     "bureaux": [
       {
         "cote": "gauche",
-        "profondeur_cm": 60
-      },
-      {
-        "cote": "avant",
-        "profondeur_cm": 50
+        "profondeur_cm": 70
       }
     ],
-    "lit_pliant": {
-      "largeur_cm": 70,
-      "longueur_cm": 190,
-      "contre": "",
-      "epaisseur_replie_cm": 10,
-      "acces_porte_cm": 0,
-      "sous_bureau": true,
-      "pied_sous": "avant",
-      "pres_de": "droite",
-      "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)"
-    },
     "sieges": [
       {
         "type": "fauteuil de bureau",
         "largeur_cm": 70,
         "profondeur_cm": 70,
         "contre": "gauche",
-        "position": "centre"
-      },
-      {
-        "type": "tabouret",
-        "largeur_cm": 30,
-        "profondeur_cm": 30,
-        "contre": "avant",
         "position": "centre"
       }
     ],
@@ -150,7 +129,7 @@ window.SHED_PARAMS = {
         "cote": "avant",
         "largeur_cm": 80,
         "hauteur_cm": 75,
-        "allege_cm": 110,
+        "allege_cm": 115,
         "position": 10,
         "ouvrant": true
       },
@@ -158,52 +137,41 @@ window.SHED_PARAMS = {
         "cote": "avant",
         "largeur_cm": 80,
         "hauteur_cm": 75,
-        "allege_cm": 110,
+        "allege_cm": 115,
         "position": 110,
         "ouvrant": true
       }
     ],
     "cotes_cm": {
-      "avant": 200,
-      "droite": 175,
-      "gauche": 275,
-      "fond": 100
+      "avant": 210,
+      "droite": 178,
+      "gauche": 248,
+      "fond": 140
     },
     "porte_vitree": false,
-    "lit_pliant_2": {
-      "pied_sous": "",
-      "pres_de": "fond en biais",
-      "parallele_a": "fond en biais",
-      "sieges_ranges": true,
-      "_comment": "seconde position, en biais au fond : le lit est parallele au pan a 45 degres et au plus pres de lui ; les sieges sont ranges (leur gene ne compte pas), le fauteuil pousse vers le bureau de facade"
-    },
     "panneaux_depuis_la_fin": [
       "droite"
     ],
     "lits_muraux": [
       {
-        "nom": "v3",
+        "nom": "lit",
         "contre": "avant",
-        "largeur_cm": 70,
-        "longueur_cm": 180,
-        "tete": "gauche",
-        "bureaux": [
-          "gauche"
-        ]
-      },
-      {
-        "nom": "v4",
-        "contre": "gauche",
-        "largeur_cm": 90,
+        "largeur_cm": 80,
         "longueur_cm": 190,
-        "tete": "fond",
+        "tete": "droite",
         "bureaux": [
-          "avant",
           "gauche"
+        ],
+        "position": "fin",
+        "bureaux_entiers": true,
+        "sieges_decalage_cm": [
+          0,
+          -20
         ]
       }
     ],
-    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (le coin du mur precedent : gauche = coin du fond) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, chacun reduit au plus grand morceau hors du lit ; les sieges sont ranges sous eux, hors du lit. v3 : lit 70 x 180 en facade (188 dedans), bureau d'angle au fond. v4 : lit 90 x 190 sur le mur gauche, tete au fond, bureau en L devant (facade + retour jusqu'au pied du lit)"
+    "_comment_lits_muraux": "le lit de l'abri, pose a demeure contre le mur `contre` et cale a l'autre bout (position 'fin') ; tete = cote de l'oreiller ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges se rangent dessous, jamais sur le lit. Ici : lit 80 x 190 le long de la facade (198 dedans), tete contre le mur de la porte, pieds vers le bureau gauche et ses ecrans",
+    "porte_hauteur_cm": 204
   },
   "formes_etudiees": [
     {
@@ -278,9 +246,9 @@ window.SHED_PARAMS = {
   "amenagement": {
     "plancher": {
       "actif": true,
-      "epaisseur_cm": 6,
+      "epaisseur_cm": 10,
       "prix_m2_eur": 45,
-      "description": "plancher isole : lambourdes + 40 mm d'isolant + OSB + sol vinyle/parquet"
+      "description": "plancher isole sur la dalle : 60 mm de PIR entre lambourdes, OSB 22 mm, revetement 5 mm (10 cm au total, pris sur la hauteur sous plafond)"
     }
   },
   "prix_materiaux_eur_ttc": {
@@ -412,10 +380,10 @@ window.SHED_PARAMS = {
       "note": "750 ml : de 7,90 a 9,90 EUR"
     },
     "porte_pleine_u": {
-      "pu": 199,
+      "pu": 160,
       "unite": "u",
-      "source": "https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/",
-      "note": "bloc-porte de service PVC plein 205 x 80 avec dormant, serrure 5 points, Ud 1,6. Les tailles standard sont 205 ou 215 x 80 ou 90 ; 100 de large n'existe pas en standard."
+      "source": "https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html",
+      "note": "bloc-porte fin de chantier Artens Lia 204 x 73 (Leroy Merlin, 160 EUR) : reservation 79,3 x 207,6, contenue par le cadre bois. C'est une porte INTERIEURE (ame alveolaire, sans isolation ni etancheite) : la proteger par le debord et un seuil. En porte de service EXTERIEURE : PVC plein 205 x 80 a 199 EUR (Brico Depot), ou sur fenetre24 le modele Nice 200 x 70 vitre, serrure 3 points, profile 70 mm, a 482 EUR hors livraison. Le lit de 80 laisse 75 cm de baie libres meme avec une porte de 80"
     },
     "porte_vitree_u": {
       "pu": 900,

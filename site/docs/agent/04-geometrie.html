@@ -43,9 +43,9 @@ de propriété, infranchissables. <code>grillages = [gauche, arriere_gauche]</co
 Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la forme et chaque mur du fond
 (<code>v.passages</code>, extrémités du mur comprises), visée : <code>passage_souhaite_cm</code>.</p>
 <h2 id="l39abri--option-13-à-cotes-imposées-modele_trapeze">L&#39;abri : option 13 à cotes imposées (<code>modele_trapeze</code>)</h2>
-<p><code>disposition_trapeze.cotes_cm</code> impose façade 200, droite 175, gauche 275 et un mur du fond de 100
+<p><code>disposition_trapeze.cotes_cm</code> impose façade 210, droite 178, gauche 248 et un mur du fond de 140
 d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Contour :
-<code>(10,10) → (210,10) → (210,185) → (110,285) → (10,285)</code> : 10 cm de dalle à gauche et devant.</p>
+<code>(10,10) → (220,10) → (220,188) → (150,258) → (10,258)</code> : 10 cm de dalle à gauche et devant, 42 à droite.</p>
 <div class="doc-table"><table>
 <thead>
 <tr>
@@ -57,57 +57,58 @@ d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mu
 </thead>
 <tbody><tr>
 <td>A façade</td>
-<td>200</td>
+<td>210</td>
 <td>237,5 → 237,5</td>
-<td>100 + 100</td>
+<td>100 + 100 + 10</td>
 </tr>
 <tr>
 <td>D droite</td>
-<td>175</td>
-<td>237,5 → 223,2</td>
-<td>75 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
+<td>178</td>
+<td>237,5 → 221,4</td>
+<td>78 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
 </tr>
 <tr>
 <td>C pan à 45°</td>
-<td>141,4</td>
-<td>223,2 → 215</td>
-<td>100 + 41,4</td>
+<td>99</td>
+<td>221,4 → 215</td>
+<td>99 (un seul panneau, aucune bande)</td>
 </tr>
 <tr>
 <td>B fond</td>
-<td>100</td>
+<td>140</td>
 <td>215 → 215</td>
-<td>100</td>
+<td>100 + 40</td>
 </tr>
 <tr>
 <td>G gauche</td>
-<td>275</td>
+<td>248</td>
 <td>215 → 237,5</td>
-<td>100 + 100 + 75</td>
+<td>100 + 100 + 48</td>
 </tr>
 </tbody></table></div>
 <ul>
-<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>5,00 m²</strong> (au seuil), intérieur 4,48 m², sol libre
-hors bureaux 2,26 m². Passage derrière : 57,8 cm au grand pan, 40,3 cm au petit pan. Espace
-caché derrière l&#39;abri 1,74 m². <strong>10 panneaux de mur</strong> de 100 × 215 à commander.</li>
-<li><strong>Toit plan vers le fond</strong> (<code>toit.sens = &quot;arriere&quot;</code>) : <code>h(y) = H + c·(1 − (y − y0)/D)</code>, <code>H</code> = 215,
-<code>c</code> = 22,5, <code>D</code> = profondeur 275 ⇒ pente <strong>8,2 %</strong> (4,68°), portée 2,75 m (panne intermédiaire
-prévue, <code>toit.panne_intermediaire</code>). Débords 5 devant et derrière, 0 sur les côtés : <strong>2 panneaux
-de toit</strong> 100 × 286, dont un coupé en biais ; 5,22 m² couverts.</li>
-<li><strong>Rehausse</strong> (madrier 75 × 225) : R1 façade 22,5 → 22,5, R2 droite 22,5 → 8,2, R3 pan 8,2 → 0,
-R4 gauche 0 → 22,5 ; rien sur le fond. <strong>2 madriers</strong> de 450.</li>
-<li><strong>Gouttière</strong> derrière l&#39;abri, 240,6 cm en deux tronçons (C 138,5 + B 102,1) : les nervures du
-toit mènent l&#39;eau aux bouts arrière des panneaux. Descente au bout droit (<code>toit.descente</code>), à
-l&#39;entrée du passage.</li>
-<li><strong>Porte</strong> pleine 80 × 205 sur D, de 82,5 à 162,5 depuis la façade, chambranle 5 : le cadre tient
-dans le module entier du fond. <strong>Fenêtres</strong> 80 × 75 de stock, oscillo-battantes, allège 110, en façade : de 10 à 90
-et de 110 à 190.</li>
-<li><strong>Mobilier</strong> : bureau en L (gauche et façade), fauteuil et tabouret, lit pliant 70 × 190 posé au sol
-libre le long du mur de la porte, pied sous le bureau de façade ; seconde position en biais au fond
-(<code>lit_pliant_2</code>) ; lits à demeure (<code>lits_muraux</code>) : v3, lit 70 × 180 le long du mur avant (188 dedans : un 190 n&#39;y
-tient pas), plus de bureau de façade, le bureau gauche arrêté au lit en bureau d&#39;angle ; v4, lit 90 × 190
-contre le mur gauche (263 dedans), tête au fond, bureau en L devant : façade 188 × 50 plus un retour de
-60 × 73 jusqu&#39;au pied du lit, fauteuil rangé sous la façade à droite du lit, tabouret dans le coin du L.</li>
+<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,96 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m²),
+intérieur 4,45 m², sol libre hors bureau et lit 2,16 m². Cotes intérieures : façade <strong>198</strong>,
+droite 169,5, pan 94, fond 131,5, gauche 236. Passage derrière : 50,4 cm au grand pan, 66,8 au
+petit pan. Matériaux 2 861 € TTC.</li>
+<li><strong>Le plancher isolé prend 10 cm</strong> (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
+la hauteur sous plafond tombe à <strong>2,05 m au plus bas et 2,28 m en façade</strong>, et c&#39;est cette hauteur
+que montre le modèle 3D.</li>
+<li><strong>La façade de 198 dedans porte le lit</strong> : 190 de long, donc 8 cm de jeu pour le cadre.</li>
+<li><strong>Le mur droit de 178 dégage la porte</strong> : la baie est <strong>entièrement libre</strong>, même avec une porte
+de 80, parce que le lit (80 de profondeur) s&#39;arrête avant elle.</li>
+<li><strong>Toit plan vers le fond</strong> : <code>H</code> = 215, <code>c</code> = 22,5, <code>D</code> = 248 ⇒ pente <strong>9,1 %</strong> (5,18°), portée 2,48 m.
+<strong>3 panneaux de toit</strong> (100 × 259, 100 × 259 en biais, bande de 10 × 201 en biais).</li>
+<li><strong>Rehausse</strong> (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.</li>
+<li><strong>Gouttière</strong> derrière l&#39;abri, sur le pan C et le fond B ; <strong>descente au coin arrière gauche</strong>
+(angle G/B, <code>toit.descente = &quot;gauche&quot;</code>), le point le plus reculé : l&#39;eau part de là.</li>
+<li><strong>Porte</strong> pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
+<strong>Fenêtres</strong> 80 × 75 de stock, oscillo-battantes, allège 110, en façade.</li>
+<li><strong>Mobilier, une seule disposition</strong> : le bureau gauche <strong>70 de profondeur sur 236 cm</strong> (trois écrans
+de 27&quot; = 190), le fauteuil qui se range dessous et se <strong>centre sur la partie libre</strong> du bureau quand on s&#39;en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27&quot; de 62 × 37 près du mur, un MacBook Pro 16 ouvert, puis un clavier nomade au bord du plateau, aux cotes réelles), et le lit <strong>80 × 190</strong> le long de la façade,
+calé à droite (<code>position: &quot;fin&quot;</code>), <strong>tête côté porte</strong> : couché, les pieds vont vers les écrans, et le
+plateau passe <strong>au-dessus du pied du lit</strong> sans être coupé (<code>bureaux_entiers</code>). Plus de lit pliant ni de
+bureau de façade : le bouton <strong>mobilier</strong> ne dit plus que l&#39;usage (rien, au bureau, couché).</li>
 </ul>
 <p>Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans <code>etudes/</code>
 et restent couvertes par les tests via <code>tests/fixtures/etude-v{1,2,3}.json</code>.</p>

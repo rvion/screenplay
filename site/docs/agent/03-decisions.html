@@ -518,6 +518,33 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 <code>params.json</code>, un point au bouton et une vignette. <em>Garde :</em> <code>tests/abri3d.mjs</code> mesure chaque lit (caché au
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l&#39;entrée v4. <em>Remplace</em> le
 mécanisme de D46 (la variante v3 reste).</p>
+<h2 id="d49--lit-80-x-190-à-demeure-en-façade-sous-le-seuil">D49 — Lit 80 x 190 à demeure en façade, sous le seuil</h2>
+<p>Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27&quot;. Les deux veulent un mur
+long, et aucun mur libre ne prenait un lit de 190 : la façade faisait 188 dedans. Cette branche cherche
+la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écrans couché, rien de
+lumineux au-dessus des écrans) <strong>sans formalité</strong>.</p>
+<p>Retenu : <strong>façade 210, droite 178, fond 140, gauche 248</strong>, pan à 45° conservé (A − B = G − D) et long de
+<strong>99 cm</strong>, donc un seul panneau sans bande, emprise <strong>4,96 m²</strong>, donc <strong>aucune formalité</strong>. Le déclic est
+la largeur du lit : un <strong>80 × 190</strong> au lieu d&#39;un 90 s&#39;arrête avant la baie de la porte. Le mur droit de
+178 recule la porte : la baie est <strong>entièrement dégagée</strong>, même avec une porte de 80 de stock. Le lit est
+calé à droite, <strong>tête contre le mur de la porte</strong> : couché, les pieds vont vers le bureau gauche et ses
+écrans. Le bureau gauche fait <strong>70 de profondeur sur 236 cm</strong> (trois écrans = 190) et son plateau (72 cm)
+court <strong>au-dessus du pied du lit</strong> (55 cm) sans être coupé (<code>bureaux_entiers</code>). Passage derrière 50,4 et 66,8 cm. Matériaux 2 861 €.</p>
+<p><em>Ce que ça coûte :</em> intérieur 4,45 m² au lieu de 4,48, puisque le lit ne se replie plus ; un troisième
+panneau de toit (bande de 10). <em>Le plancher isolé est passé de 6 à 10 cm</em> (60 mm de PIR, OSB 22,
+revêtement) : la hauteur sous plafond tombe à 2,05 m au plus bas, et la 3D le montre à l&#39;échelle.
+<em>Autres réglages :</em> silhouette à <strong>1,85 m</strong> avec sa taille écrite sur le corps, descente d&#39;eau au <strong>coin
+arrière gauche</strong> (le point le plus reculé), bureau gauche à <strong>70</strong> de profondeur, et plus de tablette au
+fond. <em>Ce qui a été retiré :</em> les lits pliants v1 et v2, le lit v4 sur le mur gauche, le bureau de façade et la
+tablette du fond. Il ne reste qu&#39;une disposition : un bureau, un fauteuil, un lit (le tabouret aussi est retiré, le lit sert d&#39;assise d&#39;appoint). Le bouton mobilier ne dit plus que
+l&#39;usage (rien, au bureau, couché) et l&#39;allège des fenêtres passe à 115 pour dégager les écrans.</p>
+<p><em>Mécanismes ajoutés :</em> <code>position: &quot;fin&quot;</code> (lit calé à l&#39;autre bout de son mur), <code>bureaux_entiers</code> (un
+plateau qui passe au-dessus du pied du lit n&#39;est pas coupé), <code>sieges_decalage_cm</code>, et la règle de rangement
+qui garde le dossier d&#39;un fauteuil hors du plateau. <em>Gardes :</em> <code>tests/abri3d.mjs</code> mesure, pour chaque lit à
+demeure, la baie de porte qui reste (55 cm minimum), refuse toute pièce DANS le lit (un plateau au-dessus
+est permis) et toute pièce de siège qui traverse un plateau. <em>État :</em> essayé sur la
+branche <code>test-bed-front-head-right</code>, <strong>retenu par Rémi le 2026-09-22</strong> : fusionné dans <code>main</code> et publié.
+La liste des changements est dans <code>changelog.md</code>.</p>
 </main>
 </body>
 </html>

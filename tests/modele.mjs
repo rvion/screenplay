@@ -138,7 +138,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(v2.fenetres.length === 2 && v2.fenetres.every((f) => f.tient !== false), "v2 : deux fenetres qui tiennent en facade");
   // porte pleine : ni vitrage dans le dos des ecrans, ni vue depuis l'etage des voisins
   ok(v2.porte.vitree === false && v.porte.vitree === true, "v2 : porte pleine (la v1 garde sa porte vitree)");
-  ok(m2.budget.lignes.some((l) => /^Porte de service pleine/.test(l.poste) && l.pu_eur === base.prix_materiaux_eur_ttc.porte_pleine_u.pu) && !m2.budget.lignes.some((l) => /vitrée/.test(l.poste)), "v2 : budget = porte pleine, plus de porte vitree");
+  ok(m2.budget.lignes.some((l) => /^Bloc-porte plein/.test(l.poste) && l.pu_eur === base.prix_materiaux_eur_ttc.porte_pleine_u.pu) && !m2.budget.lignes.some((l) => /vitrée/.test(l.poste)), "v2 : budget = porte pleine, plus de porte vitree");
   ok(c2.svg["modele-facade-D"].includes("porte pleine") && !core.svg["modele-facade-D"].includes("porte pleine"), "v2 : facade D dessine une porte pleine");
   // espace cache derriere l'abri. A la main, dalle au-dela de la droite (10,301)-(210,201), x <= 210 :
   // sommets (0,306) (210,201) (210,271.2) (72.7,398.3) (0,324) -> 1,90 m2 ; pointe a 115 cm du mur du fond
@@ -201,28 +201,29 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
 // l'abri : deux fenetres de stock identiques, 80 x 75 oscillo-battantes, allege 110
 {
   const f = buildCore(actuel).variantes.find((x) => x.id === 13).fenetres;
-  ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 110 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 110");
+  ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
 // abri actuel : l'etude v3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)
 {
   const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
-  ok(JSON.stringify(v4.polygone) === JSON.stringify(v3.polygone) && v4.aire_interieure_m2 === v3.aire_interieure_m2, "v4 : meme forme et meme interieur que la v3");
+  // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
+  ok(v4.cotes_interieures_cm[0] === 198 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([210, 178, 99, 140, 248]) && v4.aire_interieure_m2 === 4.45 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.96, 0.005) && m4.faces[2].panneaux.length === 1, "abri : facade 210 (198 dedans, un lit de 190 tient), fond 140 pour que le pan a 45 deg fasse 99 cm, soit UN panneau sans bande, emprise 4,96 m2 donc aucune formalite");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22,5 sur 275 de profondeur : facade 237,5 ; au haut du mur droit (175) 215 + 22,5 x 100 / 275 = 223,2 ; fond 215
+  // a la main, chute 22,5 sur 248 de profondeur : facade 237,5 ; au haut du mur droit (178) 215 + 22,5 x 70 / 248 = 221,4 ; fond 215
   ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
-  ok(near(L.D.hauteur_fin_cm, 223.2, 0.06) && near(L.C.hauteur_debut_cm, 223.2, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 223,2, pan 223,2 -> 215, fond a 215");
-  ok(near(m4.pente.pourcent, 8.2, 0.06) && near(m4.portee_cm, 275), "v4 : pente 22,5 / 275 = 8,2 %, portee 2,75 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  ok(near(L.D.hauteur_fin_cm, 221.4, 0.06) && near(L.C.hauteur_debut_cm, 221.4, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,4, pan 221,4 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 9.1, 0.06) && near(m4.portee_cm, 248), "v4 : pente 22,5 / 248 = 9,1 %, portee 2,48 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);
-  ok(m4.toit.gouttiere.descente[0] === Math.max(...bouts.map((z) => z[0])), "v4 : descente au bout droit de la gouttiere (" + m4.toit.gouttiere.descente + ")");
-  ok(m4.toit.panneaux.length === 2 && m4.toit.panneaux.every((t) => near(t.largeur_cm, 100)) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit de 100, un seul coupe en biais");
+  ok(m4.toit.gouttiere.descente[0] === Math.min(...bouts.map((z) => z[0])), "v4 : descente au bout gauche de la gouttiere, coin G/B (" + m4.toit.gouttiere.descente + ")");
+  ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 10) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 10), deux coupes en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const page4 = abri_md(p4, c4);
   ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme") && page4.includes("**Q1**"), "abri.md : tous les {champs} remplaces, points forts, questions et idees en fin de page");
-  ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("à l'entrée du passage"), "abri.md : gouttiere derriere en 2 troncons, descente a l'entree du passage");
+  ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("au coin arrière gauche"), "abri.md : gouttiere derriere en 2 troncons, descente au coin arriere gauche");
   ok(!/version \d|abri_v\d/i.test(page4), "abri.md : aucun numero de version, l'abri actuel n'en a pas");
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
 }
