@@ -1,5 +1,8 @@
 # Backlog & questions ouvertes
 
+Seulement ce qui reste ouvert sur l'abri actuel (`params.json`, `04-geometrie.md`). Ce qui est tranché
+vit dans `03-decisions.md`, l'historique dans git.
+
 ## À trancher avec l'utilisateur
 - [ ] **Devis de panneaux** (D36) : prix relevés en ligne le 2026-09-22, avec leur source. Restent
       « à confirmer » les panneaux (les vendeurs les moins chers imposent 100 m² ou un paquet
@@ -8,81 +11,42 @@
 - [ ] **Fenêtres : 80 × 80 sur mesure, ou 80 × 75 de stock ?** Le 80 de large × 75 de haut existe en
       stock à 119 €, sans délai ; le 80 × 80 se fait sur mesure (environ 155 €, 4 à 5 semaines).
 - [ ] **Rehausse** : le 75 × 225 n'existe en stock qu'en classe 2. Prendre du 70 × 220 classe 4 (la
-      chute passe de 22,5 à 22 cm) ou protéger un classe 2 par la bavette ?
+      chute passe de 22,5 à 22 cm) ou protéger un classe 2 par la bavette (larmier) ?
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
       lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
       navigateur, pas encore par l'œil de Rémi.
-- [ ] **Panne à mi-profondeur** (D34) : avec le toit vers le fond la portée est de 2,75 m. Ajouter au
-      modèle, aux plans et au budget un bois en travers (2 m, mur gauche à mur droit) ? Et confirmer
-      la pente de 8,2 % chez le fabricant.
-- [x] **Sens du toit** : tranché le 2026-09-22, vers le fond (D34). Était : version 3 ou version 4 ? (D31) La v4 a une
-      façade de niveau et la gouttière cachée derrière ; elle coûte une portée de 3 m, une pente de
-      7,5 % et une descente à l'entrée du passage. Passage de la v3 et de la v4 : 57,8 cm.
-- [ ] **Abri : version 3 ?** (D30, D32) `abri-v3.md` : cinq murs, pan à 45°, plus d'angle aigu, 5,00 m²
-      de murs (sans formalité), 4,48 m² intérieur, passage 57,8 cm, rangement caché 1,74 m².
-- [ ] **Abri : version 1 ou version 2** (D28). `abri-v2.md` compare les deux : la v2 est au seuil
-      de 5 m², en panneaux entiers sur 3 faces, toit vers le jardin (portée 2 m) ; elle perd 0,35 m²
-      d'intérieur et le lit rabattable contre le fond. On peut aussi ne prendre que certains points.
-- [ ] **Toit de l'abri retenu** (D27) : sens (vers l'arrière par défaut) et chute (30 cm par défaut,
-      5,5° ; madrier 75 × 300 à trouver en classe 4, sinon deux pièces superposées).
-- [ ] **Débit, achats, budget et 3D** suivent encore le rectangle 200 × 240 : les porter sur
-      `modele_trapeze` (plan : `tmp/20260919-224925-modele-trapeze.md`).
-- [ ] **Bande de 18 cm** en façade (A3) et bande T3 de 18 cm au toit : acceptables, ou décaler les
-      modules ?
-- [ ] **Forme de l'abri dans la zone utile** : 13 options dessinées (`site/assets/variante-{1..13}.svg`,
-      section « Formes » du site, résumé dans `variantes.md`). Recommandations : option 12 (coin
-      coupé au module, sous le seuil, murs gauche et fond en panneaux entiers), option 5 (coin
-      coupé, 5,94 m², avec déclaration) ou option 1 (200 × 200, le plus simple). Le choix remplace l'emprise rectangulaire actuelle.
-- [ ] **Profondeur de l'abri contre passage arrière** (D26) : 200 × 240 ⇒ bande de 27 cm, on ne
-      passe pas. 200 × 215 ⇒ 45 cm (mais un module de 15 cm sur D et G). 200 × 200 ⇒ 56 cm, 4 faces
-      en panneaux entiers, 4,0 m². À trancher ; le site montre la bande en direct.
-- [ ] **Fenêtre fixe de la face G** : elle regarde le mur de propriété à 2 cm. La déplacer
-      (module A1 côté jardin, ou face B vers l'arrière) ou la supprimer.
-- [ ] **Mur de propriété** (grand pan de 258) : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage fait 1 m (`grillage_hauteur_cm`). S'il dépasse
-      215 cm, le débord de toit arrière doit aussi dégager le mur.
+- [ ] **Toit : portée et pente** (D34) : portée 2,75 m, pente 8,2 % (4,7°, sous les 5° usuels).
+      Confirmer les deux dans le tableau du fabricant pour du 60 mm (charge neige et vent).
+- [ ] **Panne à mi-profondeur** : comptée aux matériaux et au guide de montage, pas encore dessinée
+      (plans, élévations, 3D).
+- [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
+      fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
 - [ ] **Formalités** : l'emprise au sol est celle des murs, débords de toiture exclus (R*420-1,
       D29). Reste à vérifier en mairie : secteur protégé / abords MH (déclaration préalable même
       sous 5 m²) et la distance aux limites du PLU.
-- [ ] **Portée du toit** ≈ 2,6 m en 60 mm sans panne : confirmer dans le tableau de portées du
-      fabricant (charge neige/vent), sinon ajouter une panne intermédiaire.
-- [ ] **Pente** : 22,5 cm (≈ 9,4 %, 5,4°). Vérifier la mini exacte du fabricant de panneaux toiture.
-- [ ] **Hauteur des murs** réelle souhaitée (hypothèse 215 arrière / 240 avant).
-- [ ] **Bloc-porte** : confirmer chez le menuisier un bloc 100 × 215 dormant compris (vantail ~90),
-      sens de charnière.
-- [ ] **Madrier 75 × 225** : vérifier la disponibilité en classe 4 (sinon 63 × 225 ou traitement
-      sur place) et le larmier qui le couvre à l'extérieur.
-- [ ] **Exposition** : orienter la fenêtre ouvrante et le store selon le soleil réel (sud/ouest).
+- [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237,5 en façade).
+- [ ] **Porte pleine 80 × 205** : confirmer chez le menuisier (bloc-porte, sens d'ouverture).
+- [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).
 - [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
 - [ ] **Âme** : PIR vs laine de roche.
-- [ ] Besoin **électricité / chauffage / plancher** à intégrer (bureau) ?
+
+## Défauts connus
+- [ ] `abri.md` écrit « portée … sans panne : à confirmer » même quand `toit.panne_intermediaire`
+      est vrai : la phrase doit citer la portée ramenée par la panne.
+- [ ] **`file://`** : Chrome bloque le module `abri.js` chargé depuis `file://` (CORS sur les
+      scripts de type module) ; la page ne se remplit que servie en http (`npm run site`, Pages).
+      La règle d'or 5 ne tient donc pas dans Chrome : passer le bundle en script classique, ou
+      retirer la promesse.
 
 ## Améliorations possibles (non bloquantes)
 - [ ] Élévations : cotes des joints de panneaux et de la porte plus détaillées.
 - [ ] Débit : tenir compte des recouvrements de nervure réels (perte de largeur utile).
 - [ ] Bilan thermique chiffré (vitrages, ponts thermiques, rehausse bois).
-- [ ] Export PDF imprimable du cahier (via le site, `@media print`).
-- [ ] Vérifier le rendu 3D dans un vrai navigateur (non validé dans l'environnement de build).
 - [ ] Renommer la branche par défaut (`claude/garden-shed-docs-n7eq2b` → `main`) et mettre à jour
-      `pages.yml` (aucune branche `main`/`master` n'existe aujourd'hui).
-
-## Fait (2026-09-19)
-- [x] **Dalle relevée au mètre** (262 / 223 / 324 / 104 / 258) et réglable sur le site (D24, D25).
-
-## Fait (2026-09-06, simplification)
-- [x] **Rectangle 4 faces** au lieu du pentagone à coin coupé ; dalle réelle conservée en
-      `dalle_cm` pour calculer le débord. Emprise finale **200 × 240** (D21).
-- [x] **Rehausse** : murs rectangulaires + 1 bande coupée en diagonale (2 triangles) + 1 bandeau ;
-      plan de coupe SVG dédié ; joints dessinés en 3D et sur les élévations.
-- [x] **Rehausse bois + 2 fenêtres + aménagement chiffré** (D23).
-- [x] **Porte + liste `fenetres[]`** (une fenêtre face D par défaut, D20) ; contrôles réduits ;
-      montage en 6 étapes ; épaisseur fixée à 60 mm autoportant ; prix médians 2026 + livraison.
-- [x] Ouvertures paramétriques, 3D enrichie, budget + fournisseurs, éditeur interactif, port TS
-      complet (historique, cf. D11–D14).
+      `pages.yml` (pas pour l'instant, décision de Rémi du 2026-09-22).
 
 ## Dette / limites connues
-- Prix = médians marché 2026 (fourniture seule, HT), pas des devis. Longueurs de stock non
-  modélisées : si le fournisseur ne coupe pas à longueur, compter +15–30 % sur la ligne murs.
 - Quantités de visserie / accessoires = estimations à recouper avec le fabricant.
-- Pas de validation structurelle (vent/neige/charge) — hors périmètre actuel.
+- Pas de validation structurelle (vent/neige/charge) : hors périmètre actuel.
 - `npm test` / `npm run typecheck` passent par `shipkit ci` ; les variantes `:raw` lancent
-  directement les tests Node.
+  directement les outils (la CI GitHub utilise `test:raw`).
