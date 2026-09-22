@@ -189,7 +189,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Bloc-porte plein 73 × 204 cm, avec dormant | 1 u | 160 € | 160 € | une porte. bloc-porte fin de chantier Artens Lia 204 x 73, reversible, bati reglable 50 a 100 mm, serrure a cle, poignee a part. Reservation 79,3 x 207,6 : le cadre bois de 83 x 209 la contient. ATTENTION c'est une porte INTERIEURE (ame alveolaire, pas d'isolation ni d'etancheite) : la proteger par un debord de toit et un seuil, ou lui preferer un bloc-porte de service exterieur (205 x 80 PVC, 199 EUR) ([source](https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html)) |
+| Bloc-porte plein 73 × 204 cm, avec dormant | 1 u | 160 € | 160 € | une porte. bloc-porte fin de chantier Artens Lia 204 x 73 (Leroy Merlin, 160 EUR) : reservation 79,3 x 207,6, contenue par le cadre bois. C'est une porte INTERIEURE (ame alveolaire, sans isolation ni etancheite) : la proteger par le debord et un seuil. En porte de service EXTERIEURE : PVC plein 205 x 80 a 199 EUR (Brico Depot), ou sur fenetre24 le modele Nice 200 x 70 vitre, serrure 3 points, profile 70 mm, a 482 EUR hors livraison. Le lit de 80 laisse 75 cm de baie libres meme avec une porte de 80 ([source](https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html)) |
 | Fenêtre oscillo-battante PVC double vitrage 80 × 75 cm | 2 u | 119 € | 238 € | fenêtres ouvrantes. taille de stock 80 x 75 (2 vantaux, Uw 1,2), sans delai ; hors tout 85 x 78 ; poignee vendue a part ([source](https://www.bricodepot.fr/catalogue/fenetre-pvc-blanc-oscillo-battante-2-vantaux-h75-x-l80-cm/prod75983/)) |
 
 ### Eaux pluviales · 88 €
@@ -490,7 +490,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Questions
 
 - **Q1** La pente de 9,1 % est-elle admise par le fabricant des panneaux de toit, pour 2,5 m de portée en 60 mm ?
-- **Q2** Porte : le bloc intérieur de 73 (160 €) tient-il dehors sous le débord, ou faut-il un bloc de service extérieur de 80 (199 €) ?
+- **Q2** Porte : le bloc intérieur de 73 (160 €), un bloc de service extérieur plein de 80 (199 €), ou une porte de service vitrée de 70 (482 €) ?
 - **Q3** Le panneau de toit de 60 mm porte-t-il 2,5 m seul, ou faut-il une panne en travers à mi-profondeur ?
 - **Q4** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
 - **Q5** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
