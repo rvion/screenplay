@@ -2673,10 +2673,10 @@ function surligne_section() {
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 var VUES = {
-  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0] },
-  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0] },
-  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5] },
-  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1], cible: [0.3, 0, 0.8] }
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
+  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
+  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
+  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1], cible: [0.3, 0, 0.8], fov: 42 }
 };
 var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799 };
 function etiquette(txt) {
@@ -2841,7 +2841,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
         battant.add(ombre(new THREE.Mesh(geoB, o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }))));
         battant.position.set(s1 / 100, 0, -0.01);
         battant.rotation.y = angle;
-        pose(battant);
+        pose(battant, groupes.porte || groupe("porte"));
         const qui = groupe("personne"), matP = mat(COUL.personne, { roughness: 0.9 }), corps = new THREE.Group();
         for (const dx of [-0.09, 0.09]) {
           const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
@@ -2968,7 +2968,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, porte: true };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -2992,10 +2992,29 @@ function createAbriViewer(container, data0) {
     const v = VUES[vue];
     camera.position.set(...v.position);
     controls.target.set(...v.cible);
+    regler({ fov: v.fov });
     controls.update();
   }
+  const r2 = (x) => Math.round(x * 100) / 100;
+  function etat() {
+    return { position: camera.position.toArray().map(r2), cible: controls.target.toArray().map(r2), fov: r2(camera.fov), distance: r2(camera.position.distanceTo(controls.target)) };
+  }
+  function regler(o) {
+    if (o.fov) {
+      camera.fov = o.fov;
+      camera.updateProjectionMatrix();
+    }
+    if (o.distance) {
+      const dir = camera.position.clone().sub(controls.target).normalize();
+      camera.position.copy(controls.target).addScaledVector(dir, o.distance);
+    }
+    controls.update();
+  }
+  function surChangement(cb) {
+    controls.addEventListener("change", () => cb(etat()));
+  }
   function vignette(canvas, vue) {
-    const v = VUES[vue], cam = new THREE.PerspectiveCamera(42, camera.aspect, 0.1, 100);
+    const v = VUES[vue], cam = new THREE.PerspectiveCamera(v.fov || 42, camera.aspect, 0.1, 100);
     cam.position.set(...v.position);
     cam.lookAt(...v.cible);
     renderer.render(scene, cam);
@@ -3016,7 +3035,7 @@ function createAbriViewer(container, data0) {
     controls.update();
     renderer.render(scene, camera);
   })();
-  return { rebuild, montrer, voir, vignette };
+  return { rebuild, montrer, voir, vignette, etat, regler, surChangement };
 }
 
 // site/src/abri_main.ts
@@ -3050,7 +3069,27 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => vue && vue.voir(b.dataset.vue));
   }
   rend_vignettes();
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"]) {
+  const fov = document.getElementById("cam-fov"), dist = document.getElementById("cam-dist"), copier = document.getElementById("cam-copier");
+  if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
+  if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
+  if (vue) vue.surChangement((e) => {
+    if (dist && document.activeElement !== dist) dist.value = String(e.distance);
+    if (fov) fov.value = String(e.fov);
+  });
+  if (copier) copier.addEventListener("click", async () => {
+    if (!vue) return;
+    const texte2 = JSON.stringify(vue.etat());
+    try {
+      await navigator.clipboard.writeText(texte2);
+      copier.textContent = "copi\xE9";
+    } catch {
+      window.prompt("Copier la vue :", texte2);
+    }
+    window.setTimeout(() => {
+      copier.textContent = "copier la vue";
+    }, 1500);
+  });
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"]) {
     const c = document.getElementById("voir-" + nom);
     if (c) c.addEventListener("change", () => {
       if (vue) {

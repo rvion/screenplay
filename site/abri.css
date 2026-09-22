@@ -80,6 +80,12 @@ p.intro { margin: 0 0 .7rem; font-size: .92rem; line-height: 1.55; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }
 
+.vue { position: relative; }
+.vue-barre { position: absolute; top: .5rem; left: .5rem; right: .5rem; display: flex; gap: .9rem; align-items: center; padding: .3rem .6rem; border-radius: 8px; background: rgba(255, 255, 255, .55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, .7); font-size: .76rem; color: var(--ink); }
+.vue-barre label { display: flex; align-items: center; gap: .35rem; }
+.vue-barre input[type=range] { width: 110px; margin: 0; }
+.vue-barre button { margin-left: auto; font-size: .76rem; padding: .18rem .55rem; border: 1px solid var(--line); border-radius: 6px; background: rgba(255, 255, 255, .8); cursor: pointer; }
+.vue-barre button:hover { border-color: var(--accent); color: var(--accent); }
 #viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
 .viewer-toggles { display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: .8rem; color: var(--muted); margin: .3rem 0 0; }
 .viewer-toggles label { cursor: pointer; }
@@ -149,7 +155,7 @@ p.suivante button:hover { border-color: var(--accent); }
   body { background: #fff; font-size: 11px; }
   .planbox svg { max-height: none; height: auto; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
-  .actions, aside.menu, .vue, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
+  .actions, aside.menu, .vue, .vue-barre, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
   .mise-en-page { display: block; max-width: none; }
   main { padding: 0; }
   section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; break-inside: auto; }

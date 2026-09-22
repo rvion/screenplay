@@ -119,7 +119,8 @@ ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a 
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
 ok(["docs/abri.html", "docs/index.html"].every((h) => html.includes(`href="${h}"`) && existsSync(join(ROOT, "site", h))), "liens : document complet, index des documents");
-ok(["voir-toit", "voir-mobilier", "voir-lit", "voir-etiquettes", "voir-personne"].every((id) => $("#" + id)) && !$("#voir-personne").checked, "cases à cocher de la 3D présentes, personne de 1,80 m décochée au départ");
+ok(["voir-toit", "voir-porte", "voir-mobilier", "voir-lit", "voir-etiquettes", "voir-personne"].every((id) => $("#" + id)) && !$("#voir-personne").checked && $("#voir-porte").checked, "cases à cocher de la 3D présentes (porte cochée), personne de 1,80 m décochée au départ");
+ok($(".vue .vue-barre #cam-fov[type=range]") && $(".vue .vue-barre #cam-dist[type=range]") && $(".vue .vue-barre #cam-copier"), "barre de caméra sur la vue : focale, distance, copier la vue");
 ok($$("#vignettes button[data-vue] canvas").length === 3 && $$("#vignettes button").map((b) => b.dataset.vue).join() === "porte,arriere,dessus", "trois vignettes 3D sous la vue principale : porte, arrière, dessus");
 
 // chaque autre version prete se rend sans valeur manquante, avec son bandeau et son document

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=41ba744b" />
+  <link rel="stylesheet" href="abri.css?v=f7670d78" />
   <script type="importmap">
   {
     "imports": {
@@ -62,8 +62,14 @@
         </div>
         <div class="vue">
           <div id="viewer"></div>
+          <div class="vue-barre">
+            <label>focale <input type="range" id="cam-fov" min="20" max="80" value="42"></label>
+            <label>distance <input type="range" id="cam-dist" min="2" max="14" step="0.1" value="6.1"></label>
+            <button type="button" id="cam-copier" title="Copie position, cible, focale et distance de la caméra">copier la vue</button>
+          </div>
           <p class="viewer-toggles">
             <label><input type="checkbox" id="voir-toit" checked> toit</label>
+            <label><input type="checkbox" id="voir-porte" checked> porte</label>
             <label><input type="checkbox" id="voir-mobilier" checked> mobilier</label>
             <label><input type="checkbox" id="voir-lit"> lit déplié</label>
             <label><input type="checkbox" id="voir-etiquettes" checked> repères</label>
@@ -139,7 +145,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=41ba744b"></script>
-  <script type="module" src="abri.js?v=41ba744b"></script>
+  <script src="params.js?v=f7670d78"></script>
+  <script type="module" src="abri.js?v=f7670d78"></script>
 </body>
 </html>

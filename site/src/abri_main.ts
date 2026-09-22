@@ -27,7 +27,18 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => vue && vue.voir(b.dataset.vue as NomVue));
   }
   rend_vignettes();
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"] as const) {
+  // barre de camera : focale, distance, et « copier la vue » (position, cible, focale, distance en JSON)
+  const fov = document.getElementById("cam-fov") as HTMLInputElement | null, dist = document.getElementById("cam-dist") as HTMLInputElement | null, copier = document.getElementById("cam-copier") as HTMLButtonElement | null;
+  if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
+  if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
+  if (vue) vue.surChangement((e) => { if (dist && document.activeElement !== dist) dist.value = String(e.distance); if (fov) fov.value = String(e.fov); });
+  if (copier) copier.addEventListener("click", async () => {
+    if (!vue) return;
+    const texte = JSON.stringify(vue.etat());
+    try { await navigator.clipboard.writeText(texte); copier.textContent = "copié"; } catch { window.prompt("Copier la vue :", texte); }
+    window.setTimeout(() => { copier.textContent = "copier la vue"; }, 1500);
+  });
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"] as const) {
     const c = document.getElementById("voir-" + nom) as HTMLInputElement | null;
     if (c) c.addEventListener("change", () => { if (vue) { vue.montrer(nom, c.checked); rend_vignettes(); } });
   }

@@ -7,16 +7,20 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 type Vec = any;
 type Pt = number[];
 
-export interface AbriViewer { rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; voir(vue: NomVue): void; vignette(canvas: HTMLCanvasElement, vue: NomVue): void; }
+export interface AbriViewer {
+  rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; voir(vue: NomVue): void; vignette(canvas: HTMLCanvasElement, vue: NomVue): void;
+  etat(): EtatCamera; regler(o: { fov?: number; distance?: number }): void; surChangement(cb: (e: EtatCamera) => void): void;
+}
+export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // points de vue fixes (metres, cible incluse) : la vue principale et les vignettes
 export const VUES = {
-  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0] },
-  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0] },
-  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5] },
-  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1.0], cible: [0.3, 0, 0.8] },
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
+  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
+  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
+  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1.0], cible: [0.3, 0, 0.8], fov: 42 },
 } as const;
 export type NomVue = keyof typeof VUES;
-export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne";
+export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "porte";
 
 const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
 
@@ -155,7 +159,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
         battant.add(ombre(new THREE.Mesh(geoB, o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }))));
         battant.position.set(s1 / 100, 0, -0.01);
         battant.rotation.y = angle;
-        pose(battant);
+        pose(battant, groupes.porte || groupe("porte"));
         // silhouette de 1,80 m devant la porte, pour l'echelle (cachee au depart)
         const qui = groupe("personne"), matP = mat(COUL.personne, { roughness: 0.9 }), corps = new THREE.Group();
         for (const dx of [-0.09, 0.09]) { const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP); jambe.position.set(dx, 0.42, 0); corps.add(ombre(jambe)); }
@@ -269,7 +273,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false };
+  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, porte: true };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -289,11 +293,21 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   }
   function voir(vue: NomVue) {
     const v = VUES[vue];
-    camera.position.set(...v.position); controls.target.set(...v.cible); controls.update();
+    camera.position.set(...v.position); controls.target.set(...v.cible); regler({ fov: v.fov }); controls.update();
   }
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  function etat(): EtatCamera {
+    return { position: camera.position.toArray().map(r2), cible: controls.target.toArray().map(r2), fov: r2(camera.fov), distance: r2(camera.position.distanceTo(controls.target)) };
+  }
+  function regler(o: { fov?: number; distance?: number }) {
+    if (o.fov) { camera.fov = o.fov; camera.updateProjectionMatrix(); }
+    if (o.distance) { const dir = camera.position.clone().sub(controls.target).normalize(); camera.position.copy(controls.target).addScaledVector(dir, o.distance); }
+    controls.update();
+  }
+  function surChangement(cb: (e: EtatCamera) => void) { controls.addEventListener("change", () => cb(etat())); }
   // rendu fixe d'un point de vue dans un petit canvas 2D : un seul contexte WebGL, copie du tampon juste apres le rendu
   function vignette(canvas: HTMLCanvasElement, vue: NomVue) {
-    const v = VUES[vue], cam = new THREE.PerspectiveCamera(42, camera.aspect, 0.1, 100);
+    const v = VUES[vue], cam = new THREE.PerspectiveCamera(v.fov || 42, camera.aspect, 0.1, 100);
     cam.position.set(...v.position); cam.lookAt(...v.cible);
     renderer.render(scene, cam);
     const ctx = canvas.getContext("2d");
@@ -306,5 +320,5 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     renderer.setSize(container.clientWidth, container.clientHeight);
   });
   (function boucle() { requestAnimationFrame(boucle); controls.update(); renderer.render(scene, camera); })();
-  return { rebuild, montrer, voir, vignette };
+  return { rebuild, montrer, voir, vignette, etat, regler, surChangement };
 }

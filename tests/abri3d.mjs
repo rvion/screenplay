@@ -33,7 +33,7 @@ racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });
 ok(meshes > 40 && nan === 0, meshes + " maillages, aucune coordonnee NaN ou infinie");
-ok(["toit", "mobilier", "lit", "etiquettes", "sieges", "personne"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.personne.visible === false && groupes.toit.visible === true, "groupes masquables : toit, mobilier, lit et personne (caches au depart), etiquettes, sieges");
+ok(["toit", "mobilier", "lit", "etiquettes", "sieges", "personne", "porte"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.personne.visible === false && groupes.toit.visible === true && groupes.porte.visible === true && groupes.porte.children.length === 1, "groupes masquables : toit, mobilier, lit et personne (caches au depart), etiquettes, sieges, porte (le battant)");
 
 // centre du repere : milieu de la dalle en x, et le meme decalage en y que le viewer
 const xs = d.dalle.map((z) => z[0]), ys = d.dalle.map((z) => z[1]);
@@ -89,7 +89,7 @@ const tuyau = groupes.toit.children.find((o) => o.isMesh && o.geometry.type === 
 ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "descente du toit jusqu'au sol");
 // porte : un battant, sorti vers l'exterieur (au-dela du mur de la porte), pas vers l'interieur
 {
-  const fp = d.murs[v.porte.cote], battant = racine.children.find((o) => o.isGroup && o !== groupes.toit && o !== groupes.mobilier && o !== groupes.lit && o !== groupes.etiquettes && o.children.length === 1 && o.children[0].geometry.type === "BoxGeometry");
+  const fp = d.murs[v.porte.cote], battant = groupes.porte.children.find((o) => o.isGroup && o.children.length === 1 && o.children[0].geometry.type === "BoxGeometry");
   const bb = boite(battant), xmur = monde(fp.de[0], fp.de[1], 0)[0];
   ok(!!battant && bb.max.x > xmur + 0.3 && bb.min.x > xmur - 0.1, "porte : battant entrouvert vers l'extérieur du mur " + fp.cle);
   // silhouette : 1,80 m de haut, pieds au sol, hors des murs, devant la porte

@@ -199,7 +199,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
   panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
-  toit, mobilier, lit déplié, repères, personne ; lit et personne cachés au départ). Sous la vue, **trois
+  toit, porte (le battant), mobilier, lit déplié, repères, personne ; lit et personne cachés au départ).
+  Sur la vue, une **barre de caméra** translucide (focale, distance, « copier la vue » qui met sur le
+  presse-papiers position, cible, focale et distance en JSON : c'est ainsi que Rémi transmet un point de
+  vue à régler dans `VUES`). Sous la vue, **trois
   vignettes** (côté porte, derrière avec le passage, dessus) : des rendus fixes des points de vue `VUES`,
   tirés du même contexte WebGL (rendu puis copie du tampon dans un canvas 2D), refaits à chaque case cochée ;
   un clic sur une vignette amène la caméra principale à ce point de vue. `peuple_abri`
