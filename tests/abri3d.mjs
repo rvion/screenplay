@@ -88,6 +88,7 @@ const paroi = groupes.murs.children;
     const oreiller2 = groupes.lit2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
     ok(boite(oreiller2).min.x > (b2.min.x + b2.max.x) / 2, "lit 2 : l'oreiller est du cote de la porte");
     const mi = boite(groupes.sieges_mi);
+    ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
   }
   // lits a demeure : ils existent que le lit pliant soit la ou non
   // lits a demeure (v3, v4, …) : caches au depart ; ni leurs bureaux ni les sieges ranges ne touchent le lit ; tout le monde range ; la personne dessus
@@ -147,7 +148,6 @@ const paroi = groupes.murs.children;
     const lit = groupes.lit4, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
     ok(boite(oreiller).max.z < (bl.min.z + bl.max.z) / 2, "lit v4 : l'oreiller est au fond");
   }
-  ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
 }
 const lit_pose = groupes.lit3 || groupes.lit, couchage = groupes.couchage3 || lit_pose;
 const pieces_lit = [...lit_pose.children, ...(couchage === lit_pose ? [] : couchage.children)];
