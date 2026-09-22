@@ -2889,7 +2889,12 @@ function etiquette(txt) {
   x.beginPath();
   x.roundRect(12, 12, 232, 104, 16);
   x.fill();
-  x.font = "bold 88px system-ui, sans-serif";
+  let taille = 88;
+  x.font = `bold ${taille}px system-ui, sans-serif`;
+  while (x.measureText(txt).width > 212 && taille > 28) {
+    taille -= 4;
+    x.font = `bold ${taille}px system-ui, sans-serif`;
+  }
   x.textAlign = "center";
   x.textBaseline = "middle";
   x.fillStyle = "#1c2530";
@@ -3344,8 +3349,8 @@ function peuple_abri(abri, data, visible_demande = {}) {
     dans.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(14934e3, { roughness: 1 }))));
     const tx = etiquette(`${Math.round(lw)} \xD7 ${Math.round(L)}`);
     if (tx) {
-      const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.15), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
-      const c = [mt[0] - ux * 22 + nx * (lw / 2 - 20), mt[1] - uy * 22 + ny * (lw / 2 - 20)];
+      const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.08), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+      const c = [mt[0] - ux * 13 + nx * (lw / 2 - 13), mt[1] - uy * 13 + ny * (lw / 2 - 13)];
       plaque.position.copy(W(c[0], c[1], sol + 55.6));
       plaque.rotation.set(-Math.PI / 2, 0, Math.atan2(uy, ux) - Math.PI / 2);
       dans.add(plaque);
