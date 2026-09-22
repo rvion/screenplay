@@ -179,7 +179,6 @@ export function formalites(p: Params, emprise_murs_m2: number, emprise_debords_m
     seuil_sans_formalite_m2: s1, seuil_declaration_m2: s2,
     formalite: retenue <= s1 ? "aucune" : retenue <= s2 ? "declaration prealable" : "permis de construire",
     libelle: retenue <= s1 ? "aucune formalité" : retenue <= s2 ? "déclaration préalable" : "permis de construire",
-    reserve: "secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas",
     reference: rg.reference || "Code de l'urbanisme R*420-1, R421-2, R421-9",
   };
 }
@@ -1560,7 +1559,7 @@ export function abri_md(p: Params, core: any): string {
   const stock_courant = +m.rehausse.section_mm[1] <= 225;
   md += `- **Toit** : ${droite ? "vers la droite (jardin)" : "vers l'arrière"}, chute ${fr(m.chute_cm)} cm (${fr(m.pente.degres)}°)${droite ? "" : " = choix par défaut"}. Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 ${stock_courant ? ": section courante, à vérifier en classe 4" : "à trouver (sinon deux pièces superposées)"}.\n`;
   const F = m.formalites;
-  md += `- **Formalités** : emprise au sol **${fr(F.emprise_au_sol_m2)} m²**${F.debords_comptes ? " (débords inclus : ils sont portés par des poteaux)" : ` (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : ${F.reference.split(" :")[0]})`}, surface de plancher ${fr(F.surface_plancher_m2)} m² ⇒ **${F.libelle}** (seuils ${fz(F.seuil_sans_formalite_m2)} puis ${fz(F.seuil_declaration_m2)} m²). ${F.reserve}.\n`;
+  md += `- **Formalités** : emprise au sol **${fr(F.emprise_au_sol_m2)} m²**${F.debords_comptes ? " (débords inclus : ils sont portés par des poteaux)" : ` (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : ${F.reference.split(" :")[0]})`}, surface de plancher ${fr(F.surface_plancher_m2)} m² ⇒ **${F.libelle}** (seuils ${fz(F.seuil_sans_formalite_m2)} puis ${fz(F.seuil_declaration_m2)} m²).\n`;
   if (lp && lp.replie) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le mur du fond : déplié, ${lp.sous_bureau_cm2 > 0 ? "son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et " : ""}il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).\n`;
   else if (lp) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}** : déplié au milieu${lp.sous_bureau_cm2 > 0 ? ", le pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", fauteuil et tabouret rangés" : ""}.\n`;
   const pleine = (v.fenetres || []).filter((f: any) => f.largeur_cm >= +p.panneau.largeur_utile_cm - 0.05);

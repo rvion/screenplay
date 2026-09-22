@@ -594,3 +594,10 @@ passe donc à **208** (fond 136,6) : 4,95 m², aucune formalité, 6 cm de jeu po
 « aucune formalité ») : il compare désormais l'aire exacte. *État :* essayé sur la
 branche `test-bed-front-head-right`, **retenu par Rémi le 2026-09-22** : fusionné dans `main` et publié.
 La liste des changements est dans `changelog.md`.
+
+## D50 — Formalités : aucune, tranché
+Décision de Rémi (2026-09-23) : l'abri reste sous 5 m² de murs et ne demande **aucune formalité**. La
+question de la mairie (secteur protégé, PLU) est close et **ne se soulève plus** : ni dans les questions,
+ni dans le backlog, ni dans les documents (la réserve « secteur protégé » a quitté `formalites()`). Le
+calcul du seuil reste, comparé à l'aire exacte (`tests/formalites.mjs`) : c'est lui qui garde l'abri
+sous 5 m² quand ses cotes bougent.

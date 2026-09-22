@@ -19,9 +19,6 @@ vit dans `03-decisions.md`, l'historique dans git.
       que le fabricant n'a pas dit si le 60 mm porte 2,75 m seul. Si oui, rien à faire ; sinon la dessiner.
 - [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
       fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
-- [ ] **Formalités** : l'emprise au sol est celle des murs, débords de toiture exclus (R*420-1,
-      D29). Reste à vérifier en mairie : secteur protégé / abords MH (déclaration préalable même
-      sous 5 m²) et la distance aux limites du PLU.
 - [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237,5 en façade).
 - [ ] **Porte pleine 80 × 205** : confirmer chez le menuisier (bloc-porte, sens d'ouverture).
 - [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).

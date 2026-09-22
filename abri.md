@@ -18,7 +18,7 @@
 ## À trancher
 
 - **Toit** : vers l'arrière, chute 22,5 cm (5,14°) = choix par défaut. Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
-- **Formalités** : emprise au sol **4,95 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,44 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
+- **Formalités** : emprise au sol **4,95 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,44 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²).
 - **Portée du toit** (~2,5 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (134,4°, 135,6°) : profils d'angle pliés sur mesure.
 

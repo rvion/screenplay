@@ -455,7 +455,6 @@
       seuil_declaration_m2: s2,
       formalite: retenue <= s1 ? "aucune" : retenue <= s2 ? "declaration prealable" : "permis de construire",
       libelle: retenue <= s1 ? "aucune formalit\xE9" : retenue <= s2 ? "d\xE9claration pr\xE9alable" : "permis de construire",
-      reserve: "secteur prot\xE9g\xE9 ou abords d'un monument historique : d\xE9claration pr\xE9alable m\xEAme sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas",
       reference: rg.reference || "Code de l'urbanisme R*420-1, R421-2, R421-9"
     };
   }
