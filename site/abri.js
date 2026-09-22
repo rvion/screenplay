@@ -2198,10 +2198,12 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     if (!gr) return;
     gr.traverse((o) => {
       if (!o.isMesh || o.material.map) return;
-      o.material.transparent = oui;
-      o.material.opacity = oui ? opacite : 1;
-      o.material.depthWrite = !oui;
-      o.castShadow = !oui;
+      const m = o.material, base = m.userData.avant_voile || (m.userData.avant_voile = { transparent: m.transparent, opacity: m.opacity, depthWrite: m.depthWrite });
+      if (o.userData.ombre_avant_voile === void 0) o.userData.ombre_avant_voile = o.castShadow;
+      m.transparent = oui || base.transparent;
+      m.opacity = oui ? Math.min(opacite, base.opacity) : base.opacity;
+      m.depthWrite = oui ? false : base.depthWrite;
+      o.castShadow = oui ? false : o.userData.ombre_avant_voile;
     });
   }
   var DEDANS = { position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0], fov: 42 };

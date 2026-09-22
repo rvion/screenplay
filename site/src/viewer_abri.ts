@@ -24,14 +24,17 @@ export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, et
 export function cloture_pleine(gr: Vec, oui: boolean) {
   gr.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } });
 }
-// voile : la meme paroi, vue au travers. Les materiaux sont crees un par maillage, donc voiler un
-// groupe ne touche que lui
+// voile : la meme paroi, vue au travers ; devoiler rend a chaque materiau son etat d'origine
+// (le verre reste du verre)
 export function voile(gr: Vec, oui: boolean, opacite = 0.28) {
   if (!gr) return;
   gr.traverse((o: any) => {
     if (!o.isMesh || o.material.map) return;
-    o.material.transparent = oui; o.material.opacity = oui ? opacite : 1;
-    o.material.depthWrite = !oui; o.castShadow = !oui;
+    // l'etat d'origine vit sur le materiau (partage entre maillages) et l'ombre sur le maillage
+    const m = o.material, base = m.userData.avant_voile || (m.userData.avant_voile = { transparent: m.transparent, opacity: m.opacity, depthWrite: m.depthWrite });
+    if (o.userData.ombre_avant_voile === undefined) o.userData.ombre_avant_voile = o.castShadow;
+    m.transparent = oui || base.transparent; m.opacity = oui ? Math.min(opacite, base.opacity) : base.opacity;
+    m.depthWrite = oui ? false : base.depthWrite; o.castShadow = oui ? false : o.userData.ombre_avant_voile;
   });
 }
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart

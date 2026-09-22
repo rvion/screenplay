@@ -11,8 +11,8 @@ const ROOT = process.cwd();
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri3d.mjs");
 // three vient ici de node_modules, comme site/three.js ; le bundle abri.js le lit sur window.ABRI_THREE
-await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
-const { THREE, peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT, calcule_abri } = await import(pathToFileURL(out).href);
+await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT, voile } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
+const { THREE, peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT, voile, calcule_abri } = await import(pathToFileURL(out).href);
 
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
@@ -38,6 +38,17 @@ ok(JSON.stringify([VUES.dedans.position, VUES.dedans.cible, VUES.dedans.fov]) ==
 ok(["porte", "interieur", "debout", "couche"].every((k) => JSON.stringify([VUES[k].position, VUES[k].cible, VUES[k].fov]) === JSON.stringify([VUES.interieur.position, VUES.interieur.cible, VUES.interieur.fov])) && VUES.interieur.position[1] > 4, "les quatre vues de l'intérieur partagent la même caméra, vue de haut");
 ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.couche.etats.mobilier === 2 && VUES.couche.etats.personne === 2 && VUES.couche.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, couché = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
+{
+  // why we think it is actually a bug, and not just meaning spec should change: a window is glass, and the default view must see through it; the veiled state is only meant to add transparency, never to remove it
+  const verres = () => { const v = []; groupes.murs.traverse((o) => { if (o.isMesh && o.material.color && o.material.color.getHex() === 0x9fd3e6) v.push(o); }); return v; };
+  const avant = verres().length;
+  voile(groupes.murs, true); voile(groupes.murs, false);
+  ok(avant > 0 && verres().every((o) => o.material.transparent && o.material.opacity < 0.6), `fenêtres : le verre reste transparent après voiler puis dévoiler les murs (${avant} vitre(s))`);
+  // controle : voiler rend bien les murs pleins translucides, et les dévoiler les rend pleins
+  const plein = groupes.murs.children.find((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry");
+  voile(groupes.murs, true); const voile_ok = plein.material.transparent && plein.material.opacity < 0.5; voile(groupes.murs, false);
+  ok(voile_ok && !plein.material.transparent && plein.material.opacity === 1, "murs : voilés puis pleins de nouveau");
+}
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
 {
   // clôture : 0 translucide, 1 pleine, 2 absente ; l'etat 2 cache toute la palissade, les deux autres la montrent
