@@ -39,16 +39,19 @@ export function voile(gr: Vec, oui: boolean, opacite = 0.28) {
 }
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
 const DEDANS = { position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0], fov: 42 } as const;
+// par le cote de la porte ouvert : faces D et C retirees, sans toit ni palissade
+const OUVERT = { position: [3.7, 3.73, -1.67], cible: [-0.2, 1.09, 0.1], fov: 42 } as const;
+const PAROIS_OUVERTES = { toit: 0, murs: 4, porte: 0, etiquettes: 0, personne: 2, cloture: 2 } as const;
 export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
-  // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
+  // les vues de l'interieur partagent une camera par groupe : seuls les etats changent d'une vignette a l'autre
   porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 3, porte: 1, mobilier: 1, etiquettes: 0, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
   debout: { titre: "Debout dedans, abri voilé", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 2, murs: 3, porte: 3, mobilier: 0, personne: 2, etiquettes: 0 } },
-  dedans: { titre: "Dedans, côté porte ouvert", position: [3.7, 3.73, -1.67], cible: [-0.2, 1.09, 0.1], fov: 42, etats: { toit: 0, murs: 4, porte: 0, mobilier: 1, etiquettes: 0, personne: 2, cloture: 2 } },
-  couche: { titre: "Couché, les pieds vers les écrans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+  dedans: { titre: "Dedans, côté porte ouvert", ...OUVERT, etats: { ...PAROIS_OUVERTES, mobilier: 1 } },
+  couche: { titre: "Couché, les pieds vers les écrans", ...OUVERT, etats: { ...PAROIS_OUVERTES, mobilier: 2 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)

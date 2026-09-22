@@ -2207,16 +2207,18 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     });
   }
   var DEDANS = { position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0], fov: 42 };
+  var OUVERT = { position: [3.7, 3.73, -1.67], cible: [-0.2, 1.09, 0.1], fov: 42 };
+  var PAROIS_OUVERTES = { toit: 0, murs: 4, porte: 0, etiquettes: 0, personne: 2, cloture: 2 };
   var VUES = {
     jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
     droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
     arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
-    // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
+    // les vues de l'interieur partagent une camera par groupe : seuls les etats changent d'une vignette a l'autre
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 3, porte: 1, mobilier: 1, etiquettes: 0, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
     debout: { titre: "Debout dedans, abri voil\xE9", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 2, murs: 3, porte: 3, mobilier: 0, personne: 2, etiquettes: 0 } },
-    dedans: { titre: "Dedans, c\xF4t\xE9 porte ouvert", position: [3.7, 3.73, -1.67], cible: [-0.2, 1.09, 0.1], fov: 42, etats: { toit: 0, murs: 4, porte: 0, mobilier: 1, etiquettes: 0, personne: 2, cloture: 2 } },
-    couche: { titre: "Couch\xE9, les pieds vers les \xE9crans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
+    dedans: { titre: "Dedans, c\xF4t\xE9 porte ouvert", ...OUVERT, etats: { ...PAROIS_OUVERTES, mobilier: 1 } },
+    couche: { titre: "Couch\xE9, les pieds vers les \xE9crans", ...OUVERT, etats: { ...PAROIS_OUVERTES, mobilier: 2 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);
