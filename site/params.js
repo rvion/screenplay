@@ -165,9 +165,9 @@ window.SHED_PARAMS = {
     ],
     "cotes_cm": {
       "avant": 210,
-      "droite": 175,
-      "gauche": 250,
-      "fond": 135
+      "droite": 178,
+      "gauche": 248,
+      "fond": 140
     },
     "porte_vitree": false,
     "lit_pliant_2": {
