@@ -208,8 +208,10 @@ serrés. Deux boutons en haut à droite : <strong>Document complet</strong> (<co
 page tout déroulée, sans menu, sans listes ni bascules, plans et alternatives en grille de deux, le
 plan de rehausse sur toute la largeur ; le bouton devient « Vue interactive » et garde <code>?v=N</code>) et
 <strong>Imprimer</strong>, qui pose ce mode le temps de l&#39;impression (<code>beforeprint</code> / <code>afterprint</code>) : <code>@media print</code>
-ne porte que le papier (3D et liens « agrandir » cachés, colonnes rendues aux plans, tableaux sans
-défilement, page neuve avant les élévations, le guide et les alternatives). Aucun bouton ne mène à
+ne porte que le papier : la page imprimée fait ~800 px de large, donc c&#39;est la mise en page
+« tablette » (une colonne, un plan sous l&#39;autre, borné à 40 % de page) qui s&#39;imprime ; 3D et liens
+« agrandir » cachés, tableaux sans défilement, page neuve avant les élévations, le guide et les
+alternatives. Aucun bouton ne mène à
 la page markdown : <code>docs/abri.html</code> reste atteignable par « Tous les documents » dans le menu.
 Sections : <strong>Résumé</strong> (un paragraphe de faits séparés par des points médians, les faits clés surlignés
 en <code>span.fait</code> : murs, panneaux, toit, pente, portée, porte, fenêtres, bureaux, hauteurs, surfaces,
@@ -310,9 +312,9 @@ personne a trois états (éteinte, dehors, dedans) marqués par trois points sou
 Sur la vue, une <strong>barre de caméra</strong> fine et translucide (angle 15 à 110°, distance, les valeurs en petit
 sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
 et distance en JSON : c&#39;est ainsi que Rémi transmet un point de vue à régler dans <code>VUES</code> ;
-<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>six vignettes</strong> (<code>VUES</code> : jardin = vue de
-départ, côté porte, derrière avec le passage, vue de droite collée par Rémi, intérieur sans toit, lit
-déplié) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
+<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>sept vignettes</strong> (<code>VUES</code> : jardin = vue de
+départ, vue de droite, derrière avec le passage, puis quatre vues de l&#39;intérieur sans toit qui
+partagent une seule caméra (<code>DEDANS</code>) : côté porte, au bureau, lit déplié, lit 2 en biais) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
 vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
 mobilier, lit, repères, personne, clôture) ; un clic règle la caméra <strong>et</strong> les boutons ; la première
 vignette ramène à l&#39;état de départ, comme le bouton reset ; « copier la vue » copie position, cible,

@@ -436,10 +436,10 @@ bascules cachées), et « Imprimer » pose ce mode le temps de l'impression. *Po
 document ne l'écrase pas ; et `@media print` ne porte plus que le papier, donc rien n'est déroulé deux
 fois. *Trouvé en imprimant :* la page imprimée fait ~800 px de large, donc les règles « tablette »
 (`max-width: 980px`) s'appliquaient au papier : une colonne partout, chaque plan à sa hauteur d'écran,
-27 pages dont la moitié blanches, les tableaux de matériaux coupés à droite. Le bloc d'impression rend
-leurs colonnes aux plans, aux débits et aux blocs « pourquoi », borne les dessins à 40 % de page, et le
-plan du rectangle (seul SVG sans `width`/`height`) reçoit ses cotes pour ne plus disparaître en
-`height: auto`. Vérifié par un PDF de Chrome headless (19 pages, vignettes 3D rendues) ; l'aspect à
+27 pages dont la moitié blanches, les tableaux de matériaux coupés à droite. Rémi préfère cette mise en page
+« tablette » sur papier (une colonne, un plan sous l'autre) à la large : le bloc d'impression la garde,
+borne les dessins à 40 % de page, et le plan du rectangle (seul SVG sans `width`/`height`) reçoit ses cotes pour ne plus disparaître en
+`height: auto`. Vérifié par un PDF de Chrome headless (23 pages, vignettes 3D rendues) ; l'aspect à
 l'écran reste à juger par Rémi. Dans la foulée : le titre « Sommaire » du menu tombe, et la section
 des questions devient « Questions et idées », deux listes simples (Q1…, I1…) au lieu d'un texte en
 deux colonnes, les idées étant des pistes de simplification à explorer, aucune décidée.

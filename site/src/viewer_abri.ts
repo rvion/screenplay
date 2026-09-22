@@ -23,14 +23,16 @@ export function cloture_pleine(gr: Vec, oui: boolean) {
   gr.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } });
 }
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
+const DEDANS = { position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0], fov: 42 } as const;
 export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
-  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
-  porte: { titre: "Côté porte", position: [2.14, 4.67, 3.06], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
-  interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-  lit2: { titre: "Lit déplié 2, en biais", position: [1.6, 4.4, 2.6], cible: [0, 0.5, -0.3], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
+  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
+  // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
+  porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
+  interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
+  lit: { titre: "Lit déplié", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+  lit2: { titre: "Lit déplié 2, en biais", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)

@@ -255,15 +255,15 @@ body.document .details .planbox svg { height: auto; max-height: 60vh; }
 }
 
 @media print {
-  /* la page fait ~800 px de large : les regles « tablette » ci-dessus s'appliquent, on rend leurs colonnes au papier */
+  /* la page fait ~800 px de large : les regles « tablette » ci-dessus s'appliquent, et c'est la mise en page voulue
+     sur papier (une colonne, un plan sous l'autre) ; ici seulement ce qui est propre au papier */
   body { background: #fff; font-size: 11px; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
   .actions, .vue, a.zoom, .viewer-fallback { display: none; }
   .mise-en-page { max-width: none; }
   main { padding: 0; }
   section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; }
-  .fiche-vue { grid-template-columns: minmax(0, 1fr); }
-  .rangee, .trois, .pourquoi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fiche-vue, body.document #plans-details, body.document #alternatives-corps { grid-template-columns: minmax(0, 1fr); }
   .resume-figs { max-width: 480px; }
   /* jamais un titre orphelin en bas de page, jamais un dessin ou une fiche coupes en deux */
   h2, h3, p.note { break-after: avoid; }
