@@ -201,7 +201,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
 // l'abri : deux fenetres de stock identiques, 80 x 75 oscillo-battantes, allege 110
 {
   const f = buildCore(actuel).variantes.find((x) => x.id === 13).fenetres;
-  ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 110 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 110");
+  ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
 // abri actuel : l'etude v3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)

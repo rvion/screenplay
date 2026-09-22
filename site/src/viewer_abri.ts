@@ -15,7 +15,8 @@ export interface AbriViewer {
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
 export type Etats = { toit: number; murs: number; porte: number; mobilier: number; etiquettes: number; personne: number; cloture: number };
-// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise, 1 fauteuil au bureau, 2 lit v1 (sieges ranges sous les bureaux), 3 lit v2 en biais au fond, 4 lit v3 en facade ;
+// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise (siege range), 1 au bureau (siege tire), 2 couche (siege range) ;
+// le lit est pose a demeure : il est toujours la, comme le bureau ;
 // personne : 0 sans, 1 dehors, 2 dedans (debout, assise au bureau ou couchee selon le mobilier)
 export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, etiquettes: 1, personne: 0, cloture: 0 };
 // la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
@@ -31,23 +32,23 @@ export const VUES = {
   // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
   porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-  lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-  lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-  lit3: { titre: "Lit v3, en façade, tête côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
+  couche: { titre: "Couché, les pieds vers les écrans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)
 export function applique_etats(vue: AbriViewer, e: Etats) {
   vue.montrer("toit", e.toit > 0); vue.montrer("etiquettes", e.etiquettes > 0);
   // sieges : a moitie rentres quand rien n'est utilise, tires quand on est au bureau, ranges quand un lit est deplie
-  vue.montrer("lit", e.mobilier === 2); vue.montrer("lit2", e.mobilier === 3);
-  vue.montrer("sieges_mi", e.mobilier === 0); vue.montrer("sieges", e.mobilier === 1); vue.montrer("sieges_ranges", e.mobilier === 2); vue.montrer("sieges_ranges2", e.mobilier === 3);
-  // lits a demeure (etats 4, 5, …, groupes numerotes a partir de 3) : leurs propres bureaux remplacent le L
-  vue.montrer("mobilier", e.mobilier < 4);
-  for (let n = 3; n < 3 + LITS_MURAUX_MAX; n++) for (const g of ["lit", "bureaux", "sieges_ranges", "personne_couchee"] as const) vue.montrer(`${g}${n}` as Masquable, e.mobilier === n + 1 && (g !== "personne_couchee" || e.personne === 2));
+  // le lit et son bureau sont poses a demeure : toujours visibles. Le mobilier ne dit que l'usage :
+  // 0 rien (siege range), 1 au bureau (siege tire), 2 couche (siege range)
+  vue.montrer("lit3", true); vue.montrer("bureaux3", true); vue.montrer("mobilier", false);
+  vue.montrer("lit", false); vue.montrer("lit2", false);
+  vue.montrer("sieges", e.mobilier === 1); vue.montrer("sieges_ranges3", e.mobilier !== 1);
+  vue.montrer("sieges_mi", false); vue.montrer("sieges_ranges", false); vue.montrer("sieges_ranges2", false);
+  vue.montrer("personne_couchee3", e.personne === 2 && e.mobilier === 2);
   vue.montrer("porte", e.porte === 1); vue.montrer("porte_fermee", e.porte === 2);
   vue.montrer("personne", e.personne === 1);
-  vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0); vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1); vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2); vue.montrer("personne_couchee2", e.personne === 2 && e.mobilier === 3);
+  vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0); vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1); vue.montrer("personne_couchee", false); vue.montrer("personne_couchee2", false);
   vue.montrer("cloture", e.cloture > 0);
   vue.montrer("murs", e.murs > 0); vue.montrer("murs_coupes", e.murs === 2);
 }
@@ -490,8 +491,9 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2, "droite");
   // lits a demeure : le lit, ses bureaux, les sieges ranges dessous ; caches tant que le mobilier ne les montre pas
   (data.mobilier.lits_muraux || []).slice(0, LITS_MURAUX_MAX).forEach((lm: any, i: number) => {
-    const n = 3 + i, cache = (nom: string) => { const g = groupe(nom); g.visible = visible[nom] === true; return g; };
+    const n = 3 + i, cache = (nom: string) => { const g = groupe(nom); g.visible = visible[nom] !== false; return g; };
     const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
+    gs.visible = visible[`sieges_ranges${n}`] === true;
     for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
     for (const st of lm.sieges) siege(st, gs);
     fait_lit(lm.polygone, cache(`lit${n}`), cache(`personne_couchee${n}`), lm.tete);

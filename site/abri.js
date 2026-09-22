@@ -1946,6 +1946,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     }
     const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
     const plancher_cm = pp.amenagement && pp.amenagement.plancher && pp.amenagement.plancher.actif ? +pp.amenagement.plancher.epaisseur_cm : 0;
+    const lit_pose = (v.lits_muraux || []).find((l) => l.tient);
     const passage = v.passages.find((q) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
     const gauche = Math.min(...v.polygone.map((z) => z[0])), avant = Math.min(...v.polygone.map((z) => z[1]));
     const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z) => z[0]));
@@ -1959,7 +1960,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     html("intro", [
       `Bureau de jardin \xE0 ${fait(`${NOMBRES[n] || n} murs`)}, panneaux sandwich ${fait(cote(ep))} autoportants, sur la dalle existante`,
       `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
-      `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}`,
+      `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}${lit_pose ? `, lit ${fait(cote(`${fz3(lit_pose.largeur_cm)} \xD7 ${fz3(lit_pose.longueur_cm)}`))} le long de ${face("A")}` : ""}`,
       `murs ${fait(cote(m.hauteur_mur_cm))}, fa\xEEte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
       `sous plafond ${fait(`${cote(Math.round((Math.min(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)} \u2192 ${cote(Math.round((Math.max(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)}`)} (plancher isol\xE9 de ${cote(plancher_cm)} d\xE9duit)`,
       `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`,
@@ -2058,6 +2059,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     table("amenagement", ["\xE9l\xE9ment", "taille", "place"], [
       ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, cote(`${fz3(b.profondeur_cm)} \xD7 ${fr2(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
       ...(v.sieges || []).map((st) => [st.type, cote(`${fz3(st.largeur_cm)} \xD7 ${fz3(st.profondeur_cm)}`), `devant le bureau ${st.contre === "avant" ? "de fa\xE7ade" : st.contre}`]),
+      ...lit_pose ? [[`lit \xE0 demeure`, cote(`${fz3(lit_pose.largeur_cm)} \xD7 ${fz3(lit_pose.longueur_cm)}`), `le long de la fa\xE7ade, t\xEAte c\xF4t\xE9 porte, pied sous le bureau`]] : [],
       ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
     ], [2]);
     const T = a.textes;
@@ -2180,28 +2182,29 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-    lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-    lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-    lit3: { titre: "Lit v3, en fa\xE7ade, t\xEAte c\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } }
+    couche: { titre: "Couch\xE9, les pieds vers les \xE9crans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);
     vue.montrer("etiquettes", e.etiquettes > 0);
-    vue.montrer("lit", e.mobilier === 2);
-    vue.montrer("lit2", e.mobilier === 3);
-    vue.montrer("sieges_mi", e.mobilier === 0);
+    vue.montrer("lit3", true);
+    vue.montrer("bureaux3", true);
+    vue.montrer("mobilier", false);
+    vue.montrer("lit", false);
+    vue.montrer("lit2", false);
     vue.montrer("sieges", e.mobilier === 1);
-    vue.montrer("sieges_ranges", e.mobilier === 2);
-    vue.montrer("sieges_ranges2", e.mobilier === 3);
-    vue.montrer("mobilier", e.mobilier < 4);
-    for (let n = 3; n < 3 + LITS_MURAUX_MAX; n++) for (const g of ["lit", "bureaux", "sieges_ranges", "personne_couchee"]) vue.montrer(`${g}${n}`, e.mobilier === n + 1 && (g !== "personne_couchee" || e.personne === 2));
+    vue.montrer("sieges_ranges3", e.mobilier !== 1);
+    vue.montrer("sieges_mi", false);
+    vue.montrer("sieges_ranges", false);
+    vue.montrer("sieges_ranges2", false);
+    vue.montrer("personne_couchee3", e.personne === 2 && e.mobilier === 2);
     vue.montrer("porte", e.porte === 1);
     vue.montrer("porte_fermee", e.porte === 2);
     vue.montrer("personne", e.personne === 1);
     vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0);
     vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1);
-    vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2);
-    vue.montrer("personne_couchee2", e.personne === 2 && e.mobilier === 3);
+    vue.montrer("personne_couchee", false);
+    vue.montrer("personne_couchee2", false);
     vue.montrer("cloture", e.cloture > 0);
     vue.montrer("murs", e.murs > 0);
     vue.montrer("murs_coupes", e.murs === 2);
@@ -2714,10 +2717,11 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     (data.mobilier.lits_muraux || []).slice(0, LITS_MURAUX_MAX).forEach((lm, i) => {
       const n = 3 + i, cache = (nom) => {
         const g = groupe(nom);
-        g.visible = visible[nom] === true;
+        g.visible = visible[nom] !== false;
         return g;
       };
       const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
+      gs.visible = visible[`sieges_ranges${n}`] === true;
       for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
       for (const st of lm.sieges) siege(st, gs);
       fait_lit(lm.polygone, cache(`lit${n}`), cache(`personne_couchee${n}`), lm.tete);

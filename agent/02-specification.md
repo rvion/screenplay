@@ -23,7 +23,7 @@
   les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
   bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « au bureau » et « lit
-  déplié » sont en murs coupés. Le bouton **mobilier** a six états : rien d'utilisé (fauteuil à moitié
+  déplié » sont en murs coupés. Le bouton **mobilier** a trois états (l'usage, le lit étant à demeure) : rien d'utilisé (fauteuil à moitié
   rentré), fauteuil au bureau, **lit v1** le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
   une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), **lit v2** en biais au fond, la tête côté porte (le fauteuil
   et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit), puis les **lits à demeure** de `lits_muraux`,

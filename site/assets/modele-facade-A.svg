@@ -9,18 +9,18 @@
 <text x="346.2" y="174.6" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">10</text>
 <polygon points="90.0,138.1 352.5,138.1 352.5,110.0 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
 <text x="221.2" y="128.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R1 · rehausse 22.5 → 22.5</text>
-<rect x="102.5" y="175.6" width="100.0" height="93.8" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
-<text x="152.5" y="218.5" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre ouvrante</text>
-<text x="152.5" y="234.5" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 75 · allège 110</text>
+<rect x="102.5" y="169.4" width="100.0" height="93.8" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
+<text x="152.5" y="212.2" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre ouvrante</text>
+<text x="152.5" y="228.2" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 75 · allège 115</text>
 <line x1="102.5" y1="410.9" x2="102.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="202.5" y1="410.9" x2="202.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="102.5" y1="426.9" x2="202.5" y2="426.9" stroke="#1b9aa8" stroke-width="1"/>
 <line x1="99.5" y1="429.9" x2="105.5" y2="423.9" stroke="#1b9aa8" stroke-width="1"/>
 <line x1="199.5" y1="429.9" x2="205.5" y2="423.9" stroke="#1b9aa8" stroke-width="1"/>
 <text x="152.5" y="434.9" text-anchor="middle" dominant-baseline="middle" fill="#1b9aa8" font-size="10" font-weight="bold" transform="rotate(0.0 152.5 434.9)">80</text>
-<rect x="227.5" y="175.6" width="100.0" height="93.8" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
-<text x="277.5" y="218.5" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre ouvrante</text>
-<text x="277.5" y="234.5" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 75 · allège 110</text>
+<rect x="227.5" y="169.4" width="100.0" height="93.8" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="2"/>
+<text x="277.5" y="212.2" text-anchor="middle" fill="#1b9aa8" font-size="11" font-weight="bold">fenêtre ouvrante</text>
+<text x="277.5" y="228.2" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="normal">80 × 75 · allège 115</text>
 <line x1="227.5" y1="410.9" x2="227.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="327.5" y1="410.9" x2="327.5" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="227.5" y1="426.9" x2="327.5" y2="426.9" stroke="#1b9aa8" stroke-width="1"/>

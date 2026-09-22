@@ -67,12 +67,11 @@ d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout d
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
 - **Porte** pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
   **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade.
-- **Mobilier** : bureau gauche **70 de profondeur sur 236 cm** (trois écrans de 27" = 190), seul
-  bureau de la disposition ; bureau de façade 50 dans la disposition pliante ; lit pliant 70 × 190 (`lit_pliant`,
-  `lit_pliant_2`) ; un lit à demeure (`lits_muraux`) : **v3**, lit **80 × 190** le long de la façade,
-  calé à droite (`position: "fin"`), **tête côté porte** : couché, les pieds vont vers le bureau
-  gauche et ses écrans, et le plateau du bureau passe **au-dessus du pied du lit** sans être coupé
-  (`bureaux_entiers`). Les sièges se rangent sous le bureau gauche, dossier hors du plateau.
+- **Mobilier, une seule disposition** : le bureau gauche **70 de profondeur sur 236 cm** (trois écrans
+  de 27" = 190), le fauteuil et le tabouret qui se rangent dessous, et le lit **80 × 190** le long de la façade,
+  calé à droite (`position: "fin"`), **tête côté porte** : couché, les pieds vont vers les écrans, et le
+  plateau passe **au-dessus du pied du lit** sans être coupé (`bureaux_entiers`). Plus de lit pliant ni de
+  bureau de façade : le bouton **mobilier** ne dit plus que l'usage (rien, au bureau, couché).
 
 Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans `etudes/`
 et restent couvertes par les tests via `tests/fixtures/etude-v{1,2,3}.json`.

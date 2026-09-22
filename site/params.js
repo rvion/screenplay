@@ -113,23 +113,8 @@ window.SHED_PARAMS = {
       {
         "cote": "gauche",
         "profondeur_cm": 70
-      },
-      {
-        "cote": "avant",
-        "profondeur_cm": 50
       }
     ],
-    "lit_pliant": {
-      "largeur_cm": 70,
-      "longueur_cm": 190,
-      "contre": "",
-      "epaisseur_replie_cm": 10,
-      "acces_porte_cm": 0,
-      "sous_bureau": true,
-      "pied_sous": "avant",
-      "pres_de": "droite",
-      "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)"
-    },
     "sieges": [
       {
         "type": "fauteuil de bureau",
@@ -142,8 +127,8 @@ window.SHED_PARAMS = {
         "type": "tabouret",
         "largeur_cm": 30,
         "profondeur_cm": 30,
-        "contre": "avant",
-        "position": "centre"
+        "contre": "gauche",
+        "position": "fin"
       }
     ],
     "fenetres": [
@@ -151,7 +136,7 @@ window.SHED_PARAMS = {
         "cote": "avant",
         "largeur_cm": 80,
         "hauteur_cm": 75,
-        "allege_cm": 110,
+        "allege_cm": 115,
         "position": 10,
         "ouvrant": true
       },
@@ -159,7 +144,7 @@ window.SHED_PARAMS = {
         "cote": "avant",
         "largeur_cm": 80,
         "hauteur_cm": 75,
-        "allege_cm": 110,
+        "allege_cm": 115,
         "position": 110,
         "ouvrant": true
       }
@@ -171,19 +156,12 @@ window.SHED_PARAMS = {
       "fond": 140
     },
     "porte_vitree": false,
-    "lit_pliant_2": {
-      "pied_sous": "",
-      "pres_de": "fond en biais",
-      "parallele_a": "fond en biais",
-      "sieges_ranges": true,
-      "_comment": "seconde position, en biais au fond : le lit est parallele au pan a 45 degres et au plus pres de lui ; les sieges sont ranges (leur gene ne compte pas), le fauteuil pousse vers le bureau de facade"
-    },
     "panneaux_depuis_la_fin": [
       "droite"
     ],
     "lits_muraux": [
       {
-        "nom": "v3",
+        "nom": "lit",
         "contre": "avant",
         "largeur_cm": 80,
         "longueur_cm": 190,
@@ -199,7 +177,7 @@ window.SHED_PARAMS = {
         ]
       }
     ],
-    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (position 'fin' = a l'autre bout) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges sont ranges dessous, jamais sur le lit. v3 : lit 80 x 190 le long de la facade (198 dedans), tete a droite contre le mur de la porte, pieds vers le bureau gauche et ses ecrans, le pied du lit sous le plateau de 80",
+    "_comment_lits_muraux": "le lit de l'abri, pose a demeure contre le mur `contre` et cale a l'autre bout (position 'fin') ; tete = cote de l'oreiller ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges se rangent dessous, jamais sur le lit. Ici : lit 80 x 190 le long de la facade (198 dedans), tete contre le mur de la porte, pieds vers le bureau gauche et ses ecrans",
     "porte_hauteur_cm": 204
   },
   "formes_etudiees": [

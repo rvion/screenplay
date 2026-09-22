@@ -19,7 +19,6 @@
 
 - **Toit** : vers l'arrière, chute 22,5 cm (5,18°) = choix par défaut. Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
 - **Formalités** : emprise au sol **4,96 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,45 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
-- **Lit 70 × 190** : déplié au milieu, le pied sous un bureau, fauteuil et tabouret rangés.
 - **Portée du toit** (~2,5 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (135°, 135°) : profils d'angle pliés sur mesure.
 
@@ -71,7 +70,7 @@
 | B · fond | 140 cm | 131,5 cm | 215 → 215 cm | 135° |
 | G · gauche | 248 cm | 236 cm | 215 → 237,5 cm | 90° |
 
-Murs 4,96 m² · intérieur 4,45 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,16 m² · hauteur sous plafond 2,28 m devant, 2,05 m au plus bas (plancher isolé déduit).
+Murs 4,96 m² · intérieur 4,45 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,8 m² · hauteur sous plafond 2,28 m devant, 2,05 m au plus bas (plancher isolé déduit).
 
 ## Débit
 
@@ -125,18 +124,16 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | ouverture | taille | où | détail |
 |---|---|---|---|
 | porte pleine | 73 × 204 (cadre 83 × 209) | face D, de 92,5 à 165,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
-| fenêtre oscillo-battante | 80 × 75 | face A, de 10 à 90 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
-| fenêtre oscillo-battante | 80 × 75 | face A, de 110 à 190 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 10 à 90 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 110 à 190 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
 
 ## Aménagement
 
 | élément | taille | place |
 |---|---|---|
 | bureau gauche | 70 × 236 cm | tout le mur gauche |
-| bureau de façade | 50 × 198 cm | tout le mur de façade |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
-| tabouret | 30 × 30 cm | devant le bureau de façade |
-| lit pliant (déplié) | 70 × 190 cm | au milieu, pied sous un bureau, sièges rangés |
+| tabouret | 30 × 30 cm | devant le bureau gauche |
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 
@@ -289,7 +286,7 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 **Outils :** scie circulaire lame métal, rail de guidage, scie sauteuse
 
 1. Bandes de mur : A3 10 cm, D1 78 cm, C1 99 cm, B2 40 cm, G3 48 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
-2. Fenêtres : 80 × 75 cm, bas à 110 cm ; 80 × 75 cm, bas à 110 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
+2. Fenêtres : 80 × 75 cm, bas à 115 cm ; 80 × 75 cm, bas à 115 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
 3. Toit : T2, T3 à couper en biais d'après le plan de toiture.
 4. Rehausse : R1 (mur A, 210 cm, 22,5 → 22,5 cm), R2 (mur D, 178 cm, 22,5 → 6,4 cm), R3 (mur C, 99 cm, 6,4 → 0 cm), R4 (mur G, 248 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
 
@@ -458,7 +455,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 1. Deux entrées d'air sur deux murs opposés, une basse et une haute.
 2. Électricité en apparent, sous goulotte, depuis le câble existant : on ne perce pas la tôle extérieure pour un câble.
-3. Bureaux sur pieds ou sur équerres au sol : 70 × 236 cm à gauche, 50 × 198 cm en façade. Les parements de 0,5 mm ne portent pas une charge suspendue.
+3. Bureaux sur pieds ou sur équerres au sol : 70 × 236 cm à gauche. Les parements de 0,5 mm ne portent pas une charge suspendue.
 
 **À contrôler avant de continuer :**
 
@@ -470,7 +467,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Points forts
 
 - **Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais (99 cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
-- **4,96 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,45 m² à l'intérieur, 2,16 m² de sol libre hors bureaux.
+- **4,96 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,45 m² à l'intérieur, 2,8 m² de sol libre hors bureaux.
 - **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (238.1 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 50 cm.** 2,06 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
