@@ -28,7 +28,7 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, lit: false, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,porte,arriere,dessus" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.dessus.position[1] > 5 && Object.values(VUES).every((v) => v.titre.length > 5), "quatre points de vue fixes : jardin, porte, arrière, dessus");
+ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && VUES.droite.position[2] > 4 && Object.values(VUES).every((v) => v.titre.length > 5), "quatre points de vue fixes : jardin, porte, arrière, droite (celle collée par Rémi)");
 racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });

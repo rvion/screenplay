@@ -1594,8 +1594,7 @@ export function buildCore(p: Params) {
   }
   if (modele && g.dalle) {
     planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
-    planches.resume_murs = { nom: "Murs et angles", lignes: [], svg: resume_murs_svg(v13, modele) };
-    planches.resume_marges = { nom: "Sur la dalle", lignes: [], svg: resume_marges_svg(g, v13) };
+    planches.resume = { nom: "Résumé", lignes: [], svg: resume_svg(g, v13, modele) };
     planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
     planches.toit = { ...entete_toit(modele), svg: modele_toit_svg(v13, modele, true) };
     planches.rehausse = { ...entete_rehausse(modele), svg: modele_rehausse_svg(modele, true) };
@@ -1853,33 +1852,14 @@ function cote_svg(pa: number[], pb: number[], label: string, off: number, col = 
 }
 
 // repere plan commun (y vers l'arriere = vers le haut de l'image)
-// resume de la page d'accueil : deux petits dessins nus, sans fond ni entete
-// 1. le contour de l'abri avec la longueur de chaque mur et l'angle a chaque coin
-export function resume_murs_svg(v: any, m: any): string {
-  const q: Pt[] = v.polygone, xs = q.map((z) => z[0]), ys = q.map((z) => z[1]);
-  const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const scale = 0.72, pad = 52, W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + 2 * pad;
-  const P = (z: Pt) => [pad + (z[0] - minx) * scale, pad + (maxy - z[1]) * scale];
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${rnd(W)} ${rnd(H)}" width="${rnd(W)}" height="${rnd(H)}" font-family="system-ui,sans-serif" font-size="12">\n`;
-  svg += poly(q.map(P), "#e8eef4", "#2b5d8a", 2.5);
-  m.faces.forEach((f: any, i: number) => {
-    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / L, ny = -(b[0] - a[0]) / L;
-    // contour antihoraire dans le repere (x droite, y fond) : a l'ecran (y inverse) l'exterieur est a gauche de la marche
-    const c = [(a[0] + b[0]) / 2 - nx * 19, (a[1] + b[1]) / 2 - ny * 19 + 4];
-    svg += text(c[0], c[1], `${f.cle} ${fr1(f.longueur_cm)}`, "middle", "#1f5a8c", 12, "bold");
-    const p0 = P(q[i]), prev = P(q[(i - 1 + q.length) % q.length]), next = P(q[(i + 1) % q.length]);
-    const dx = (prev[0] - p0[0]) + (next[0] - p0[0]), dy = (prev[1] - p0[1]) + (next[1] - p0[1]), d = Math.hypot(dx, dy) || 1;
-    svg += text(p0[0] + dx / d * 22, p0[1] + dy / d * 22 + 4, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 10);
-  });
-  return svg + "</svg>\n";
-}
-// 2. l'abri sur la dalle, avec chaque marge : gauche, devant, a droite, et le passage derriere
-export function resume_marges_svg(g: any, v: any): string {
+// resume de la page d'accueil : un seul dessin nu, sans fond ni entete. L'abri sur la dalle : longueur et lettre de
+// chaque mur et angle de chaque coin a l'interieur du contour, marges (gauche, devant, droite, passage) hors de la dalle
+export function resume_svg(g: any, v: any, m: any): string {
   const d = g.dalle, [ox, oy] = d.decalage_cm, dalle: Pt[] = d.polygone.map(([x, y]: Pt) => [x + ox, y + oy]), q: Pt[] = v.polygone;
   const xs = dalle.map((z) => z[0]), ys = dalle.map((z) => z[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const scale = 0.5, pad = 30, W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + 2 * pad;
-  const P = (z: Pt) => [pad + (z[0] - minx) * scale, pad - 12 + (maxy - z[1]) * scale];
+  const scale = 0.7, padx = 40, pady = 24, W = (maxx - minx) * scale + 2 * padx, H = (maxy - miny) * scale + 2 * pady;
+  const P = (z: Pt) => [padx + (z[0] - minx) * scale, pady + (maxy - z[1]) * scale];
   const qx = q.map((z) => z[0]), qy = q.map((z) => z[1]), gx = Math.min(...qx), dx = Math.max(...qx), av = Math.min(...qy), ymid = (av + Math.max(...qy)) / 2;
   const mur = new Set(d.murs.map((w: any) => w.cote)), grillage = new Set(d.murs.filter((w: any) => w.type === "grillage").map((w: any) => w.cote));
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${rnd(W)} ${rnd(H)}" width="${rnd(W)}" height="${rnd(H)}" font-family="system-ui,sans-serif" font-size="11">\n`;
@@ -1890,23 +1870,33 @@ export function resume_marges_svg(g: any, v: any): string {
     svg += grillage.has(nom) ? line(pa[0], pa[1], pb[0], pb[1], "#5f8a4a", 2.5, "5 3") : line(pa[0], pa[1], pb[0], pb[1], "#5b4a3a", 4);
   });
   svg += poly(q.map(P), "#dbe6f0", "#2b5d8a", 2);
-  // une marge courte a son libelle hors de la dalle, une longue au-dessus de son trait
-  const marge = (a: Pt, b: Pt, label: string, ou: "gauche" | "bas" | "dessus", col = "#b86e1f") => {
+  // murs : lettre et longueur a l'interieur, le long du mur ; angle a chaque coin, sur la bissectrice interieure
+  m.faces.forEach((f: any, i: number) => {
+    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / L, ny = -(b[0] - a[0]) / L;
+    svg += text((a[0] + b[0]) / 2 + nx * 13, (a[1] + b[1]) / 2 + ny * 13 + 4, `${f.cle} ${fr1(f.longueur_cm)}`, "middle", "#1f5a8c", 11, "bold");
+    const p0 = P(q[i]), prev = P(q[(i - 1 + q.length) % q.length]), next = P(q[(i + 1) % q.length]);
+    const bx = (prev[0] - p0[0]) + (next[0] - p0[0]), by = (prev[1] - p0[1]) + (next[1] - p0[1]), bl = Math.hypot(bx, by) || 1;
+    svg += text(p0[0] + bx / bl * 24, p0[1] + by / bl * 24 + 3, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 9);
+  });
+  // marges : trait entre l'abri et le bord, libelle hors de la dalle
+  const marge = (a: Pt, b: Pt, label: string, ou: "gauche" | "bas" | "droite", col = "#b86e1f") => {
     const pa = P(a), pb = P(b);
     svg += line(pa[0], pa[1], pb[0], pb[1], col, 1.4);
-    if (ou === "gauche") svg += text(pa[0] - 4, pa[1] + 4, label, "end", col, 11, "bold");
-    else if (ou === "bas") svg += text(pa[0], pa[1] + 13, label, "middle", col, 11, "bold");
-    else svg += text((pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2 - 5, label, "middle", col, 11, "bold");
+    if (ou === "gauche") svg += text(pa[0] - 5, pa[1] + 4, label, "end", col, 11, "bold");
+    else if (ou === "bas") svg += text(pa[0], pa[1] + 14, label, "middle", col, 11, "bold");
+    else svg += text(pb[0] + 5, pb[1] + 4, label, "start", col, 11, "bold");
   };
-  marge([0, ymid], [gx, ymid], `${fr1(gx)}`, "gauche");
+  // les traits de marge passent pres de la facade, loin des libelles des murs G et D (au milieu de leur mur)
+  const yb = av + 40;
+  marge([0, yb], [gx, yb], `${fr1(gx)}`, "gauche");
   marge([(gx + dx) / 2, 0], [(gx + dx) / 2, av], `${fr1(av)}`, "bas");
-  marge([dx, ymid * 0.7], [d.avant, ymid * 0.7], `${fr1(rnd(d.avant - dx, 1))}`, "dessus");
+  marge([dx, yb], [d.avant, yb], `${fr1(rnd(d.avant - dx, 1))}`, "droite");
   const pas = v.passages.find((x: any) => x.cote === "arriere_droite");
   if (pas && pas.segment) {
-    const [s0, s1] = pas.segment, pa = P(s0), pb = P(s1);
+    const [s0, s1] = pas.segment, pa = P(s0), pb = P(s1), L = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
     svg += line(pa[0], pa[1], pb[0], pb[1], "#2a8a4a", 1.6);
-    // le libelle du passage est pose du cote de l'abri, pas sur le mur
-    svg += text((pa[0] + pb[0]) / 2 - 6, (pa[1] + pb[1]) / 2 + 14, `${fr1(pas.cm)}`, "end", "#2a8a4a", 11, "bold");
+    // le libelle du passage est au-dela du mur, hors de la dalle, dans le prolongement du trait
+    svg += text(pb[0] + (pb[0] - pa[0]) / L * 22 + 4, pb[1] + (pb[1] - pa[1]) / L * 22 + 2, `${fr1(pas.cm)}`, "middle", "#2a8a4a", 11, "bold");
   }
   return svg + "</svg>\n";
 }

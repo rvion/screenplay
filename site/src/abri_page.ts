@@ -124,7 +124,6 @@ export function rend_abri(a: Abri) {
 
   // fiche chantier : ce qu'on cherche sur place, sur un ecran
   // resume : deux phrases, puis six cartes ; le detail est dans les sections
-  const grillage_gauche = ((a.pp.dalle_cm && a.pp.dalle_cm.grillages) || []).includes("gauche");
   html("intro", `Bureau de jardin à ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, sur la dalle existante, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau en L le long des murs ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   // deux dessins (murs et angles ; marges sur la dalle) puis les chiffres qui restent
   const RS = core.planches || {};
@@ -134,7 +133,7 @@ export function rend_abri(a: Abri) {
     ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${cote(v.aire_interieure_m2, "m²")} intérieur`],
     ["Matériaux", `${eur(B.materiaux_eur)} TTC`],
   ];
-  html("fiche", `<div class="resume-figs"><figure>${RS.resume_murs ? RS.resume_murs.svg : ""}<figcaption>Murs et angles, cotes extérieures en cm, façade en bas</figcaption></figure><figure>${RS.resume_marges ? RS.resume_marges.svg : ""}<figcaption>Sur la dalle : marges en cm, passage derrière en vert${grillage_gauche ? ", grillage en pointillé vert" : ""}</figcaption></figure></div><dl class="resume-dl">${paires.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("")}</dl>`);
+  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><dl class="resume-dl">${paires.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("")}</dl></div>`);
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
     m.faces.map((f: any, i: number) => [paire(f.cle, nom_face(f)), cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => paire(pn.id, cote(pn.largeur_cm))).join(", "), cote(m.angles_deg[i], "°")]), [3, 4]);
 

@@ -18,7 +18,7 @@ export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
   porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
   arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
-  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1.0], cible: [0.3, 0, 0.8], fov: 42 },
+  droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42 },
 } as const;
 export type NomVue = keyof typeof VUES;
 export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee";
