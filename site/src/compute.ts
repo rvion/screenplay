@@ -1000,8 +1000,9 @@ export function variantes(p: Params, g: any) {
 /* ----------------------------------------------------------------- */
 /* SVG (plans + elevations)                                           */
 /* ----------------------------------------------------------------- */
-function svgHeader(w: number, h: number): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" font-family="system-ui,sans-serif" font-size="13">\n<rect width="${w}" height="${h}" fill="#fbfbf8"/>\n`;
+// nu = planche de la page : pas de fond (la carte est blanche), largeur et hauteur reelles pour que la boite epouse le dessin
+function svgHeader(w: number, h: number, nu = false): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}"${nu ? ` width="${w}" height="${h}"` : ""} font-family="system-ui,sans-serif" font-size="13">\n${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>\n`}`;
 }
 function line(x1: number, y1: number, x2: number, y2: number, stroke = "#333", w = 1, dash = ""): string {
   const d = dash ? ` stroke-dasharray="${dash}"` : "";
@@ -1219,7 +1220,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   const zu = !m && (avecBandes || v) ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
   const q: Pt[] = d.polygone.map(([x, y]: Pt) => [x + ox, y + oy]);
-  const n = q.length, scale = 1.25, pad = 110, top = sans_entete ? 0 : 90;
+  const n = q.length, scale = 1.25, pad = sans_entete ? 85 : 110, top = sans_entete ? 0 : 90;
   const xs = q.map((v) => v[0]), ys = q.map((v) => v[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
   const pw = v && v.porte ? v.porte.largeur_cm * scale - 60 : 0;
@@ -1228,7 +1229,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   const P = (v: Pt) => [pad + (v[0] - minx) * scale, top + 40 + (maxy - v[1]) * scale];
   const mur = new Set(d.murs.map((w: any) => w.cote));
   const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
-  let svg = svgHeader(rnd(W), rnd(H));
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   if (zu) svg += `<defs><pattern id="bande" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3e3cf"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e0b98a" stroke-width="2"/></pattern></defs>\n`;
   svg += poly(q.map(P), zu ? "url(#bande)" : "#e9e5da", GRIS, 2);
   if (zu) svg += poly(zu.polygone.map(P), "#e3efe0", "#2a8a4a", 1.8, v ? "5 4" : "");
@@ -1862,8 +1863,8 @@ export function entete_sol(p: Params, v: any): EntetePlan {
 }
 export function modele_sol_svg(p: Params, v: any, m: any, sans_entete = false): string {
   const q: Pt[] = v.polygone, n = q.length, scale = 1.6;
-  const { W, H, P } = cadre_plan(q, scale, 120, sans_entete ? 0 : 50);
-  let svg = svgHeader(rnd(W), rnd(H));
+  const { W, H, P } = cadre_plan(q, scale, sans_entete ? 108 : 120, sans_entete ? 0 : 50);
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   svg += poly(q.map(P), "#8fa3b8", "#2b5d8a", 1.5);
   svg += poly(m.interieur.map(P), "#fbfbf8", "#2b5d8a", 1.2);
   for (const b of v.bureaux || []) {
@@ -1947,8 +1948,8 @@ export function entete_toit(m: any): EntetePlan {
 }
 export function modele_toit_svg(v: any, m: any, sans_entete = false): string {
   const T = m.toit, scale = 1.6;
-  const { W, H, P } = cadre_plan(T.contour, scale, 110, sans_entete ? 0 : 50);
-  let svg = svgHeader(rnd(W), rnd(H));
+  const { W, H, P } = cadre_plan(T.contour, scale, sans_entete ? 85 : 110, sans_entete ? 0 : 50);
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   for (const pn of T.panneaux) {
     svg += poly(pn.polygone.map(P), "#f3f0e8", "#7a6f5a", 1.5);
     const ys = pn.polygone.map((z: Pt) => z[1]), xs = pn.polygone.map((z: Pt) => z[0]);
@@ -2002,9 +2003,9 @@ export function entete_rehausse(m: any): EntetePlan {
   return { lettre: "R", nom: "Rehausse bois", detail: `${R.pieces.length} pièces dans ${R.nb_madriers} madrier${R.nb_madriers > 1 ? "s" : ""}`, lignes: ["hauteur de chaque pièce : de son début à sa fin, dans le sens de la face (vue de l'extérieur, de gauche à droite)"] };
 }
 export function modele_rehausse_svg(m: any, sans_entete = false): string {
-  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = 50, gap = 60, ent = sans_entete ? 20 : 70;
-  const W = stock * sx + 2 * pad, H = ent + R.barres.length * (section * sy + gap) + 30;
-  let svg = svgHeader(rnd(W), rnd(H));
+  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = sans_entete ? 20 : 50, gap = 60, ent = sans_entete ? 20 : 70;
+  const W = stock * sx + 2 * pad, H = ent + R.barres.length * (section * sy + gap) + (sans_entete ? 10 : 30);
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   R.barres.forEach((b: any, k: number) => {
     const top = ent + k * (section * sy + gap), X = (x: number) => pad + x * sx, Y = (h: number) => top + (section - h) * sy;
     svg += text(pad, top - 10, `madrier ${k + 1} · ${R.section_mm[0]} × ${R.section_mm[1]} · ${fz(stock)} cm · chute ${fz(b.chute_cm)} cm`, "start", "#5a4f3a", 12, "bold");
@@ -2028,10 +2029,10 @@ export function entete_facade(f: any): EntetePlan {
   return { lettre: f.cle, nom: f.nom, lignes: [`vue de l'extérieur · ${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(f.hauteur_mur_cm)} · hauteurs finies aux deux bouts`] };
 }
 export function modele_facade_svg(m: any, f: any, sans_entete = false): string {
-  const scale = 1.25, pad = 60, top = sans_entete ? 0 : 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
+  const scale = 1.25, pad = sans_entete ? 30 : 60, top = sans_entete ? 0 : 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
   const W = L * scale + 2 * pad + 60, H = Math.max(h0, h1) * scale + 2 * pad + top + 30;
   const P = (x: number, h: number) => [pad + 30 + x * scale, H - pad - 30 - h * scale];
-  let svg = svgHeader(rnd(W), rnd(H));
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   for (const pn of f.panneaux) {
     svg += poly([P(pn.debut_cm, 0), P(pn.debut_cm + pn.largeur_cm, 0), P(pn.debut_cm + pn.largeur_cm, Hm), P(pn.debut_cm, Hm)], "#eef2f6", "#2b5d8a", 1.5);
     const c = P(pn.debut_cm + pn.largeur_cm / 2, Hm - 18);
