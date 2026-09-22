@@ -608,3 +608,27 @@ hors tout**, dormant compris, à **10 cm** de la face intérieure du pan C. Son 
 rehausse et à la tôle par un profil en U. Remplace la porte intérieure Artens Lia 73 × 204 (âme alvéolaire,
 sans étanchéité). Prix du 70 à relever (199 € est celui du 80 × 205).
 
+
+## D52 — Une seule référence de panneau, angles obtus pliés sur place, plancher flottant, pied en cornières
+Relecture de tout le dossier (2026-09-23) : « qu'est-ce qui pourrait être plus simple ? ». Cinq changements, sur la
+branche `simplifications-coherence`.
+(1) **Panneaux de 115 partout**, murs et toit : 8 panneaux de mur au lieu de 9 (7 de 100 et 2 de 115), une seule
+ligne de devis, et chaque chute sert à n'importe quel mur (B2 de 21,6 et G3 de 20 en sortent). Le mécanisme par
+face (`largeur_utile_par_face_cm`) reste, pour le cas où le fournisseur n'aurait le 115 qu'en toiture.
+*Coût :* deux bandes étroites (20 et 21,6) au lieu de 36,6 et 50, et le pan C recoupé dans un 115.
+(2) **Angles obtus sans profil sur mesure** : un profil d'angle est une tôle pliée dont l'angle entre les ailes est
+celui du mur. À 90° il s'achète tout fait ; à 134,4° et 135,6° il fallait le faire plier en usine, sans prix
+public. Désormais une **bande plate laquée** de 25 cm, de la même teinte, se plie sur place à la pince : un seul
+pli de 45°, serrée entre deux planches droites, gabarit fait de deux chutes de panneau posées dans l'angle.
+Le même geste sert dehors et dedans.
+(3) **Plancher flottant** : film PE, 60 mm de XPS continu, OSB3 22 mm collé aux rainures, revêtement. Ni
+lambourde ni vis dans la dalle, pas de pont thermique par les lambourdes. 9 cm au lieu de 10 : un centimètre de
+plus sous le plafond. La liste d'achats disait jusqu'ici 40 mm et OSB 18 alors que l'épaisseur comptait 60 et 22.
+(4) **Pied des murs en deux cornières alu 40 × 40**, dedans et dehors, au lieu d'un profil de départ en U : un U
+fait sur place, qui se coupe d'onglet à tout angle, en longueurs de magasin. La cornière intérieure se pose
+contre le panneau, donc sans mesure ; côté grillage, aucune vis n'est à faire dehors.
+(5) **Ventilation au total** : les deux entrées d'air sortent de l'équipement optionnel (D7 les dit indispensables).
+*Cohérence :* le PLU a quitté le guide (D50), la phrase sur le madrier classe 2 se contredisait, « En bref »
+parlait encore d'un bureau en L et oubliait le lit, « À trancher » listait des choix déjà faits, et le texte du
+dossier disait « deux panneaux de toit entiers » et « profils standard ». *Gardes :* `tests/modele.mjs` (ventilation au
+total, aucun profil sur mesure, aucune lambourde, deux cornières, aucun PLU), vues rouges sur l'ancien `chantier.ts`.

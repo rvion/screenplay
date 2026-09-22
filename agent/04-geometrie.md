@@ -52,29 +52,32 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 208 | 237 → 237 | 115 + 93 (panneaux de 115) |
-| D droite | 180 | 237 → 221,2 | 80 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan en biais | 100 | 221,2 → 215 | 100 (un panneau entier, aucune coupe) |
-| B fond | 136,6 | 215 → 215 | 100 + 36,6 |
-| G gauche | 250 | 215 → 237 | 100 + 100 + 50 |
+| A façade | 208 | 237 → 237 | 115 + 93 |
+| D droite | 180 | 237 → 221,2 | 65 + 115 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan en biais | 100 | 221,2 → 215 | 100 (un panneau recoupé) |
+| B fond | 136,6 | 215 → 215 | 115 + 21,6 (chute) |
+| G gauche | 250 | 215 → 237 | 115 + 115 + 20 (chute) |
 
-- Angles **90 / 90 / 134,4 / 135,6 / 90** (profils d'angle pliés sur mesure de toute façon). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
+- Angles **90 / 90 / 134,4 / 135,6 / 90** (angles droits : profils du commerce ; angles obtus : bande plate laquée pliée sur place, D52). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
   à l'aire exacte, jamais arrondie : `tests/formalites.mjs`). Intérieur 4,44 m², sol libre hors
   bureau 2,77 m². Cotes intérieures : façade **196**, droite 171,5, pan 95, fond 128,1, gauche 238.
-  Passage derrière : 54,9 cm au grand pan, 69,7 au petit pan. Matériaux 2 850 € TTC.
+  Passage derrière : 54,9 cm au grand pan, 69,7 au petit pan. Matériaux 2 873 € TTC.
 - **Pourquoi 208 et pas 210** : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
   5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).
-- **Le plancher isolé prend 10 cm** (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
-  la hauteur sous plafond tombe à **2,05 m au plus bas et 2,27 m en façade**, et c'est cette hauteur
+- **Le plancher flottant prend 9 cm** (film PE, 60 mm de XPS continu, OSB 22 collé aux rainures,
+  revêtement 5 ; ni lambourde ni vis dans la dalle, D52) : la hauteur sous plafond tombe à
+  **2,06 m au plus bas et 2,28 m en façade**, et c'est cette hauteur
   que montre le modèle 3D.
 - **La façade de 196 dedans porte le lit** : 190 de long, donc 6 cm de jeu pour le cadre.
 - **Le mur droit de 180 dégage la porte** : la baie est **entièrement libre**, même avec une porte
   de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
 - **Toit plan vers le fond** : `H` = 215, `c` = 22, `D` = 250 ⇒ pente **8,8 %** (5,03°), portée 2,50 m.
   **2 panneaux de toit de 115** (115 × 261, 93 × 261 en biais).
-- **Panneaux de 115 en façade et au toit** (`panneau.largeur_utile_par_face_cm`), 100 sur les autres murs :
-  deux pièces au lieu de trois, plus de bande de 8. Deux références chez le fournisseur ; une chute ne
-  sert qu'à un panneau de la même largeur. Fenêtres recentrées : une par panneau de façade (17,5 et 121,5).
+- **Une seule référence de panneau, 115 de large**, murs et toit (D52) : **8 panneaux de mur** au lieu de
+  9 (7 de 100 et 2 de 115), et chaque chute sert à n'importe quel mur (B2 et G3 en sortent). Façade et
+  toit en deux pièces, une fenêtre par panneau de façade (17,5 et 121,5). `panneau.largeur_utile_par_face_cm`
+  reste possible si le fournisseur n'a pas le 115 partout.
+- **Pied des murs** : deux cornières alu 40 × 40, dedans et dehors, coupées d'onglet à chaque angle (D52).
 - **Rehausse** (madrier **70 × 220 classe 4**, la section vendue en stock ; chute 22) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.

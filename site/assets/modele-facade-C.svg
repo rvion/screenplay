@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 305 496" font-family="system-ui,sans-serif" font-size="13">
 <rect width="305" height="496" fill="#fbfbf8"/>
 <polygon points="90.0,406.2 215.0,406.2 215.0,137.5 90.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
-<text x="152.5" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">C1</text>
+<text x="152.5" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">C1 · 100</text>
 <polygon points="90.0,137.5 215.0,137.5 215.0,137.5 90.0,129.8" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
 <text x="152.5" y="128.0" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R3 · rehausse 6.2 → 0</text>
 <line x1="90.0" y1="410.2" x2="90.0" y2="430.2" stroke="#aaa" stroke-width="0.7"/>

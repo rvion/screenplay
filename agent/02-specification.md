@@ -145,8 +145,9 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
     budget. Que des matériaux, en **TTC**, quantités **calculées** depuis le modèle avec leur règle
     affichée (« comment c'est compté »). **Ni main-d'œuvre, ni forfait, ni livraison** (la livraison
     est citée à part, hors total). Groupes : panneaux, bois, profils et bavettes, fixations,
-    étanchéité, ouvertures, eaux pluviales, plancher isolé, consommables ; l'équipement (aérateurs,
-    électricité, chauffage, stores) est **optionnel et compté à part**. Prix dans
+    étanchéité, ouvertures, eaux pluviales, plancher isolé, ventilation (jamais optionnelle : D7),
+    consommables ; l'équipement (électricité, chauffage, stores) est **optionnel et compté à part**.
+    Une ligne de panneaux de mur par largeur utile, qui nomme ses murs (« tous les murs » s'il n'y en a qu'une). Prix dans
     `prix_materiaux_eur_ttc` : chaque article a `pu`, `unite`, `source` ; **sans source il est marqué
     « prix à confirmer »** sur le site et dans `abri.md`. `m.budget` garde `total_eur`, `coque_eur`,
     `amenagement_eur` pour les tableaux comparés, mais ils ne comptent que des matériaux.

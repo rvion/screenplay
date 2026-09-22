@@ -561,6 +561,29 @@ hors tout</strong>, dormant compris, à <strong>10 cm</strong> de la face intér
 (<code>porte_chambranle_cm: 0</code>) : le bois du cadre sort des matériaux, et le guide fixe le dormant au rail, à la
 rehausse et à la tôle par un profil en U. Remplace la porte intérieure Artens Lia 73 × 204 (âme alvéolaire,
 sans étanchéité). Prix du 70 à relever (199 € est celui du 80 × 205).</p>
+<h2 id="d52--une-seule-référence-de-panneau-angles-obtus-pliés-sur-place-plancher-flottant-pied-en-cornières">D52 — Une seule référence de panneau, angles obtus pliés sur place, plancher flottant, pied en cornières</h2>
+<p>Relecture de tout le dossier (2026-09-23) : « qu&#39;est-ce qui pourrait être plus simple ? ». Cinq changements, sur la
+branche <code>simplifications-coherence</code>.
+(1) <strong>Panneaux de 115 partout</strong>, murs et toit : 8 panneaux de mur au lieu de 9 (7 de 100 et 2 de 115), une seule
+ligne de devis, et chaque chute sert à n&#39;importe quel mur (B2 de 21,6 et G3 de 20 en sortent). Le mécanisme par
+face (<code>largeur_utile_par_face_cm</code>) reste, pour le cas où le fournisseur n&#39;aurait le 115 qu&#39;en toiture.
+<em>Coût :</em> deux bandes étroites (20 et 21,6) au lieu de 36,6 et 50, et le pan C recoupé dans un 115.
+(2) <strong>Angles obtus sans profil sur mesure</strong> : un profil d&#39;angle est une tôle pliée dont l&#39;angle entre les ailes est
+celui du mur. À 90° il s&#39;achète tout fait ; à 134,4° et 135,6° il fallait le faire plier en usine, sans prix
+public. Désormais une <strong>bande plate laquée</strong> de 25 cm, de la même teinte, se plie sur place à la pince : un seul
+pli de 45°, serrée entre deux planches droites, gabarit fait de deux chutes de panneau posées dans l&#39;angle.
+Le même geste sert dehors et dedans.
+(3) <strong>Plancher flottant</strong> : film PE, 60 mm de XPS continu, OSB3 22 mm collé aux rainures, revêtement. Ni
+lambourde ni vis dans la dalle, pas de pont thermique par les lambourdes. 9 cm au lieu de 10 : un centimètre de
+plus sous le plafond. La liste d&#39;achats disait jusqu&#39;ici 40 mm et OSB 18 alors que l&#39;épaisseur comptait 60 et 22.
+(4) <strong>Pied des murs en deux cornières alu 40 × 40</strong>, dedans et dehors, au lieu d&#39;un profil de départ en U : un U
+fait sur place, qui se coupe d&#39;onglet à tout angle, en longueurs de magasin. La cornière intérieure se pose
+contre le panneau, donc sans mesure ; côté grillage, aucune vis n&#39;est à faire dehors.
+(5) <strong>Ventilation au total</strong> : les deux entrées d&#39;air sortent de l&#39;équipement optionnel (D7 les dit indispensables).
+<em>Cohérence :</em> le PLU a quitté le guide (D50), la phrase sur le madrier classe 2 se contredisait, « En bref »
+parlait encore d&#39;un bureau en L et oubliait le lit, « À trancher » listait des choix déjà faits, et le texte du
+dossier disait « deux panneaux de toit entiers » et « profils standard ». <em>Gardes :</em> <code>tests/modele.mjs</code> (ventilation au
+total, aucun profil sur mesure, aucune lambourde, deux cornières, aucun PLU), vues rouges sur l&#39;ancien <code>chantier.ts</code>.</p>
 </main>
 </body>
 </html>

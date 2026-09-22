@@ -16,10 +16,10 @@ unique** et publié sur un petit **site web**.
 ## L'abri : le bureau à cinq murs
 
 La dalle réelle, relevée au mètre, se termine en pointe et longe la limite de propriété à gauche
-et au fond. L'abri est un **bureau à cinq murs**, avec un mur du fond d'équerre et un pan à 45° qui
+et au fond. L'abri est un **bureau à cinq murs**, avec un mur du fond d'équerre et un pan presque à 45° qui
 longe le mur de propriété et garde un passage vers l'arrière. Il reste au seuil des 5 m² de murs
 (sans formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
-vers le fond : la gouttière court derrière l'abri, le long du mur du fond et du pan à 45°.
+vers le fond : la gouttière court derrière l'abri, le long du mur du fond et du pan en biais.
 
 ![implantation de l'abri sur la dalle](site/assets/modele-implantation.svg)
 
@@ -39,7 +39,7 @@ Toute la logique vit dans [`site/src/compute.ts`](site/src/compute.ts) (dalle, f
 modèle de l'abri, plans SVG, scène 3D), et la nomenclature et le guide dans
 [`site/src/chantier.ts`](site/src/chantier.ts). Les deux sont **purs**, donc partagés entre le
 navigateur, le CLI Node et les tests. Les cotes vivent dans [`params.json`](params.json). **Aucune
-cote n'est écrite à la main ailleurs.** La 3D utilise Three.js via CDN.
+cote n'est écrite à la main ailleurs.** La 3D utilise Three.js, livré dans `site/three.js` : la page marche hors ligne et en `file://`.
 
 ```bash
 npm ci                              # esbuild + typescript + jsdom + three (dev)
@@ -77,10 +77,10 @@ La conception détaillée vit dans [`agent/`](agent/) :
 - **Seuil des 5 m²** : emprise au sol = emprise des **murs**. D'après l'article R*420-1 du Code de
   l'urbanisme, les débords de toiture sont **exclus** de l'emprise au sol tant qu'ils ne sont pas
   soutenus par des poteaux, piliers ou encorbellements. Jusqu'à 5 m² d'emprise au sol *et* de
-  surface de plancher : aucune formalité ; de 5 à 20 m² : déclaration préalable. Réserves : secteur
-  protégé ou abords d'un monument historique (déclaration préalable quand même), et le PLU.
+  surface de plancher : aucune formalité ; de 5 à 20 m² : déclaration préalable. L'abri reste sous
+  le seuil, comparé à l'aire exacte.
 - **Portée et pente du toit** : vérifier le tableau de portées et la pente mini du fabricant pour
-  du 60 mm ; `abri.md` donne la portée et la pente calculées, et la panne à mi-profondeur.
+  du 60 mm ; `abri.md` donne la portée et la pente calculées.
 - **Condensation** (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
   thermiques (dont le joint mur/rehausse). **Ventilation indispensable**.
 - **Accès derrière l'abri** : les murs contre la limite ne sont plus accessibles une fois montés ;

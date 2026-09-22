@@ -1,5 +1,16 @@
 # Changelog
 
+## Branche `simplifications-coherence`
+
+- Une seule référence de panneau, 115 de large, murs et toit : 8 panneaux de mur au lieu de 9
+- La liste d'achats nomme les murs de chaque ligne de panneaux
+- Angles de 135° : bande plate laquée pliée sur place, plus de profil sur mesure
+- Plancher flottant (film, XPS 60, OSB 22 collé) : plus de lambourdes, 9 cm au lieu de 10
+- Pied des murs : deux cornières alu, dedans et dehors, au lieu du profil en U
+- Entrées d'air au total des matériaux, plus dans l'équipement optionnel
+- Nouveaux prix relevés : bande plate, pince, cornières, XPS 60, OSB 22, colle, grilles
+- Textes remis à jour : résumé, À trancher, points forts, guide (plus de PLU), README
+
 ## Branche `test-bed-front-head-right` (lit en façade)
 
 - Dimensions changées : façade 208, droite 180, gauche 250, fond 136,6, pan de 100 cm en un panneau entier (44,4°)

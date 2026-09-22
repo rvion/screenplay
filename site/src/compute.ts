@@ -1527,6 +1527,8 @@ export function injecteur(v: any, m: any): (s: string) => string {
     gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), portee_m: fr(rnd(m.portee_cm / 100, 1)), descente: ou_descente(m),
     panneaux_toit: String(m.toit.panneaux.length), hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers),
     pan_cm: fr((m.faces.find((f: any) => f.cle === "C") || m.faces[2]).longueur_cm),
+    panneaux_mur: String(m.panneaux_mur_a_commander), module_cm: fz(m.faces[0].module_cm),
+    bureau_cm: v.bureaux && v.bureaux[0] ? fz(v.bureaux[0].longueur_cm) : "?",
   };
   return (s: string) => s.replace(/\{(\w+)\}/g, (tout, k) => (k in valeurs ? valeurs[k] : tout));
 }
@@ -1545,7 +1547,7 @@ export function abri_md(p: Params, core: any): string {
   const droite = m.sens === "droite";
   const fr = (x: number) => String(x).replace(".", ",");
   const eur = (x: number) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} €`;
-  const d = p.disposition_trapeze, po = v.porte, lp = v.lit_pliant, B = m.budget;
+  const d = p.disposition_trapeze, po = v.porte, lp = v.lit_pliant, B = m.budget, lit = (v.lits_muraux || []).find((l: any) => l.tient);
   const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
   const derriere = v.passages.find((q: any) => q.cote === "arriere_droite");
   let md = `# ${(p.abri && p.abri.titre) || "Abri de jardin"}\n\n`;
@@ -1557,20 +1559,17 @@ export function abri_md(p: Params, core: any): string {
   md += `- **${m.faces.length} murs** en panneaux sandwich ${fz(ep)} cm autoportants : ${m.faces.map((f: any) => `${f.cle === "A" ? "façade" : f.nom} ${fr(f.longueur_cm)}`).join(", ")} cm.\n`;
   md += droite ? `- **Toit** mono-pente vers la droite (jardin), ${fr(m.pente.degres)}° : ${fr(Math.max(...m.hauteurs_coins_cm))} cm contre le mur gauche, ${fr(Math.min(...m.hauteurs_coins_cm))} cm côté porte.\n`
     : `- **Toit** mono-pente vers le fond, ${fr(m.pente.degres)}° : ${fr(m.hauteurs_coins_cm[0])} cm devant, ${fr(Math.min(...m.hauteurs_coins_cm))} cm au plus bas.\n`;
-  md += `- **Porte${po.vitree === false ? " pleine" : ""}** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **${v.fenetres.length === 1 ? `une fenêtre de ${fz(v.fenetres[0].largeur_cm)}` : `${v.fenetres.length} fenêtres`}** en façade, **bureau en L** sur la façade et le mur gauche${lp && lp.replie ? `, **lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le fond` : ""}.\n`;
+  md += `- **Porte${po.vitree === false ? " pleine" : ""}** ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} sur le mur droit, **${v.fenetres.length === 1 ? `une fenêtre de ${fz(v.fenetres[0].largeur_cm)}` : `${v.fenetres.length} fenêtres`}** en façade${v.bureaux.length ? `, **bureau** sur ${v.bureaux.map((b: any) => `le mur ${b.cote === "avant" ? "de façade" : b.cote}`).join(" et ")}` : ""}${lit ? `, **lit ${fz(lit.largeur_cm)} × ${fz(lit.longueur_cm)}** à demeure le long de la façade` : lp && lp.replie ? `, **lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le fond` : ""}.\n`;
   md += `- **Matériaux** : ${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}), sans main-d'œuvre ni livraison ; équipement optionnel ${eur(B.options_eur)}.\n\n`;
   md += `- **Formalités** : emprise au sol ${fr(m.formalites.emprise_au_sol_m2)} m², surface de plancher ${fr(m.formalites.surface_plancher_m2)} m² ⇒ ${m.formalites.libelle}.\n\n`;
   md += `## À trancher\n\n`;
-  const stock_courant = +m.rehausse.section_mm[1] <= 225;
-  md += `- **Toit** : ${droite ? "vers la droite (jardin)" : "vers l'arrière"}, chute ${fr(m.chute_cm)} cm (${fr(m.pente.degres)}°)${droite ? "" : " = choix par défaut"}. Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 ${stock_courant ? ": section courante, à vérifier en classe 4" : "à trouver (sinon deux pièces superposées)"}.\n`;
-  const F = m.formalites;
-  md += `- **Formalités** : emprise au sol **${fr(F.emprise_au_sol_m2)} m²**${F.debords_comptes ? " (débords inclus : ils sont portés par des poteaux)" : ` (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : ${F.reference.split(" :")[0]})`}, surface de plancher ${fr(F.surface_plancher_m2)} m² ⇒ **${F.libelle}** (seuils ${fz(F.seuil_sans_formalite_m2)} puis ${fz(F.seuil_declaration_m2)} m²).\n`;
+  md += `- **Pente** (${fr(m.pente.pourcent)} %, ${fr(m.pente.degres)}°) : à confirmer par le fabricant des panneaux de toit.\n`;
   if (lp && lp.replie) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} rabattable** contre le mur du fond : déplié, ${lp.sous_bureau_cm2 > 0 ? "son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et " : ""}il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).\n`;
   else if (lp) md += `- **Lit ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)}** : déplié au milieu${lp.sous_bureau_cm2 > 0 ? ", le pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", fauteuil et tabouret rangés" : ""}.\n`;
-  const pleine = (v.fenetres || []).filter((f: any) => f.largeur_cm >= +p.panneau.largeur_utile_cm - 0.05);
+  const pleine = (v.fenetres || []).filter((f: any) => f.largeur_cm >= (m.faces[f.cote] || m.faces[0]).module_cm - 0.05);
   if (pleine.length) md += `- **Fenêtre de ${fz(pleine[0].largeur_cm)}** : aussi large qu'un module, elle prend tout le panneau A2, qui ne garde qu'une allège de ${fz(pleine[0].allege_cm)} cm et un linteau de ${fz(rnd(m.hauteur_mur_cm - pleine[0].allege_cm - pleine[0].hauteur_cm, 1))} cm.${(v.fenetres || []).every((f: any) => !f.ouvrant) ? " Elle est **fixe** : la seule aération est la porte (plus la ventilation prévue) ; une ouvrante coûte ~120 € de plus." : ""}\n`;
   md += `- **Portée du toit** (~${fr(rnd(m.portee_cm / 100, 1))} m au plus long) en ${fz(ep)} cm sans panne : à confirmer dans le tableau du fabricant.\n`;
-  md += `- **Angles non droits** (${m.angles_deg.filter((a: number) => Math.abs(a - 90) > 0.5).map((a: number) => fr(a) + "°").join(", ")}) : profils d'angle pliés sur mesure.\n\n`;
+  md += `\n`;
   md += `## Plans\n\n`;
   const plans: [string, string][] = [["modele-implantation", "Implantation sur la dalle"], ["modele-sol", "Plan de sol"], ["modele-toit", "Toiture"], ...m.faces.map((f: any, i: number): [string, string] => [`modele-facade-${f.cle}`, `Face ${f.cle} · ${f.cle === "A" ? "façade (jardin)" : f.nom}${po && po.cote === i ? " (porte)" : ""}`]), ["modele-rehausse", "Rehausse bois : débit des madriers"]];
   for (const [f, t] of plans) md += `### ${t}\n\n![${t}](site/assets/${f}.svg)\n\n`;
@@ -1578,11 +1577,11 @@ export function abri_md(p: Params, core: any): string {
   m.faces.forEach((f: any, i: number) => { md += `| ${f.cle} · ${f.nom} | ${fr(f.longueur_cm)} cm | ${fr(v.cotes_interieures_cm[i])} cm | ${fr(f.hauteur_debut_cm)} → ${fr(f.hauteur_fin_cm)} cm | ${fr(m.angles_deg[i])}° |\n`; });
   md += `\nMurs ${fr(v.aire_m2)} m² · intérieur ${fr(v.aire_interieure_m2)} m² (murs de ${fz(ep)} cm retirés) · sol libre hors bureaux ${fr(v.sol_libre_m2)} m² · hauteur sous plafond ${fr(rnd((m.hauteurs_coins_cm[0] - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m devant, ${fr(rnd((Math.min(...m.hauteurs_coins_cm) - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m au plus bas (plancher isolé déduit).\n\n`;
   md += `## Débit\n\n### Panneaux de mur (hauteur ${fz(m.hauteur_mur_cm)} cm, pose verticale)\n\n| pièce | largeur | provenance | découpe |\n|---|---|---|---|\n`;
-  for (const f of m.faces) for (const pn of f.panneaux) md += `| ${pn.id} | ${fr(pn.largeur_cm)} cm | ${pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < 99.95 ? "panneau recoupé" : "panneau entier"} | ${pn.decoupes.length ? pn.decoupes.join(", ") : "–"} |\n`;
+  for (const f of m.faces) for (const pn of f.panneaux) md += `| ${pn.id} | ${fr(pn.largeur_cm)} cm | ${pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < f.module_cm - 0.05 ? "panneau recoupé" : "panneau entier"} | ${pn.decoupes.length ? pn.decoupes.join(", ") : "–"} |\n`;
   const par_l = Object.entries(m.panneaux_mur_par_largeur || { [+p.panneau.largeur_utile_cm]: m.panneaux_mur_a_commander }).sort((a: any, b: any) => +a[0] - +b[0]);
   md += `\n**${m.panneaux_mur_a_commander} panneaux de mur** à commander, ${par_l.map(([l, n]) => `${n} de ${fz(+l)} × ${fz(m.hauteur_mur_cm)}`).join(" et ")} (les bandes étroites sortent des chutes).\n\n`;
   md += `### Panneaux de toit (dans le sens de la pente, longueur = rampant)\n\n| pièce | largeur | longueur à commander | coupe |\n|---|---|---|---|\n`;
-  for (const t of m.toit.panneaux) md += `| ${t.id} | ${fr(t.largeur_cm)} cm | ${fr(t.longueur_cm)} cm | ${t.largeur_cm < 99.95 ? "refendu en largeur, " : ""}${t.biais ? (droite ? "un bord en biais le long du mur du fond" : "bout arrière en biais") : "entier, coupes droites"} |\n`;
+  for (const t of m.toit.panneaux) md += `| ${t.id} | ${fr(t.largeur_cm)} cm | ${fr(t.longueur_cm)} cm | ${t.largeur_cm < m.toit.module_cm - 0.05 ? "refendu en largeur, " : ""}${t.biais ? (droite ? "un bord en biais le long du mur du fond" : "bout arrière en biais") : "entier, coupes droites"} |\n`;
   const db = m.toit.debord_cm;
   md += droite ? `\nDébords : ${fz(db.droite)} cm à droite (égout, au-dessus de la porte), ${fz(db.gauche)} cm contre le mur de propriété, rives avant et fond ${db.avant || db.arriere ? `à ${fz(db.avant)} et ${fz(db.arriere)} cm` : "affleurantes (bavette de rive)"}. Surface couverte ${fr(m.toit.aire_m2)} m².\n\n`
     : `\nDébords : ${fz(db.avant)} cm devant, ${fz(db.arriere)} cm au fond, rives affleurantes sur les côtés. Surface couverte ${fr(m.toit.aire_m2)} m².\n\n`;
@@ -1601,6 +1600,7 @@ export function abri_md(p: Params, core: any): string {
   md += `\n## Aménagement\n\n| élément | taille | place |\n|---|---|---|\n`;
   for (const b of v.bureaux) md += `| bureau ${b.cote === "avant" ? "de façade" : b.cote} | ${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)} cm | tout le mur ${b.cote === "avant" ? "de façade" : b.cote} |\n`;
   for (const st of v.sieges || []) md += `| ${st.type} | ${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm | devant le bureau ${st.contre === "avant" ? "de façade" : st.contre} |\n`;
+  if (lit) md += `| lit à demeure | ${fz(lit.largeur_cm)} × ${fz(lit.longueur_cm)} cm | le long de la façade, tête côté porte, pied sous le bureau |\n`;
   if (lp) md += `| lit ${lp.replie ? "rabattable" : "pliant"} (déplié) | ${fz(lp.largeur_cm)} × ${fz(lp.longueur_cm)} cm | ${!lp.tient ? "**NE TIENT PAS**" : lp.replie ? `contre le mur du fond (replié : ${fz(lp.epaisseur_replie_cm)} cm), ${lp.sous_bureau_cm2 > 0 ? "pied sous le bureau gauche" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}` : `au milieu${lp.sous_bureau_cm2 > 0 ? ", pied sous un bureau" : ""}${lp.gene_sieges_m2 > 0.05 ? ", sièges rangés" : ""}`} |\n`;
   md += `\n## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)\n\n`;
   for (const gr of B.groupes) {

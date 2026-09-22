@@ -204,15 +204,24 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
-// panneaux de 115 en facade et au toit, 100 ailleurs : facade et toit en deux pieces, chaque fenetre dans un seul panneau
+// une seule reference de 115, murs et toit : facade et toit en deux pieces, chaque fenetre dans un seul panneau
 {
   const c115 = buildCore(actuel), m115 = c115.modele, A = m115.faces.find((f) => f.cle === "A");
+  ok(JSON.stringify(m115.panneaux_mur_par_largeur) === '{"115":8}', "debit : une seule reference, 8 panneaux de mur de 115 (" + JSON.stringify(m115.panneaux_mur_par_largeur) + ")");
+  ok(m115.faces.every((f) => f.module_cm === 115 && f.panneaux.every((x) => x.largeur_cm <= 115)), "panneaux : 115 sur tous les murs");
   ok(JSON.stringify(A.panneaux.map((x) => x.largeur_cm)) === "[115,93]" && JSON.stringify(m115.toit.panneaux.map((t) => t.largeur_cm)) === "[115,93]", "panneaux : facade 115 + 93, toit 115 + 93 (" + A.panneaux.map((x) => x.largeur_cm) + " / " + m115.toit.panneaux.map((t) => t.largeur_cm) + ")");
-  ok(m115.faces.filter((f) => f.cle !== "A").every((f) => f.panneaux.every((x) => x.largeur_cm <= 100)), "panneaux : 100 sur les autres murs");
   const fen = A.ouvertures.filter((o) => o.type === "fenetre");
   ok(fen.length === 2 && fen.every((o) => A.panneaux.some((x) => o.debut_cm >= x.debut_cm && o.debut_cm + o.largeur_cm <= x.debut_cm + x.largeur_cm)), "fenetres : chacune dans un seul panneau de facade, jamais sur le joint");
-  const lignes = c115.nomenclature ? c115.nomenclature : null; void lignes;
-  ok(m115.panneaux_mur_par_largeur && m115.panneaux_mur_par_largeur["115"] >= 1 && m115.panneaux_mur_par_largeur["100"] >= 1, "debit : panneaux de mur comptes par largeur (" + JSON.stringify(m115.panneaux_mur_par_largeur) + ")");
+}
+// une face peut prendre une autre reference (largeur_utile_par_face_cm) : le debit compte alors par largeur,
+// une chute ne sert qu'a la meme reference, et la nomenclature a une ligne par largeur
+{
+  const p2 = JSON.parse(JSON.stringify(actuel));
+  p2.panneau.largeur_utile_cm = 100; p2.panneau.largeur_utile_par_face_cm = { A: 115, T: 115 };
+  const m2 = buildCore(p2).modele;
+  ok(JSON.stringify(m2.panneaux_mur_par_largeur) === '{"100":7,"115":2}' && m2.faces.find((f) => f.cle === "G").module_cm === 100, "deux references : 7 de 100 et 2 de 115 (" + JSON.stringify(m2.panneaux_mur_par_largeur) + ")");
+  const lp = m2.budget.lignes.filter((l) => l.groupe === "Panneaux" && /de mur/.test(l.poste));
+  ok(lp.length === 2 && /façade/.test(lp.find((l) => /115/.test(l.poste)).poste), "nomenclature : une ligne par reference, chacune nomme ses murs (" + lp.map((l) => l.poste) + ")");
 }
 // porte : bloc de service exterieur de 70 hors tout, dormant compris (pas de cadre bois), 200 de haut,
 // a 10 cm de la face interieure du pan C ; le lit laisse la baie libre
@@ -258,6 +267,23 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("au coin arrière gauche"), "abri.md : gouttiere derriere en 2 troncons, descente au coin arriere gauche");
   ok(!/version \d|abri_v\d/i.test(page4), "abri.md : aucun numero de version, l'abri actuel n'en a pas");
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
+}
+
+// chantier de l'abri : ventilation jamais optionnelle, angles obtus pliés sur place, plancher flottant, pied en cornieres
+{
+  const ca = buildCore(actuel), L = ca.modele.budget.lignes, G = ca.modele.guide;
+  const aer = L.find((l) => /entrées d'air/.test(l.poste));
+  ok(aer && !aer.optionnel && aer.groupe === "Ventilation", "ventilation : les entrees d'air sont au total, pas dans l'equipement optionnel");
+  ok(!L.some((l) => /sur mesure/.test(l.poste)) && L.some((l) => /Bande plate laquée/.test(l.poste)) && L.some((l) => /Pince à plier/.test(l.poste)), "angles obtus : bande plate pliee sur place et sa pince, aucun profil sur mesure");
+  ok(!L.some((l) => /ambourde/.test(l.poste)) && !G.etapes.some((e) => e.faire.some((x) => /ambourde/.test(x))), "plancher flottant : aucune lambourde, ni aux materiaux ni au guide");
+  const pied = L.find((l) => /Cornières alu/.test(l.poste)), perim = ca.modele.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
+  ok(pied && near(pied.qte, 2 * (perim - ca.variantes.find((x) => x.id === 13).porte.largeur_cm / 100), 0.02), "pied des murs : deux cornieres sur le perimetre moins la porte");
+}
+// formalites closes (D50) : ni le PLU ni un secteur protege ne reviennent dans le document
+{
+  const interdit = (s) => /\bPLU\b|secteur protégé|monument historique/i.test(s);
+  ok(interdit("Vérifier au PLU la règle d'implantation") && !interdit("plus de pluie, un plumeau"), "garde formalites : attrape le PLU, laisse passer les mots voisins");
+  ok(!interdit(abri_md(actuel, buildCore(actuel))), "abri.md : aucune formalite a verifier en mairie");
 }
 
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }

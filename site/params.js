@@ -3,7 +3,7 @@ window.SHED_PARAMS = {
   "_comment": "Source unique de verite du bureau de jardin. Toutes les cotes sont en centimetres sauf indication contraire. La page recalcule tout depuis ce fichier ; pour regenerer les artefacts versionnes : npm run build && npm run emit.",
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
-    "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
+    "description": "Petit bureau de jardin a cinq murs en panneaux sandwich 60 mm autoportants, toit mono-pente vers le fond, porte de service pleine + deux fenetres, sur dalle beton existante.",
     "auteur": "Remi Vion",
     "depot_url": "https://github.com/rvion/screenplay"
   },
@@ -12,20 +12,20 @@ window.SHED_PARAMS = {
     "titre": "Abri de jardin : le bureau à cinq murs",
     "dossier": {
       "atouts": [
-        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm, un panneau entier) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
+        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm) : les deux angles obtus se ferment par une bande plate pliée sur place, sans profil sur mesure.",
         "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
         "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
         "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
-        "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
-        "**Un bureau, un lit.** Le bureau court sur tout le mur gauche ({gauche_cm} cm, trois écrans de 27\"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau."
+        "**Une seule référence de panneau.** {panneaux_mur} panneaux de mur et {panneaux_toit} de toit, tous de {module_cm} cm de large : une seule ligne de devis, et chaque chute sert à n'importe quel mur.",
+        "**Un bureau, un lit.** Le bureau court sur tout le mur gauche ({bureau_cm} cm, trois écrans de 27\"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau."
       ],
       "limites": [
         "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).",
         "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
-        "**La descente est {descente}.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
+        "**La descente est {descente}.** Un tuyau au sol, par le passage derrière l'abri, ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
         "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
-        "**Deux profils d'angle proches de 135°** à faire plier sur mesure, en même temps que les panneaux.",
+        "**Deux angles proches de 135°.** Leurs bandes d'angle se plient sur place à la pince, sur un tasseau : un geste de plus que les angles droits, qui s'achètent tout faits.",
         "**Un mur à {gauche_cm} cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse."
       ],
       "questions": [
@@ -35,14 +35,10 @@ window.SHED_PARAMS = {
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
       ],
       "idees": [
-        "**Fixation visible derrière.** Le mur du fond et le pan en biais ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
-        "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
         "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
-        "**Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.",
         "**Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.",
         "**Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.",
-        "**Rail de pied simplifié.** Une cornière alu de 40 vissée sur la bande d'arase, dedans et dehors, plutôt qu'un profil en U introuvable au détail : deux longueurs de stock, le même mastic.",
-        "**Électricité sous les bureaux.** Une seule goulotte sous le plateau du bureau gauche et de la façade, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble."
+        "**Électricité sous le bureau.** Une seule goulotte sous le plateau du bureau gauche, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble."
       ]
     }
   },
@@ -88,7 +84,7 @@ window.SHED_PARAMS = {
     }
   },
   "disposition_trapeze": {
-    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm (ouverture) sur le cote droit, entouree d'un chambranle de porte_chambranle_cm, le cadre a porte_marge_cm des faces interieures des murs voisins et sous le haut du mur (hauteur de passage = hauteur du mur - marge - chambranle), bureau en L le long de tout le mur gauche et de toute la facade, facade = fenetres seulement ; sieges = emprise au sol posee contre le bord interieur d'un bureau (contre), sur la plus longue partie libre de ce bord (position = centre|debut|fin ou decalage en cm) ; lit_pliant = lit rabattable facon couchette de bateau : contre = mur ou il est fixe (plaque contre sa face interieure, replie a plat sur epaisseur_replie_cm, deux fixations ; rien sur la facade), emprise depliee placee automatiquement hors d'une zone d'acces devant la porte (acces_porte_cm) et hors des bureaux, sauf si sous_bureau (lit plus bas que le plateau : son pied peut glisser dessous quand le sol libre ne suffit pas ; sur le sol libre seul, 65 de large tient jusqu'a ~165 de long) (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
+    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm (ouverture) sur le cote droit, entouree d'un chambranle de porte_chambranle_cm, le cadre a porte_marge_cm des faces interieures des murs voisins et sous le haut du mur (hauteur de passage = hauteur du mur - marge - chambranle), bureaux le long des murs nommes dans bureaux, facade = fenetres seulement ; sieges = emprise au sol posee contre le bord interieur d'un bureau (contre), sur la plus longue partie libre de ce bord (position = centre|debut|fin ou decalage en cm) ; lit_pliant = lit rabattable facon couchette de bateau : contre = mur ou il est fixe (plaque contre sa face interieure, replie a plat sur epaisseur_replie_cm, deux fixations ; rien sur la facade), emprise depliee placee automatiquement hors d'une zone d'acces devant la porte (acces_porte_cm) et hors des bureaux, sauf si sous_bureau (lit plus bas que le plateau : son pied peut glisser dessous quand le sol libre ne suffit pas ; sur le sol libre seul, 65 de large tient jusqu'a ~165 de long) (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
@@ -218,20 +214,16 @@ window.SHED_PARAMS = {
     "seuil_declaration_m2": 20,
     "debords_sur_poteaux": false,
     "reference": "Code de l'urbanisme R*420-1 : l'emprise au sol est la projection verticale du volume de la construction, MAIS les debords de toiture en sont exclus tant qu'ils ne sont PAS soutenus par des poteaux, piliers ou encorbellements. Seuils : R421-2 (dispense jusqu'a 5 m2 d'emprise au sol ET de surface de plancher), R421-9 (declaration prealable de 5 a 20 m2), au-dela permis de construire. Surface de plancher : R111-22 (nu interieur, sous plafond >= 1,80 m).",
-    "_comment": "Notre toit n'a aucun poteau : debords_sur_poteaux = false, donc l'emprise au sol = l'emprise des MURS, debords exclus. Mettre true si un poteau, un pilier ou un encorbellement vient un jour porter un debord : l'emprise au sol integrerait alors ce debord. Reserve : en secteur protege / abords de monument historique, une declaration prealable est due meme sous le seuil."
+    "_comment": "Notre toit n'a aucun poteau : debords_sur_poteaux = false, donc l'emprise au sol = l'emprise des MURS, debords exclus. Mettre true si un poteau, un pilier ou un encorbellement vient un jour porter un debord : l'emprise au sol integrerait alors ce debord."
   },
   "panneau": {
     "epaisseur_mm": 60,
     "autoportant": true,
     "ame": "PIR (polyisocyanurate) - bon rapport isolation/epaisseur pour usage habitable",
-    "largeur_utile_cm": 100,
-    "_largeur_par_face_comment": "Largeur utile quand une face prend une autre reference (A = facade, T = toit) : 115 en facade et au toit, deux pieces au lieu de trois et plus de bande de 8.",
-    "largeur_utile_par_face_cm": {
-      "A": 115,
-      "T": 115
-    },
+    "largeur_utile_cm": 115,
+    "_largeur_par_face_comment": "largeur_utile_par_face_cm (facultatif, { A: 100, T: 115 }...) : une face qui prend une autre reference. Absent ici : une seule reference de 115 pour tous les murs et le toit, 8 panneaux de mur au lieu de 9, et chaque chute sert a n'importe quel mur.",
     "orientation_murs": "verticale",
-    "_comment": "60 mm = panneau autoportant (murs ET toit) : pas d'ossature secondaire, seulement un rail de pied et des profils d'angle. largeur_utile = largeur couverte apres recouvrement (souvent 1000 ou 1150 mm selon fabricant). Verifier la portee libre du toit (~2,8 m) dans le tableau du fabricant."
+    "_comment": "60 mm = panneau autoportant (murs ET toit) : pas d'ossature secondaire, seulement un rail de pied et des profils d'angle. largeur_utile = largeur couverte apres recouvrement (souvent 1000 ou 1150 mm selon fabricant). Verifier la portee libre du toit (2,5 m) dans le tableau du fabricant."
   },
   "murs": {
     "hauteur_cm": 215,
@@ -254,9 +246,8 @@ window.SHED_PARAMS = {
   "amenagement": {
     "plancher": {
       "actif": true,
-      "epaisseur_cm": 10,
-      "prix_m2_eur": 45,
-      "description": "plancher isole sur la dalle : 60 mm de PIR entre lambourdes, OSB 22 mm, revetement 5 mm (10 cm au total, pris sur la hauteur sous plafond)"
+      "epaisseur_cm": 9,
+      "description": "plancher flottant sur la dalle : film PE, 60 mm de XPS continu, OSB3 22 mm colle aux rainures, revetement 5 mm (9 cm au total, pris sur la hauteur sous plafond). Ni lambourde ni vis dans la dalle."
     }
   },
   "prix_materiaux_eur_ttc": {
@@ -293,25 +284,23 @@ window.SHED_PARAMS = {
       "unite": "ml",
       "note": "pas de prix releve"
     },
-    "profil_pied_ml": {
-      "pu": 12,
-      "unite": "ml",
-      "source": "https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs",
-      "note": "4,86 EUR HT la longueur de 0,5 m",
-      "incertain": true
-    },
     "angle_standard_ml": {
       "pu": 10,
       "unite": "ml",
       "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
       "note": "7,92 EUR HT le metre, tole 0,75 mm"
     },
-    "angle_sur_mesure_ml": {
-      "pu": 15,
+    "bande_plane_ml": {
+      "pu": 7.05,
       "unite": "ml",
-      "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
-      "note": "aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer",
-      "incertain": true
+      "source": "https://www.yousteel.fr/toles-planes/196-tole-plane-1200x2000mm-acier-063-laque-25.html",
+      "note": "tole plane laquee 0,63 mm, 2000 x 1220, 16 teintes : 56,40 EUR la feuille, soit 4 bandes de 25 cm sur 2 m. Prendre la teinte des panneaux."
+    },
+    "corniere_pied_ml": {
+      "pu": 9.96,
+      "unite": "ml",
+      "source": "https://www.castorama.fr/corniere-aluminium-brut-40-x-40-x-1-5-mm-2-50-m/3232637727754_CAFR.prd",
+      "note": "corniere alu brut 40 x 40 x 1,5 mm, 2,50 m : 24,90 EUR"
     },
     "bande_rive_ml": {
       "pu": 14,
@@ -433,17 +422,11 @@ window.SHED_PARAMS = {
       "source": "https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris",
       "note": "tube de 80 : 10 EUR les 2 m"
     },
-    "lambourde_ml": {
-      "pu": 3.3,
-      "unite": "ml",
-      "source": "https://www.bricodepot.fr/catalogue/lambourde-en-bois-classe-4-2700-x-70-x-45-mm/prod97284/",
-      "note": "classe 4, 45 x 70, 2,70 m : 8,90 EUR"
-    },
     "isolant_sol_m2": {
-      "pu": 7.43,
+      "pu": 11.51,
       "unite": "m²",
-      "source": "https://www.leroymerlin.fr/produits/materiaux/isolation/plaque-polystyrene/polystyrene-extrude/polystyrene-extrude-40-mm-prix-p.html",
-      "note": "polystyrene extrude 40 mm"
+      "source": "https://www.bricodepot.fr/p/8437007530070/panneau-de-polystyrene-extrude-xps-l-1-25-x-l-0-60-m-ep-60-mm",
+      "note": "XPS 60 mm rainure, 1,25 x 0,60 : 8,63 EUR le panneau"
     },
     "film_pe_m2": {
       "pu": 1,
@@ -452,10 +435,16 @@ window.SHED_PARAMS = {
       "note": "rouleau de 20 m2 : 19,90 EUR"
     },
     "osb_m2": {
-      "pu": 11.23,
+      "pu": 14.9,
       "unite": "m²",
-      "source": "https://www.lamaison.fr/0275785.html",
-      "note": "dalle OSB3 18 mm 2500 x 675 : 18,95 EUR"
+      "source": "https://www.castorama.fr/dalle-lisse-osb3-250-x-67-5-cm-x-ep-22-mm-isb/3534691922190_CAFR.prd",
+      "note": "dalle OSB3 22 mm rainuree 4 cotes, 250 x 67,5 : 25,14 EUR (9,99 EUR/m2 chez Brico Depot, rainure non confirmee)"
+    },
+    "colle_rainure_u": {
+      "pu": 17.9,
+      "unite": "u",
+      "source": "https://www.castorama.fr/colle-sader-vinylique-bois-pro-d3-750g/3549212468682_CAFR.prd",
+      "note": "colle vinylique D3, 750 g"
     },
     "revetement_sol_m2": {
       "pu": 15,
@@ -464,10 +453,10 @@ window.SHED_PARAMS = {
       "note": "vinyle rigide a clipser ; stratifie des 5 EUR/m2"
     },
     "aerateur_u": {
-      "pu": 8,
+      "pu": 5.85,
       "unite": "u",
-      "source": "https://www.bricodepot.fr/produits/chauffage-clim-et-ventilation/climatisation-et-confort-thermique/vmc-et-extracteur-d-air/grille-d-aeration",
-      "note": "grille avec moustiquaire, de 4 a 16 EUR ; un extracteur hygroreglable coute 95 EUR"
+      "source": "https://www.castorama.fr/grille-d-aeration-aluminium-autogyre-a-persiennes-avec-moustiquaire-blanche-100-x-100-mm/3127609810100_CAFR.prd",
+      "note": "grille alu a persiennes avec moustiquaire, 100 x 100 ; un extracteur hygroreglable coute 95 EUR"
     },
     "goulotte_u": {
       "pu": 14.9,
@@ -502,6 +491,12 @@ window.SHED_PARAMS = {
       "unite": "u",
       "source": "https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html",
       "note": "Bosch Expert for Sandwich Panel, 36 dents"
+    },
+    "pince_plier_u": {
+      "pu": 39.99,
+      "unite": "u",
+      "source": "https://www.castorama.fr/departments/pince-border-droite-d331-60-erdi-270-mm-acier-rev-tu-noir/4010220003114_CAFR.prd",
+      "note": "pince a border droite Erdi, mors de 60 mm"
     },
     "livraison_panneaux": {
       "pu": 250,

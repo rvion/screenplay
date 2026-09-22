@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 351 496" font-family="system-ui,sans-serif" font-size="13">
 <rect width="351" height="496" fill="#fbfbf8"/>
-<polygon points="90.0,406.2 215.0,406.2 215.0,137.5 90.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
-<text x="152.5" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B1</text>
-<polygon points="215.0,406.2 260.8,406.2 260.8,137.5 215.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
-<text x="237.9" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B2 · 36.6</text>
+<polygon points="90.0,406.2 233.8,406.2 233.8,137.5 90.0,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="161.9" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B1</text>
+<polygon points="233.8,406.2 260.8,406.2 260.8,137.5 233.8,137.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="247.2" y="160.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">B2 · 21.6</text>
 <line x1="90.0" y1="410.2" x2="90.0" y2="430.2" stroke="#aaa" stroke-width="0.7"/>
 <line x1="260.8" y1="410.2" x2="260.8" y2="430.2" stroke="#aaa" stroke-width="0.7"/>
 <line x1="90.0" y1="426.2" x2="260.8" y2="426.2" stroke="#2b5d8a" stroke-width="1"/>
