@@ -11,7 +11,7 @@
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 100, fond 136,6, gauche 250 cm.
 - **Toit** mono-pente vers le fond, 5,03° : 237 cm devant, 215 cm au plus bas.
 - **Porte pleine** 70 × 200 sur le mur droit, **2 fenêtres** en façade, **bureau** sur le mur gauche, **lit 80 × 190** à demeure le long de la façade.
-- **Matériaux** : 2 873 € TTC (2 442 € à 3 304 €), sans main-d'œuvre ni livraison ; équipement optionnel 200 €.
+- **Matériaux** : 2 903 € TTC (2 468 € à 3 338 €), sans main-d'œuvre ni livraison ; équipement optionnel 200 €.
 
 - **Formalités** : emprise au sol 4,95 m², surface de plancher 4,44 m² ⇒ aucune formalité.
 
@@ -146,13 +146,13 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Madrier 70 × 220 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
 
-### Profils et bavettes · 467 €
+### Profils et bavettes · 537 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Cornières alu 40 × 40 (pied des murs, dedans et dehors) | 16,09 ml | 10 € | 160 € | deux cornières sur le périmètre des murs moins la porte : le panneau se pose entre elles. corniere alu brut 40 x 40 x 1,5 mm, 2,50 m : 24,90 EUR ([source](https://www.castorama.fr/corniere-aluminium-brut-40-x-40-x-1-5-mm-2-50-m/3232637727754_CAFR.prd)) |
 | Profils d'angle à 90°, extérieur + intérieur | 13,78 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
-| Bande plate laquée 25 cm, pliée sur place (angles de 134,4°, 135,6°), extérieur + intérieur | 8,72 ml | 7 € | 61 € | 2 angles non droits, deux faces, un seul pli de 45,6° ou 44,4°. tole plane laquee 0,63 mm, 2000 x 1220, 16 teintes : 56,40 EUR la feuille, soit 4 bandes de 25 cm sur 2 m. Prendre la teinte des panneaux. ([source](https://www.yousteel.fr/toles-planes/196-tole-plane-1200x2000mm-acier-063-laque-25.html)) |
+| Profils d'angle pliés sur mesure (134,4°, 135,6°), extérieur + intérieur *(prix à confirmer)* | 8,72 ml | 15 € | 131 € | 2 angles non droits, deux faces, commandés pliés avec les panneaux. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer avec les panneaux (sinon un atelier de tolerie local plie des bandes plates) ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
 | Bandes de rive de toit | 4,52 ml | 14 € | 63 € | bords du toit parallèles à la pente. 12,90 EUR/m en longueurs de 2,1 m ([source](https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html)) |
 | Bavette de tête (bord haut du toit) | 2,08 ml | 14 € | 29 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
 | Closoirs mousse sous les nervures *(prix à confirmer)* | 4,44 ml | 4 € | 16 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
@@ -218,14 +218,13 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Radiateur panneau 750 W à thermostat | 1 u | 65 € | 65 € | bureau chauffé toute l'année. panneau acier 750 W, thermostat, detection de fenetre ouverte ([source](https://www.bricodepot.fr/catalogue/radiateur-acier-jaina-blanc-750-w/prod87074/)) |
 | Stores des fenêtres de façade *(prix à confirmer)* | 2 u | 30 € | 60 € | un par fenêtre. pas de prix releve |
 
-### Consommables · 107 €
+### Consommables · 67 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
-| Pince à plier la tôle | 1 u | 40 € | 40 € | plier la bande plate des angles obtus. pince a border droite Erdi, mors de 60 mm ([source](https://www.castorama.fr/departments/pince-border-droite-d331-60-erdi-270-mm-acier-rev-tu-noir/4010220003114_CAFR.prd)) |
 
-**Total des matériaux : 2 873 € TTC** (fourchette 2 442 € à 3 304 €, ±15 %). Équipement optionnel en plus : 200 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 2 903 € TTC** (fourchette 2 468 € à 3 338 €, ±15 %). Équipement optionnel en plus : 200 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -238,7 +237,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - Rehausse : madrier 70 × 220 **classe 4** (autoclave, pour l'extérieur), en longueurs de 450 cm : c'est la section vendue en stock dans cette classe.
 - Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
 - Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,5 m ici ; et la **pente minimale** (8,8 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
-- Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits et la **bande plate laquée** de la même teinte, pour les angles de 134,4° et 135,6°.
+- Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits et les profils des angles de 134,4° et 135,6° **pliés sur mesure**.
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
 
 ### Outillage
@@ -337,13 +336,13 @@ Les profils d'angle lient deux murs et ferment la mousse.
 **Outils :** visseuse, mastic
 
 1. Profil extérieur puis intérieur à chacun des 5 angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.
-2. Angles de 134,4° et 135,6° : couper la bande plate à la hauteur du coin, tracer son axe, la serrer entre deux planches droites sur le trait (serre-joints) et la plier à la pince, en plusieurs passes, jusqu'à l'angle du mur. Gabarit : deux chutes de panneau posées dans l'angle.
+2. Les angles de 134,4° et 135,6° reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.
 3. Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur.
 
 **À contrôler avant de continuer :**
 
 - [ ] Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.
-- [ ] Chaque bande pliée porte sur ses deux ailes sur toute la hauteur, sans forcer.
+- [ ] Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer.
 
 ### Étape 7 · Poser la rehausse bois
 
@@ -469,7 +468,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 ### Points forts
 
-- **Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais (100 cm) : les deux angles obtus se ferment par une bande plate pliée sur place, sans profil sur mesure.
+- **Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais (100 cm) : les deux angles obtus se ferment par des profils pliés sur mesure, commandés avec les panneaux.
 - **4,95 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,77 m² de sol libre hors bureaux.
 - **Façade de niveau à 237 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
@@ -483,7 +482,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 - **Pente 8,8 %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.
 - **La descente est au coin arrière gauche.** Un tuyau au sol, par le passage derrière l'abri, ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.
 - **Aucun débord au-dessus de la porte.** Prévoir une petite marquise.
-- **Deux angles proches de 135°.** Leurs bandes d'angle se plient sur place à la pince, sur un tasseau : un geste de plus que les angles droits, qui s'achètent tout faits.
+- **Deux angles proches de 135°.** Leurs profils d'angle se commandent pliés sur mesure avec les panneaux, sans prix public : à faire chiffrer au devis.
 - **Un mur à 10 cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse.
 
 ### Questions

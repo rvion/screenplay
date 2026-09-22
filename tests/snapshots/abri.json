@@ -2476,15 +2476,15 @@
     },
     {
      "groupe": "Profils et bavettes",
-     "poste": "Bande plate laquée 25 cm, pliée sur place (angles de 134,4°, 135,6°), extérieur + intérieur",
+     "poste": "Profils d'angle pliés sur mesure (134,4°, 135,6°), extérieur + intérieur",
      "qte": 8.72,
      "unite": "ml",
-     "pu_eur": 7.05,
-     "montant_eur": 61,
-     "regle": "2 angles non droits, deux faces, un seul pli de 45,6° ou 44,4°",
-     "a_confirmer": false,
-     "source": "https://www.yousteel.fr/toles-planes/196-tole-plane-1200x2000mm-acier-063-laque-25.html",
-     "note": "tole plane laquee 0,63 mm, 2000 x 1220, 16 teintes : 56,40 EUR la feuille, soit 4 bandes de 25 cm sur 2 m. Prendre la teinte des panneaux.",
+     "pu_eur": 15,
+     "montant_eur": 131,
+     "regle": "2 angles non droits, deux faces, commandés pliés avec les panneaux",
+     "a_confirmer": true,
+     "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
+     "note": "aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer avec les panneaux (sinon un atelier de tolerie local plie des bandes plates)",
      "optionnel": false
     },
     {
@@ -2876,19 +2876,6 @@
      "source": "https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html",
      "note": "Bosch Expert for Sandwich Panel, 36 dents",
      "optionnel": false
-    },
-    {
-     "groupe": "Consommables",
-     "poste": "Pince à plier la tôle",
-     "qte": 1,
-     "unite": "u",
-     "pu_eur": 39.99,
-     "montant_eur": 40,
-     "regle": "plier la bande plate des angles obtus",
-     "a_confirmer": false,
-     "source": "https://www.castorama.fr/departments/pince-border-droite-d331-60-erdi-270-mm-acier-rev-tu-noir/4010220003114_CAFR.prd",
-     "note": "pince a border droite Erdi, mors de 60 mm",
-     "optionnel": false
     }
    ],
    "groupes": [
@@ -2904,7 +2891,7 @@
     },
     {
      "nom": "Profils et bavettes",
-     "total_eur": 467,
+     "total_eur": 537,
      "optionnel": false
     },
     {
@@ -2944,13 +2931,13 @@
     },
     {
      "nom": "Consommables",
-     "total_eur": 107,
+     "total_eur": 67,
      "optionnel": false
     }
    ],
-   "materiaux_eur": 2873,
+   "materiaux_eur": 2903,
    "options_eur": 200,
-   "a_confirmer": 7,
+   "a_confirmer": 8,
    "hors_materiaux": [
     {
      "poste": "Livraison des panneaux (service, hors total)",
@@ -2958,12 +2945,12 @@
      "note": "service, affiche a part, jamais dans le total des materiaux. Aucun tarif public : sur devis, selon la quantite et la distance."
     }
    ],
-   "coque_eur": 2650,
+   "coque_eur": 2680,
    "amenagement_eur": 223,
-   "total_eur": 2873,
+   "total_eur": 2903,
    "incertitude_pct": 15,
-   "total_bas_eur": 2442,
-   "total_haut_eur": 3304
+   "total_bas_eur": 2468,
+   "total_haut_eur": 3338
   },
   "guide": {
    "avant": [
@@ -2972,7 +2959,7 @@
     "Rehausse : madrier 70 × 220 **classe 4** (autoclave, pour l'extérieur), en longueurs de 450 cm : c'est la section vendue en stock dans cette classe.",
     "Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.",
     "Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,5 m ici ; et la **pente minimale** (8,8 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).",
-    "Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits et la **bande plate laquée** de la même teinte, pour les angles de 134,4° et 135,6°.",
+    "Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits et les profils des angles de 134,4° et 135,6° **pliés sur mesure**.",
     "Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile."
    ],
    "outillage": [
@@ -3090,12 +3077,12 @@
      ],
      "faire": [
       "Profil extérieur puis intérieur à chacun des 5 angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.",
-      "Angles de 134,4° et 135,6° : couper la bande plate à la hauteur du coin, tracer son axe, la serrer entre deux planches droites sur le trait (serre-joints) et la plier à la pince, en plusieurs passes, jusqu'à l'angle du mur. Gabarit : deux chutes de panneau posées dans l'angle.",
+      "Les angles de 134,4° et 135,6° reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.",
       "Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur."
      ],
      "controler": [
       "Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.",
-      "Chaque bande pliée porte sur ses deux ailes sur toute la hauteur, sans forcer."
+      "Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer."
      ]
     },
     {

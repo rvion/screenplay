@@ -58,7 +58,7 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 | B fond | 136,6 | 215 → 215 | 115 + 21,6 (chute) |
 | G gauche | 250 | 215 → 237 | 115 + 115 + 20 (chute) |
 
-- Angles **90 / 90 / 134,4 / 135,6 / 90** (angles droits : profils du commerce ; angles obtus : bande plate laquée pliée sur place, D52). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
+- Angles **90 / 90 / 134,4 / 135,6 / 90** (angles droits : profils du commerce ; angles obtus : profils pliés sur mesure, commandés avec les panneaux). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
   à l'aire exacte, jamais arrondie : `tests/formalites.mjs`). Intérieur 4,44 m², sol libre hors
   bureau 2,77 m². Cotes intérieures : façade **196**, droite 171,5, pan 95, fond 128,1, gauche 238.
   Passage derrière : 54,9 cm au grand pan, 69,7 au petit pan. Matériaux 2 873 € TTC.

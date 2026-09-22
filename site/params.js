@@ -12,7 +12,7 @@ window.SHED_PARAMS = {
     "titre": "Abri de jardin : le bureau à cinq murs",
     "dossier": {
       "atouts": [
-        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm) : les deux angles obtus se ferment par une bande plate pliée sur place, sans profil sur mesure.",
+        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm) : les deux angles obtus se ferment par des profils pliés sur mesure, commandés avec les panneaux.",
         "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
         "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
@@ -25,7 +25,7 @@ window.SHED_PARAMS = {
         "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
         "**La descente est {descente}.** Un tuyau au sol, par le passage derrière l'abri, ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
         "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
-        "**Deux angles proches de 135°.** Leurs bandes d'angle se plient sur place à la pince, sur un tasseau : un geste de plus que les angles droits, qui s'achètent tout faits.",
+        "**Deux angles proches de 135°.** Leurs profils d'angle se commandent pliés sur mesure avec les panneaux, sans prix public : à faire chiffrer au devis.",
         "**Un mur à {gauche_cm} cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse."
       ],
       "questions": [
@@ -290,11 +290,12 @@ window.SHED_PARAMS = {
       "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
       "note": "7,92 EUR HT le metre, tole 0,75 mm"
     },
-    "bande_plane_ml": {
-      "pu": 7.05,
+    "angle_sur_mesure_ml": {
+      "pu": 15,
       "unite": "ml",
-      "source": "https://www.yousteel.fr/toles-planes/196-tole-plane-1200x2000mm-acier-063-laque-25.html",
-      "note": "tole plane laquee 0,63 mm, 2000 x 1220, 16 teintes : 56,40 EUR la feuille, soit 4 bandes de 25 cm sur 2 m. Prendre la teinte des panneaux."
+      "source": "https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur",
+      "note": "aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer avec les panneaux (sinon un atelier de tolerie local plie des bandes plates)",
+      "incertain": true
     },
     "corniere_pied_ml": {
       "pu": 9.96,
@@ -491,12 +492,6 @@ window.SHED_PARAMS = {
       "unite": "u",
       "source": "https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html",
       "note": "Bosch Expert for Sandwich Panel, 36 dents"
-    },
-    "pince_plier_u": {
-      "pu": 39.99,
-      "unite": "u",
-      "source": "https://www.castorama.fr/departments/pince-border-droite-d331-60-erdi-270-mm-acier-rev-tu-noir/4010220003114_CAFR.prd",
-      "note": "pince a border droite Erdi, mors de 60 mm"
     },
     "livraison_panneaux": {
       "pu": 250,

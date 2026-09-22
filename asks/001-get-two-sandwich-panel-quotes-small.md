@@ -10,7 +10,7 @@ blocks: materials budget (panels are half the total), roof purlin yes/no
 **Ask**: One call per supplier (two panel specialists, one local merchant), 60 mm PIR, cut to length:
 - walls: 8 panels 115 × 215 (useful width 1150, one reference)
 - roof: 2 panels 115 × 261
-- standard 90° corner profiles, plus about 9 m of flat pre-painted strip, same colour (the 135° corners get folded on site)
+- standard 90° corner profiles, plus 2 bent corner profiles near 135° (134.4° and 135.6°), inside and outside
 - and ask: is 1150 useful width available for walls and roof? does 60 mm span 2.50 m with no purlin, at 8.8 % pitch?
 
 **Why**: Online sellers price by 100 m² or a full pack. The span answer decides whether a purlin gets drawn (the old separate ask 003 is folded in here).

@@ -101,7 +101,7 @@
     if (po && po.chambranle_cm > 0) pose("Bois", "chevron_cadre_ml", `Bois du cadre de porte, section ${fz(po.chambranle_cm * 10)} \xD7 ${ep} mm`, (2 * (po.hauteur_cm + po.chambranle_cm) + po.largeur_cm) / 100, "deux montants + une traverse haute");
     pose("Profils et bavettes", "corniere_pied_ml", "Corni\xE8res alu 40 \xD7 40 (pied des murs, dedans et dehors)", 2 * (perim - (po ? (po.largeur_cm + 2 * po.chambranle_cm) / 100 : 0)), "deux corni\xE8res sur le p\xE9rim\xE8tre des murs moins la porte : le panneau se pose entre elles");
     pose("Profils et bavettes", "angle_standard_ml", "Profils d'angle \xE0 90\xB0, ext\xE9rieur + int\xE9rieur", 2 * angles_droits.reduce((s, x) => s + x.h, 0), `${angles_droits.length} angles droits, hauteur finie de chaque coin, deux faces`);
-    pose("Profils et bavettes", "bande_plane_ml", `Bande plate laqu\xE9e 25 cm, pli\xE9e sur place (angles de ${[...new Set(angles_speciaux.map((x) => fr(x.g) + "\xB0"))].join(", ")}), ext\xE9rieur + int\xE9rieur`, 2 * angles_speciaux.reduce((s, x) => s + x.h, 0), `${angles_speciaux.length} angles non droits, deux faces, un seul pli de ${[...new Set(angles_speciaux.map((x) => fr(rnd(180 - x.g, 1)) + "\xB0"))].join(" ou ")}`);
+    pose("Profils et bavettes", "angle_sur_mesure_ml", `Profils d'angle pli\xE9s sur mesure (${[...new Set(angles_speciaux.map((x) => fr(x.g) + "\xB0"))].join(", ")}), ext\xE9rieur + int\xE9rieur`, 2 * angles_speciaux.reduce((s, x) => s + x.h, 0), `${angles_speciaux.length} angles non droits, deux faces, command\xE9s pli\xE9s avec les panneaux`);
     pose("Profils et bavettes", "bande_rive_ml", "Bandes de rive de toit", B.rive_m, "bords du toit parall\xE8les \xE0 la pente");
     pose("Profils et bavettes", "bandeau_haut_ml", "Bavette de t\xEAte (bord haut du toit)", B.haut_m, "bord haut du toit");
     pose("Profils et bavettes", "closoir_ml", "Closoirs mousse sous les nervures", B.egout_m + B.haut_m, "bord haut + bord d'\xE9gout");
@@ -135,7 +135,6 @@
     pose("\xC9quipement (optionnel)", "radiateur_u", "Radiateur panneau 750 W \xE0 thermostat", 1, "bureau chauff\xE9 toute l'ann\xE9e", true);
     pose("\xC9quipement (optionnel)", "store_u", "Stores des fen\xEAtres de fa\xE7ade", fen.length, "un par fen\xEAtre", true);
     pose("Consommables", "lame_metal_u", "Lame de scie circulaire pour m\xE9tal (coupe \xE0 froid des panneaux)", 1, "jamais de meuleuse : elle br\xFBle le laquage et la mousse");
-    if (angles_speciaux.length) pose("Consommables", "pince_plier_u", "Pince \xE0 plier la t\xF4le", 1, "plier la bande plate des angles obtus");
     const groupes = [...new Set(lignes.map((l) => l.groupe))].map((nom) => ({ nom, total_eur: rnd(lignes.filter((l) => l.groupe === nom).reduce((s, l) => s + l.montant_eur, 0)), optionnel: lignes.filter((l) => l.groupe === nom).every((l) => l.optionnel) }));
     const materiaux = rnd(lignes.filter((l) => !l.optionnel).reduce((s, l) => s + l.montant_eur, 0)), options = rnd(lignes.filter((l) => l.optionnel).reduce((s, l) => s + l.montant_eur, 0));
     const plancher = rnd(lignes.filter((l) => l.groupe === "Plancher isol\xE9").reduce((s, l) => s + l.montant_eur, 0));
@@ -175,7 +174,7 @@
       `Rehausse : madrier ${m.rehausse.section_mm.join(" \xD7 ")} **classe 4** (autoclave, pour l'ext\xE9rieur), en longueurs de ${fz(m.rehausse.longueur_stock_cm)} cm : c'est la section vendue en stock dans cette classe.`,
       "Fen\xEAtres et porte sont des articles de stock, sans d\xE9lai : la d\xE9coupe des panneaux se fait aux cotes hors tout lues sur l'article re\xE7u, pas aux cotes nominales.",
       `Faire confirmer la **port\xE9e** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramen\xE9e \xE0 ${fz(m.portee_cm / 200)} m par la panne interm\xE9diaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans p\xE9n\xE9tration ni recouvrement en bout).`,
-      `Commander les panneaux de toit **coup\xE9s \xE0 longueur**, et avec les panneaux les profils d'angle droits${speciaux.length ? ` et la **bande plate laqu\xE9e** de la m\xEAme teinte, pour les angles de ${speciaux.join(" et ")}` : ""}.`,
+      `Commander les panneaux de toit **coup\xE9s \xE0 longueur**, et avec les panneaux les profils d'angle droits${speciaux.length ? ` et les profils des angles de ${speciaux.join(" et ")} **pli\xE9s sur mesure**` : ""}.`,
       "Pr\xE9voir deux personnes pour lever les murs et poser le toit, et une journ\xE9e sans vent : un panneau de 2 m\xB2 est une voile."
     ];
     const outillage = [
@@ -237,8 +236,8 @@
         titre: "Fermer les angles",
         but: "Les profils d'angle lient deux murs et ferment la mousse.",
         outils: ["visseuse", "mastic"],
-        faire: [`Profil ext\xE9rieur puis int\xE9rieur \xE0 chacun des ${n} angles, viss\xE9 tous les 30 cm (vis de couture), mastic sous les deux ailes.`, speciaux.length ? `Angles de ${speciaux.join(" et ")} : couper la bande plate \xE0 la hauteur du coin, tracer son axe, la serrer entre deux planches droites sur le trait (serre-joints) et la plier \xE0 la pince, en plusieurs passes, jusqu'\xE0 l'angle du mur. Gabarit : deux chutes de panneau pos\xE9es dans l'angle.` : "", "Bourrer le vide de l'angle \xE0 la mousse avant de fermer le profil int\xE9rieur."].filter(Boolean),
-        controler: ["Aucun jour entre profil et panneau : c'est l\xE0 que l'air et l'eau entrent.", ...speciaux.length ? ["Chaque bande pli\xE9e porte sur ses deux ailes sur toute la hauteur, sans forcer."] : []]
+        faire: [`Profil ext\xE9rieur puis int\xE9rieur \xE0 chacun des ${n} angles, viss\xE9 tous les 30 cm (vis de couture), mastic sous les deux ailes.`, speciaux.length ? `Les angles de ${speciaux.join(" et ")} re\xE7oivent les profils pli\xE9s sur mesure : les pr\xE9senter \xE0 blanc avant de percer.` : "", "Bourrer le vide de l'angle \xE0 la mousse avant de fermer le profil int\xE9rieur."].filter(Boolean),
+        controler: ["Aucun jour entre profil et panneau : c'est l\xE0 que l'air et l'eau entrent.", ...speciaux.length ? ["Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer."] : []]
       },
       {
         titre: "Poser la rehausse bois",

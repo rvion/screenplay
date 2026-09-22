@@ -269,12 +269,12 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
 }
 
-// chantier de l'abri : ventilation jamais optionnelle, angles obtus pliés sur place, plancher flottant, pied en cornieres
+// chantier de l'abri : ventilation jamais optionnelle, angles obtus commandés pliés, plancher flottant, pied en cornieres
 {
   const ca = buildCore(actuel), L = ca.modele.budget.lignes, G = ca.modele.guide;
   const aer = L.find((l) => /entrées d'air/.test(l.poste));
   ok(aer && !aer.optionnel && aer.groupe === "Ventilation", "ventilation : les entrees d'air sont au total, pas dans l'equipement optionnel");
-  ok(!L.some((l) => /sur mesure/.test(l.poste)) && L.some((l) => /Bande plate laquée/.test(l.poste)) && L.some((l) => /Pince à plier/.test(l.poste)), "angles obtus : bande plate pliee sur place et sa pince, aucun profil sur mesure");
+  ok(L.some((l) => /sur mesure/.test(l.poste)) && !L.some((l) => /Pince à plier/.test(l.poste)), "angles obtus : profils plies sur mesure commandes, rien a plier sur place");
   ok(!L.some((l) => /ambourde/.test(l.poste)) && !G.etapes.some((e) => e.faire.some((x) => /ambourde/.test(x))), "plancher flottant : aucune lambourde, ni aux materiaux ni au guide");
   const pied = L.find((l) => /Cornières alu/.test(l.poste)), perim = ca.modele.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
   ok(pied && near(pied.qte, 2 * (perim - ca.variantes.find((x) => x.id === 13).porte.largeur_cm / 100), 0.02), "pied des murs : deux cornieres sur le perimetre moins la porte");

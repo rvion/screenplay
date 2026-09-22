@@ -60,8 +60,7 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   // pied des murs : deux cornieres alu, dedans et dehors, le panneau pose entre elles (un U fait sur place, coupe d'onglet a tout angle)
   pose("Profils et bavettes", "corniere_pied_ml", "Cornières alu 40 × 40 (pied des murs, dedans et dehors)", 2 * (perim - (po ? (po.largeur_cm + 2 * po.chambranle_cm) / 100 : 0)), "deux cornières sur le périmètre des murs moins la porte : le panneau se pose entre elles");
   pose("Profils et bavettes", "angle_standard_ml", "Profils d'angle à 90°, extérieur + intérieur", 2 * angles_droits.reduce((s: number, x: any) => s + x.h, 0), `${angles_droits.length} angles droits, hauteur finie de chaque coin, deux faces`);
-  // angles obtus : une bande plate laquee pliee sur place, un pli de (180 - angle) degres, dedans comme dehors
-  pose("Profils et bavettes", "bande_plane_ml", `Bande plate laquée 25 cm, pliée sur place (angles de ${[...new Set(angles_speciaux.map((x: any) => fr(x.g) + "°"))].join(", ")}), extérieur + intérieur`, 2 * angles_speciaux.reduce((s: number, x: any) => s + x.h, 0), `${angles_speciaux.length} angles non droits, deux faces, un seul pli de ${[...new Set(angles_speciaux.map((x: any) => fr(rnd(180 - x.g, 1)) + "°"))].join(" ou ")}`);
+  pose("Profils et bavettes", "angle_sur_mesure_ml", `Profils d'angle pliés sur mesure (${[...new Set(angles_speciaux.map((x: any) => fr(x.g) + "°"))].join(", ")}), extérieur + intérieur`, 2 * angles_speciaux.reduce((s: number, x: any) => s + x.h, 0), `${angles_speciaux.length} angles non droits, deux faces, commandés pliés avec les panneaux`);
   pose("Profils et bavettes", "bande_rive_ml", "Bandes de rive de toit", B.rive_m, "bords du toit parallèles à la pente");
   pose("Profils et bavettes", "bandeau_haut_ml", "Bavette de tête (bord haut du toit)", B.haut_m, "bord haut du toit");
   pose("Profils et bavettes", "closoir_ml", "Closoirs mousse sous les nervures", B.egout_m + B.haut_m, "bord haut + bord d'égout");
@@ -103,7 +102,6 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   pose("Équipement (optionnel)", "radiateur_u", "Radiateur panneau 750 W à thermostat", 1, "bureau chauffé toute l'année", true);
   pose("Équipement (optionnel)", "store_u", "Stores des fenêtres de façade", fen.length, "un par fenêtre", true);
   pose("Consommables", "lame_metal_u", "Lame de scie circulaire pour métal (coupe à froid des panneaux)", 1, "jamais de meuleuse : elle brûle le laquage et la mousse");
-  if (angles_speciaux.length) pose("Consommables", "pince_plier_u", "Pince à plier la tôle", 1, "plier la bande plate des angles obtus");
 
   const groupes = [...new Set(lignes.map((l) => l.groupe))].map((nom) => ({ nom, total_eur: rnd(lignes.filter((l) => l.groupe === nom).reduce((s, l) => s + l.montant_eur, 0)), optionnel: lignes.filter((l) => l.groupe === nom).every((l) => l.optionnel) }));
   const materiaux = rnd(lignes.filter((l) => !l.optionnel).reduce((s, l) => s + l.montant_eur, 0)), options = rnd(lignes.filter((l) => l.optionnel).reduce((s, l) => s + l.montant_eur, 0));
@@ -140,7 +138,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     `Rehausse : madrier ${m.rehausse.section_mm.join(" × ")} **classe 4** (autoclave, pour l'extérieur), en longueurs de ${fz(m.rehausse.longueur_stock_cm)} cm : c'est la section vendue en stock dans cette classe.`,
     "Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.",
     `Faire confirmer la **portée** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramenée à ${fz(m.portee_cm / 200)} m par la panne intermédiaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).`,
-    `Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits${speciaux.length ? ` et la **bande plate laquée** de la même teinte, pour les angles de ${speciaux.join(" et ")}` : ""}.`,
+    `Commander les panneaux de toit **coupés à longueur**, et avec les panneaux les profils d'angle droits${speciaux.length ? ` et les profils des angles de ${speciaux.join(" et ")} **pliés sur mesure**` : ""}.`,
     "Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.",
   ];
   const outillage = [
@@ -196,8 +194,8 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     {
       titre: "Fermer les angles", but: "Les profils d'angle lient deux murs et ferment la mousse.",
       outils: ["visseuse", "mastic"],
-      faire: [`Profil extérieur puis intérieur à chacun des ${n} angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.`, speciaux.length ? `Angles de ${speciaux.join(" et ")} : couper la bande plate à la hauteur du coin, tracer son axe, la serrer entre deux planches droites sur le trait (serre-joints) et la plier à la pince, en plusieurs passes, jusqu'à l'angle du mur. Gabarit : deux chutes de panneau posées dans l'angle.` : "", "Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur."].filter(Boolean),
-      controler: ["Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.", ...(speciaux.length ? ["Chaque bande pliée porte sur ses deux ailes sur toute la hauteur, sans forcer."] : [])],
+      faire: [`Profil extérieur puis intérieur à chacun des ${n} angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.`, speciaux.length ? `Les angles de ${speciaux.join(" et ")} reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.` : "", "Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur."].filter(Boolean),
+      controler: ["Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.", ...(speciaux.length ? ["Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer."] : [])],
     },
     {
       titre: "Poser la rehausse bois", but: "Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.",
