@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 588 738" font-family="system-ui,sans-serif" font-size="13">
-<rect width="588" height="738" fill="#fbfbf8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 581 738" font-family="system-ui,sans-serif" font-size="13">
+<rect width="581" height="738" fill="#fbfbf8"/>
 <polygon points="110.0,627.9 437.5,627.9 437.5,349.1 200.9,130.0 110.0,222.9" fill="#e9e5da" stroke="#6f675a" stroke-width="2"/>
 <line x1="110.0" y1="635.9" x2="110.0" y2="662.9" stroke="#999" stroke-width="0.8"/>
 <line x1="437.5" y1="635.9" x2="437.5" y2="662.9" stroke="#999" stroke-width="0.8"/>
@@ -66,12 +66,12 @@
 <text x="185.0" y="631.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
 <line x1="260.0" y1="615.4" x2="360.0" y2="615.4" stroke="#1b9aa8" stroke-width="6"/>
 <text x="310.0" y="631.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
-<line x1="385.0" y1="518.5" x2="385.0" y2="512.2" stroke="#7a5530" stroke-width="7"/>
+<line x1="385.0" y1="512.2" x2="385.0" y2="506.0" stroke="#7a5530" stroke-width="7"/>
 <line x1="385.0" y1="412.2" x2="385.0" y2="406.0" stroke="#7a5530" stroke-width="7"/>
-<line x1="385.0" y1="512.2" x2="385.0" y2="412.2" stroke="#c0392b" stroke-width="5"/>
-<line x1="385.0" y1="412.2" x2="485.0" y2="412.2" stroke="#c0392b" stroke-width="2"/>
-<polyline points="385.0,512.2 394.8,511.8 404.5,510.3 414.0,507.9 423.3,504.6 432.1,500.4 440.6,495.4 448.4,489.6 455.7,483.0 462.3,475.7 468.1,467.8 473.2,459.4 477.4,450.5 480.7,441.3 483.1,431.8 484.5,422.1 485.0,412.2" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
-<text x="403.0" y="462.2" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(90.0 403.0 462.2)">porte 80</text>
+<line x1="385.0" y1="506.0" x2="385.0" y2="412.2" stroke="#c0392b" stroke-width="5"/>
+<line x1="385.0" y1="412.2" x2="478.8" y2="412.2" stroke="#c0392b" stroke-width="2"/>
+<polyline points="385.0,506.0 394.2,505.5 403.3,504.2 412.2,502.0 420.9,498.9 429.2,494.9 437.1,490.2 444.5,484.7 451.3,478.5 457.5,471.7 463.0,464.3 467.7,456.4 471.6,448.1 474.7,439.5 476.9,430.5 478.3,421.4 478.8,412.2" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="403.0" y="459.1" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(90.0 403.0 459.1)">porte 75</text>
 <line x1="297.5" y1="309.1" x2="342.2" y2="260.9" stroke="#2a8a4a" stroke-width="2.5"/>
 <circle cx="297.5" cy="309.1" r="3" fill="#2a8a4a"/>
 <text x="326.5" y="291.1" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(-47.2 326.5 291.1)">52.6</text>
@@ -87,7 +87,7 @@
 <text x="411.2" y="609.4" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">42</text>
 <line x1="122.5" y1="615.4" x2="110.0" y2="615.4" stroke="#b86e1f" stroke-width="2"/>
 <text x="116.2" y="609.4" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">10</text>
-<text x="293.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Implantation sur la dalle · abri 4.9 m² sur 8.51 m² de dalle</text>
-<text x="293.8" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">brun = palissade bois, vert pointillé = grillage · orange = distance aux bords · vert = passage derrière · hachures = rangement caché</text>
-<text x="293.8" y="725.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage</text>
+<text x="290.6" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Implantation sur la dalle · abri 4.9 m² sur 8.51 m² de dalle</text>
+<text x="290.6" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">brun = palissade bois, vert pointillé = grillage · orange = distance aux bords · vert = passage derrière · hachures = rangement caché</text>
+<text x="290.6" y="725.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage</text>
 </svg>

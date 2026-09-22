@@ -567,8 +567,8 @@ lumineux au-dessus des écrans) **sans formalité**.
 
 Retenu : **façade 210, droite 175, fond 140, gauche 245**, pan à 45° conservé (A − B = G − D), emprise
 **4,90 m²**, donc **aucune formalité**. Le déclic est la largeur du lit : un **80 × 190** au lieu d'un
-90 s'arrête avant la baie de la porte, qui reste dégagée sur **77 de ses 80 cm**, et la porte reste le
-bloc de stock 205 × 80. Le lit est calé à droite, **tête contre le mur de la porte** : couché, les pieds
+90 s'arrête avant la baie de la porte, qui reste dégagée sur **77 de ses 80 cm**, et la porte, ramenée à **75**, est
+entièrement dégagée (les tailles de stock étant 80 et 90, elle passe sur mesure : prix à confirmer). Le lit est calé à droite, **tête contre le mur de la porte** : couché, les pieds
 vont vers le bureau gauche et ses écrans. Le bureau gauche passe à **80 de profondeur sur 233 cm** (trois
 écrans = 190) et son plateau (72 cm) court **au-dessus du pied du lit** (55 cm) sans être coupé
 (`bureaux_entiers`). Passage derrière 52,6 et 69,7 cm. Matériaux 2 888 €.
@@ -579,7 +579,8 @@ favorables). *Ce qui a été retiré ici :* le lit v4 sur le mur gauche, incompa
 de 80 (le lit couvrait tout le plateau, les sièges n'avaient plus où se ranger).
 
 *Mécanismes ajoutés :* `position: "fin"` (lit calé à l'autre bout de son mur) et `bureaux_entiers` (un
-plateau qui passe au-dessus du pied du lit n'est pas coupé). *Gardes :* `tests/abri3d.mjs` mesure, pour
+plateau qui passe au-dessus du pied du lit n'est pas coupé). *Le plan de sol* dessine cette disposition : le lit plein avec son oreiller, le plateau du bureau par-dessus
+son pied, les sièges rangés. *Gardes :* `tests/abri3d.mjs` mesure, pour
 chaque lit à demeure, la baie de porte qui reste (55 cm minimum) et refuse toute pièce DANS le lit, un
 plateau au-dessus étant permis. *État :* branche `test-bed-front-head-right`, aucun déploiement
 (`pages.yml` n'écoute que `main`). **Rien n'est décidé.**

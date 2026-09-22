@@ -56,14 +56,15 @@ d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout d
   petit pan. Matériaux 2 888 € TTC.
 - **La façade de 198 dedans est la raison de cette forme** : un lit de 190 y tient à demeure. Le fond
   passe de 100 à 140 pour que le pan reste un vrai 45° (deux profils d'angle identiques).
-- **Le lit fait 80 de large, pas 90** : il s'arrête avant la baie de la porte, qui reste dégagée sur
-  **77 cm de ses 80**, et la porte reste le bloc de service de stock 205 × 80.
+- **Le lit fait 80 de large, pas 90** : il s'arrête avant la baie de la porte, qui reste **entièrement
+  dégagée**. La porte est ramenée à **75** : les tailles de stock sont 80 et 90, donc elle passe sur
+  mesure (prix à confirmer, compter 300 à 450 € au lieu de 199).
 - **Toit plan vers le fond** (`toit.sens = "arriere"`) : `H` = 215, `c` = 22,5, `D` = 245 ⇒ pente
   **9,2 %** (5,25°), portée 2,45 m. **3 panneaux de toit** (100 × 256, 100 × 256 en biais, bande de
   10 × 198 en biais).
 - **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; descente au bout droit.
-- **Porte** pleine 80 × 205 sur D, à 82,5 cm de la façade, chambranle 5. **Fenêtres** 80 × 75 de
+- **Porte** pleine 75 × 205 sur D, à 87,5 cm de la façade, chambranle 5. **Fenêtres** 80 × 75 de
   stock, oscillo-battantes, allège 110, en façade.
 - **Mobilier** : bureau gauche **80 de profondeur sur 233 cm** (trois écrans de 27" = 190 cm) et
   bureau de façade 50 ; lit pliant 70 × 190 (`lit_pliant`, `lit_pliant_2`) ; un lit à demeure

@@ -87,7 +87,7 @@
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
-    "porte_largeur_cm": 80,
+    "porte_largeur_cm": 75,
     "porte_chambranle_cm": 5,
     "porte_marge_cm": 5,
     "toit": {
@@ -402,7 +402,8 @@
       "pu": 199,
       "unite": "u",
       "source": "https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/",
-      "note": "bloc-porte de service PVC plein 205 x 80 avec dormant, serrure 5 points, Ud 1,6. Les tailles standard sont 205 ou 215 x 80 ou 90 ; 100 de large n'existe pas en standard."
+      "note": "bloc-porte de service PVC plein avec dormant, serrure 5 points, Ud 1,6. Le 205 x 80 de stock coute 199 EUR ; en 75 de large il passe sur mesure (delai et prix a confirmer chez un menuisier, compter 300 a 450 EUR)",
+      "incertain": true
     },
     "porte_vitree_u": {
       "pu": 900,

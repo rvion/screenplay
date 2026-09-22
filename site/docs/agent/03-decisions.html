@@ -525,8 +525,8 @@ la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écr
 lumineux au-dessus des écrans) <strong>sans formalité</strong>.</p>
 <p>Retenu : <strong>façade 210, droite 175, fond 140, gauche 245</strong>, pan à 45° conservé (A − B = G − D), emprise
 <strong>4,90 m²</strong>, donc <strong>aucune formalité</strong>. Le déclic est la largeur du lit : un <strong>80 × 190</strong> au lieu d&#39;un
-90 s&#39;arrête avant la baie de la porte, qui reste dégagée sur <strong>77 de ses 80 cm</strong>, et la porte reste le
-bloc de stock 205 × 80. Le lit est calé à droite, <strong>tête contre le mur de la porte</strong> : couché, les pieds
+90 s&#39;arrête avant la baie de la porte, qui reste dégagée sur <strong>77 de ses 80 cm</strong>, et la porte, ramenée à <strong>75</strong>, est
+entièrement dégagée (les tailles de stock étant 80 et 90, elle passe sur mesure : prix à confirmer). Le lit est calé à droite, <strong>tête contre le mur de la porte</strong> : couché, les pieds
 vont vers le bureau gauche et ses écrans. Le bureau gauche passe à <strong>80 de profondeur sur 233 cm</strong> (trois
 écrans = 190) et son plateau (72 cm) court <strong>au-dessus du pied du lit</strong> (55 cm) sans être coupé
 (<code>bureaux_entiers</code>). Passage derrière 52,6 et 69,7 cm. Matériaux 2 888 €.</p>
@@ -535,7 +535,8 @@ plus ; un troisième panneau de toit (bande de 10) ; pente 9,2 % et portée 2,45
 favorables). <em>Ce qui a été retiré ici :</em> le lit v4 sur le mur gauche, incompatible avec un bureau gauche
 de 80 (le lit couvrait tout le plateau, les sièges n&#39;avaient plus où se ranger).</p>
 <p><em>Mécanismes ajoutés :</em> <code>position: &quot;fin&quot;</code> (lit calé à l&#39;autre bout de son mur) et <code>bureaux_entiers</code> (un
-plateau qui passe au-dessus du pied du lit n&#39;est pas coupé). <em>Gardes :</em> <code>tests/abri3d.mjs</code> mesure, pour
+plateau qui passe au-dessus du pied du lit n&#39;est pas coupé). <em>Le plan de sol</em> dessine cette disposition : le lit plein avec son oreiller, le plateau du bureau par-dessus
+son pied, les sièges rangés. <em>Gardes :</em> <code>tests/abri3d.mjs</code> mesure, pour
 chaque lit à demeure, la baie de porte qui reste (55 cm minimum) et refuse toute pièce DANS le lit, un
 plateau au-dessus étant permis. <em>État :</em> branche <code>test-bed-front-head-right</code>, aucun déploiement
 (<code>pages.yml</code> n&#39;écoute que <code>main</code>). <strong>Rien n&#39;est décidé.</strong></p>
