@@ -54,6 +54,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Résumé : dessin sur deux tiers, légende courte (mur, angle, distance bord, palissade, grillage, dalle), taille stable ; puces à icône avec clé en minuscules
 - [x] Preset « Derrière » : porte fermée
 - [x] Mobilier à trois états (rien, fauteuil, lit) ; la personne dedans est debout, assise au bureau ou couchée sur le lit ; sièges rangés sous les bureaux quand le lit est déplié ; plus de bouton lit
+- [x] Lit pliant placé le long du mur de la porte, pied sous le bureau de façade (`pied_sous`, `pres_de`) ; fauteuil poussé jusqu'au bord du bureau
+- [x] Résumé : chiffres en étiquettes sous le paragraphe ; sur téléphone dessin plus petit, légende à droite ; en-tête qui se replie
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

@@ -78,7 +78,7 @@
         "toit": { "sens": "droite", "chute_cm": 22.5, "debord_cm": { "avant": 0, "arriere": 0, "gauche": 0, "droite": 15 } },
         "rehausse_section_mm": [75, 225],
         "rehausse_prix_ml_eur": 10,
-        "lit_pliant": { "contre": "" },
+        "lit_pliant": { "contre": "", "pied_sous": "avant", "pres_de": "droite", "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)" },
         "fenetres": [
           { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 80, "allege_cm": 110, "position": 10, "ouvrant": true },
           { "cote": "avant", "largeur_cm": 80, "hauteur_cm": 80, "allege_cm": 110, "position": 110, "ouvrant": false }

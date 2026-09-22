@@ -86,10 +86,9 @@ ul.legende i.trait-epais { border-top: 4px solid var(--c); height: 0; }
 ul.legende i.pointille { border-top: 2.5px dashed var(--c); height: 0; }
 ul.legende i.aplat { background: var(--c); border: 1px solid #b5b0a5; }
 ul.legende i.arc { width: 12px; height: 12px; border: 1.5px solid var(--c); border-color: transparent transparent var(--c) var(--c); border-radius: 50%; }
-ul.resume-points { margin: .6rem 0 0; padding: 0; list-style: none; font-size: .86rem; }
-ul.resume-points li { display: flex; align-items: baseline; gap: .45rem; margin: .25rem 0; }
-ul.resume-points svg { width: 13px; height: 13px; flex: none; color: var(--muted); align-self: center; }
-ul.resume-points .k { color: var(--muted); margin-right: .15rem; }
+ul.tags { list-style: none; margin: 0 0 .6rem; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
+ul.tags li { display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .5rem .15rem .4rem; border: 1px solid var(--line); border-radius: 12px; background: var(--carte); font-size: .76rem; white-space: nowrap; }
+ul.tags svg { width: 12px; height: 12px; color: var(--muted); }
 .cote { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); font-weight: 500; }
 .cote .u { color: var(--muted); font-weight: 400; font-size: .74em; margin-left: .1em; }
 .cote .d { font-size: .82em; }
@@ -206,6 +205,8 @@ ol.liste.formes button { padding: .2rem .5rem; }
 
 @media (max-width: 980px) {
   .mise-en-page { grid-template-columns: minmax(0, 1fr); }
+  header.barre { flex-wrap: wrap; gap: .4rem .8rem; padding: .45rem .8rem; }
+  header.barre p { font-size: .76rem; }
   aside.menu { position: static; height: auto; padding: .8rem 1rem 0; }
   nav.ailleurs { padding-top: .4rem; display: flex; gap: 1rem; }
   #plans-details.tout { grid-template-columns: minmax(0, 1fr); }
@@ -213,8 +214,10 @@ ol.liste.formes button { padding: .2rem .5rem; }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre, .pourquoi { grid-template-columns: minmax(0, 1fr); }
-  .resume-figs { grid-template-columns: minmax(0, 1fr); }
-  ul.legende { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* telephone : le dessin reste a gauche, plus petit, la legende a droite */
+  .resume-figs { grid-template-columns: minmax(0, 1fr) max-content; gap: .4rem; }
+  .resume-figs svg { max-height: 240px; width: auto; max-width: 100%; }
+  ul.legende { grid-template-columns: minmax(0, 1fr); font-size: .6rem; }
   ol.questions { columns: 1; }
   .rangee { grid-template-columns: minmax(0, 1fr); }
   .maitre .cote-liste { position: static; }

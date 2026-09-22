@@ -398,7 +398,8 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   for (const st of data.mobilier.sieges) {
     const s = siege(st, sieges);
     // range : pousse sous son bureau (a gauche pour le bureau gauche, vers la facade pour celui de facade)
-    const pousse = st.contre === "gauche" ? [-(s.largeur - 15), 0] : st.contre === "droite" ? [s.largeur - 15, 0] : [0, -(s.profondeur - 15)];
+    // pousse jusqu'a ce que le dossier touche le bord du bureau (l'assise passe dessous, le dossier reste dehors)
+    const pousse = st.contre === "gauche" ? [-(s.largeur - 4), 0] : st.contre === "droite" ? [s.largeur - 4, 0] : [0, -(s.profondeur - 4)];
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     // la personne assise sur le fauteuil, tournee vers son bureau
     if (!s.tabouret) {

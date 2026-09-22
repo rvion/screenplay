@@ -1241,12 +1241,24 @@ function variantes(p, g) {
       }
       let best2 = null;
       {
+        const b_pied = disp.lit_pliant.pied_sous ? v.bureaux.find((b) => b.cote === disp.lit_pliant.pied_sous) : null;
+        const kp = disp.lit_pliant.pres_de ? v.noms_cotes.findIndex((nm) => nm.startsWith(disp.lit_pliant.pres_de)) : -1;
+        const dist_mur = (q) => {
+          if (kp < 0) return 0;
+          const a = r[kp], c = r[(kp + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), nx = -(c[1] - a[1]) / l, ny = (c[0] - a[0]) / l;
+          return Math.min(...q.map((z) => Math.abs((z[0] - a[0]) * nx + (z[1] - a[1]) * ny)));
+        };
         for (const { q, s } of candidats) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous2 ? v.bureaux.reduce((s2, b) => s2 + poly_area(clip_convex(q, b.brut)), 0) : 0;
           const gene = poses.reduce((s2, o) => s2 + poly_area(clip_convex(q, o)), 0);
-          const cout = dessous * 1e3 + gene;
+          let cout = dessous * 1e3 + gene;
+          if (b_pied) {
+            const sous_pied = poly_area(clip_convex(q, b_pied.brut)), autres = dessous - sous_pied;
+            if (sous_pied < LW * 20 || autres > 1) continue;
+            cout = autres * 1e3 + gene + dist_mur(q) * 50 + Math.abs(sous_pied - LW * b_pied.profondeur_cm * 0.9);
+          } else if (kp >= 0) cout += dist_mur(q) * 50;
           if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, s };
         }
       }

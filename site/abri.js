@@ -1241,12 +1241,24 @@ function variantes(p, g) {
       }
       let best2 = null;
       {
+        const b_pied = disp.lit_pliant.pied_sous ? v.bureaux.find((b) => b.cote === disp.lit_pliant.pied_sous) : null;
+        const kp = disp.lit_pliant.pres_de ? v.noms_cotes.findIndex((nm) => nm.startsWith(disp.lit_pliant.pres_de)) : -1;
+        const dist_mur = (q) => {
+          if (kp < 0) return 0;
+          const a = r[kp], c = r[(kp + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), nx = -(c[1] - a[1]) / l, ny = (c[0] - a[0]) / l;
+          return Math.min(...q.map((z) => Math.abs((z[0] - a[0]) * nx + (z[1] - a[1]) * ny)));
+        };
         for (const { q, s } of candidats) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous2 ? v.bureaux.reduce((s2, b) => s2 + poly_area(clip_convex(q, b.brut)), 0) : 0;
           const gene = poses.reduce((s2, o) => s2 + poly_area(clip_convex(q, o)), 0);
-          const cout = dessous * 1e3 + gene;
+          let cout = dessous * 1e3 + gene;
+          if (b_pied) {
+            const sous_pied = poly_area(clip_convex(q, b_pied.brut)), autres = dessous - sous_pied;
+            if (sous_pied < LW * 20 || autres > 1) continue;
+            cout = autres * 1e3 + gene + dist_mur(q) * 50 + Math.abs(sous_pied - LW * b_pied.profondeur_cm * 0.9);
+          } else if (kp >= 0) cout += dist_mur(q) * 50;
           if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, s };
         }
       }
@@ -2626,11 +2638,12 @@ function rend_abri(a) {
     surfaces: '<svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1.5"/></svg>',
     materiaux: '<svg viewBox="0 0 16 16"><path d="M2 4h2l1.6 7h7.2L14 6H5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/></svg>'
   };
-  const paires = [
-    ["hauteurs", "hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}, finies ${cote(Math.max(...m.hauteurs_coins_cm))} \u2192 ${cote(Math.min(...m.hauteurs_coins_cm))}`],
-    ["toit", "toit", `pente ${cote(m.pente.pourcent, "%")}, port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}, goutti\xE8re ${G.troncons.map((t) => face(t.face)).join(" ")}`],
-    ["surfaces", "surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
-    ["materiaux", "mat\xE9riaux", `${eur(B.materiaux_eur)} TTC`]
+  const tags = [
+    ["hauteurs", `murs ${cote(m.hauteur_mur_cm)}, fa\xEEte ${cote(Math.max(...m.hauteurs_coins_cm))}`],
+    ["toit", `pente ${cote(m.pente.pourcent, "%")}, port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`],
+    ["surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? ", sans formalit\xE9" : ", d\xE9claration pr\xE9alable"}`],
+    ["surfaces", `${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
+    ["materiaux", `${eur(B.materiaux_eur)} TTC`]
   ];
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w) => w.type));
   const legende = [
@@ -2642,7 +2655,8 @@ function rend_abri(a) {
     ...types.has("grillage") ? [["pointille", "#5f8a4a", "grillage"]] : [],
     ["aplat", "#f3f1ec", "dalle"]
   ];
-  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div><ul class="resume-points">${paires.map(([ico, k, val]) => `<li>${ICO[ico]}<span><span class="k">${k} :</span> ${val}</span></li>`).join("")}</ul>`);
+  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div>`);
+  html("tags", tags.map(([ico, val]) => `<li>${ICO[ico]}<span>${val}</span></li>`).join(""));
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
@@ -3280,7 +3294,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
   };
   for (const st of data.mobilier.sieges) {
     const s = siege(st, sieges);
-    const pousse = st.contre === "gauche" ? [-(s.largeur - 15), 0] : st.contre === "droite" ? [s.largeur - 15, 0] : [0, -(s.profondeur - 15)];
+    const pousse = st.contre === "gauche" ? [-(s.largeur - 4), 0] : st.contre === "droite" ? [s.largeur - 4, 0] : [0, -(s.profondeur - 4)];
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     if (!s.tabouret) {
       const g = assise(s.haut / 100);

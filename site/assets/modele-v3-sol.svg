@@ -11,9 +11,9 @@
 <text x="281.6" y="391.2" text-anchor="middle" fill="#44445a" font-size="9" font-weight="normal">70 × 70</text>
 <polygon points="304.0,520.4 352.0,520.4 352.0,472.4 304.0,472.4" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
 <text x="328.0" y="499.4" text-anchor="middle" fill="#44445a" font-size="8" font-weight="bold">tab.</text>
-<polygon points="347.2,555.6 347.2,251.6 227.2,251.6 227.2,555.6" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
-<text x="287.2" y="517.1" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit pliant 75 × 190</text>
-<text x="287.2" y="530.1" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
+<polygon points="392.0,600.4 392.0,296.4 272.0,296.4 272.0,600.4" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
+<text x="332.0" y="561.9" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit pliant 75 × 190</text>
+<text x="332.0" y="574.9" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
 <polygon points="136.0,610.0 264.0,610.0 264.0,600.4 136.0,600.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <polygon points="296.0,610.0 424.0,610.0 424.0,600.4 296.0,600.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <line x1="120.0" y1="614.0" x2="120.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>

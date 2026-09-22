@@ -194,7 +194,10 @@ window.SHED_PARAMS = {
         ],
         "rehausse_prix_ml_eur": 10,
         "lit_pliant": {
-          "contre": ""
+          "contre": "",
+          "pied_sous": "avant",
+          "pres_de": "droite",
+          "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)"
         },
         "fenetres": [
           {

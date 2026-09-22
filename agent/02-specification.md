@@ -143,7 +143,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
     serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
-    Sections : **Résumé** (deux phrases calculées ; un petit dessin nu sans légende, `resume_svg` : l'abri sur
+    Sections : **Résumé** (deux phrases calculées, puis des **étiquettes** de chiffres (hauteurs, pente et
+    portée, surfaces, matériaux) ; un petit dessin nu, `resume_svg` : l'abri sur
     la dalle, la longueur et la lettre de chaque mur et l'angle de chaque coin à l'intérieur du contour, les
     marges gauche, devant, droite et le passage derrière avec leur chiffre hors de la dalle, la limite en
     trait ; à côté, quatre lignes : hauteurs, toit, surfaces, matériaux ; le détail vit dans les sections) à

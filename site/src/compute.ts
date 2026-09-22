@@ -973,12 +973,26 @@ export function variantes(p: Params, g: any) {
       }
       let best: any = null;
       {
+        // pied_sous : le pied du lit va sous ce bureau (jusqu'a sa profondeur, rien sous les autres) ;
+        // pres_de : le lit longe ce mur (distance au mur penalisee) ; sinon on evite les bureaux et on gene le moins les sieges
+        const b_pied = disp.lit_pliant.pied_sous ? v.bureaux.find((b: any) => b.cote === disp.lit_pliant.pied_sous) : null;
+        const kp = disp.lit_pliant.pres_de ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(disp.lit_pliant.pres_de)) : -1;
+        const dist_mur = (q: Pt[]) => {
+          if (kp < 0) return 0;
+          const a = r[kp], c = r[(kp + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), nx = -(c[1] - a[1]) / l, ny = (c[0] - a[0]) / l;
+          return Math.min(...q.map((z) => Math.abs((z[0] - a[0]) * nx + (z[1] - a[1]) * ny)));
+        };
         for (const { q, s } of candidats) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o: Pt[]) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous ? v.bureaux.reduce((s: number, b: any) => s + poly_area(clip_convex(q, b.brut)), 0) : 0;
           const gene = poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
-          const cout = dessous * 1000 + gene;
+          let cout = dessous * 1000 + gene;
+          if (b_pied) {
+            const sous_pied = poly_area(clip_convex(q, b_pied.brut)), autres = dessous - sous_pied;
+            if (sous_pied < LW * 20 || autres > 1) continue;
+            cout = autres * 1000 + gene + dist_mur(q) * 50 + Math.abs(sous_pied - LW * b_pied.profondeur_cm * 0.9);
+          } else if (kp >= 0) cout += dist_mur(q) * 50;
           if (!best || cout < best.cout - 1) best = { gene, dessous, cout, q, s };
         }
       }
