@@ -10,8 +10,8 @@ const ROOT = process.cwd();
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri3d.mjs");
 // three vient ici de node_modules (meme version que le CDN du site) ; le bundle du site le garde externe
-await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
-const { THREE, peuple_abri, calcule_abri } = await import(pathToFileURL(out).href);
+await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
+const { THREE, peuple_abri, VUES, calcule_abri } = await import(pathToFileURL(out).href);
 
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
@@ -27,6 +27,8 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, lit: false, etiquettes: true });
+// points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
+ok(Object.keys(VUES).join() === "jardin,porte,arriere,dessus" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.dessus.position[1] > 5 && Object.values(VUES).every((v) => v.titre.length > 5), "quatre points de vue fixes : jardin, porte, arrière, dessus");
 racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });

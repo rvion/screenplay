@@ -84,6 +84,11 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .viewer-toggles { display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: .8rem; color: var(--muted); margin: .3rem 0 0; }
 .viewer-toggles label { cursor: pointer; }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
+.vignettes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: .5rem; }
+.vignettes button { padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); cursor: pointer; overflow: hidden; text-align: left; }
+.vignettes button:hover { border-color: var(--accent); }
+.vignettes canvas { display: block; width: 100%; height: auto; background: #dfe7ee; }
+.vignettes span { display: block; font-size: .74rem; color: var(--muted); padding: .2rem .45rem; }
 
 figcaption { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
 .planbox svg { display: block; width: auto; height: auto; max-width: 100%; max-height: 66vh; border: 1px solid var(--line); border-radius: 6px; background: #fff; }

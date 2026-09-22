@@ -7,7 +7,15 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 type Vec = any;
 type Pt = number[];
 
-export interface AbriViewer { rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; }
+export interface AbriViewer { rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; voir(vue: NomVue): void; vignette(canvas: HTMLCanvasElement, vue: NomVue): void; }
+// points de vue fixes (metres, cible incluse) : la vue principale et les vignettes
+export const VUES = {
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0] },
+  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0] },
+  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5] },
+  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1.0], cible: [0.3, 0, 0.8] },
+} as const;
+export type NomVue = keyof typeof VUES;
 export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne";
 
 const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
@@ -238,7 +246,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdfeaf3);
   const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(3.3, 2.7, 4.3);
+  camera.position.set(...VUES.jardin.position);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -279,6 +287,18 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }
+  function voir(vue: NomVue) {
+    const v = VUES[vue];
+    camera.position.set(...v.position); controls.target.set(...v.cible); controls.update();
+  }
+  // rendu fixe d'un point de vue dans un petit canvas 2D : un seul contexte WebGL, copie du tampon juste apres le rendu
+  function vignette(canvas: HTMLCanvasElement, vue: NomVue) {
+    const v = VUES[vue], cam = new THREE.PerspectiveCamera(42, camera.aspect, 0.1, 100);
+    cam.position.set(...v.position); cam.lookAt(...v.cible);
+    renderer.render(scene, cam);
+    const ctx = canvas.getContext("2d");
+    if (ctx) { canvas.width = 320; canvas.height = Math.round(320 / camera.aspect); ctx.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height); }
+  }
 
   window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
@@ -286,5 +306,5 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     renderer.setSize(container.clientWidth, container.clientHeight);
   });
   (function boucle() { requestAnimationFrame(boucle); controls.update(); renderer.render(scene, camera); })();
-  return { rebuild, montrer };
+  return { rebuild, montrer, voir, vignette };
 }

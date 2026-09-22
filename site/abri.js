@@ -2663,6 +2663,12 @@ function surligne_section() {
 // site/src/viewer_abri.ts
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+var VUES = {
+  jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0] },
+  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0] },
+  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5] },
+  dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1], cible: [0.3, 0, 0.8] }
+};
 var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799 };
 function etiquette(txt) {
   if (typeof document === "undefined") return null;
@@ -2927,7 +2933,7 @@ function createAbriViewer(container, data0) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(14674675);
   const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(3.3, 2.7, 4.3);
+  camera.position.set(...VUES.jardin.position);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -2973,6 +2979,24 @@ function createAbriViewer(container, data0) {
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }
+  function voir(vue) {
+    const v = VUES[vue];
+    camera.position.set(...v.position);
+    controls.target.set(...v.cible);
+    controls.update();
+  }
+  function vignette(canvas, vue) {
+    const v = VUES[vue], cam = new THREE.PerspectiveCamera(42, camera.aspect, 0.1, 100);
+    cam.position.set(...v.position);
+    cam.lookAt(...v.cible);
+    renderer.render(scene, cam);
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      canvas.width = 320;
+      canvas.height = Math.round(320 / camera.aspect);
+      ctx.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height);
+    }
+  }
   window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
@@ -2983,7 +3007,7 @@ function createAbriViewer(container, data0) {
     controls.update();
     renderer.render(scene, camera);
   })();
-  return { rebuild, montrer };
+  return { rebuild, montrer, voir, vignette };
 }
 
 // site/src/abri_main.ts
@@ -3004,9 +3028,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
+  const vignettes = [...document.querySelectorAll("#vignettes [data-vue]")];
+  const rend_vignettes = () => {
+    for (const b of vignettes) {
+      const c = b.querySelector("canvas");
+      if (vue && c) vue.vignette(c, b.dataset.vue);
+    }
+  };
+  for (const b of vignettes) {
+    const titre = b.querySelector("span");
+    if (titre) titre.textContent = VUES[b.dataset.vue].titre;
+    b.addEventListener("click", () => vue && vue.voir(b.dataset.vue));
+  }
+  rend_vignettes();
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"]) {
     const c = document.getElementById("voir-" + nom);
-    if (c) c.addEventListener("change", () => vue && vue.montrer(nom, c.checked));
+    if (c) c.addEventListener("change", () => {
+      if (vue) {
+        vue.montrer(nom, c.checked);
+        rend_vignettes();
+      }
+    });
   }
   window.setTimeout(() => {
     if (boite && !boite.querySelector("canvas") && !boite.textContent.trim()) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible ici (WebGL requis, ou librairie bloqu\xE9e). Les plans plus bas restent enti\xE8rement valables.</p>';

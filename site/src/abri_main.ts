@@ -1,7 +1,7 @@
 // Point d'entree de la page d'accueil : calcule l'abri retenu depuis window.SHED_PARAMS,
 // remplit la page, puis branche la scene 3D (qui echoue proprement sans WebGL).
 import { calcule_abri, rend_abri } from "./abri_page";
-import { createAbriViewer, type AbriViewer } from "./viewer_abri";
+import { createAbriViewer, VUES, type AbriViewer, type NomVue } from "./viewer_abri";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = (window as any).SHED_PARAMS;
@@ -19,9 +19,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent entièrement valables.</p>';
     console.error(e);
   }
+  // vignettes : trois points de vue fixes sous la vue principale ; un clic y amene la camera
+  const vignettes = [...document.querySelectorAll<HTMLElement>("#vignettes [data-vue]")];
+  const rend_vignettes = () => { for (const b of vignettes) { const c = b.querySelector("canvas"); if (vue && c) vue.vignette(c, b.dataset.vue as NomVue); } };
+  for (const b of vignettes) {
+    const titre = b.querySelector("span"); if (titre) titre.textContent = VUES[b.dataset.vue as NomVue].titre;
+    b.addEventListener("click", () => vue && vue.voir(b.dataset.vue as NomVue));
+  }
+  rend_vignettes();
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"] as const) {
     const c = document.getElementById("voir-" + nom) as HTMLInputElement | null;
-    if (c) c.addEventListener("change", () => vue && vue.montrer(nom, c.checked));
+    if (c) c.addEventListener("change", () => { if (vue) { vue.montrer(nom, c.checked); rend_vignettes(); } });
   }
   // filet de securite : CDN bloque ou WebGL absent, rien n'a ete dessine
   window.setTimeout(() => {
