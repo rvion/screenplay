@@ -127,19 +127,25 @@ export function rend_abri(a: Abri) {
   html("intro", `Bureau de jardin à ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, sur la dalle existante, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau en L le long des murs ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   // deux dessins (murs et angles ; marges sur la dalle) puis les chiffres qui restent
   const RS = core.planches || {};
-  const paires: [string, string][] = [
-    ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}, finies ${cote(Math.max(...m.hauteurs_coins_cm))} → ${cote(Math.min(...m.hauteurs_coins_cm))}`],
-    ["Toit", `pente ${cote(m.pente.pourcent, "%")}, portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}, gouttière ${G.troncons.map((t: any) => face(t.face)).join(" ")}`],
-    ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${cote(v.aire_interieure_m2, "m²")} intérieur`],
-    ["Matériaux", `${eur(B.materiaux_eur)} TTC`],
+  const ICO: Record<string, string> = {
+    hauteurs: '<svg viewBox="0 0 16 16"><path d="M8 2v12M5.5 4.5 8 2l2.5 2.5M5.5 11.5 8 14l2.5-2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    toit: '<svg viewBox="0 0 16 16"><path d="M2 8.5 8 3l6 5.5M4 7.5V13h8V7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+    surfaces: '<svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1.5"/></svg>',
+    materiaux: '<svg viewBox="0 0 16 16"><path d="M2 4h2l1.6 7h7.2L14 6H5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/></svg>',
+  };
+  const paires: [string, string, string][] = [
+    ["hauteurs", "hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}, finies ${cote(Math.max(...m.hauteurs_coins_cm))} → ${cote(Math.min(...m.hauteurs_coins_cm))}`],
+    ["toit", "toit", `pente ${cote(m.pente.pourcent, "%")}, portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}, gouttière ${G.troncons.map((t: any) => face(t.face)).join(" ")}`],
+    ["surfaces", "surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${cote(v.aire_interieure_m2, "m²")} intérieur`],
+    ["materiaux", "matériaux", `${eur(B.materiaux_eur)} TTC`],
   ];
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w: any) => w.type));
   const legende = [
-    ["trait", "#2b5d8a", "mur, cote extérieure en cm"], ["arc", "#b0452a", "angle du coin"], ["trait", "#b86e1f", "marge avant dalle"],
-    ...(types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : []), ...(types.has("mur") ? [["trait-epais", "#5b4a3a", "mur de propriété"]] : []), ...(types.has("grillage") ? [["pointille", "#5f8a4a", "grillage (limite)"]] : []),
-    ["aplat", "#f3f1ec", "dalle béton"],
+    ["trait", "#2b5d8a", "mur"], ["arc", "#b0452a", "angle"], ["trait", "#b86e1f", "distance bord"],
+    ...(types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade"]] : []), ...(types.has("mur") ? [["trait-epais", "#5b4a3a", "mur voisin"]] : []), ...(types.has("grillage") ? [["pointille", "#5f8a4a", "grillage"]] : []),
+    ["aplat", "#f3f1ec", "dalle"],
   ];
-  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div><ul class="resume-points">${paires.map(([k, val]) => `<li><b>${k}</b> ${val}</li>`).join("")}</ul>`);
+  html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div><ul class="resume-points">${paires.map(([ico, k, val]) => `<li>${ICO[ico]}<span><span class="k">${k} :</span> ${val}</span></li>`).join("")}</ul>`);
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
     m.faces.map((f: any, i: number) => [paire(f.cle, nom_face(f)), cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => paire(pn.id, cote(pn.largeur_cm))).join(", "), cote(m.angles_deg[i], "°")]), [3, 4]);
 
