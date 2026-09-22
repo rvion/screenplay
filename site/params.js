@@ -69,10 +69,10 @@ window.SHED_PARAMS = {
       "arriere_droite"
     ],
     "palissade_epaisseur_cm": 4,
-    "_gaine_comment": "Trou de la gaine electrique dans la dalle, mesure depuis le bord gauche (x) et le bord avant (y) de la dalle ; le cable arrive par la.",
+    "_gaine_comment": "Trou de la gaine electrique dans la dalle, centre mesure depuis le bord gauche (x) et le bord avant (y) de la dalle (trou de 12 a 16 depuis l'avant) ; le cable arrive par la.",
     "gaine_electrique": {
       "x_cm": 110,
-      "y_cm": 13,
+      "y_cm": 14,
       "diametre_cm": 4
     },
     "palissade_travee_cm": 180,
@@ -83,7 +83,7 @@ window.SHED_PARAMS = {
     "passage_souhaite_cm": 50,
     "bandes_libres_cm": {
       "_comment": "Bande reservee (laissee libre) le long de chaque cote de la dalle, vers l'interieur. Ce qui reste au centre = zone utile (plan-dalle-bandes.svg).",
-      "avant": 10,
+      "avant": 5,
       "droite": 5,
       "arriere_droite": 45,
       "arriere_gauche": 12,

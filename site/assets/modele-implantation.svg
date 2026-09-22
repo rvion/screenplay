@@ -40,56 +40,56 @@
 <text x="202.0" y="178.0" text-anchor="middle" fill="#b0452a" font-size="12" font-weight="bold">91.6°</text>
 <polyline points="110.0,244.9 113.2,244.6 116.4,243.9 119.4,242.7 122.3,241.1 124.8,239.1 127.1,236.8 128.9,234.1 130.4,231.2 131.4,228.1 131.9,224.9 132.0,221.6 131.5,218.4 130.7,215.3 129.3,212.3 127.5,209.6 125.4,207.2" fill="none" stroke="#b0452a" stroke-width="1.5"/>
 <text x="150.7" y="243.5" text-anchor="middle" fill="#b0452a" font-size="12" font-weight="bold">135.6°</text>
-<polygon points="122.5,621.6 382.5,621.6 382.5,381.6 295.8,296.6 122.5,296.6" fill="none" stroke="#7a6f5a" stroke-width="1.2" stroke-dasharray="6 4"/>
-<line x1="382.5" y1="381.6" x2="295.8" y2="296.6" stroke="#1b6fa8" stroke-width="4"/>
-<line x1="295.8" y1="296.6" x2="122.5" y2="296.6" stroke="#1b6fa8" stroke-width="4"/>
-<circle cx="122.5" cy="296.6" r="5" fill="#1b6fa8"/>
+<polygon points="122.5,627.9 382.5,627.9 382.5,387.9 295.8,302.9 122.5,302.9" fill="none" stroke="#7a6f5a" stroke-width="1.2" stroke-dasharray="6 4"/>
+<line x1="382.5" y1="387.9" x2="295.8" y2="302.9" stroke="#1b6fa8" stroke-width="4"/>
+<line x1="295.8" y1="302.9" x2="122.5" y2="302.9" stroke="#1b6fa8" stroke-width="4"/>
+<circle cx="122.5" cy="302.9" r="5" fill="#1b6fa8"/>
 <defs><pattern id="cache" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#6b8e23" stroke-width="1.6"/></pattern></defs>
-<polygon points="382.5,298.2 200.9,130.0 159.8,172.0 382.5,390.4" fill="url(#cache)" stroke="#6b8e23" stroke-width="1"/>
-<polygon points="382.5,298.2 200.9,130.0 110.0,222.9 110.0,302.9 382.5,302.9" fill="url(#cache)" stroke="#6b8e23" stroke-width="1"/>
-<text x="221.2" y="201.4" text-anchor="middle" fill="#4f6b18" font-size="11" font-weight="bold">rangement caché</text>
-<text x="221.2" y="214.4" text-anchor="middle" fill="#4f6b18" font-size="11" font-weight="bold">2.02 m²</text>
-<polygon points="122.5,615.4 382.5,615.4 382.5,390.4 293.2,302.9 122.5,302.9" fill="#cfe0f1" stroke="#2b5d8a" stroke-width="2.5"/>
-<text x="252.5" y="601.4" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 252.5 601.4)">208</text>
-<text x="368.5" y="502.9" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-90.0 368.5 502.9)">180</text>
-<text x="328.1" y="356.6" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(44.4 328.1 356.6)">100</text>
-<text x="207.9" y="316.9" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 207.9 316.9)">136.6</text>
-<text x="136.5" y="459.1" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(90.0 136.5 459.1)">250</text>
-<polyline points="138.5,615.4 138.4,613.3 138.0,611.2 137.3,609.3 136.4,607.4 135.2,605.6 133.8,604.1 132.2,602.7 130.5,601.5 128.6,600.6 126.6,599.9 124.6,599.5 122.5,599.4" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<polyline points="382.5,599.4 380.4,599.5 378.4,599.9 376.4,600.6 374.5,601.5 372.8,602.7 371.2,604.1 369.8,605.6 368.6,607.4 367.7,609.3 367.0,611.2 366.6,613.3 366.5,615.4" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<polyline points="371.1,379.2 369.1,381.6 367.7,384.4 366.8,387.4 366.5,390.5 366.8,393.6 367.7,396.6 369.2,399.3 371.2,401.7 373.6,403.7 376.4,405.2 379.4,406.1 382.5,406.4" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<text x="345.6" y="409.9" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">134.4°</text>
-<polyline points="277.2,302.9 277.6,306.0 278.5,309.0 280.0,311.8 282.0,314.2 284.4,316.2 287.2,317.7 290.2,318.6 293.4,318.9 296.5,318.5 299.5,317.6 302.3,316.1 304.7,314.1" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<text x="278.1" y="343.9" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">135.6°</text>
-<polyline points="122.5,318.9 124.6,318.7 126.6,318.3 128.6,317.7 130.5,316.7 132.2,315.6 133.8,314.2 135.2,312.6 136.4,310.9 137.3,309.0 138.0,307.0 138.4,305.0 138.5,302.9" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<line x1="135.0" y1="615.4" x2="235.0" y2="615.4" stroke="#1b9aa8" stroke-width="6"/>
-<text x="185.0" y="631.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
-<line x1="260.0" y1="615.4" x2="360.0" y2="615.4" stroke="#1b9aa8" stroke-width="6"/>
-<text x="310.0" y="631.4" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
-<line x1="382.5" y1="503.5" x2="382.5" y2="497.2" stroke="#7a5530" stroke-width="7"/>
-<line x1="382.5" y1="406.0" x2="382.5" y2="399.8" stroke="#7a5530" stroke-width="7"/>
-<line x1="382.5" y1="497.2" x2="382.5" y2="406.0" stroke="#c0392b" stroke-width="5"/>
-<line x1="382.5" y1="406.0" x2="473.8" y2="406.0" stroke="#c0392b" stroke-width="2"/>
-<polyline points="382.5,497.2 391.4,496.8 400.3,495.5 409.0,493.3 417.4,490.3 425.5,486.5 433.2,481.9 440.4,476.5 447.0,470.5 453.0,463.9 458.4,456.7 463.0,449.0 466.8,440.9 469.8,432.5 472.0,423.8 473.3,414.9 473.8,406.0" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
-<text x="400.5" y="451.6" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(90.0 400.5 451.6)">porte 73</text>
-<line x1="293.2" y1="302.9" x2="336.8" y2="255.9" stroke="#2a8a4a" stroke-width="2.5"/>
-<circle cx="293.2" cy="302.9" r="3" fill="#2a8a4a"/>
-<text x="321.6" y="285.5" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(-47.2 321.6 285.5)">51.3</text>
-<line x1="122.5" y1="302.9" x2="110.0" y2="222.9" stroke="#2a8a4a" stroke-width="2.5"/>
-<circle cx="122.5" cy="302.9" r="3" fill="#2a8a4a"/>
-<text x="107.4" y="264.3" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(81.1 107.4 264.3)">64.8</text>
-<text x="260.6" y="445.4" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">4.95 m²</text>
-<text x="260.6" y="463.4" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 4.44 m²</text>
-<polygon points="130.0,607.9 375.0,607.9 375.0,393.5 290.1,310.4 130.0,310.4" fill="none" stroke="#2b5d8a" stroke-width="1" stroke-dasharray="3 2"/>
-<line x1="122.5" y1="615.4" x2="122.5" y2="627.9" stroke="#b86e1f" stroke-width="2"/>
-<text x="130.5" y="625.6" text-anchor="start" fill="#b86e1f" font-size="11" font-weight="bold">10</text>
-<line x1="382.5" y1="615.4" x2="437.5" y2="615.4" stroke="#b86e1f" stroke-width="2"/>
-<text x="410.0" y="609.4" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">44</text>
-<line x1="122.5" y1="615.4" x2="110.0" y2="615.4" stroke="#b86e1f" stroke-width="2"/>
-<text x="116.2" y="609.4" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">10</text>
-<g class="gaine"><circle cx="247.5" cy="611.6" r="7.5" fill="none" stroke="#c0392b" stroke-width="1.2"/><circle cx="247.5" cy="611.6" r="3.5" fill="#c0392b"/></g>
-<line x1="247.5" y1="619.1" x2="247.5" y2="693.9" stroke="#c0392b" stroke-width="0.8" stroke-dasharray="3 2"/>
-<text x="247.5" y="705.9" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="bold">gaine électrique Ø4 · 110 depuis la gauche, 13 depuis l'avant · sous le mur A</text>
+<polygon points="382.5,298.2 200.9,130.0 156.6,175.2 382.5,396.6" fill="url(#cache)" stroke="#6b8e23" stroke-width="1"/>
+<polygon points="382.5,298.2 200.9,130.0 110.0,222.9 110.0,309.1 382.5,309.1" fill="url(#cache)" stroke="#6b8e23" stroke-width="1"/>
+<text x="221.2" y="204.6" text-anchor="middle" fill="#4f6b18" font-size="11" font-weight="bold">rangement caché</text>
+<text x="221.2" y="217.6" text-anchor="middle" fill="#4f6b18" font-size="11" font-weight="bold">2.13 m²</text>
+<polygon points="122.5,621.6 382.5,621.6 382.5,396.6 293.2,309.1 122.5,309.1" fill="#cfe0f1" stroke="#2b5d8a" stroke-width="2.5"/>
+<text x="252.5" y="607.6" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 252.5 607.6)">208</text>
+<text x="368.5" y="509.1" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-90.0 368.5 509.1)">180</text>
+<text x="328.1" y="362.9" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(44.4 328.1 362.9)">100</text>
+<text x="207.9" y="323.1" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 207.9 323.1)">136.6</text>
+<text x="136.5" y="465.4" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(90.0 136.5 465.4)">250</text>
+<polyline points="138.5,621.6 138.4,619.5 138.0,617.5 137.3,615.5 136.4,613.6 135.2,611.9 133.8,610.3 132.2,608.9 130.5,607.8 128.6,606.8 126.6,606.2 124.6,605.8 122.5,605.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<polyline points="382.5,605.6 380.4,605.8 378.4,606.2 376.4,606.8 374.5,607.8 372.8,608.9 371.2,610.3 369.8,611.9 368.6,613.6 367.7,615.5 367.0,617.5 366.6,619.5 366.5,621.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<polyline points="371.1,385.4 369.1,387.9 367.7,390.6 366.8,393.6 366.5,396.7 366.8,399.8 367.7,402.8 369.2,405.6 371.2,408.0 373.6,409.9 376.4,411.4 379.4,412.3 382.5,412.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<text x="345.6" y="416.1" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">134.4°</text>
+<polyline points="277.2,309.1 277.6,312.3 278.5,315.3 280.0,318.0 282.0,320.5 284.4,322.5 287.2,323.9 290.2,324.8 293.4,325.1 296.5,324.8 299.5,323.9 302.3,322.3 304.7,320.3" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<text x="278.1" y="350.2" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">135.6°</text>
+<polyline points="122.5,325.1 124.6,325.0 126.6,324.6 128.6,323.9 130.5,323.0 132.2,321.8 133.8,320.4 135.2,318.9 136.4,317.1 137.3,315.2 138.0,313.3 138.4,311.2 138.5,309.1" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<line x1="135.0" y1="621.6" x2="235.0" y2="621.6" stroke="#1b9aa8" stroke-width="6"/>
+<text x="185.0" y="637.6" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
+<line x1="260.0" y1="621.6" x2="360.0" y2="621.6" stroke="#1b9aa8" stroke-width="6"/>
+<text x="310.0" y="637.6" text-anchor="middle" fill="#1b9aa8" font-size="10" font-weight="bold">fen. 80×75 ouvr.</text>
+<line x1="382.5" y1="509.8" x2="382.5" y2="503.5" stroke="#7a5530" stroke-width="7"/>
+<line x1="382.5" y1="412.2" x2="382.5" y2="406.0" stroke="#7a5530" stroke-width="7"/>
+<line x1="382.5" y1="503.5" x2="382.5" y2="412.2" stroke="#c0392b" stroke-width="5"/>
+<line x1="382.5" y1="412.2" x2="473.8" y2="412.2" stroke="#c0392b" stroke-width="2"/>
+<polyline points="382.5,503.5 391.4,503.1 400.3,501.7 409.0,499.6 417.4,496.6 425.5,492.7 433.2,488.1 440.4,482.8 447.0,476.8 453.0,470.1 458.4,462.9 463.0,455.3 466.8,447.2 469.8,438.7 472.0,430.1 473.3,421.2 473.8,412.2" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="400.5" y="457.9" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(90.0 400.5 457.9)">porte 73</text>
+<line x1="293.2" y1="309.1" x2="339.9" y2="258.8" stroke="#2a8a4a" stroke-width="2.5"/>
+<circle cx="293.2" cy="309.1" r="3" fill="#2a8a4a"/>
+<text x="323.2" y="290.1" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(-47.2 323.2 290.1)">54.9</text>
+<line x1="122.5" y1="309.1" x2="110.0" y2="222.9" stroke="#2a8a4a" stroke-width="2.5"/>
+<circle cx="122.5" cy="309.1" r="3" fill="#2a8a4a"/>
+<text x="107.3" y="267.3" text-anchor="middle" dominant-baseline="middle" fill="#2a8a4a" font-size="11" font-weight="bold" transform="rotate(81.8 107.3 267.3)">69.7</text>
+<text x="260.6" y="451.6" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">4.95 m²</text>
+<text x="260.6" y="469.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 4.44 m²</text>
+<polygon points="130.0,614.1 375.0,614.1 375.0,399.8 290.1,316.6 130.0,316.6" fill="none" stroke="#2b5d8a" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="122.5" y1="621.6" x2="122.5" y2="627.9" stroke="#b86e1f" stroke-width="2"/>
+<text x="130.5" y="628.8" text-anchor="start" fill="#b86e1f" font-size="11" font-weight="bold">5</text>
+<line x1="382.5" y1="621.6" x2="437.5" y2="621.6" stroke="#b86e1f" stroke-width="2"/>
+<text x="410.0" y="615.6" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">44</text>
+<line x1="122.5" y1="621.6" x2="110.0" y2="621.6" stroke="#b86e1f" stroke-width="2"/>
+<text x="116.2" y="615.6" text-anchor="middle" fill="#b86e1f" font-size="11" font-weight="bold">10</text>
+<g class="gaine"><circle cx="247.5" cy="610.4" r="7.5" fill="none" stroke="#c0392b" stroke-width="1.2"/><circle cx="247.5" cy="610.4" r="3.5" fill="#c0392b"/></g>
+<line x1="247.5" y1="617.9" x2="247.5" y2="693.9" stroke="#c0392b" stroke-width="0.8" stroke-dasharray="3 2"/>
+<text x="247.5" y="705.9" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="bold">gaine électrique Ø4 · 110 depuis la gauche, 14 depuis l'avant · dans l'abri</text>
 <text x="289.4" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Implantation sur la dalle · abri 4.95 m² sur 8.51 m² de dalle</text>
 <text x="289.4" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">brun = palissade bois, vert pointillé = grillage · orange = distance aux bords · vert = passage derrière · hachures = rangement caché</text>
 <text x="289.4" y="725.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage</text>

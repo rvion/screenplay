@@ -26,7 +26,7 @@ Angles intérieurs (`dalle.angles_deg`, plan `plan-dalle.svg`) : **90 / 90 / 132
 
 **Bandes libres et zone utile** (`bandes_libres_cm`, `dalle.zone_utile`) : chaque côté est
 décalé vers l'intérieur de sa bande, la zone utile est l'intersection des demi-plans. Bandes :
-avant 10, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile **6,53 m²**. Elle sert aux
+avant 5, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile **6,65 m²**. Elle sert aux
 13 formes de `variantes(p, g)` ; l'abri, lui, impose ses cotes. L'étude des formes publiée
 (`etudes/variantes.md`) est figée : elle a été faite avec les bandes de la première forme (gauche 12, avant 5).
 
@@ -42,8 +42,13 @@ Le **passage** derrière l'abri est la vraie distance entre la forme et chaque m
 d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout du fond et fait **100**, un
 panneau entier. Il monte de G − D = 70, donc il avance de √(100² − 70²) = 71,4 : il fait **44,4°** et
 non 45°, et le fond est ce qui reste (B = A − 71,4). La façade ne change rien à l'angle. Contour :
-`(10,10) → (218,10) → (218,190) → (146,6 ; 260) → (10,260)` : 10 cm de dalle à
-gauche et devant, 44 à droite.
+`(10,5) → (218,5) → (218,185) → (146,6 ; 255) → (10,255)` : 10 cm de dalle à
+gauche, **5 devant**, 44 à droite.
+
+**Gaine électrique** (`dalle_cm.gaine_electrique`) : trou de 4 cm, 110 depuis la gauche, de 12 à 16
+depuis l'avant. Façade à 5 cm du bord et panneau de 6 : face intérieure à 11, donc le câble sort
+**dans l'abri**, 1 cm derrière le mur de façade, entre les deux fenêtres. À 10 cm devant, il tombait sous
+le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 10 à 5.
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
@@ -56,7 +61,7 @@ gauche et devant, 44 à droite.
 - Angles **90 / 90 / 134,4 / 135,6 / 90** (profils d'angle pliés sur mesure de toute façon). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
   à l'aire exacte, jamais arrondie : `tests/formalites.mjs`). Intérieur 4,44 m², sol libre hors
   bureau 2,77 m². Cotes intérieures : façade **196**, droite 171,5, pan 95, fond 128,1, gauche 238.
-  Passage derrière : 51,3 cm au grand pan, 64,8 au petit pan. Matériaux 2 850 € TTC.
+  Passage derrière : 54,9 cm au grand pan, 69,7 au petit pan. Matériaux 2 850 € TTC.
 - **Pourquoi 208 et pas 210** : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
   5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).
 - **Le plancher isolé prend 10 cm** (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :

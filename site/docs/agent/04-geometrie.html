@@ -33,7 +33,7 @@ Angles intérieurs (<code>dalle.angles_deg</code>, plan <code>plan-dalle.svg</co
 (avant-gauche, avant-droit, haut droit, pointe, haut gauche ; somme 540°). Aire <strong>8,51 m²</strong>.</p>
 <p><strong>Bandes libres et zone utile</strong> (<code>bandes_libres_cm</code>, <code>dalle.zone_utile</code>) : chaque côté est
 décalé vers l&#39;intérieur de sa bande, la zone utile est l&#39;intersection des demi-plans. Bandes :
-avant 10, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile <strong>6,53 m²</strong>. Elle sert aux
+avant 5, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile <strong>6,65 m²</strong>. Elle sert aux
 13 formes de <code>variantes(p, g)</code> ; l&#39;abri, lui, impose ses cotes. L&#39;étude des formes publiée
 (<code>etudes/variantes.md</code>) est figée : elle a été faite avec les bandes de la première forme (gauche 12, avant 5).</p>
 <h3 id="murs-de-propriété">Murs de propriété</h3>
@@ -47,8 +47,12 @@ Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la 
 d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond et fait <strong>100</strong>, un
 panneau entier. Il monte de G − D = 70, donc il avance de √(100² − 70²) = 71,4 : il fait <strong>44,4°</strong> et
 non 45°, et le fond est ce qui reste (B = A − 71,4). La façade ne change rien à l&#39;angle. Contour :
-<code>(10,10) → (218,10) → (218,190) → (146,6 ; 260) → (10,260)</code> : 10 cm de dalle à
-gauche et devant, 44 à droite.</p>
+<code>(10,5) → (218,5) → (218,185) → (146,6 ; 255) → (10,255)</code> : 10 cm de dalle à
+gauche, <strong>5 devant</strong>, 44 à droite.</p>
+<p><strong>Gaine électrique</strong> (<code>dalle_cm.gaine_electrique</code>) : trou de 4 cm, 110 depuis la gauche, de 12 à 16
+depuis l&#39;avant. Façade à 5 cm du bord et panneau de 6 : face intérieure à 11, donc le câble sort
+<strong>dans l&#39;abri</strong>, 1 cm derrière le mur de façade, entre les deux fenêtres. À 10 cm devant, il tombait sous
+le mur, pile au joint A1/A2 : c&#39;est pour lui que la bande avant est passée de 10 à 5.</p>
 <div class="doc-table"><table>
 <thead>
 <tr>
@@ -93,7 +97,7 @@ gauche et devant, 44 à droite.</p>
 <li>Angles <strong>90 / 90 / 134,4 / 135,6 / 90</strong> (profils d&#39;angle pliés sur mesure de toute façon). Murs <strong>4,95 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m², comparé
 à l&#39;aire exacte, jamais arrondie : <code>tests/formalites.mjs</code>). Intérieur 4,44 m², sol libre hors
 bureau 2,77 m². Cotes intérieures : façade <strong>196</strong>, droite 171,5, pan 95, fond 128,1, gauche 238.
-Passage derrière : 51,3 cm au grand pan, 64,8 au petit pan. Matériaux 2 850 € TTC.</li>
+Passage derrière : 54,9 cm au grand pan, 69,7 au petit pan. Matériaux 2 850 € TTC.</li>
 <li><strong>Pourquoi 208 et pas 210</strong> : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
 5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).</li>
 <li><strong>Le plancher isolé prend 10 cm</strong> (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :

@@ -7,7 +7,7 @@
 ## En bref
 
 - **Dalle existante** : 8,51 m², côtés 262 / 223 / 258 / 104 / 324 cm, murs de propriété à gauche et au fond.
-- **4,44 m² intérieur** (4,95 m² de murs), 51,3 cm de passage derrière.
+- **4,44 m² intérieur** (4,95 m² de murs), 54,9 cm de passage derrière.
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 100, fond 136,6, gauche 250 cm.
 - **Toit** mono-pente vers le fond, 5,14° : 237,5 cm devant, 215 cm au plus bas.
 - **Porte pleine** 73 × 204 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
@@ -253,14 +253,14 @@ Tout le reste s'aligne sur ce tracé : dix minutes de plus ici évitent un mur q
 
 **Outils :** cordeau, mètre, grande équerre
 
-1. Tracer la façade à 10 cm du bord avant de la dalle et le mur gauche à 10 cm du bord gauche.
+1. Tracer la façade à 5 cm du bord avant de la dalle et le mur gauche à 10 cm du bord gauche.
 2. Reporter les 5 murs dans l'ordre : A 208 cm, D 180 cm, C 100 cm, B 136,6 cm, G 250 cm.
 3. Angles, dans le même ordre : 90°, 90°, 134,4°, 135,6°, 90°.
 
 **À contrôler avant de continuer :**
 
 - [ ] Diagonales du tracé : coin avant gauche → haut du mur droit = 275,1 cm ; coin avant droit → coin arrière gauche = 325,2 cm.
-- [ ] Passage derrière l'abri : 51,3 cm au plus étroit, à mesurer une fois le tracé fait.
+- [ ] Passage derrière l'abri : 54,9 cm au plus étroit, à mesurer une fois le tracé fait.
 
 ### Étape 2 · Poser le rail de pied
 
@@ -469,7 +469,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 - **4,95 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,77 m² de sol libre hors bureaux.
 - **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
-- **Passage derrière de 51 cm.** 2,02 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
+- **Passage derrière de 54 cm.** 2,13 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.
 - **Un bureau, un lit.** Le bureau court sur tout le mur gauche (10 cm, trois écrans de 27"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau.
 
