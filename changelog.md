@@ -21,3 +21,4 @@
 - Nouveaux presets : debout dedans, côté porte, dedans côté porte ouvert, couché
 - Nouveaux réglages de transparence : toit, murs et porte fermée voilés
 - Clôture : troisième état, palissade absente
+- Gaine électrique (Ø4, 110 depuis la gauche, 13 depuis l'avant de la dalle) sur l'implantation et en 3D

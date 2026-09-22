@@ -234,6 +234,7 @@ export function geometry(p: Params) {
       mur_hauteur_cm: +d.mur_hauteur_cm || 0,
       grillage_hauteur_cm: +d.grillage_hauteur_cm || +d.mur_hauteur_cm || 0,
       palissade_epaisseur_cm: +d.palissade_epaisseur_cm || 4,
+      gaine: d.gaine_electrique ? { x_cm: +d.gaine_electrique.x_cm, y_cm: +d.gaine_electrique.y_cm, diametre_cm: +d.gaine_electrique.diametre_cm || 4 } : null,
       palissade_travee_cm: +d.palissade_travee_cm || 180,
       mur_epaisseur_cm: +d.mur_epaisseur_cm || 15,
     },
@@ -925,6 +926,18 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
     svg += text(cz[0], cz[1] + 22, `${zu.aire_m2} m²`, "middle", "#2a8a4a", 20, "bold");
     svg += text(cz[0], cz[1] + 38, `bandes libres ${zu.bandes_m2} m²`, "middle", "#b86e1f", 11);
   }
+  // gaine electrique : le trou dans la dalle, et ou il tombe par rapport a l'abri (sous un mur, dedans, dehors)
+  if (m && v && d.gaine) {
+    const gp: Pt = [d.gaine.x_cm, d.gaine.y_cm], c = P(gp), r = Math.max(d.gaine.diametre_cm / 2 * scale, 3.5);
+    const dans = (z: Pt, poly_: Pt[]) => { let o = false; for (let i = 0, j = poly_.length - 1; i < poly_.length; j = i++) { const a = poly_[i], b = poly_[j]; if ((a[1] > z[1]) !== (b[1] > z[1]) && z[0] < (b[0] - a[0]) * (z[1] - a[1]) / (b[1] - a[1]) + a[0]) o = !o; } return o; };
+    const sous = dans(gp, v.polygone) && !dans(gp, m.interieur), face = sous ? m.faces.reduce((best: any, f: any) => { const l = Math.hypot(f.a[0] - f.de[0], f.a[1] - f.de[1]) || 1, dist = Math.abs((f.a[0] - f.de[0]) * (f.de[1] - gp[1]) - (f.de[0] - gp[0]) * (f.a[1] - f.de[1])) / l; return !best || dist < best.d ? { f, d: dist } : best; }, null).f : null;
+    const ou = sous ? `sous le mur ${face.cle}` : dans(gp, m.interieur) ? "dans l'abri" : "hors de l'abri";
+    svg += `<g class="gaine"><circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="${f1(r + 4)}" fill="none" stroke="#c0392b" stroke-width="1.2"/><circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="${f1(r)}" fill="#c0392b"/></g>\n`;
+    // le libelle sous la cote de largeur de la dalle, au-dessus de la legende du bas
+    const yl = H - 32;
+    svg += `<line x1="${f1(c[0])}" y1="${f1(c[1] + r + 4)}" x2="${f1(c[0])}" y2="${f1(yl - 12)}" stroke="#c0392b" stroke-width="0.8" stroke-dasharray="3 2"/>\n`;
+    svg += text(c[0], yl, `gaine électrique Ø${fz(d.gaine.diametre_cm)} · ${fz(d.gaine.x_cm)} depuis la gauche, ${fz(d.gaine.y_cm)} depuis l'avant · ${ou}`, "middle", "#c0392b", 10, "bold");
+  }
   const somme = d.angles_deg.reduce((s: number, x: number) => s + x, 0);
   if (m && v) {
     if (!sans_entete) svg += dessine_entete(W, entete_implantation(v, d));
@@ -1112,6 +1125,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
+    gaine: d.gaine,
     murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : w.type === "palissade" ? d.palissade_epaisseur_cm : d.mur_epaisseur_cm, travee_cm: d.palissade_travee_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },

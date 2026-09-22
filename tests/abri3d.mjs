@@ -73,6 +73,11 @@ const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math
 const monde = (x, y, h) => [(x - cx) / 100, h / 100, -(y - cy) / 100];
 // boite PRECISE (sommets reels) : la boite rapide de three enveloppe la boite locale d'un mur tourne, pas sa vraie forme
 const boite = (o) => new THREE.Box3().setFromObject(o, true);
+if (nom === "abri actuel") {
+  // gaine : un tube de 4 cm debout sur la dalle, a sa place
+  const bg = groupes.gaine ? boite(groupes.gaine) : new THREE.Box3(), attendu = [((d.gaine || {}).x_cm - (Math.min(...d.dalle.map((z) => z[0])) + Math.max(...d.dalle.map((z) => z[0]))) / 2) / 100];
+  ok(!!groupes.gaine && near(bg.max.x - bg.min.x, 0.04, 0.002) && near(bg.min.y, 0, 0.001) && bg.max.y > 0.1 && near((bg.min.x + bg.max.x) / 2, attendu[0], 0.005), "gaine : tube de 4 cm debout sur la dalle, a 110 cm du bord gauche");
+}
 
 // chaque mur : sa boite englobante doit etre celle du segment [de, a] epaissi vers l'INTERIEUR, de 0 a la hauteur des murs
 const paroi = groupes.murs.children;

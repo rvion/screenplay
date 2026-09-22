@@ -204,6 +204,18 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
+// gaine electrique : le trou dans la dalle (110 depuis la gauche, 13 depuis l'avant, 4 cm) se voit sur l'implantation,
+// et le plan dit quand elle tombe sous un mur (le mur de facade occupe 10 a 16 cm depuis l'avant)
+{
+  const ca = buildCore(actuel), ga = ca.geometry ? ca.geometry.dalle.gaine : null, svg = ca.svg["modele-implantation"];
+  ok(JSON.stringify(ca.modele3d.gaine) === JSON.stringify({ x_cm: 110, y_cm: 13, diametre_cm: 4 }), "gaine : 110 depuis la gauche, 13 depuis l'avant, 4 cm, dans la scene 3D");
+  ok(/class="gaine"/.test(svg) && svg.includes("gaine électrique Ø4") && svg.includes("sous le mur A"), "gaine : dessinee sur l'implantation, sous le mur A");
+  // controle : la meme gaine au milieu de l'abri n'est sous aucun mur
+  const dedans = { ...actuel, dalle_cm: { ...actuel.dalle_cm, gaine_electrique: { x_cm: 110, y_cm: 100, diametre_cm: 4 } } };
+  const s2 = buildCore(dedans).svg["modele-implantation"];
+  ok(/class="gaine"/.test(s2) && !s2.includes("sous le mur") && s2.includes("dans l'abri"), "gaine au milieu : dans l'abri, sous aucun mur");
+  void ga;
+}
 // abri actuel : l'etude v3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)
 {
   const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);

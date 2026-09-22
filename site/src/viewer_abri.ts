@@ -160,6 +160,12 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
 
   // dalle et murs de propriete
   abri.add(ombre(new THREE.Mesh(prisme(data.dalle, plat(-14), plat(0)), mat(COUL.dalle, { roughness: 0.95 }))));
+  // gaine electrique : le tube qui sort de la dalle, a sa place (souvent cache dans un mur : il se voit murs voiles ou coupes)
+  if (data.gaine) {
+    const g = groupe("gaine"), dia = data.gaine.diametre_cm / 100, h = 0.2;
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(dia / 2, dia / 2, h, 16), mat(0xc0392b, { roughness: 0.6 }));
+    tube.position.copy(W(data.gaine.x_cm, data.gaine.y_cm, h * 50)); g.add(ombre(tube));
+  }
   for (const w of data.murs_propriete) {
     const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, ux = (w.a[0] - w.de[0]) / l, uy = (w.a[1] - w.de[1]) / l;
     if (w.type === "grillage") {
