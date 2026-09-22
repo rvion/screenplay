@@ -15,12 +15,16 @@ export interface AbriViewer {
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
 export type Etats = { toit: number; porte: number; mobilier: number; lit: number; etiquettes: number; personne: number; cloture: number };
-export const ETATS_DEFAUT: Etats = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 1 };
+export const ETATS_DEFAUT: Etats = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
+// la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
+export function cloture_pleine(gr: Vec, oui: boolean) {
+  gr.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } });
+}
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
 export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
   porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
-  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, cloture: 0 } },
+  arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Intérieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
   lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } },
@@ -80,7 +84,7 @@ function dessine_tuile_grillage(): HTMLCanvasElement | null {
 
 // construit la scene de l'abri dans `abri` (sans renderer ni DOM : testable sous Node) ; rend les groupes masquables
 export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string, boolean> = {}): Record<string, Vec> {
-  const groupes: Record<string, Vec> = {}, visible = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, ...visible_demande };
+  const groupes: Record<string, Vec> = {}, visible: Record<string, boolean> = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, cloture: false, ...visible_demande };
   const mat = (couleur: number, extra: any = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z: Pt) => z[0]), ys = data.dalle.map((z: Pt) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -125,7 +129,8 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     }
     if (w.type === "palissade") {
       // palissade bois : poteaux carres a chaque travee, entre deux poteaux un panneau de planches a sommet bombe
-      const cl = groupes.cloture || groupe("cloture"), e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
+      if (!groupes.cloture) { groupes.cloture = new THREE.Group(); abri.add(groupes.cloture); }
+      const cl = groupes.cloture, e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
       const matPl = new THREE.MeshStandardMaterial({ color: COUL.palissade, roughness: 0.85, side: THREE.DoubleSide }), matPo = new THREE.MeshStandardMaterial({ color: COUL.poteau, roughness: 0.9 });
       const nb = Math.max(1, Math.round(l / (w.travee_cm || 180))), travee = l / nb, ang = Math.atan2(uy, ux);
       for (let k = 0; k <= nb; k++) {
@@ -241,6 +246,14 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
           const g = new THREE.Group(), geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
           geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
           g.add(ombre(new THREE.Mesh(geoB, matB)));
+          // poignee (bequille) et cylindre de serrure, cote oppose aux charnieres, a 1,05 m, sur les deux faces
+          const matM = mat(COUL.metal, { metalness: 0.8, roughness: 0.3 }), xg = -o.largeur_cm / 100 + 0.09;
+          for (const face of [1, -1]) {
+            const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.16, 0.006), matM); plaque.position.set(xg, 1.03, face * 0.023); g.add(plaque);
+            const bequille = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.12, 8), matM); bequille.rotation.z = Math.PI / 2; bequille.position.set(xg + 0.05, 1.06, face * 0.045); g.add(ombre(bequille));
+            const tige = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.03, 8), matM); tige.rotation.x = Math.PI / 2; tige.position.set(xg, 1.06, face * 0.035); g.add(tige);
+            const serrure = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.01, 10), mat(0x2b3138)); serrure.rotation.x = Math.PI / 2; serrure.position.set(xg, 0.98, face * 0.028); g.add(serrure);
+          }
           g.position.set(s1 / 100, 0, -0.01); g.rotation.y = angle;
           return g;
         };
@@ -346,6 +359,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   const lit = groupe("lit");
   if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
   sieges.visible = !visible.lit;
+  if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }
 
@@ -384,7 +398,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: true };
+  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -400,7 +414,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   function montrer(nom: Masquable, oui: boolean) {
     visible[nom] = oui;
     // cloture : jamais cachee, mais pleine (oui) ou translucide (non), pour voir l'abri derriere
-    if (nom === "cloture") { if (groupes.cloture) groupes.cloture.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } }); return; }
+    if (nom === "cloture") { if (groupes.cloture) cloture_pleine(groupes.cloture, oui); return; }
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }

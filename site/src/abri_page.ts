@@ -220,11 +220,13 @@ export function rend_abri(a: Abri) {
   };
   const bloc = (marque: string, titre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "");
   // questions ouvertes, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
-  const questions = (items: string[]) => (items.length ? `<div class="pourquoi-bloc questions"><h3><span class="marque">❓</span>Questions ouvertes</h3><ol>${items.map((s, i) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol></div>` : "");
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
   const D = T && T.dossier;
-  html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites) + questions(D.questions)
+  html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites)
     : T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
+  // questions ouvertes : leur section, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
+  const sq = el("questions"); if (sq) (sq as HTMLElement).hidden = !(D && D.questions.length);
+  html("questions-corps", D && D.questions.length ? `<ol class="questions">${D.questions.map((s: string, i: number) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol>` : "");
 
   // formes etudiees : une carte par forme de params.formes_etudiees
   const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");

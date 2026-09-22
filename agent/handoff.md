@@ -40,6 +40,9 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Texte caméra plus petit et plus pâle
 - [x] Six vignettes sous les deux colonnes du résumé, la première = vue de départ ; chaque vignette porte ses états d'options ; « copier la vue » copie aussi les états
 - [x] Résumé : paragraphe, dessin plus grand avec légende à côté, puces de chiffres dessous
+- [x] Clôture translucide par défaut
+- [x] Porte : béquille et cylindre de serrure sur le battant
+- [x] Section « Questions et axes d'amélioration » sous « Pourquoi cette forme »
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

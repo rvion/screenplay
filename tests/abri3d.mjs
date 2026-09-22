@@ -29,7 +29,9 @@ const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, lit: false, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
 ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
-ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.lit === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.personne === 2 && VUES.lit.etats.lit === 1 && VUES.arriere.etats.cloture === 0, "états : jardin = départ, intérieur sans toit avec la personne dedans, lit déplié, passage avec la clôture translucide");
+ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.lit === 0 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.personne === 2 && VUES.lit.etats.lit === 1, "états : jardin = départ (clôture translucide), intérieur sans toit avec la personne dedans, lit déplié");
+ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
+ok(groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry").length >= 4 && groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry").length >= 3, "porte : béquille, tige et cylindre de serrure sur chaque face du battant");
 racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });
@@ -91,11 +93,11 @@ const tuyau = groupes.toit.children.find((o) => o.isMesh && o.geometry.type === 
 ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "descente du toit jusqu'au sol");
 // porte : un battant, sorti vers l'exterieur (au-dela du mur de la porte), pas vers l'interieur
 {
-  const fp = d.murs[v.porte.cote], battant = groupes.porte.children.find((o) => o.isGroup && o.children.length === 1 && o.children[0].geometry.type === "BoxGeometry");
+  const fp = d.murs[v.porte.cote], battant = groupes.porte.children.find((o) => o.isGroup && o.children.length >= 1 && o.children[0].geometry.type === "BoxGeometry");
   const bb = boite(battant), xmur = monde(fp.de[0], fp.de[1], 0)[0];
   ok(!!battant && bb.max.x > xmur + 0.3 && bb.min.x > xmur - 0.1, "porte : battant entrouvert vers l'extérieur du mur " + fp.cle);
   const bf = boite(groupes.porte_fermee);
-  ok(bf.max.x < xmur + 0.02 && bf.min.x > xmur - d.epaisseur_cm / 100 - 0.05 && near(bf.max.y, v.porte.hauteur_cm / 100, 1e-6), "porte fermée : le battant reste dans l'épaisseur du mur " + fp.cle);
+  ok(bf.max.x < xmur + 0.08 && bf.min.x > xmur - d.epaisseur_cm / 100 - 0.08 && near(bf.max.y, v.porte.hauteur_cm / 100, 1e-6), "porte fermée : le battant reste dans l'épaisseur du mur " + fp.cle + " (poignées comprises)");
   // silhouette : 1,80 m de haut, pieds au sol, hors des murs, devant la porte
   const bp = boite(groupes.personne), sp = monde(fp.de[0] + (fp.a[0] - fp.de[0]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, fp.de[1] + (fp.a[1] - fp.de[1]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, 0);
   ok(near(bp.max.y, 1.8, 1e-6) && near(bp.min.y, 0, 1e-6) && bp.min.x > tout.max.x - 1e-6 && Math.abs((bp.min.z + bp.max.z) / 2 - sp[2] - 0.3) < 0.05 && !boite(battant).intersectsBox(bp), "personne : 1,80 m, pieds au sol, dehors, 30 cm devant la porte du mur " + fp.cle + ", hors du battant");

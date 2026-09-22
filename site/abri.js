@@ -2718,11 +2718,13 @@ function rend_abri(a) {
     return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
   };
   const bloc = (marque, titre, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "";
-  const questions = (items) => items.length ? `<div class="pourquoi-bloc questions"><h3><span class="marque">\u2753</span>Questions ouvertes</h3><ol>${items.map((s, i) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol></div>` : "";
   const section = el("pourquoi");
   if (section) section.hidden = !T;
   const D = T && T.dossier;
-  html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) + questions(D.questions) : T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
+  html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) : T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
+  const sq = el("questions");
+  if (sq) sq.hidden = !(D && D.questions.length);
+  html("questions-corps", D && D.questions.length ? `<ol class="questions">${D.questions.map((s, i) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol>` : "");
   const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
@@ -2797,11 +2799,21 @@ function surligne_section() {
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-var ETATS_DEFAUT = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 1 };
+var ETATS_DEFAUT = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
+function cloture_pleine(gr, oui) {
+  gr.traverse((o) => {
+    if (o.isMesh) {
+      o.material.transparent = !oui;
+      o.material.opacity = oui ? 1 : 0.3;
+      o.material.depthWrite = oui;
+      o.castShadow = oui;
+    }
+  });
+}
 var VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
   porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
-  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, cloture: 0 } },
+  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Int\xE9rieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
   lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } }
@@ -2871,7 +2883,7 @@ function dessine_tuile_grillage() {
   return c;
 }
 function peuple_abri(abri, data, visible_demande = {}) {
-  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, ...visible_demande };
+  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, cloture: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2932,7 +2944,11 @@ function peuple_abri(abri, data, visible_demande = {}) {
       continue;
     }
     if (w.type === "palissade") {
-      const cl = groupes.cloture || groupe("cloture"), e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
+      if (!groupes.cloture) {
+        groupes.cloture = new THREE.Group();
+        abri.add(groupes.cloture);
+      }
+      const cl = groupes.cloture, e = w.epaisseur_cm / 100, h = w.hauteur_cm / 100;
       const matPl = new THREE.MeshStandardMaterial({ color: COUL.palissade, roughness: 0.85, side: THREE.DoubleSide }), matPo = new THREE.MeshStandardMaterial({ color: COUL.poteau, roughness: 0.9 });
       const nb = Math.max(1, Math.round(l / (w.travee_cm || 180))), travee = l / nb, ang = Math.atan2(uy, ux);
       for (let k = 0; k <= nb; k++) {
@@ -3063,6 +3079,24 @@ function peuple_abri(abri, data, visible_demande = {}) {
           const g = new THREE.Group(), geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
           geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
           g.add(ombre(new THREE.Mesh(geoB, matB)));
+          const matM = mat(COUL.metal, { metalness: 0.8, roughness: 0.3 }), xg = -o.largeur_cm / 100 + 0.09;
+          for (const face2 of [1, -1]) {
+            const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.16, 6e-3), matM);
+            plaque.position.set(xg, 1.03, face2 * 0.023);
+            g.add(plaque);
+            const bequille = new THREE.Mesh(new THREE.CylinderGeometry(9e-3, 9e-3, 0.12, 8), matM);
+            bequille.rotation.z = Math.PI / 2;
+            bequille.position.set(xg + 0.05, 1.06, face2 * 0.045);
+            g.add(ombre(bequille));
+            const tige = new THREE.Mesh(new THREE.CylinderGeometry(8e-3, 8e-3, 0.03, 8), matM);
+            tige.rotation.x = Math.PI / 2;
+            tige.position.set(xg, 1.06, face2 * 0.035);
+            g.add(tige);
+            const serrure = new THREE.Mesh(new THREE.CylinderGeometry(9e-3, 9e-3, 0.01, 10), mat(2830648));
+            serrure.rotation.x = Math.PI / 2;
+            serrure.position.set(xg, 0.98, face2 * 0.028);
+            g.add(serrure);
+          }
           g.position.set(s1 / 100, 0, -0.01);
           g.rotation.y = angle;
           return g;
@@ -3177,6 +3211,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
   const lit = groupe("lit");
   if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
   sieges.visible = !visible.lit;
+  if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }
 function createAbriViewer(container, data0) {
@@ -3221,7 +3256,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: true };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3239,14 +3274,7 @@ function createAbriViewer(container, data0) {
   function montrer(nom, oui) {
     visible[nom] = oui;
     if (nom === "cloture") {
-      if (groupes.cloture) groupes.cloture.traverse((o) => {
-        if (o.isMesh) {
-          o.material.transparent = !oui;
-          o.material.opacity = oui ? 1 : 0.3;
-          o.material.depthWrite = oui;
-          o.castShadow = oui;
-        }
-      });
+      if (groupes.cloture) cloture_pleine(groupes.cloture, oui);
       return;
     }
     if (groupes[nom]) groupes[nom].visible = oui;

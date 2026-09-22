@@ -22,7 +22,7 @@
   258) : `dalle.murs[].type` vaut `grillage`, `palissade` ou `mur`. Un mur est un trait brun épais sur le
   plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
   travée (`palissade_travee_cm`) et entre eux un panneau de planches de `palissade_epaisseur_cm` à sommet
-  bombé, dans le groupe `cloture` que le bouton « clôture » rend translucide pour voir l'abri derrière ;
+  bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
   un grillage un pointillé vert sur le plan, et en 3D un treillis
   à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
   translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur
@@ -144,7 +144,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
     rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
     **Mobilier** (l'une sous l'autre) ; **Pourquoi cette forme** (le bloc `dossier` de la version retenue :
-    ✅ points forts, ⚠️ points faibles, ❓ questions ouvertes numérotées `Q1`… en `span.question` ; textes
+    ✅ points forts, ⚠️ points faibles) ; **Questions et axes d'amélioration** (`dossier.questions`,
+    numérotées `Q1`… en `span.question`, chacune finit par « ? ») ; textes
     **autonomes**, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
     suite en petit ; à défaut de `dossier`, les textes comparés `atouts/pertes/notes/hors_modele`) ;
     **Formes étudiées** (`params.formes_etudiees` : une carte par forme, produit du commerce dessiné en

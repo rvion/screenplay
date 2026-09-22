@@ -194,9 +194,8 @@ p.suivante button:hover { border-color: var(--accent); }
 .pourquoi-bloc ul { padding-left: 1.1rem; }
 .pourquoi-bloc li { margin: .3rem 0; }
 .pourquoi-bloc .suite { display: block; font-size: .8rem; color: var(--muted); line-height: 1.4; }
-.pourquoi-bloc.questions { grid-column: 1 / -1; }
-.pourquoi-bloc.questions ol { list-style: none; padding-left: 0; columns: 2; column-gap: 1.2rem; }
-.pourquoi-bloc.questions li { break-inside: avoid; margin: .3rem 0; }
+ol.questions { list-style: none; padding-left: 0; margin: 0; columns: 2; column-gap: 1.2rem; }
+ol.questions li { break-inside: avoid; margin: .3rem 0; }
 .question { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72em; font-weight: 700; color: #fff; background: var(--alerte); border-radius: 3px; padding: 0 .35em; vertical-align: .1em; margin-right: .2em; }
 /* formes etudiees : icone de la forme dans la liste */
 ol.liste.formes .icone { flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
@@ -212,6 +211,7 @@ ol.liste.formes button { padding: .2rem .5rem; }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre, .pourquoi { grid-template-columns: minmax(0, 1fr); }
+  ol.questions { columns: 1; }
   .rangee { grid-template-columns: minmax(0, 1fr); }
   .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }

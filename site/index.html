@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=fd4596a2" />
+  <link rel="stylesheet" href="abri.css?v=bcfd2fc6" />
   <script type="importmap">
   {
     "imports": {
@@ -44,6 +44,7 @@
       <a href="#montage">Montage</a>
       <a href="#ouvertures">Ouvertures, mobilier</a>
       <a href="#pourquoi">Pourquoi cette forme</a>
+      <a href="#questions">Questions</a>
       <a href="#alternatives">Formes étudiées</a>
     </nav>
     <nav class="ailleurs">
@@ -78,7 +79,7 @@
             <button type="button" id="voir-lit" data-etat="0" data-etats="2" aria-pressed="false" title="Lit déplié"><svg viewBox="0 0 16 16"><path d="M2 12V5M2 9h12v3M14 12V7H7v2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="4.5" cy="7" r="1.2" fill="currentColor"/></svg><span>lit</span></button>
             <button type="button" id="voir-etiquettes" data-etat="1" data-etats="2" aria-pressed="true" title="Repères des panneaux"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 10V6.5h1.6a1.2 1.2 0 0 1 0 2.4H5M9.5 10V6" stroke="currentColor" stroke-width="1.3" fill="none"/></svg><span>repères</span></button>
             <button type="button" id="voir-personne" data-etat="0" data-etats="3" aria-pressed="false" title="Personne de 1,80 m : dehors, puis dedans"><svg viewBox="0 0 16 16"><circle cx="8" cy="3.5" r="2" fill="currentColor"/><path d="M5 14V9a3 3 0 0 1 6 0v5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-noms="personne|dehors|dedans">personne</span><i class="points"><b></b><b></b><b></b></i></button>
-            <button type="button" id="voir-cloture" data-etat="1" data-etats="2" aria-pressed="true" title="Palissade bois : pleine, ou translucide pour voir l'abri derrière"><svg viewBox="0 0 16 16"><path d="M3 14V5M13 14V5M6 14V6q2-2.5 4 0v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 10h4" stroke="currentColor" stroke-width="1"/></svg><span data-noms="translucide|clôture">clôture</span></button>
+            <button type="button" id="voir-cloture" data-etat="0" data-etats="2" aria-pressed="false" title="Palissade bois : translucide pour voir l'abri derrière, ou pleine"><svg viewBox="0 0 16 16"><path d="M3 14V5M13 14V5M6 14V6q2-2.5 4 0v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 10h4" stroke="currentColor" stroke-width="1"/></svg><span data-noms="translucide|clôture">translucide</span></button>
           </div>
         </div>
       </div>
@@ -162,6 +163,11 @@
       <div id="pourquoi-corps" class="pourquoi"></div>
     </section>
 
+    <section id="questions">
+      <h2>Questions et axes d'amélioration</h2>
+      <div id="questions-corps"></div>
+    </section>
+
     <section id="alternatives">
       <h2>Formes étudiées <span class="mode" id="alternatives-mode"></span></h2>
       <p class="note">Une entrée par forme envisagée. Toutes les options dessinées : <a href="docs/variantes.html">variantes</a> ; les versions précédentes : <a href="docs/index.html">documents</a>.</p>
@@ -173,7 +179,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=fd4596a2"></script>
-  <script type="module" src="abri.js?v=fd4596a2"></script>
+  <script src="params.js?v=bcfd2fc6"></script>
+  <script type="module" src="abri.js?v=bcfd2fc6"></script>
 </body>
 </html>
