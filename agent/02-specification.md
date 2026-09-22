@@ -22,10 +22,12 @@
   bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
   les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
-  bouton « murs » les laisse pleins, les **coupe net à 1 m**, les **voile** (translucides, `voile()`) ou les
-  cache ; le bouton « toit » a le même état voilé, et le bouton « porte » un quatrième état (fermée et
+  bouton « murs » les laisse pleins, les **coupe net à 1 m**, les **voile** (translucides, `voile()`), **retire les faces D et C**
+  (chaque pièce de mur porte la lettre de sa face) ou les cache ; le bouton « toit » a le même état voilé, et le bouton « porte » un quatrième état (fermée et
   voilée). La vue « au bureau » est en murs coupés, la vue « debout dedans » montre **tout l'abri voilé**,
-  à sa vraie hauteur. Le bouton **mobilier** a trois états (l'usage, le lit étant à demeure) : rien d'utilisé (fauteuil à moitié
+  à sa vraie hauteur, et la vue « regarder » se met à la place de quelqu'un couché, grand angle.
+  Le lit se lit comme un **canapé** (gros coussins de dossier contre la façade) partout sauf dans la vue
+  « couché », où le couchage (drap, oreiller, plaque de taille) remplace les coussins. Le bouton **mobilier** a trois états (l'usage, le lit étant à demeure) : rien d'utilisé (fauteuil à moitié
   rentré), fauteuil au bureau, **lit v1** le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
   une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), **lit v2** en biais au fond, la tête côté porte (le fauteuil
   et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit), puis les **lits à demeure** de `lits_muraux`,

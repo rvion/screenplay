@@ -34,7 +34,7 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,droite,arriere,porte,interieur,debout,couche" && VUES.jardin.position[2] > 3 && VUES.porte.etats.murs === 3 && VUES.porte.etats.toit === 0 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "sept points de vue fixes, chacun avec ses sept états d'options");
+ok(Object.keys(VUES).join() === "jardin,droite,arriere,porte,interieur,debout,regarder,couche" && VUES.jardin.position[2] > 3 && VUES.porte.etats.murs === 3 && VUES.porte.etats.toit === 0 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "huit points de vue fixes, chacun avec ses sept états d'options");
 ok(["porte", "interieur", "debout", "couche"].every((k) => JSON.stringify([VUES[k].position, VUES[k].cible, VUES[k].fov]) === JSON.stringify([VUES.interieur.position, VUES.interieur.cible, VUES.interieur.fov])) && VUES.interieur.position[1] > 4, "les quatre vues de l'intérieur partagent la même caméra, vue de haut");
 ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.couche.etats.mobilier === 2 && VUES.couche.etats.personne === 2 && VUES.couche.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, couché = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
@@ -139,8 +139,9 @@ const paroi = groupes.murs.children;
     ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
   }
 }
-const lit_pose = groupes.lit3 || groupes.lit;
-ok(lit_pose.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").length === 4 && lit_pose.children.some((o) => o.material.color && o.material.color.getHex() === 0xe3dff0 && boite(o).max.y > boite(lit_pose.children[0]).max.y), "lit : sommier, matelas, drap et oreiller lavande au-dessus");
+const lit_pose = groupes.lit3 || groupes.lit, couchage = groupes.couchage3 || lit_pose;
+const pieces_lit = [...lit_pose.children, ...(couchage === lit_pose ? [] : couchage.children)];
+ok(pieces_lit.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").length === 4 && pieces_lit.some((o) => o.material.color && o.material.color.getHex() === 0xe3dff0 && boite(o).max.y > boite(lit_pose.children[0]).max.y), "lit : sommier, matelas, drap et oreiller lavande au-dessus (couchage a part)");
 const murs = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
 ok(murs.length === d.murs.length, "un volume de mur par face (" + murs.length + ")");
 const centre_abri = v.polygone.reduce((s, z) => [s[0] + z[0] / v.polygone.length, s[1] + z[1] / v.polygone.length], [0, 0]);

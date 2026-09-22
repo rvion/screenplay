@@ -2213,6 +2213,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 3, porte: 1, mobilier: 1, etiquettes: 0, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
     debout: { titre: "Debout dedans, abri voil\xE9", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 2, murs: 3, porte: 3, mobilier: 0, personne: 2, etiquettes: 0 } },
+    regarder: { titre: "Regarder, depuis le lit", position: [1.16, 1.43, -0.2], cible: [0.09, 1.12, 0.43], fov: 110, etats: { ...ETATS_DEFAUT, toit: 1, murs: 1, porte: 0, mobilier: 1, etiquettes: 0, personne: 0, cloture: 0 } },
     couche: { titre: "Couch\xE9, les pieds vers les \xE9crans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
@@ -2230,6 +2231,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("sieges_ranges", false);
     vue.montrer("sieges_ranges2", false);
     vue.montrer("personne_couchee3", e.personne === 2 && e.mobilier === 2);
+    vue.montrer("couchage3", e.mobilier === 2);
+    vue.montrer("canape3", e.mobilier !== 2);
     vue.montrer("porte", e.porte === 1);
     vue.montrer("porte_fermee", e.porte >= 2);
     vue.montrer("porte_voile", e.porte === 3);
@@ -2242,6 +2245,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("murs", e.murs > 0);
     vue.montrer("murs_coupes", e.murs === 2);
     vue.montrer("murs_voile", e.murs === 3);
+    vue.montrer("murs_sans_DC", e.murs === 4);
   }
   var LITS_MURAUX_MAX = 6;
   var TAILLE_PERSONNE = 1.85;
@@ -2424,6 +2428,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     };
     const etiq = groupe("etiquettes");
     for (const f of data.murs) {
+      const avant_paroi = parois.children.length, avant_etiq = etiq.children.length;
       const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
       const base = new THREE.Matrix4().makeBasis(new THREE.Vector3(ux, 0, -uy), new THREE.Vector3(0, 1, 0), new THREE.Vector3(uy, 0, ux));
       base.setPosition(W(f.de[0], f.de[1], 0));
@@ -2572,6 +2577,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
           if (o.ouvrant) pose(boite((s0 + s1) / 2 - 1, (s0 + s1) / 2 + 1, h0, h1, -ep, 0.5, matCadre));
         }
       }
+      for (const o of parois.children.slice(avant_paroi)) o.userData.face = f.cle;
+      for (const o of etiq.children.slice(avant_etiq)) o.userData.face = f.cle;
     }
     const T = data.toit, pl = T.plan, droite = pl.sens === "droite";
     const hz = (z) => pl.haut_cm - (pl.haut_cm - pl.bas_cm) * ((droite ? z[0] : z[1]) - pl.origine_cm) / pl.course_cm;
@@ -2720,7 +2727,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         p_assise.add(g);
       }
     }
-    const fait_lit = (q, dans, qui, tete_vers = "fond") => {
+    const fait_lit = (q, dans, qui, tete_vers = "fond", couchage = dans, canape = null) => {
       const cotes = q.map((a, i) => ({ a, b: q[(i + 1) % 4], l: Math.hypot(q[(i + 1) % 4][0] - a[0], q[(i + 1) % 4][1] - a[1]) }));
       const k = tete_vers === "fond" ? 1 : 0, sens = tete_vers === "gauche" ? -1 : 1;
       const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => sens * (c1.a[k] + c1.b[k] - (c2.a[k] + c2.b[k])));
@@ -2730,15 +2737,28 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const rect = (s0, s1, marge) => [[mp[0] + ux * s0 + nx * (-lw / 2 + marge), mp[1] + uy * s0 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (-lw / 2 + marge), mp[1] + uy * s1 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (lw / 2 - marge), mp[1] + uy * s1 + ny * (lw / 2 - marge)], [mp[0] + ux * s0 + nx * (lw / 2 - marge), mp[1] + uy * s0 + ny * (lw / 2 - marge)]];
       dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(5917244, { roughness: 0.9 }))));
       dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(15855076, { roughness: 0.95 }))));
-      dans.add(ombre(new THREE.Mesh(prisme(rect(-1, L * 0.66, -1), plat(sol + 45), plat(sol + 48)), mat(7311295, { roughness: 0.95 }))));
-      dans.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(14934e3, { roughness: 1 }))));
+      couchage.add(ombre(new THREE.Mesh(prisme(rect(-1, L * 0.66, -1), plat(sol + 45), plat(sol + 48)), mat(7311295, { roughness: 0.95 }))));
+      couchage.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(14934e3, { roughness: 1 }))));
+      if (canape) {
+        const nb = Math.max(2, Math.round(L / 62));
+        for (let i = 0; i < nb; i++) {
+          const s0c = 6 + i * (L - 12) / nb, s1c = s0c + (L - 12) / nb - 6;
+          const dossier = [
+            [mp[0] + ux * s0c + nx * (lw / 2 - 16), mp[1] + uy * s0c + ny * (lw / 2 - 16)],
+            [mp[0] + ux * s1c + nx * (lw / 2 - 16), mp[1] + uy * s1c + ny * (lw / 2 - 16)],
+            [mp[0] + ux * s1c + nx * (lw / 2 - 2), mp[1] + uy * s1c + ny * (lw / 2 - 2)],
+            [mp[0] + ux * s0c + nx * (lw / 2 - 2), mp[1] + uy * s0c + ny * (lw / 2 - 2)]
+          ];
+          canape.add(ombre(new THREE.Mesh(prisme(dossier, plat(sol + 45), plat(sol + 90)), mat(i % 2 ? 13154720 : 12167309, { roughness: 1 }))));
+        }
+      }
       const tx = etiquette(`${Math.round(lw)} \xD7 ${Math.round(L)}`);
       if (tx) {
         const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.08), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
         const c = [mt[0] - ux * 13 + nx * (lw / 2 - 13), mt[1] - uy * 13 + ny * (lw / 2 - 13)];
         plaque.position.copy(W(c[0], c[1], sol + 55.6));
         plaque.rotation.set(-Math.PI / 2, 0, Math.atan2(uy, ux) - Math.PI / 2);
-        dans.add(plaque);
+        couchage.add(plaque);
       }
       const g = couchee(0.45);
       g.rotation.y = Math.atan2(uy, ux);
@@ -2766,16 +2786,17 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         const cy2 = (y_libre0 + y_libre1) / 2;
         const boite_cm = (xa, xb, ya, yb, h0, h1, couleur, rough = 0.6) => ombre(new THREE.Mesh(prisme([[xa, ya], [xb, ya], [xb, yb], [xa, yb]], plat(h0), plat(h1)), mat(couleur, { roughness: rough })));
         const ecran = (yc) => {
-          const x_pied = x0 + 18;
+          const x_pied = x0 + 14;
           gb.add(boite_cm(x_pied - 9, x_pied + 9, yc - 12, yc + 12, haut2, haut2 + 1.5, 3159098));
           gb.add(boite_cm(x_pied - 2.5, x_pied + 2.5, yc - 3, yc + 3, haut2 + 1.5, haut2 + 13, 3159098));
           gb.add(boite_cm(x_pied - 1.5, x_pied + 1.5, yc - 31, yc + 31, haut2 + 13, haut2 + 50, 1316634));
         };
         ecran(cy2 - 32);
         ecran(cy2 + 32);
-        const xm = x1 - 30;
+        const xm = x0 + 30;
         gb.add(boite_cm(xm, xm + 25, cy2 - 17.5, cy2 + 17.5, haut2, haut2 + 1.6, 10133670));
         gb.add(boite_cm(xm - 1, xm + 1.2, cy2 - 17.5, cy2 + 17.5, haut2 + 1.6, haut2 + 24, 1316634));
+        gb.add(boite_cm(x1 - 16, x1 - 4, cy2 - 22, cy2 + 22, haut2, haut2 + 1.8, 14210511));
       }
       for (const [px, py] of lm.pieds_bureau || []) {
         const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));
@@ -2783,7 +2804,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         gb.add(ombre(pied));
       }
       for (const st of lm.sieges) siege(st, gs);
-      fait_lit(lm.polygone, cache(`lit${n}`), cache(`personne_couchee${n}`), lm.tete);
+      const g_lit = cache(`lit${n}`);
+      fait_lit(lm.polygone, g_lit, cache(`personne_couchee${n}`), lm.tete, cache(`couchage${n}`), cache(`canape${n}`));
     });
     if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
     return groupes;
@@ -2862,6 +2884,12 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       }
       if (nom === "murs_voile") {
         voile(groupes.murs, oui);
+        return;
+      }
+      if (nom === "murs_sans_DC") {
+        for (const gr of [groupes.murs, groupes.etiquettes]) if (gr) {
+          for (const o of gr.children) if (o.userData && o.userData.face) o.visible = !(oui && (o.userData.face === "D" || o.userData.face === "C"));
+        }
         return;
       }
       if (nom === "porte_voile") {
