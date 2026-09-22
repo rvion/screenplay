@@ -1,7 +1,7 @@
 // Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
-import { buildCore, params_v2, version_principale, versions_abri, textes_variante, nom_page, type Params } from "./compute";
-import { maitre_detail, type Entree } from "./maitre_detail";
+import { buildCore, params_v2, version_principale, versions_abri, textes_variante, nom_page, type Params } from "site/src/compute.ts";
+import { maitre_detail, type Entree } from "site/src/maitre_detail.ts";
 
 const fr = (x: number) => String(x).replace(".", ",");
 const fz = (x: number) => fr(Math.round(x * 10) / 10);

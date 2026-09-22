@@ -8,7 +8,9 @@
     "noImplicitAny": false,
     "noEmit": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": { "site/src/*": ["./site/src/*"] }
   },
   "include": ["site/src"]
 }

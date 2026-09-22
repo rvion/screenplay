@@ -7,8 +7,8 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md, abri_md, params_v2, versions_abri, nom_page, version_principale, DOSSIER_ETUDES } from "./compute";
-import { construit_docs, est_publie, relativise } from "./docs";
+import { buildCore, variantes_md, abri_md, params_v2, versions_abri, nom_page, version_principale, DOSSIER_ETUDES } from "site/src/compute.ts";
+import { construit_docs, est_publie, relativise } from "site/src/docs.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");

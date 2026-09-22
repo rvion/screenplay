@@ -1,8 +1,8 @@
 // Rendu DOM de toute la page a partir du coeur recalcule (buildCore) + params.
 // Appele a chaque changement de parametre : tout est reconstruit (idempotent).
-import type { Params } from "./compute";
+import type { Params } from "site/src/compute.ts";
 
-type Core = ReturnType<typeof import("./compute").buildCore>;
+type Core = ReturnType<typeof import("site/src/compute.ts").buildCore>;
 
 function setHTML(sel: string, html: string) {
   const e = document.querySelector(sel);

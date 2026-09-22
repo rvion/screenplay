@@ -1,7 +1,7 @@
 // Panneau de reglages, volontairement court : dimensions, toit, porte, fenetres, panneaux.
 // Mute l'objet `params` (par reference) puis appelle onChange() -> main.ts
 // recalcule tout (KPIs, debit, plans, budget, 3D). Prix repliés par defaut.
-import { opening_start_cm, type Params } from "./compute";
+import { opening_start_cm, type Params } from "site/src/compute.ts";
 
 const POSITIONS: [string, string][] = [["gauche", "à gauche"], ["centre", "centrée"], ["droite", "à droite"]];
 const FACES: [string, string][] = [["A", "A · avant"], ["D", "D · droite"], ["B", "B · arrière"], ["G", "G · gauche"]];

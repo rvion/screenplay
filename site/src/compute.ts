@@ -11,7 +11,7 @@
 //     A x chute (face A). Le mur arriere B reste a H ;
 //   - toit mono-pente en panneaux toiture, ecoulement vers l'arriere (B).
 
-import { nomenclature_abri, guide_montage } from "./chantier";
+import { nomenclature_abri, guide_montage } from "site/src/chantier.ts";
 
 export type Params = any;
 

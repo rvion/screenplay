@@ -1,7 +1,7 @@
 // Point d'entree de la page d'accueil : calcule l'abri retenu depuis window.SHED_PARAMS,
 // remplit la page, puis branche la scene 3D (qui echoue proprement sans WebGL).
-import { calcule_abri, rend_abri, mode_document } from "./abri_page";
-import { createAbriViewer, applique_etats, VUES, ETATS_DEFAUT, type AbriViewer, type NomVue, type Etats } from "./viewer_abri";
+import { calcule_abri, rend_abri, mode_document } from "site/src/abri_page.ts";
+import { createAbriViewer, applique_etats, VUES, ETATS_DEFAUT, type AbriViewer, type NomVue, type Etats } from "site/src/viewer_abri.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = (window as any).SHED_PARAMS;

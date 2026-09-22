@@ -1,10 +1,10 @@
 // Point d'entree navigateur : 100% client-side.
 // params (window.SHED_PARAMS) -> buildCore -> rendu complet + 3D. Chaque
 // changement de controle recalcule tout en direct (rien n'est fige).
-import { buildCore } from "./compute";
-import { createViewer, type Viewer } from "./viewer";
-import { renderAll } from "./render";
-import { buildControls } from "./controls";
+import { buildCore } from "site/src/compute.ts";
+import { createViewer, type Viewer } from "site/src/viewer.ts";
+import { renderAll } from "site/src/render.ts";
+import { buildControls } from "site/src/controls.ts";
 
 const clone = (o: any) => JSON.parse(JSON.stringify(o));
 
