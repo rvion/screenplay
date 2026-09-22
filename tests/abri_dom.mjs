@@ -34,7 +34,7 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
   ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
-  ok(ancres.length === 9 && ancres.every((h) => $(h)), "menu : les 9 sections de la page, toutes existantes");
+  ok(ancres.length === 10 && ancres.every((h) => $(h)), "menu : les 10 sections de la page, toutes existantes");
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
   ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 20), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
@@ -110,8 +110,10 @@ ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux
   touche("ArrowUp"); touche("ArrowLeft"); ok(visibles()[0].dataset.etape === "2" && dom.window.document.activeElement === $("#etapes-liste li.ici button"), "guide : haut et gauche reviennent en arrière, le focus suit l'entrée ouverte");
   touche("Home"); ok(visibles()[0].id === "guide-avant-etape", "guide : Home revient à la première entrée");
 }
-ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte pleine/.test($("#ouvertures-table").textContent) && $$("#amenagement tbody tr").length >= 4, "ouvertures et aménagement");
+ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte pleine/.test($("#ouvertures-table").textContent) && $$("#mobilier #amenagement tbody tr").length >= 4 && $("#ouvertures").parentElement.classList.contains("rangee") && $("#ouvertures").nextElementSibling === $("#mobilier"), "ouvertures et mobilier : deux boîtes côte à côte");
 ok($$("#pourquoi-corps li").length >= 8 && !/\{\w+\}/.test($("#pourquoi-corps").textContent), "pourquoi : textes de la version, tous les {champs} remplacés");
+ok($$("#pourquoi-corps .pourquoi-bloc").length === 4 && $$("#pourquoi-corps li b").length >= 8 && $$("#pourquoi-corps li .suite").length >= 6 && $$("#pourquoi-corps h3 .marque").length === 4, "pourquoi : quatre blocs marqués, chaque puce ouvre en gras, la suite en petit");
+ok($$("#alternatives-corps a.alt").length === 3 && $$("#alternatives-corps a.alt svg").length === 3 && $$("#alternatives-corps a.alt").every((x) => /docs\/abri-v\d\.html/.test(x.getAttribute("href")) && existsSync(join(ROOT, "site", x.getAttribute("href"))) && /m² de murs/.test(x.textContent)) && existsSync(join(ROOT, "site/docs/variantes.html")), "formes étudiées : trois autres versions en vignette (plan de sol, chiffres), chacune vers son document");
 ok(!/undefined|NaN|\[object/.test($("main").textContent), "aucune valeur manquante dans la page");
 // liens des textes : un .md publie pointe vers sa page de docs/, qui existe
 const liens = $$("#pourquoi-corps a").map((x) => x.getAttribute("href"));

@@ -2479,6 +2479,13 @@ function menu_versions(p) {
     return { n, nom, principale: n === principale, murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, budget_eur: m.budget.total_eur, sens: m.sens };
   });
 }
+function alternatives(p, courante) {
+  return versions_pretes(p).filter((n) => n !== courante).map((n) => {
+    const { core } = coeur(p, n), v = core.variantes.find((x) => x.id === 13), m = core.modele, passage = v.passages.find((q) => q.cote === "arriere_droite");
+    const bloc = p[`abri_v${n}`] || {};
+    return { n, nom: bloc.nom_court || (n === 1 ? "trap\xE8ze, toit vers le fond" : `version ${n}`), murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, sens: m.sens, budget_eur: m.budget.total_eur, svg_sol: core.planches && core.planches.sol ? core.planches.sol.svg : "" };
+  });
+}
 var el = (id) => document.getElementById(id);
 var texte = (id, s) => {
   const e = el(id);
@@ -2609,10 +2616,20 @@ function rend_abri(a) {
     ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
   ]);
   const T = a.textes;
-  const bloc = (titre, items, ordonne = false) => items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "";
+  const puce = (s) => {
+    const gras = s.match(/^\*\*(.+?)\*\*\s*[:.]?\s*([\s\S]*)$/);
+    const [tete, suite] = gras ? [gras[1], gras[2]] : (() => {
+      const i = s.search(/[.!?]\s/);
+      return i > 0 ? [s.slice(0, i + 1), s.slice(i + 2)] : [s, ""];
+    })();
+    if (!gras && !suite) return `<li>${md_en_ligne(s)}</li>`;
+    return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
+  };
+  const bloc = (marque, titre, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "";
   const section = el("pourquoi");
   if (section) section.hidden = !T;
-  html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle co\xFBte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
+  html("pourquoi-corps", T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
+  html("alternatives-corps", alternatives(a.p, a.version).map((x) => `<a class="alt" href="docs/abri-v${x.n}.html"><div class="alt-plan">${x.svg_sol}</div><b>Version ${x.n}</b> <span>${echappe(x.nom)}</span><small>${x.murs} murs \xB7 ${fr2(x.murs_m2)} m\xB2 de murs \xB7 ${fr2(x.interieur_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(x.passage_cm))} cm \xB7 toit vers ${x.sens === "droite" ? "le jardin" : "le fond"} \xB7 ${eur(x.budget_eur)}</small></a>`).join(""));
 }
 function rend_guide(Gd, version) {
   const cle_cases = `abri-v${version}-cases`;

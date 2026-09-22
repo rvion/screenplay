@@ -133,9 +133,12 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
     serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
     Sections : **Résumé** (deux phrases calculées, puis six cartes : murs, hauteurs, toit, surfaces,
-    passage, matériaux ; le détail vit dans les sections) à côté du **modèle 3D**, plans et élévations (avec le
-    tableau des murs), débit des panneaux, **matériaux à acheter**, **guide de montage**, ouvertures et
-    mobilier, pourquoi cette forme. Tout est calculé dans
+    passage, matériaux ; le détail vit dans les sections) à côté du **modèle 3D** ; **Implantation sur la
+    dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
+    rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
+    **Mobilier** (deux boîtes) ; **Pourquoi cette forme** (quatre blocs marqués ✅ ⚠️ 💡 🔧, chaque puce ouvre
+    sur son accroche en gras, la suite en petit) ; **Formes étudiées** (les autres versions en vignette :
+    plan de sol, chiffres clés, lien vers leur document, et le lien vers les treize formes de départ). Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
     aucune cote dans le HTML, et la page marche en `file://`.
   - **Menu de gauche** (196 px) : le sommaire des sections, la section sous le tiers haut de l'écran

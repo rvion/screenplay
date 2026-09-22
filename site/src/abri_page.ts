@@ -61,6 +61,15 @@ export function menu_versions(p: Params) {
   });
 }
 
+// les autres versions calculables, pour la section « formes étudiées » : nom, chiffres cles, plan de sol
+export function alternatives(p: Params, courante: number) {
+  return versions_pretes(p).filter((n) => n !== courante).map((n) => {
+    const { core } = coeur(p, n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
+    const bloc = p[`abri_v${n}`] || {};
+    return { n, nom: bloc.nom_court || (n === 1 ? "trapèze, toit vers le fond" : `version ${n}`), murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, sens: m.sens, budget_eur: m.budget.total_eur, svg_sol: core.planches && core.planches.sol ? core.planches.sol.svg : "" };
+  });
+}
+
 const el = (id: string) => document.getElementById(id);
 const texte = (id: string, s: string) => { const e = el(id); if (e) e.textContent = s; };
 const html = (id: string, s: string) => { const e = el(id); if (e) e.innerHTML = s; };
@@ -175,11 +184,20 @@ export function rend_abri(a: Abri) {
     ...(v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? (v.lit_pliant.replie ? "contre un mur" : "déplié au sol libre, sièges rangés") : "ne tient pas"]] : []),
   ]);
 
-  // pourquoi
+  // pourquoi : une puce par idee, l'accroche en gras, le reste en petit ; un marqueur par groupe
   const T = a.textes;
-  const bloc = (titre: string, items: string[], ordonne = false) => (items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "");
+  const puce = (s: string) => {
+    const gras = s.match(/^\*\*(.+?)\*\*\s*[:.]?\s*([\s\S]*)$/);
+    const [tete, suite] = gras ? [gras[1], gras[2]] : (() => { const i = s.search(/[.!?]\s/); return i > 0 ? [s.slice(0, i + 1), s.slice(i + 2)] : [s, ""]; })();
+    if (!gras && !suite) return `<li>${md_en_ligne(s)}</li>`;
+    return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
+  };
+  const bloc = (marque: string, titre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "");
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
-  html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle coûte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
+  html("pourquoi-corps", T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
+
+  // formes etudiees : les autres versions, en vignettes
+  html("alternatives-corps", alternatives(a.p, a.version).map((x) => `<a class="alt" href="docs/abri-v${x.n}.html"><div class="alt-plan">${x.svg_sol}</div><b>Version ${x.n}</b> <span>${echappe(x.nom)}</span><small>${x.murs} murs · ${fr(x.murs_m2)} m² de murs · ${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · toit vers ${x.sens === "droite" ? "le jardin" : "le fond"} · ${eur(x.budget_eur)}</small></a>`).join(""));
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).
