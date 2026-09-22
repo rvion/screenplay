@@ -136,9 +136,14 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     passage, matériaux ; le détail vit dans les sections) à côté du **modèle 3D** ; **Implantation sur la
     dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
     rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
-    **Mobilier** (deux boîtes) ; **Pourquoi cette forme** (quatre blocs marqués ✅ ⚠️ 💡 🔧, chaque puce ouvre
-    sur son accroche en gras, la suite en petit) ; **Formes étudiées** (les autres versions en vignette :
-    plan de sol, chiffres clés, lien vers leur document, et le lien vers les treize formes de départ). Tout est calculé dans
+    **Mobilier** (l'une sous l'autre) ; **Pourquoi cette forme** (le bloc `dossier` de la version retenue :
+    ✅ points forts, ⚠️ points faibles, ❓ questions ouvertes numérotées `Q1`… en `span.question` ; textes
+    **autonomes**, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
+    suite en petit ; à défaut de `dossier`, les textes comparés `atouts/pertes/notes/hors_modele`) ;
+    **Formes étudiées** (`params.formes_etudiees` : une carte par forme, produit du commerce dessiné en
+    simple rectangle, option de `variantes.md`, rectangle de l'étude initiale, ou version ; dessins sans
+    entête, chiffres, lien). Les **matériaux** tiennent en quatre colonnes : la règle de calcul, la note et
+    la source sont sous le nom de l'article, en petit italique. Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
     aucune cote dans le HTML, et la page marche en `file://`.
   - **Menu de gauche** (196 px) : le sommaire des sections, la section sous le tiers haut de l'écran

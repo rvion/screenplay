@@ -51,6 +51,13 @@
   },
   "abri_principal": "abri_v4",
   "abri_menu": ["abri_v4"],
+  "formes_etudiees": [
+    { "type": "commerce", "nom": "Everbox 2 × 2 m", "cotes_cm": [200, 200], "note": "bureau de jardin du commerce, livré en kit ; prix et délai à relever chez le fabricant", "url": "" },
+    { "type": "variante", "id": 1, "nom": "Carré 2 × 2 m" },
+    { "type": "rectangle", "nom": "Rectangle 200 × 240" },
+    { "type": "version", "n": 1, "nom": "Trapèze" }
+  ],
+  "_formes_etudiees_comment": "Section « Formes étudiées » de la page d'accueil : une carte par forme. commerce = produit du commerce (dessin d'un simple rectangle aux cotes donnees, note, url facultative) ; variante = une des 13 formes de variantes.md (id) ; rectangle = l'etude initiale (emprise_cm, configurateur) ; version = un bloc abri_vN.",
   "_abri_menu_comment": "Les versions montrees dans le menu de gauche du site, celles qui sont pretes. Les autres restent atteignables par ?v=N et ont leur document dans docs/.",
   "abri_v1": { "_comment": "La version 1 est la disposition de base (disposition_trapeze) : ce bloc ne porte que son nom pour le menu du site, pas de params.", "nom_court": "première forme : trapèze, toit vers le fond" },
   "_abri_principal_comment": "La version retenue : son bloc abri_vN devient abri.md, la page d'accueil du site et le modele 3D. La premiere forme (disposition_trapeze de base) passe dans abri-v1.md. Pour retenir une autre version, changer ce seul nom.",
@@ -147,6 +154,34 @@
   },
   "abri_v4": {
     "nom_court": "cinq murs, toit vers le fond, gouttière derrière",
+    "_dossier_comment": "Textes de la section « Pourquoi cette forme » de la page d'accueil : autonomes (aucune comparaison avec une autre version), champs {…} calcules. atouts = points forts, limites = points faibles, questions = ce qui reste a trancher (numerotees Q1, Q2… par la page).",
+    "dossier": {
+      "atouts": [
+        "**Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais ({pan_cm} cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
+        "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
+        "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
+        "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres 80 × 80 : écrans sur le bureau gauche, lumière de côté.",
+        "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
+        "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
+        "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
+      ],
+      "limites": [
+        "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : une panne en bois à mi-profondeur, de mur à mur, est prévue dans les matériaux et le guide.",
+        "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
+        "**La descente est {descente}.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
+        "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
+        "**Deux profils d'angle à 135°** à faire plier sur mesure, en même temps que les panneaux.",
+        "**Un mur à {gauche_cm} cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse."
+      ],
+      "questions": [
+        "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
+        "Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?",
+        "Fenêtres : 80 × 80 sur mesure (4 à 5 semaines), ou 80 × 75 de stock ?",
+        "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
+        "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
+        "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
+      ]
+    },
     "_comment": "Version 4 = version 3 (herite) avec le toit vers le FOND : les nervures des panneaux menent l'eau a l'arriere, la gouttiere court derriere l'abri (mur du fond + pan a 45 degres). descente = bout de la gouttiere ou placer la descente (droite = vers le jardin). Comparee a la version 3 : le tableau isole l'effet du sens du toit.",
     "herite": "abri_v3",
     "compare_a": 3,

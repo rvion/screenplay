@@ -194,9 +194,14 @@ Sections : <strong>Résumé</strong> (deux phrases calculées, puis six cartes :
 passage, matériaux ; le détail vit dans les sections) à côté du <strong>modèle 3D</strong> ; <strong>Implantation sur la
 dalle</strong> et <strong>Plan de sol</strong> (deux boîtes côte à côte) ; <strong>Murs</strong> (le tableau) ; élévations, toiture,
 rehausse ; débit des panneaux ; <strong>matériaux à acheter</strong> ; <strong>guide de montage</strong> ; <strong>Ouvertures</strong> et
-<strong>Mobilier</strong> (deux boîtes) ; <strong>Pourquoi cette forme</strong> (quatre blocs marqués ✅ ⚠️ 💡 🔧, chaque puce ouvre
-sur son accroche en gras, la suite en petit) ; <strong>Formes étudiées</strong> (les autres versions en vignette :
-plan de sol, chiffres clés, lien vers leur document, et le lien vers les treize formes de départ). Tout est calculé dans
+<strong>Mobilier</strong> (l&#39;une sous l&#39;autre) ; <strong>Pourquoi cette forme</strong> (le bloc <code>dossier</code> de la version retenue :
+✅ points forts, ⚠️ points faibles, ❓ questions ouvertes numérotées <code>Q1</code>… en <code>span.question</code> ; textes
+<strong>autonomes</strong>, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
+suite en petit ; à défaut de <code>dossier</code>, les textes comparés <code>atouts/pertes/notes/hors_modele</code>) ;
+<strong>Formes étudiées</strong> (<code>params.formes_etudiees</code> : une carte par forme, produit du commerce dessiné en
+simple rectangle, option de <code>variantes.md</code>, rectangle de l&#39;étude initiale, ou version ; dessins sans
+entête, chiffres, lien). Les <strong>matériaux</strong> tiennent en quatre colonnes : la règle de calcul, la note et
+la source sont sous le nom de l&#39;article, en petit italique. Tout est calculé dans
 le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
 aucune cote dans le HTML, et la page marche en <code>file://</code>.</li>
 <li><strong>Menu de gauche</strong> (196 px) : le sommaire des sections, la section sous le tiers haut de l&#39;écran

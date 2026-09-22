@@ -28,6 +28,10 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Rehausse R1..R4 étiquetée en 3D
 - [x] Tableaux : pas de repli sauf colonnes choisies (hauteur finie, panneaux, textes), défilement de côté
 - [x] Barre caméra : pos en dernier, le reste ne bouge plus
+- [x] Unités collées, entiers alignés ; virgules entre éléments ; paires repère + cote insécables
+- [x] Formes étudiées : Everbox 2 × 2 (commerce), carré 2 × 2, rectangle 200 × 240, trapèze
+- [x] « Pourquoi cette forme » autonome : points forts, points faibles, questions Q1..Q6 (bloc `dossier` de abri_v4)
+- [x] Matériaux : règle et source sous le nom de l'article, quatre colonnes ; panneau qui débordait
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

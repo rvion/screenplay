@@ -64,7 +64,9 @@ h3 .precision { font-weight: 400; color: var(--muted); }
 table { width: 100%; border-collapse: collapse; font-size: .85rem; }
 th, td { text-align: left; vertical-align: top; padding: .25rem .5rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 /* les cellules ne se replient pas : le tableau defile de cote (.table-wrap) ; seule la regle des materiaux reste un texte */
-td.regle { white-space: normal; min-width: 18rem; }
+/* materiaux : la regle et la source sous le nom, en petit italique ; la cellule peut se replier */
+.bom td .regle { white-space: normal; font-size: .76rem; font-style: italic; color: var(--muted); line-height: 1.35; max-width: 36rem; margin-top: .1rem; }
+.bom td .poste { white-space: nowrap; }
 td.pliable { white-space: normal; }
 thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 1px solid #b9c0c8; white-space: nowrap; }
 tbody tr:nth-child(even) td { background: #f8f9fa; }
@@ -156,7 +158,7 @@ ol.liste li.faite .badge { color: var(--ok); }
 ol.liste li.en-cours .num-etape { background: var(--accent); }
 ol.liste li.a-confirmer .badge::after { content: " ?"; color: var(--alerte); }
 .details { min-width: 0; display: grid; gap: .6rem; }
-.detail { border: 1px solid var(--line); border-radius: 6px; padding: .6rem .8rem .7rem; background: var(--carte); break-inside: avoid; }
+.detail { min-width: 0; border: 1px solid var(--line); border-radius: 6px; padding: .6rem .8rem .7rem; background: var(--carte); break-inside: avoid; }
 .detail[hidden] { display: none; }
 .detail h3 { margin: 0 0 .25rem; font-size: .98rem; }
 .num-etape { display: inline-flex; justify-content: center; align-items: center; min-width: 1.5em; height: 1.5em; margin-right: .45rem; border-radius: 3px; background: var(--ink); color: #fff; font-size: .78rem; font-weight: 600; flex: none; }
@@ -178,12 +180,17 @@ p.suivante button:hover { border-color: var(--accent); }
 .pourquoi-bloc ul { padding-left: 1.1rem; }
 .pourquoi-bloc li { margin: .3rem 0; }
 .pourquoi-bloc .suite { display: block; font-size: .8rem; color: var(--muted); line-height: 1.4; }
+.pourquoi-bloc.questions { grid-column: 1 / -1; }
+.pourquoi-bloc.questions ol { list-style: none; padding-left: 0; columns: 2; column-gap: 1.2rem; }
+.pourquoi-bloc.questions li { break-inside: avoid; margin: .3rem 0; }
+.question { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72em; font-weight: 700; color: #fff; background: var(--alerte); border-radius: 3px; padding: 0 .35em; vertical-align: .1em; margin-right: .2em; }
 /* formes etudiees : vignettes des autres versions */
 .alternatives { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem; }
 .alt { display: block; text-decoration: none; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: .5rem .6rem; background: var(--carte); }
 .alt:hover { border-color: var(--accent); }
 .alt .alt-plan { height: 150px; display: flex; align-items: center; margin-bottom: .35rem; }
 .alt .alt-plan svg { width: auto; height: 150px; max-width: 100%; border: 0; }
+.alt.commerce .alt-plan { justify-content: center; }
 .alt span { color: var(--muted); font-size: .84rem; }
 .alt small { display: block; color: var(--muted); font-size: .74rem; margin-top: .15rem; line-height: 1.35; }
 

@@ -67,12 +67,25 @@ export function menu_versions(p: Params) {
   });
 }
 
-// les autres versions calculables, pour la section « formes étudiées » : nom, chiffres cles, plan de sol
-export function alternatives(p: Params, courante: number) {
-  return versions_pretes(p).filter((n) => n !== courante).map((n) => {
-    const { core } = coeur(p, n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
-    const bloc = p[`abri_v${n}`] || {};
-    return { n, nom: bloc.nom_court || (n === 1 ? "trapèze, toit vers le fond" : `version ${n}`), murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, sens: m.sens, budget_eur: m.budget.total_eur, svg_sol: core.planches && core.planches.sol ? core.planches.sol.svg : "" };
+// formes etudiees (params.formes_etudiees) : une carte par forme, avec son dessin sans entete, ses chiffres et son document
+export function formes_etudiees(p: Params) {
+  const base = coeur(p, 1).core;
+  return ((p.formes_etudiees || []) as any[]).map((f) => {
+    if (f.type === "commerce") {
+      const [a, b] = f.cotes_cm, s = 1.1, W = a * s + 40, H = b * s + 40;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="system-ui,sans-serif"><rect x="20" y="20" width="${a * s}" height="${b * s}" fill="#eef2f6" stroke="#2b5d8a" stroke-width="3"/><text x="${W / 2}" y="${H / 2 + 6}" text-anchor="middle" fill="#2b5d8a" font-size="18" font-weight="bold">${fz(a / 100)} × ${fz(b / 100)} m</text></svg>`;
+      return { nom: f.nom, svg, chiffres: `${fr(Math.round(a * b) / 1e4)} m² au sol · ${f.note || ""}`, href: f.url || "", commerce: true };
+    }
+    if (f.type === "variante") {
+      const v = base.variantes.find((x: any) => x.id === f.id), q = base.planches[`variante-${f.id}`];
+      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int.`, href: `docs/variantes.html#option-${f.id}` };
+    }
+    if (f.type === "rectangle") {
+      const g = base.geometrie, q = base.planches.rectangle;
+      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `4 murs · ${fr(g.aire_m2)} m² de murs · ${fr(g.aire_interieure_m2)} m² int. · étude initiale, réglable`, href: "configurateur.html" };
+    }
+    const { core } = coeur(p, f.n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
+    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int. · passage ${fz(Math.round(passage.cm))} cm · ${eur(m.budget.total_eur)}`, href: `docs/abri-v${f.n}.html` };
   });
 }
 
@@ -168,7 +181,7 @@ export function rend_abri(a: Abri) {
   table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} → ${cote(r.h1)}`]), [3]);
 
   // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait
-  html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th><th>règle · source</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
+  html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? ` · <span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
   const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
   if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
     liste: liste_materiaux, mode: mode_materiaux, panneaux: materiaux, memoire: `abri-v${a.version}-materiaux`, ancre: el("materiaux-section") || undefined,
@@ -201,11 +214,15 @@ export function rend_abri(a: Abri) {
     return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
   };
   const bloc = (marque: string, titre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "");
+  // questions ouvertes, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
+  const questions = (items: string[]) => (items.length ? `<div class="pourquoi-bloc questions"><h3><span class="marque">❓</span>Questions ouvertes</h3><ol>${items.map((s, i) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol></div>` : "");
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
-  html("pourquoi-corps", T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
+  const D = T && T.dossier;
+  html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites) + questions(D.questions)
+    : T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
 
-  // formes etudiees : les autres versions, en vignettes
-  html("alternatives-corps", alternatives(a.p, a.version).map((x) => `<a class="alt" href="docs/abri-v${x.n}.html"><div class="alt-plan">${x.svg_sol}</div><b>Version ${x.n}</b> <span>${echappe(x.nom)}</span><small>${x.murs} murs · ${fr(x.murs_m2)} m² de murs · ${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · toit vers ${x.sens === "droite" ? "le jardin" : "le fond"} · ${eur(x.budget_eur)}</small></a>`).join(""));
+  // formes etudiees : une carte par forme de params.formes_etudiees
+  html("alternatives-corps", formes_etudiees(a.p).map((x) => `<${x.href ? `a href="${x.href}"` : "div"} class="alt${x.commerce ? " commerce" : ""}"><div class="alt-plan">${x.svg}</div><b>${echappe(x.nom)}</b><small>${echappe(x.chiffres)}</small></${x.href ? "a" : "div"}>`).join(""));
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).

@@ -1021,7 +1021,7 @@ function tw(s: string, size: number): number {
   return s.length * size * 0.58;
 }
 
-export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
+export function plan_sol_svg(p: Params, g: any, openings: any[], sans_entete = false): string {
   const pad = 90, scale = 0.42;
   const { A, G } = g.cotes;
   const d = g.dalle;
@@ -1042,7 +1042,7 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
     const ex = -(b[1] - a[1]) / wl * 2.5, ey = (b[0] - a[0]) / wl * 2.5;   // vers l'exterieur de la dalle (y SVG inverse)
     svg += line(a[0] + ex, a[1] + ey, b[0] + ex, b[1] + ey, "#5b4a3a", 5);
   }
-  if (d && d.murs.length) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
+  if (d && d.murs.length && !sans_entete) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
   if (d && d.passage && d.passage.cm > 0 && d.passage.cm < 200) {
     const col = d.passage.etat === "praticable" ? "#2a8a4a" : d.passage.etat === "de profil" ? "#c77d0a" : "#c0392b";
     const [a, b] = d.passage.segment.map(P);
@@ -1101,8 +1101,10 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
     svg += `<path d="M ${f1(q1[0])} ${f1(q1[1])} A ${f1(dwpx)} ${f1(dwpx)} 0 0 1 ${f1(oe[0])} ${f1(oe[1])}" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>\n`;
     svg += text((q0[0] + q1[0]) / 2 + owx * (dwpx + 14), (q0[1] + q1[1]) / 2 + owy * (dwpx + 14), `porte ${itr(o.largeur_cm)} (ouvre dehors)`, "middle", "#c0392b", 11);
   }
-  svg += text(W / 2, 28, title, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, "pente vers l'arrière (face B) · dalle réelle en pointillé", "middle", "#888", 11);
+  if (!sans_entete) {
+    svg += text(W / 2, 28, title, "middle", "#222", 15, "bold");
+    svg += text(W / 2, 44, "pente vers l'arrière (face B) · dalle réelle en pointillé", "middle", "#888", 11);
+  }
   svg += text(W / 2, H - 14, "AVANT (face A)", "middle", "#666", 12);
   svg += "</svg>\n";
   return svg;
@@ -1347,9 +1349,11 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   if (m && v) {
     if (!sans_entete) svg += dessine_entete(W, entete_implantation(v, d));
   } else if (v) {
-    svg += text(W / 2, 26, `Option ${v.id} · ${v.titre}`, "middle", "#222", 15, "bold");
-    svg += text(W / 2, 46, `murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m² · ${v.polygone.length} côtés`, "middle", "#2b5d8a", 13, "bold");
-    svg += text(W / 2, 64, v.note, "middle", "#666", 11);
+    if (!sans_entete) {
+      svg += text(W / 2, 26, `Option ${v.id} · ${v.titre}`, "middle", "#222", 15, "bold");
+      svg += text(W / 2, 46, `murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m² · ${v.polygone.length} côtés`, "middle", "#2b5d8a", 13, "bold");
+      svg += text(W / 2, 64, v.note, "middle", "#666", 11);
+    }
   } else svg += text(W / 2, 26, zu ? `Dalle réelle ${d.aire_m2} m² · zone utile ${zu.aire_m2} m²` : `Dalle réelle · ${n} côtés · ${d.aire_m2} m²`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus · cotes relevées au mètre · somme des angles ${f0(somme)}°`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant supposés droits", "middle", "#888", 10);
@@ -1583,6 +1587,11 @@ export function buildCore(p: Params) {
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   // planches de la page : le meme corps que les fichiers SVG, l'entete a part (la page la rend en texte)
   const planches: Record<string, Planche> = {};
+  if (g.dalle) {
+    // les formes etudiees : le rectangle de l'etude initiale et chaque option, sans entete
+    planches.rectangle = { nom: `Rectangle ${g.cotes.A} × ${g.cotes.G}`, detail: `${g.aire_m2} m² de murs`, lignes: [], svg: plan_sol_svg(p, g, openings, true) };
+    for (const v of vars) planches[`variante-${v.id}`] = { nom: `Option ${v.id}`, detail: v.titre, lignes: [], svg: plan_dalle_svg(g, true, v, null, true) };
+  }
   if (modele && g.dalle) {
     planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
     planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
@@ -2123,6 +2132,9 @@ export function injecteur(v: any, m: any, base: any): (s: string) => string {
     murs_m2: fr(v.aire_m2), interieur_m2: fr(v.aire_interieure_m2), sol_libre_m2: fr(v.sol_libre_m2),
     gauche_cm: fz(Math.min(...v.polygone.map((z: Pt) => z[0]))),
     debord_droite_cm: fz(m.toit.debord_cm.droite), debord_avant_cm: fz(m.toit.debord_cm.avant), debord_arriere_cm: fz(m.toit.debord_cm.arriere),
+    gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), portee_m: fr(rnd(m.portee_cm / 100, 1)), descente: ou_descente(m),
+    panneaux_toit: String(m.toit.panneaux.length), hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers),
+    pan_cm: fr((m.faces.find((f: any) => f.cle === "C") || m.faces[2]).longueur_cm),
   };
   if (opts.base) {
     const vb = opts.base.variantes.find((x: any) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q: any) => q.cote === "arriere_droite");
@@ -2130,11 +2142,8 @@ export function injecteur(v: any, m: any, base: any): (s: string) => string {
       base_murs_m2: fr(vb.aire_m2), base_interieur_m2: fr(vb.aire_interieure_m2), base_arriere_m2: vb.arriere ? fr(vb.arriere.aire_m2) : "?",
       base_passage_cm: fz(Math.floor(pb.cm)), gain_interieur_m2: fr(rnd(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
       gain_sol_libre_m2: fr(rnd(v.sol_libre_m2 - vb.sol_libre_m2, 2)), ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
-      base_debord_droite_cm: fz(mb.toit.debord_cm.droite),
-      gouttiere_cm: fz(m.toit.gouttiere.longueur_cm), pente_pourcent: fr(m.pente.pourcent), base_pente_pourcent: fr(mb.pente.pourcent),
-      portee_m: fr(rnd(m.portee_cm / 100, 1)), base_portee_m: fr(rnd(mb.portee_cm / 100, 1)), descente: ou_descente(m), base_descente: ou_descente(mb),
-      panneaux_toit: String(m.toit.panneaux.length), base_panneaux_toit: String(mb.toit.panneaux.length),
-      hauteur_facade_cm: fr(m.hauteurs_coins_cm[0]), madriers: String(m.rehausse.nb_madriers), base_madriers: String(mb.rehausse.nb_madriers),
+      base_debord_droite_cm: fz(mb.toit.debord_cm.droite), base_pente_pourcent: fr(mb.pente.pourcent), base_portee_m: fr(rnd(mb.portee_cm / 100, 1)),
+      base_descente: ou_descente(mb), base_panneaux_toit: String(mb.toit.panneaux.length), base_madriers: String(mb.rehausse.nb_madriers),
     });
   }
   const injecte = (s: string) => s.replace(/\{(\w+)\}/g, (tout, k) => (k in valeurs ? valeurs[k] : tout));
@@ -2144,8 +2153,10 @@ export function injecteur(v: any, m: any, base: any): (s: string) => string {
 // textes d'un bloc abri_vN, champs remplaces : { atouts, pertes, notes, hors_modele }
 export function textes_variante(bloc: any, core: any, base: any) {
   const v = core.variantes.find((x: any) => x.id === 13), injecte = injecteur(v, core.modele, base);
-  const liste = (k: string): string[] => (bloc[k] || []).map(injecte);
-  return { atouts: liste("atouts"), pertes: liste("pertes"), notes: liste("notes"), hors_modele: liste("hors_modele") };
+  const liste = (k: string, de: any = bloc): string[] => (de[k] || []).map(injecte);
+  // dossier : textes autonomes de la page d'accueil (points forts, points faibles, questions), sans comparaison
+  const dossier = bloc.dossier ? { atouts: liste("atouts", bloc.dossier), limites: liste("limites", bloc.dossier), questions: liste("questions", bloc.dossier) } : null;
+  return { atouts: liste("atouts"), pertes: liste("pertes"), notes: liste("notes"), hors_modele: liste("hors_modele"), dossier };
 }
 
 // tableau compare de deux abris (memes fonctions, deux jeux de parametres)

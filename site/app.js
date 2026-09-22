@@ -1291,7 +1291,7 @@ function poly(pts, fill, stroke, w = 2, dash = "") {
 function tw(s, size) {
   return s.length * size * 0.58;
 }
-function plan_sol_svg(p, g, openings) {
+function plan_sol_svg(p, g, openings, sans_entete = false) {
   const pad = 90, scale = 0.42;
   const { A, G } = g.cotes;
   const d = g.dalle;
@@ -1312,7 +1312,7 @@ function plan_sol_svg(p, g, openings) {
     const ex = -(b[1] - a[1]) / wl * 2.5, ey = (b[0] - a[0]) / wl * 2.5;
     svg += line(a[0] + ex, a[1] + ey, b[0] + ex, b[1] + ey, "#5b4a3a", 5);
   }
-  if (d && d.murs.length) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
+  if (d && d.murs.length && !sans_entete) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
   if (d && d.passage && d.passage.cm > 0 && d.passage.cm < 200) {
     const col = d.passage.etat === "praticable" ? "#2a8a4a" : d.passage.etat === "de profil" ? "#c77d0a" : "#c0392b";
     const [a, b] = d.passage.segment.map(P);
@@ -1374,8 +1374,10 @@ function plan_sol_svg(p, g, openings) {
 `;
     svg += text((q0[0] + q1[0]) / 2 + owx * (dwpx + 14), (q0[1] + q1[1]) / 2 + owy * (dwpx + 14), `porte ${itr(o.largeur_cm)} (ouvre dehors)`, "middle", "#c0392b", 11);
   }
-  svg += text(W / 2, 28, title, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, "pente vers l'arri\xE8re (face B) \xB7 dalle r\xE9elle en pointill\xE9", "middle", "#888", 11);
+  if (!sans_entete) {
+    svg += text(W / 2, 28, title, "middle", "#222", 15, "bold");
+    svg += text(W / 2, 44, "pente vers l'arri\xE8re (face B) \xB7 dalle r\xE9elle en pointill\xE9", "middle", "#888", 11);
+  }
   svg += text(W / 2, H - 14, "AVANT (face A)", "middle", "#666", 12);
   svg += "</svg>\n";
   return svg;
@@ -1636,9 +1638,11 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
   if (m && v) {
     if (!sans_entete) svg += dessine_entete(W, entete_implantation(v, d));
   } else if (v) {
-    svg += text(W / 2, 26, `Option ${v.id} \xB7 ${v.titre}`, "middle", "#222", 15, "bold");
-    svg += text(W / 2, 46, `murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2 \xB7 ${v.polygone.length} c\xF4t\xE9s`, "middle", "#2b5d8a", 13, "bold");
-    svg += text(W / 2, 64, v.note, "middle", "#666", 11);
+    if (!sans_entete) {
+      svg += text(W / 2, 26, `Option ${v.id} \xB7 ${v.titre}`, "middle", "#222", 15, "bold");
+      svg += text(W / 2, 46, `murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2 \xB7 ${v.polygone.length} c\xF4t\xE9s`, "middle", "#2b5d8a", 13, "bold");
+      svg += text(W / 2, 64, v.note, "middle", "#666", 11);
+    }
   } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
@@ -1858,6 +1862,10 @@ function buildCore(p) {
   }
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
   const planches = {};
+  if (g.dalle) {
+    planches.rectangle = { nom: `Rectangle ${g.cotes.A} \xD7 ${g.cotes.G}`, detail: `${g.aire_m2} m\xB2 de murs`, lignes: [], svg: plan_sol_svg(p, g, openings, true) };
+    for (const v of vars) planches[`variante-${v.id}`] = { nom: `Option ${v.id}`, detail: v.titre, lignes: [], svg: plan_dalle_svg(g, true, v, null, true) };
+  }
   if (modele && g.dalle) {
     planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
     planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
