@@ -128,19 +128,18 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .tip:hover::after { opacity: 1; }
 button.tip::after { left: auto; right: 0; }
 #viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
-/* options de la scene : une ligne de pilules au-dessus de la vue, libelle fixe, points = valeur */
-.bascules { display: flex; flex-wrap: wrap; gap: .25rem .4rem; margin: 0 0 .35rem; }
-.bascules .groupe { display: flex; gap: .15rem; }
-.bascules .groupe + .groupe { padding-left: .4rem; border-left: 1px solid var(--line); }
-.bascules button { display: inline-flex; align-items: center; gap: .2rem; height: 21px; padding: 0 .32rem 0 .3rem; border: 1px solid var(--line); border-radius: 11px; background: var(--carte); color: var(--muted); cursor: pointer; font-size: .62rem; line-height: 1; letter-spacing: -.01em; }
-.bascules button svg { width: 11px; height: 11px; flex: none; }
+/* options de la scene : une colonne de pilules de verre posee sur la vue, en bas a gauche ; libelle fixe, points = valeur */
+.bascules { position: absolute; left: .4rem; bottom: .4rem; display: flex; flex-direction: column; gap: .45rem; pointer-events: none; }
+.bascules .groupe { display: flex; flex-direction: column; gap: .15rem; }
+.bascules button { pointer-events: auto; display: inline-flex; align-items: center; gap: .3rem; height: 22px; padding: 0 .45rem 0 .35rem; border: 1px solid rgba(255, 255, 255, .6); border-radius: 11px; background: rgba(255, 255, 255, .42); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: rgba(28, 37, 48, .7); cursor: pointer; font-size: .64rem; line-height: 1; width: max-content; }
+.bascules button svg { width: 12px; height: 12px; flex: none; }
 .bascules button span { white-space: nowrap; }
 .bascules button:hover { border-color: var(--accent); color: var(--accent); }
-.bascules button[aria-pressed="true"] { color: var(--ink); border-color: #b9c6d3; background: #eef3f8; }
-.bascules .points { display: inline-flex; gap: 2px; margin-left: .05rem; }
-.bascules .points b { width: 4px; height: 4px; border-radius: 50%; background: #d3d8de; }
+.bascules button[aria-pressed="true"] { color: var(--ink); background: rgba(255, 255, 255, .62); }
+.bascules .points { display: inline-flex; gap: 2px; margin-left: .1rem; }
+.bascules .points b { width: 4px; height: 4px; border-radius: 50%; background: rgba(28, 37, 48, .22); }
 .bascules .points b.ici { background: var(--accent); }
-.bascules button[data-etat="0"] .points b.ici { background: #9aa4ae; }
+.bascules button[data-etat="0"] .points b.ici { background: rgba(28, 37, 48, .5); }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
 .vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .45rem; margin-top: .6rem; }
 .vignettes button { padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); cursor: pointer; overflow: hidden; text-align: left; }
@@ -223,7 +222,7 @@ ol.liste.formes button { padding: .2rem .5rem; }
   body { background: #fff; font-size: 11px; }
   .planbox svg { max-height: none; height: auto; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
-  .actions, aside.menu, .vue, .vue-barre, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
+  .actions, aside.menu, .vue, .vue-barre, .bascules, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
   .mise-en-page { display: block; max-width: none; }
   main { padding: 0; }
   section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; break-inside: auto; }

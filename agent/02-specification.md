@@ -220,9 +220,9 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
   panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** pour l'échelle, devant la porte ou à
-  60 cm du seuil dedans, sur le plancher. Les **options** sont une ligne de pilules au-dessus de la vue
-  (libellé fixe, autant de points que d'états, le point actif en bleu), en trois groupes : toit, murs |
-  porte, lit, personne | mobilier, repères, clôture. **Rendu** : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
+  60 cm du seuil dedans, sur le plancher. Les **options** sont une colonne de pilules de verre posée sur la
+  vue, en bas à gauche (libellé fixe, autant de points que d'états, le point actif en bleu), en trois
+  groupes : toit, murs | porte, lit, personne | mobilier, repères, clôture. **Rendu** : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
   contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),
   tone mapping ACES ; couleurs distinctes par plan (panneaux RAL 9002, toit gris moyen, dalle béton, herbe
   sombre) ; **arêtes** sombres (EdgesGeometry) sur murs, rehausse et toit pour lire les angles. **Bascules** sous la vue : boutons carrés à icône et petit libellé
