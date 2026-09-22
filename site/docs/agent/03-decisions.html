@@ -518,6 +518,24 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 <code>params.json</code>, un point au bouton et une vignette. <em>Garde :</em> <code>tests/abri3d.mjs</code> mesure chaque lit (caché au
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l&#39;entrée v4. <em>Remplace</em> le
 mécanisme de D46 (la variante v3 reste).</p>
+<h2 id="d49--branche-d39essai--façade-215-lit-à-demeure-en-façade-la-tête-côté-porte-non-décidé">D49 — Branche d&#39;essai : façade 215, lit à demeure en façade la tête côté porte (non décidé)</h2>
+<p>Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27&quot;. Les deux besoins veulent
+le même mur long, et un lit de 190 ne tenait contre aucun mur libre : la façade faisait 188 dedans.
+Cette branche essaie la seule disposition qui satisfait les trois contraintes qu&#39;il a données (bureau sur
+le mur gauche, voir les écrans couché, pas de fenêtre au-dessus des écrans ni de lumière dans les yeux) :</p>
+<ul>
+<li><strong>Façade 215</strong> (203 dedans) et <strong>fond 115</strong> : un lit de 190 tient le long de la façade, et le fond
+passe de 100 à 115 pour que le pan reste un vrai 45°, donc deux profils d&#39;angle identiques.</li>
+<li><strong>Lit v3 : 90 × 190 le long de la façade, calé à droite, tête contre le mur de la porte.</strong> Couché, on a
+les pieds vers le bureau gauche et ses écrans. Il reste <strong>67 cm</strong> de baie de porte dégagés sur 80.</li>
+<li><strong>Bureau gauche à 80 de profondeur sur 263 cm</strong> : trois écrans de 27&quot; (190 cm) tiennent, et son plateau
+passe <strong>au-dessus du pied du lit</strong> sans être coupé (<code>bureaux_entiers</code>, 6 030 cm² de recouvrement).
+<em>Ce que ça coûte :</em> emprise <strong>5,41 m²</strong>, donc <strong>déclaration préalable</strong> (un formulaire et environ un mois) ;
+passage arrière 47,6 cm au lieu de 57,8 ; sol libre 2,15 m² ; un troisième panneau de toit (bande de 15).
+<em>Garde :</em> <code>tests/abri3d.mjs</code> mesure, pour chaque lit à demeure, ce qui reste de baie de porte (55 cm
+minimum) et refuse toute pièce DANS le lit, un plateau au-dessus étant permis. <em>État :</em> branche
+<code>test-bed-front-head-right</code>, aucun déploiement (<code>pages.yml</code> n&#39;écoute que <code>main</code>). <strong>Rien n&#39;est décidé.</strong></li>
+</ul>
 </main>
 </body>
 </html>

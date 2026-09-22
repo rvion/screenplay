@@ -920,11 +920,13 @@
         if (k < 0) return null;
         const LW = +lm.largeur_cm, LL = +lm.longueur_cm, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
         const at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
-        const q = [at(ep, ep), at(ep + LL, ep), at(ep + LL, ep + LW), at(ep, ep + LW)];
+        const s0 = lm.position === "fin" ? l - ep - LL : ep;
+        const q = [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + LW), at(s0, ep + LW)];
         const touche = (z) => poly_area(clip_convex(z, q)) >= 1;
         const bureaux = (lm.bureaux || []).map((cote2) => {
           const bu = v.bureaux.find((b) => b.cote === cote2);
           if (!bu) return null;
+          if (lm.bureaux_entiers) return { cote: cote2, brut: bu.brut };
           const morceaux = q.flatMap((p0, i) => [true, false].map((g2) => clip_half(bu.brut, p0, q[(i + 1) % 4], g2))).filter((z) => z.length >= 3 && !touche(z));
           const bq = morceaux.sort((x, y) => poly_area(y) - poly_area(x))[0];
           return bq ? { cote: cote2, brut: bq } : null;
@@ -934,8 +936,8 @@
           for (const bu of bureaux) {
             const i = v.noms_cotes.indexOf(bu.cote), a2 = r[i], c2 = r[(i + 1) % r.length], l2 = Math.hypot(c2[0] - a2[0], c2[1] - a2[1]), u2x = (c2[0] - a2[0]) / l2, u2y = (c2[1] - a2[1]) / l2, n2x = -u2y, n2y = u2x;
             const W = +st.largeur_cm, Dp = +st.profondeur_cm, d0 = ep + 4, at2 = (s, d) => [a2[0] + u2x * s + n2x * d, a2[1] + u2y * s + n2y * d];
-            for (let s0 = ep + 4; s0 + W <= l2 - ep - 4; s0 += 2) {
-              const z = [at2(s0, d0), at2(s0 + W, d0), at2(s0 + W, d0 + Dp), at2(s0, d0 + Dp)];
+            for (let s02 = ep + 4; s02 + W <= l2 - ep - 4; s02 += 2) {
+              const z = [at2(s02, d0), at2(s02 + W, d0), at2(s02 + W, d0 + Dp), at2(s02, d0 + Dp)];
               const dessous = poly_area(clip_convex(z, bu.brut)) >= W * Math.min(Dp, 60 - 4) * 0.75;
               if (z.every(dedans_int) && dessous && !touche(z) && ranges.every((o) => poly_area(clip_convex(z, o)) < 1)) {
                 ranges.push(z);
@@ -946,7 +948,7 @@
           return null;
         }).filter(Boolean);
         const pts = (z) => z.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]);
-        return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
+        return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", sous_bureau_cm2: rnd2(bureaux.reduce((s, b) => s + poly_area(clip_convex(q, b.brut)), 0), 0), tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
       }).filter(Boolean);
       for (const b of v.bureaux) delete b.brut;
       v.bureaux_m2 = rnd2(occ / 1e4, 2);
@@ -1442,7 +1444,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
         lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
         lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
-        lits_muraux: (v.lits_muraux || []).filter((lm) => lm.tient).map((lm) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, bureaux: lm.bureaux.map((b) => b.polygone), sieges: lm.sieges }))
+        lits_muraux: (v.lits_muraux || []).filter((lm) => lm.tient).map((lm) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, sous_bureau_cm2: lm.sous_bureau_cm2, bureaux: lm.bureaux.map((b) => b.polygone), sieges: lm.sieges }))
       }
     };
   }
@@ -2144,7 +2146,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
     lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
     lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-    lit3: { titre: "Lit v3, en fa\xE7ade (180)", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
+    lit3: { titre: "Lit v3, en fa\xE7ade, t\xEAte c\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
     lit4: { titre: "Lit v4, mur gauche, bureau en L", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 5, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {

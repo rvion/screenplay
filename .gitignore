@@ -21,8 +21,7 @@ bun.lock
 CLAUDE.local.md
 tmp/
 .*.tmp-*
-.comfy-ts/*
-!.comfy-ts/drafts/
+.comfy-ts/
 *.loras.local.txt
 # shipkit writes these on every run — ignored AND untracked (untrack-generated.ts)
 STATUS.md

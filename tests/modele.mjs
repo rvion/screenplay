@@ -208,7 +208,8 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
 {
   const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
-  ok(JSON.stringify(v4.polygone) === JSON.stringify(v3.polygone) && v4.aire_interieure_m2 === v3.aire_interieure_m2, "v4 : meme forme et meme interieur que la v3");
+  // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
+  ok(v4.cotes_interieures_cm[0] === 203 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([215, 175, 141.4, 115, 275]) && v4.aire_interieure_m2 === 4.87 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "declaration prealable" && near(m4.formalites.emprise_au_sol_m2, 5.41, 0.005), "abri : facade 215 (203 dedans, un lit de 190 tient), fond 115 pour garder le pan a 45 deg, emprise 5,41 m2 donc declaration prealable");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
   // a la main, chute 22,5 sur 275 de profondeur : facade 237,5 ; au haut du mur droit (175) 215 + 22,5 x 100 / 275 = 223,2 ; fond 215
   ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
@@ -218,7 +219,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);
   ok(m4.toit.gouttiere.descente[0] === Math.max(...bouts.map((z) => z[0])), "v4 : descente au bout droit de la gouttiere (" + m4.toit.gouttiere.descente + ")");
-  ok(m4.toit.panneaux.length === 2 && m4.toit.panneaux.every((t) => near(t.largeur_cm, 100)) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit de 100, un seul coupe en biais");
+  ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 15) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 15), deux coupes en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const page4 = abri_md(p4, c4);
   ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme") && page4.includes("**Q1**"), "abri.md : tous les {champs} remplaces, points forts, questions et idees en fin de page");

@@ -558,3 +558,20 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 `params.json`, un point au bouton et une vignette. *Garde :* `tests/abri3d.mjs` mesure chaque lit (caché au
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l'entrée v4. *Remplace* le
 mécanisme de D46 (la variante v3 reste).
+
+## D49 — Branche d'essai : façade 215, lit à demeure en façade la tête côté porte (non décidé)
+Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27". Les deux besoins veulent
+le même mur long, et un lit de 190 ne tenait contre aucun mur libre : la façade faisait 188 dedans.
+Cette branche essaie la seule disposition qui satisfait les trois contraintes qu'il a données (bureau sur
+le mur gauche, voir les écrans couché, pas de fenêtre au-dessus des écrans ni de lumière dans les yeux) :
+- **Façade 215** (203 dedans) et **fond 115** : un lit de 190 tient le long de la façade, et le fond
+  passe de 100 à 115 pour que le pan reste un vrai 45°, donc deux profils d'angle identiques.
+- **Lit v3 : 90 × 190 le long de la façade, calé à droite, tête contre le mur de la porte.** Couché, on a
+  les pieds vers le bureau gauche et ses écrans. Il reste **67 cm** de baie de porte dégagés sur 80.
+- **Bureau gauche à 80 de profondeur sur 263 cm** : trois écrans de 27" (190 cm) tiennent, et son plateau
+  passe **au-dessus du pied du lit** sans être coupé (`bureaux_entiers`, 6 030 cm² de recouvrement).
+*Ce que ça coûte :* emprise **5,41 m²**, donc **déclaration préalable** (un formulaire et environ un mois) ;
+passage arrière 47,6 cm au lieu de 57,8 ; sol libre 2,15 m² ; un troisième panneau de toit (bande de 15).
+*Garde :* `tests/abri3d.mjs` mesure, pour chaque lit à demeure, ce qui reste de baie de porte (55 cm
+minimum) et refuse toute pièce DANS le lit, un plateau au-dessus étant permis. *État :* branche
+`test-bed-front-head-right`, aucun déploiement (`pages.yml` n'écoute que `main`). **Rien n'est décidé.**

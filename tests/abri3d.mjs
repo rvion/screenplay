@@ -93,18 +93,25 @@ const paroi = groupes.murs.children;
     const lm = d.mobilier.lits_muraux || [], serre = (b) => b.clone().expandByScalar(-0.005);
     ok(nom !== "abri actuel" || lm.map((x) => x.nom).join() === "v3,v4", "lits à demeure : v3 et v4 (" + lm.map((x) => x.nom).join() + ")");
     lm.forEach((l, i) => {
-      const n = 3 + i, g = (k) => groupes[k + n], bl = serre(boite(g("lit"))), bb = boite(g("bureaux")), bs = boite(g("sieges_ranges"));
+      const n = 3 + i, g = (k) => groupes[k + n], bl = serre(boite(g("lit")));
+      const dans_le_lit = (gr) => gr.children.filter((o) => o.isMesh).some((o) => bl.intersectsBox(serre(boite(o))) && boite(o).min.y < bl.max.y - 0.005);
       ok(["lit", "bureaux", "sieges_ranges", "personne_couchee"].every((k) => g(k) && g(k).visible === false), `lit ${l.nom} : lit, bureaux, sièges rangés et personne cachés au départ`);
-      ok(!bl.intersectsBox(serre(bb)) && !bl.intersectsBox(serre(bs)) && bl.intersectsBox(boite(g("personne_couchee"))) && l.sieges.length === v.sieges.filter((st) => st.tient !== false).length, `lit ${l.nom} : ni bureau ni siège rangé sur le lit, les ${l.sieges.length} sièges rangés, la personne couchée dessus`);
+      ok(!dans_le_lit(g("bureaux")) && !dans_le_lit(g("sieges_ranges")) && bl.intersectsBox(boite(g("personne_couchee"))) && l.sieges.length === v.sieges.filter((st) => st.tient !== false).length, `lit ${l.nom} : rien dans le lit (un plateau au-dessus est permis, pas une pièce dedans), les ${l.sieges.length} sièges rangés, la personne couchée dessus`);
+      // la porte : un lit peut longer son mur, il doit rester de quoi entrer
+      const po = v.porte, mp = m.faces[po.cote], [ax, ay] = mp.de, [ccx, ccy] = mp.a, lo = Math.hypot(ccx - ax, ccy - ay);
+      const py = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ay + (ccy - ay) / lo * s), px = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ax + (ccx - ax) / lo * s);
+      const ql = l.polygone, qb = { x1: Math.max(...ql.map((z) => z[0])), y1: Math.max(...ql.map((z) => z[1])) };
+      const ep_mur = +base.panneau.epaisseur_mm / 10, croise = qb.x1 > Math.max(...px) - ep_mur - 0.5, degage = croise ? Math.max(0, Math.max(...py) - Math.max(Math.min(...py), qb.y1)) : po.largeur_cm;
+      ok(degage >= 55, `lit ${l.nom} : ${Math.round(degage)} cm de baie de porte dégagés sur ${po.largeur_cm} (il faut 55 pour entrer)`);
     });
     const plan_box = (q) => { const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
     const si = plan_box(d.sol.polygone), v3 = lm.find((x) => x.nom === "v3"), v4 = lm.find((x) => x.nom === "v4");
     if (v3) {
       const b = plan_box(v3.polygone), bu = v3.bureaux.map(plan_box);
-      ok(near(b.x1 - b.x0, 180, 0.2) && near(b.y1 - b.y0, 70, 0.2) && near(b.y0, si.y0, 0.2) && near(b.x0, si.x0, 0.2), "lit v3 : 180 × 70 le long du mur avant, calé dans le coin gauche");
-      ok(bu.length === 1 && near(bu[0].y0, b.y1, 0.2) && bu[0].y1 > b.y1 + 100, "lit v3 : plus de bureau devant, le bureau d'angle part du bord du lit et court jusqu'au fond");
+      ok(near(b.x1 - b.x0, 190, 0.2) && near(b.y1 - b.y0, 90, 0.2) && near(b.y0, si.y0, 0.2) && near(b.x1, si.x1, 0.2), "lit v3 : 190 × 90 le long du mur avant, calé à droite contre le mur de la porte");
+      ok(bu.length === 1 && near(bu[0].y0, si.y0, 0.2) && bu[0].y1 > b.y1 + 100 && v3.sous_bureau_cm2 > 3000, "lit v3 : plus de bureau devant, le bureau gauche reste entier et couvre le pied du lit (" + v3.sous_bureau_cm2 + " cm2)");
       const lit = groupes.lit3, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
-      ok(boite(oreiller).max.x < (bl.min.x + bl.max.x) / 2, "lit v3 : l'oreiller est du côté gauche, loin de la porte");
+      ok(boite(oreiller).min.x > (bl.min.x + bl.max.x) / 2, "lit v3 : l'oreiller est à droite, côté porte : couché, les pieds vont vers le bureau gauche et ses écrans");
     }
     if (v4) {
       const b = plan_box(v4.polygone), [av, ga] = v4.bureaux.map(plan_box);

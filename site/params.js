@@ -111,7 +111,7 @@ window.SHED_PARAMS = {
     "bureaux": [
       {
         "cote": "gauche",
-        "profondeur_cm": 60
+        "profondeur_cm": 80
       },
       {
         "cote": "avant",
@@ -164,10 +164,10 @@ window.SHED_PARAMS = {
       }
     ],
     "cotes_cm": {
-      "avant": 200,
+      "avant": 215,
       "droite": 175,
       "gauche": 275,
-      "fond": 100
+      "fond": 115
     },
     "porte_vitree": false,
     "lit_pliant_2": {
@@ -184,12 +184,14 @@ window.SHED_PARAMS = {
       {
         "nom": "v3",
         "contre": "avant",
-        "largeur_cm": 70,
-        "longueur_cm": 180,
-        "tete": "gauche",
+        "largeur_cm": 90,
+        "longueur_cm": 190,
+        "tete": "droite",
         "bureaux": [
           "gauche"
-        ]
+        ],
+        "position": "fin",
+        "bureaux_entiers": true
       },
       {
         "nom": "v4",
@@ -203,7 +205,7 @@ window.SHED_PARAMS = {
         ]
       }
     ],
-    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (le coin du mur precedent : gauche = coin du fond) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, chacun reduit au plus grand morceau hors du lit ; les sieges sont ranges sous eux, hors du lit. v3 : lit 70 x 180 en facade (188 dedans), bureau d'angle au fond. v4 : lit 90 x 190 sur le mur gauche, tete au fond, bureau en L devant (facade + retour jusqu'au pied du lit)"
+    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (position 'fin' = a l'autre bout) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges sont ranges dessous, jamais sur le lit. v3 : lit 90 x 190 le long de la facade (203 dedans), tete a droite pres de la porte, pieds vers le bureau gauche et ses ecrans, le pied du lit sous le plateau. v4 : lit 90 x 190 sur le mur gauche, tete au fond, bureau en L devant"
   },
   "formes_etudiees": [
     {
