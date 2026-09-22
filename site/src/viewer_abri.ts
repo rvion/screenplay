@@ -15,7 +15,7 @@ export interface AbriViewer {
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
 export type Etats = { toit: number; murs: number; porte: number; mobilier: number; etiquettes: number; personne: number; cloture: number };
-// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise, 1 fauteuil au bureau, 2 lit deplie (sieges ranges sous les bureaux), 3 lit en biais au fond ;
+// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise, 1 fauteuil au bureau, 2 lit v1 (sieges ranges sous les bureaux), 3 lit v2 en biais au fond, 4 lit v3 en facade ;
 // personne : 0 sans, 1 dehors, 2 dedans (debout, assise au bureau ou couchee selon le mobilier)
 export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, etiquettes: 1, personne: 0, cloture: 0 };
 // la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
@@ -31,9 +31,9 @@ export const VUES = {
   // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
   porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-  lit: { titre: "Lit déplié", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-  lit2: { titre: "Lit déplié 2, en biais", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-  lit3: { titre: "Lit en façade, bureau d'angle", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
+  lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+  lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
+  lit3: { titre: "Lit v3, en façade (180)", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)

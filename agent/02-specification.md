@@ -24,9 +24,9 @@
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
   bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « au bureau » et « lit
   déplié » sont en murs coupés. Le bouton **mobilier** a cinq états : rien d'utilisé (fauteuil à moitié
-  rentré), fauteuil au bureau, lit déplié (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
-  une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), lit 2 en biais au fond, la tête côté porte (le fauteuil
-  et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit), lit en façade (`lit_facade` : plus de bureau de façade, un lit
+  rentré), fauteuil au bureau, **lit v1** le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
+  une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), **lit v2** en biais au fond, la tête côté porte (le fauteuil
+  et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit), **lit v3** en façade (`lit_facade` : plus de bureau de façade, un lit
   70 × 180 le long du mur avant, tête dans le coin gauche, et le bureau gauche arrêté au bord du lit, en bureau
   d'angle au fond, groupe `bureau_coin` ; fauteuil et tabouret rangés dessous). La **personne** dedans suit le
   mobilier : debout, assise au fauteuil face au bureau, ou couchée sur le lit la tête sur l'oreiller
@@ -174,7 +174,7 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   et distance en JSON : c'est ainsi que Rémi transmet un point de vue à régler dans `VUES` ;
   `window.abri_vue.placer({...})` rejoue un état copié). Sous les deux colonnes du résumé, **huit vignettes** (`VUES` : jardin = vue de
   départ, vue de droite, derrière avec le passage, puis cinq vues de l'intérieur sans toit qui
-  partagent une seule caméra (`DEDANS`) : côté porte, au bureau, lit déplié, lit 2 en biais, lit en façade) : des rendus fixes tirés du même contexte WebGL (la scène prend les **états d'options** de la
+  partagent une seule caméra (`DEDANS`) : côté porte, au bureau, lit v1, lit v2, lit v3) : des rendus fixes tirés du même contexte WebGL (la scène prend les **états d'options** de la
   vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
   mobilier, lit, repères, personne, clôture) ; un clic règle la caméra **et** les boutons ; la première
   vignette ramène à l'état de départ, comme le bouton reset ; « copier la vue » copie position, cible,

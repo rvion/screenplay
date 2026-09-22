@@ -2119,9 +2119,9 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-    lit: { titre: "Lit d\xE9pli\xE9", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-    lit2: { titre: "Lit d\xE9pli\xE9 2, en biais", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-    lit3: { titre: "Lit en fa\xE7ade, bureau d'angle", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } }
+    lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+    lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
+    lit3: { titre: "Lit v3, en fa\xE7ade (180)", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);
