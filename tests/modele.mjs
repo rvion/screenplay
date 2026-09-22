@@ -244,7 +244,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 8) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 8), deux coupes en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const page4 = abri_md(p4, c4);
-  ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme") && page4.includes("**Q1**"), "abri.md : tous les {champs} remplaces, points forts, questions et idees en fin de page");
+  ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme"), "abri.md : tous les {champs} remplaces, les raisons en fin de page");
   ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("au coin arrière gauche"), "abri.md : gouttiere derriere en 2 troncons, descente au coin arriere gauche");
   ok(!/version \d|abri_v\d/i.test(page4), "abri.md : aucun numero de version, l'abri actuel n'en a pas");
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");

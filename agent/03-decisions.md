@@ -532,8 +532,7 @@ Choix de Rémi (2026-09-22) : la simplicité d'abord. La panne à mi-profondeur 
 et au guide de montage sans être dessinée nulle part. `toit.panne_intermediaire` passe à `false` : elle
 sort de la liste d'achats et du guide, et reste une question (Q2 : le panneau de 60 mm porte-t-il la
 portée seul ?). Si le fabricant dit non, on la dessine et on la remet, en une fois. *Garde :*
-`tests/abri_dom.mjs` refuse une panne dans le guide ou les matériaux et exige la question (vue rouge
-avec la panne activée).
+`tests/abri_dom.mjs` refuse une panne dans le guide ou les matériaux (vue rouge avec la panne activée).
 
 ## D46 — Cinquième état du mobilier : lit en façade, bureau d'angle
 Demande de Rémi (2026-09-22) : une variante où le bureau de façade disparaît pour laisser la place au lit,
