@@ -3118,7 +3118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const affiche_etat = () => {
     if (vue && etat_el) {
       const e = vue.etat();
-      etat_el.innerHTML = `<span>pos ${e.position.join(" ")} \xB7 ${e.fov}\xB0</span><span>cible ${e.cible.join(" ")} \xB7 ${e.distance} m</span>`;
+      etat_el.innerHTML = `<i class="pos">pos (${e.position.join(", ")})</i> <i class="cible">cible (${e.cible.join(", ")})</i> <i class="fov">${e.fov}\xB0</i> <i class="dist">${e.distance} m</i>`;
     }
   };
   if (vue) vue.surChangement((e) => {

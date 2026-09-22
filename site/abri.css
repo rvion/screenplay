@@ -88,7 +88,12 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .vue-barre input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; margin-top: -3.5px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
 .vue-barre input[type=range]::-moz-range-track { height: 2px; border-radius: 1px; background: rgba(28, 37, 48, .28); }
 .vue-barre input[type=range]::-moz-range-thumb { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
-.cam-etat { flex: 1; min-width: 0; display: grid; font-size: .58rem; line-height: 1.25; color: rgba(28, 37, 48, .55); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.cam-etat { flex: 1; min-width: 0; font-size: .62rem; color: rgba(28, 37, 48, .55); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cam-etat i { font-style: normal; margin-right: .45rem; }
+.cam-etat .pos { color: #1f5a8c; }
+.cam-etat .cible { color: #8a4b1f; }
+.cam-etat .fov { color: #2a7d46; }
+.cam-etat .dist { color: #6b4fa0; }
 .vue-barre button { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; border: 1px solid rgba(28, 37, 48, .22); border-radius: 5px; background: rgba(255, 255, 255, .45); color: rgba(28, 37, 48, .75); cursor: pointer; }
 .vue-barre button:hover { border-color: var(--accent); color: var(--accent); }
 .vue-barre button.copie { background: var(--ok); color: #fff; border-color: var(--ok); }
