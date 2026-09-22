@@ -45,9 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
     try { await navigator.clipboard.writeText(texte); copier.classList.add("copie"); } catch { window.prompt("Copier la vue :", texte); }
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
+  // bascules : un clic avance l'etat (0/1, ou 0/1/2 pour la personne : dehors puis dedans)
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"] as const) {
-    const c = document.getElementById("voir-" + nom) as HTMLInputElement | null;
-    if (c) c.addEventListener("change", () => { if (vue) { vue.montrer(nom, c.checked); rend_vignettes(); } });
+    const b = document.getElementById("voir-" + nom) as HTMLButtonElement | null;
+    if (!b) continue;
+    b.addEventListener("click", () => {
+      const n = +(b.dataset.etats || 2), etat = (+(b.dataset.etat || 0) + 1) % n;
+      b.dataset.etat = String(etat); b.setAttribute("aria-pressed", String(etat > 0));
+      const lib = b.querySelector("span"); if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
+      b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
+      if (!vue) return;
+      if (nom === "personne") { vue.montrer("personne", etat === 1); vue.montrer("personne_dedans", etat === 2); }
+      else vue.montrer(nom, etat > 0);
+      rend_vignettes();
+    });
   }
   // filet de securite : CDN bloque ou WebGL absent, rien n'a ete dessine
   window.setTimeout(() => {

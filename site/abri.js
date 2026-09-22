@@ -2732,7 +2732,7 @@ function dessine_tuile_grillage() {
   return c;
 }
 function peuple_abri(abri, data, visible_demande = {}) {
-  const groupes = {}, visible = { lit: false, personne: false, ...visible_demande };
+  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2877,20 +2877,25 @@ function peuple_abri(abri, data, visible_demande = {}) {
         battant.position.set(s1 / 100, 0, -0.01);
         battant.rotation.y = angle;
         pose(battant, groupes.porte || groupe("porte"));
-        const qui = groupe("personne"), matP = mat(COUL.personne, { roughness: 0.9 }), corps = new THREE.Group();
-        for (const dx of [-0.09, 0.09]) {
-          const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
-          jambe.position.set(dx, 0.42, 0);
-          corps.add(ombre(jambe));
-        }
-        const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP);
-        tronc.position.y = 0.84 + 0.33;
-        corps.add(ombre(tronc));
-        const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP);
-        tete.position.y = 1.8 - 0.115;
-        corps.add(ombre(tete));
-        corps.position.set((s0 + s1) / 200, 0, 0.45);
-        pose(corps, qui);
+        const matP = mat(COUL.personne, { roughness: 0.9 });
+        const silhouette = (z, y) => {
+          const corps = new THREE.Group();
+          for (const dx of [-0.09, 0.09]) {
+            const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
+            jambe.position.set(dx, 0.42, 0);
+            corps.add(ombre(jambe));
+          }
+          const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP);
+          tronc.position.y = 0.84 + 0.33;
+          corps.add(ombre(tronc));
+          const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP);
+          tete.position.y = 1.8 - 0.115;
+          corps.add(ombre(tete));
+          corps.position.set((s0 + s1) / 200, y, z);
+          return corps;
+        };
+        pose(silhouette(0.45, 0), groupe("personne"));
+        pose(silhouette(-(ep + 60) / 100, data.sol.epaisseur_cm / 100), groupe("personne_dedans"));
       } else {
         const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(16053750), c = 4;
         pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
@@ -3003,7 +3008,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, porte: true };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3141,12 +3146,21 @@ document.addEventListener("DOMContentLoaded", () => {
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"]) {
-    const c = document.getElementById("voir-" + nom);
-    if (c) c.addEventListener("change", () => {
-      if (vue) {
-        vue.montrer(nom, c.checked);
-        rend_vignettes();
-      }
+    const b = document.getElementById("voir-" + nom);
+    if (!b) continue;
+    b.addEventListener("click", () => {
+      const n = +(b.dataset.etats || 2), etat = (+(b.dataset.etat || 0) + 1) % n;
+      b.dataset.etat = String(etat);
+      b.setAttribute("aria-pressed", String(etat > 0));
+      const lib = b.querySelector("span");
+      if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
+      b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
+      if (!vue) return;
+      if (nom === "personne") {
+        vue.montrer("personne", etat === 1);
+        vue.montrer("personne_dedans", etat === 2);
+      } else vue.montrer(nom, etat > 0);
+      rend_vignettes();
     });
   }
   window.setTimeout(() => {

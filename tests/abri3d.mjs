@@ -33,7 +33,7 @@ racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });
 ok(meshes > 40 && nan === 0, meshes + " maillages, aucune coordonnee NaN ou infinie");
-ok(["toit", "mobilier", "lit", "etiquettes", "sieges", "personne", "porte"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.personne.visible === false && groupes.toit.visible === true && groupes.porte.visible === true && groupes.porte.children.length === 1, "groupes masquables : toit, mobilier, lit et personne (caches au depart), etiquettes, sieges, porte (le battant)");
+ok(["toit", "mobilier", "lit", "etiquettes", "sieges", "personne", "personne_dedans", "porte"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.personne.visible === false && groupes.personne_dedans.visible === false && groupes.toit.visible === true && groupes.porte.visible === true && groupes.porte.children.length === 1, "groupes masquables : toit, mobilier, lit, personne dehors et dedans (caches au depart), etiquettes, sieges, porte (le battant)");
 
 // centre du repere : milieu de la dalle en x, et le meme decalage en y que le viewer
 const xs = d.dalle.map((z) => z[0]), ys = d.dalle.map((z) => z[1]);
@@ -95,6 +95,8 @@ ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "des
   // silhouette : 1,80 m de haut, pieds au sol, hors des murs, devant la porte
   const bp = boite(groupes.personne), sp = monde(fp.de[0] + (fp.a[0] - fp.de[0]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, fp.de[1] + (fp.a[1] - fp.de[1]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, 0);
   ok(near(bp.max.y, 1.8, 1e-6) && near(bp.min.y, 0, 1e-6) && bp.min.x > tout.max.x - 1e-6 && Math.abs((bp.min.z + bp.max.z) / 2 - sp[2]) < 0.5, "personne : 1,80 m, pieds au sol, dehors devant la porte du mur " + fp.cle);
+  const bd = boite(groupes.personne_dedans), sol_h = d.sol.epaisseur_cm / 100;
+  ok(near(bd.max.y, 1.8 + sol_h, 1e-6) && near(bd.min.y, sol_h, 1e-6) && bd.max.x < tout.max.x && bd.min.x > tout.min.x && -bd.max.z > -tout.max.z && -bd.min.z < -tout.min.z, "personne dedans : sur le plancher, à l'intérieur des murs, à 60 cm du seuil");
 }
 // mobilier : bureaux a hauteur de table, dans l'emprise interieure
 const bureaux = groupes.mobilier.children.filter((o) => o.isMesh);

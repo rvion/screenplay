@@ -98,8 +98,16 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .vue-barre button:hover { border-color: var(--accent); color: var(--accent); }
 .vue-barre button.copie { background: var(--ok); color: #fff; border-color: var(--ok); }
 #viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
-.viewer-toggles { display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: .8rem; color: var(--muted); margin: .3rem 0 0; }
-.viewer-toggles label { cursor: pointer; }
+.bascules { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0 0; }
+.bascules button { position: relative; display: grid; justify-items: center; gap: .1rem; width: 50px; height: 44px; padding: .3rem 0 .2rem; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); color: var(--muted); cursor: pointer; }
+.bascules button svg { width: 16px; height: 16px; }
+.bascules button span { font-size: .56rem; line-height: 1; letter-spacing: .01em; }
+.bascules button:hover { border-color: var(--accent); color: var(--accent); }
+.bascules button[aria-pressed="true"] { background: #e6eef6; border-color: var(--accent); color: var(--accent); }
+.bascules .points { position: absolute; bottom: 3px; left: 0; right: 0; display: flex; justify-content: center; gap: 3px; }
+.bascules .points b { width: 4px; height: 4px; border-radius: 50%; background: var(--line); }
+.bascules .points b.ici { background: var(--accent); }
+.bascules button[data-etats="3"] { padding-bottom: .5rem; height: 48px; }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
 .vignettes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: .5rem; }
 .vignettes button { padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); cursor: pointer; overflow: hidden; text-align: left; }

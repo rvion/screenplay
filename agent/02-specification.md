@@ -199,8 +199,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   `e / tan(angle / 2)` : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
-  panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
-  toit, porte (le battant), mobilier, lit déplié, repères, personne ; lit et personne cachés au départ).
+  panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** pour l'échelle, devant la porte ou à
+  60 cm du seuil dedans, sur le plancher. **Bascules** sous la vue : boutons carrés à icône et petit libellé
+  (toit, porte (le battant), mobilier, lit, repères, personne) ; lit et personne éteints au départ ; la
+  personne a trois états (éteinte, dehors, dedans) marqués par trois points sous le bouton.
   Sur la vue, une **barre de caméra** fine et translucide (angle 15 à 110°, distance, les valeurs en petit
   sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
   et distance en JSON : c'est ainsi que Rémi transmet un point de vue à régler dans `VUES` ;
