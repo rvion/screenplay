@@ -2912,7 +2912,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
       const nb = Math.max(1, Math.round(l / (w.travee_cm || 180))), travee = l / nb, ang = Math.atan2(uy, ux);
       for (let k = 0; k <= nb; k++) {
         const t = k / nb, hp = h + 0.2, poteau = new THREE.Mesh(new THREE.BoxGeometry(0.09, hp, 0.09), matPo);
-        poteau.position.copy(W(w.de[0] + ux * l * t, w.de[1] + uy * l * t, hp / 2 - 0.14));
+        poteau.position.copy(W(w.de[0] + ux * l * t, w.de[1] + uy * l * t, (hp / 2 - 0.14) * 100));
         poteau.rotation.y = ang;
         cl.add(ombre(poteau));
       }
