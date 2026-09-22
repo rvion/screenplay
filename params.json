@@ -47,7 +47,7 @@
     ]
   },
   "abri_principal": "abri_v4",
-  "abri_menu": ["abri_v3", "abri_v4"],
+  "abri_menu": ["abri_v4"],
   "_abri_menu_comment": "Les versions montrees dans le menu de gauche du site, celles qui sont pretes. Les autres restent atteignables par ?v=N et ont leur document dans docs/.",
   "abri_v1": { "_comment": "La version 1 est la disposition de base (disposition_trapeze) : ce bloc ne porte que son nom pour le menu du site, pas de params.", "nom_court": "première forme : trapèze, toit vers le fond" },
   "_abri_principal_comment": "La version retenue : son bloc abri_vN devient abri.md, la page d'accueil du site et le modele 3D. La premiere forme (disposition_trapeze de base) passe dans abri-v1.md. Pour retenir une autre version, changer ce seul nom.",

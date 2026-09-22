@@ -30,6 +30,7 @@ screenplay/
     ├── configurateur.html # l'étude initiale : rectangle réglable ; charge app.js
     ├── style.css
     ├── src/            # TypeScript : compute (logique pure) + viewer/render/controls/main + cli
+    │                   # abri_page (page d'accueil, DOM seul) + maitre_detail (liste + détail partagée) + viewer_abri
     ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts, pour configurateur.html)
     ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts, pour index.html)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)

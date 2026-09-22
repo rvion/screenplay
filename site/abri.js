@@ -2334,6 +2334,62 @@ function textes_variante(bloc, core, base) {
   return { atouts: liste2("atouts"), pertes: liste2("pertes"), notes: liste2("notes"), hors_modele: liste2("hors_modele") };
 }
 
+// site/src/maitre_detail.ts
+var lire = (cle) => {
+  try {
+    return JSON.parse(window.localStorage.getItem(cle) || "null");
+  } catch {
+    return null;
+  }
+};
+var ecrire = (cle, val) => {
+  try {
+    window.localStorage.setItem(cle, JSON.stringify(val));
+  } catch {
+  }
+};
+function maitre_detail(o) {
+  const etat = { cle: "", tout: false, ...lire(o.memoire) || {} };
+  const cles = () => o.entrees().map((e) => e.cle);
+  const liste0 = o.entrees();
+  liste0.forEach((e, i) => {
+    const prec = liste0[i - 1], suiv = liste0[i + 1];
+    e.panneau.classList.add("detail");
+    e.panneau.insertAdjacentHTML("beforeend", `<p class="suivante">${prec ? `<button type="button" data-aller="${prec.cle}">\u2190 ${prec.titre}</button>` : "<span></span>"}${suiv ? `<button type="button" data-aller="${suiv.cle}">${suiv.titre} \u2192</button>` : ""}</p>`);
+  });
+  o.mode.innerHTML = `<label><input type="checkbox" data-tout${etat.tout ? " checked" : ""}> tout afficher</label>`;
+  const rend_liste = () => {
+    o.liste.innerHTML = o.entrees().map((e) => `<li class="${[e.etat || "", e.cle === etat.cle ? "ici" : ""].filter(Boolean).join(" ")}"><button type="button" data-aller="${e.cle}">${e.num ? `<span class="num-etape">${e.num}</span>` : ""}<span class="t">${e.titre}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ""}</button></li>`).join("");
+  };
+  const applique = () => {
+    for (const e of o.entrees()) e.panneau.hidden = !etat.tout && e.cle !== etat.cle;
+    o.panneaux.classList.toggle("tout", etat.tout);
+    rend_liste();
+    ecrire(o.memoire, etat);
+  };
+  const montrer = (k, defiler = false) => {
+    if (!cles().includes(k)) k = cles()[0];
+    etat.cle = k;
+    applique();
+    const cible = etat.tout ? o.entrees().find((e) => e.cle === k).panneau : o.ancre;
+    if (defiler && cible && typeof cible.scrollIntoView === "function") cible.scrollIntoView({ block: "start" });
+  };
+  montrer(etat.cle);
+  const racine = o.panneaux.parentElement || o.panneaux;
+  racine.addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-aller]");
+    if (b && b.dataset.aller !== void 0) montrer(b.dataset.aller, etat.tout || b.parentElement.classList.contains("suivante"));
+  });
+  o.mode.addEventListener("change", (ev) => {
+    const c = ev.target;
+    if (c && c.dataset && c.dataset.tout !== void 0) {
+      etat.tout = c.checked;
+      applique();
+    }
+  });
+  return { montrer, rafraichir: rend_liste };
+}
+
 // site/src/abri_page.ts
 var fr2 = (x) => String(x).replace(".", ",");
 var fz3 = (x) => fr2(Math.round(x * 10) / 10);
@@ -2404,9 +2460,13 @@ function rend_abri(a) {
   const sans_formalite = v.aire_m2 <= seuil, retenue = a.version === a.principale;
   const nom_face = (f) => f.cle === "A" ? "fa\xE7ade" : f.nom;
   const NOMBRES = ["z\xE9ro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
-  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr2(x.interieur_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(x.passage_cm))} cm \xB7 ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  const menu = menu_versions(a.p);
+  html("versions", menu.map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr2(x.interieur_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(x.passage_cm))} cm \xB7 ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  const bloc_versions = el("bloc-versions");
+  if (bloc_versions) bloc_versions.hidden = menu.length < 2;
   texte("titre", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `Dossier de construction \xB7 version ${a.version}${retenue ? " (retenue)" : " (\xE9tude)"} \xB7 panneaux sandwich ${fz3(ep)} cm autoportants \xB7 toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  texte("sous-titre", `version ${a.version}${retenue ? "" : " (\xE9tude)"} \xB7 panneaux sandwich ${fz3(ep)} cm \xB7 toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  surligne_section();
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une \xE9tude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau");
   if (bandeau) bandeau.hidden = retenue;
@@ -2451,28 +2511,21 @@ function rend_abri(a) {
     m.toit.panneaux.map((t) => [`<b>${t.id}</b>`, `${fr2(t.largeur_cm)} cm`, `${fr2(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`])
   );
   table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [`<b>${r.id}</b>`, r.face, `${fr2(r.L)} cm`, `${fr2(r.h0)} \u2192 ${fr2(r.h1)} cm`]));
-  html("materiaux", B.groupes.map((gr) => `<h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>comment c'est compt\xE9 \xB7 d'o\xF9 vient le prix</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div>`).join(""));
-  html("materiaux-total", `<b>Total des mat\xE9riaux : ${eur(B.materiaux_eur)} TTC</b> (fourchette ${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}). \xC9quipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}.` : ""} Ni main-d'\u0153uvre ni forfait : seulement ce qu'on ach\xE8te.`);
-  const Gd = m.guide, cle_cases = `abri-v${a.version}-cases`;
-  let faites = {};
-  try {
-    faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}");
-  } catch {
-    faites = {};
-  }
-  liste("guide-avant", Gd.avant.map(md_en_ligne));
-  liste("guide-outillage", Gd.outillage.map(md_en_ligne));
-  html("etapes", Gd.etapes.map((e, i) => `<li class="etape"><h3><span class="num-etape">${i + 1}</span>${e.titre}</h3><p class="but">${md_en_ligne(e.but)}</p><p class="outils"><b>Outils :</b> ${e.outils.join(", ")}</p><ol>${e.faire.map((x) => `<li>${md_en_ligne(x)}</li>`).join("")}</ol><div class="controle"><b>\xC0 contr\xF4ler avant de continuer</b>${e.controler.map((x, k) => `<label><input type="checkbox" data-case="${i}.${k}"${faites[`${i}.${k}`] ? " checked" : ""}> ${md_en_ligne(x)}</label>`).join("")}</div></li>`).join(""));
-  const etapes = el("etapes");
-  if (etapes) etapes.addEventListener("change", (ev) => {
-    const c = ev.target;
-    if (!c || !c.dataset || !c.dataset.case) return;
-    faites[c.dataset.case] = c.checked;
-    try {
-      window.localStorage.setItem(cle_cases, JSON.stringify(faites));
-    } catch {
-    }
+  html("materiaux", B.groupes.map((gr) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>r\xE8gle \xB7 source</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
+  const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
+  if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
+    liste: liste_materiaux,
+    mode: mode_materiaux,
+    panneaux: materiaux,
+    memoire: `abri-v${a.version}-materiaux`,
+    ancre: el("materiaux-section") || void 0,
+    entrees: () => B.groupes.map((gr) => {
+      const lignes = B.lignes.filter((l) => l.groupe === gr.nom), incertain = lignes.some((l) => l.a_confirmer);
+      return { cle: gr.nom, titre: gr.nom, badge: eur(gr.total_eur), etat: lignes.every((l) => l.optionnel) ? "optionnel" : incertain ? "a-confirmer" : "", panneau: materiaux.querySelector(`article[data-cle="${gr.nom}"]`) };
+    })
   });
+  html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
+  rend_guide(m.guide, a.version);
   table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)} cm (cadre ${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)})`, `face ${m.faces[po.cote].cle}, de ${fr2(po.debut_cm)} \xE0 ${fr2(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} cm depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
     ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, `${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)} cm`, `face A, de ${fr2(f.debut_cm)} \xE0 ${fr2(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} cm depuis le coin gauche`, `all\xE8ge ${fz3(f.allege_cm)} cm, dans un seul panneau`])
@@ -2487,6 +2540,64 @@ function rend_abri(a) {
   const section = el("pourquoi");
   if (section) section.hidden = !T;
   html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle co\xFBte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
+}
+function rend_guide(Gd, version) {
+  const cle_cases = `abri-v${version}-cases`;
+  let faites = {};
+  try {
+    faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}");
+  } catch {
+    faites = {};
+  }
+  liste("guide-avant", Gd.avant.map(md_en_ligne));
+  liste("guide-outillage", Gd.outillage.map(md_en_ligne));
+  const conteneur = el("etapes"), lst = el("etapes-liste"), mode = el("etapes-mode");
+  if (!conteneur || !lst || !mode) return;
+  for (const vieux of conteneur.querySelectorAll("article[data-etape]")) vieux.remove();
+  conteneur.insertAdjacentHTML("beforeend", Gd.etapes.map((e, i) => `<article class="etape" data-etape="${i}"><h3><span class="num-etape">${i + 1}</span>${e.titre}</h3><p class="but">${md_en_ligne(e.but)}</p><p class="outils"><b>Outils :</b> ${e.outils.join(", ")}</p><ol>${e.faire.map((x) => `<li>${md_en_ligne(x)}</li>`).join("")}</ol><div class="controle"><b>\xC0 contr\xF4ler avant de continuer</b>${e.controler.map((x, k) => `<label><input type="checkbox" data-case="${i}.${k}"${faites[`${i}.${k}`] ? " checked" : ""}> ${md_en_ligne(x)}</label>`).join("")}</div></article>`).join(""));
+  const avancement = (i) => {
+    const n = Gd.etapes[i].controler.length, f = Gd.etapes[i].controler.filter((_x, k) => faites[`${i}.${k}`]).length;
+    return { n, f };
+  };
+  const guide = maitre_detail({
+    liste: lst,
+    mode,
+    panneaux: conteneur,
+    memoire: `abri-v${version}-etape`,
+    ancre: el("montage") || void 0,
+    entrees: () => [
+      { cle: "avant", titre: "Avant de commander", etat: "prealable", panneau: el("guide-avant-etape") },
+      { cle: "outillage", titre: "Outillage", etat: "prealable", panneau: el("guide-outillage-etape") },
+      ...Gd.etapes.map((e, i) => {
+        const av = avancement(i);
+        return { cle: String(i), titre: e.titre, num: String(i + 1), badge: `${av.f}/${av.n}`, etat: av.f === av.n ? "faite" : av.f ? "en-cours" : "", panneau: conteneur.querySelector(`article[data-etape="${i}"]`) };
+      })
+    ]
+  });
+  conteneur.addEventListener("change", (ev) => {
+    const c = ev.target;
+    if (!c || !c.dataset || !c.dataset.case) return;
+    faites[c.dataset.case] = c.checked;
+    try {
+      window.localStorage.setItem(cle_cases, JSON.stringify(faites));
+    } catch {
+    }
+    guide.rafraichir();
+  });
+}
+function surligne_section() {
+  const liens = [...document.querySelectorAll("#sommaire a")];
+  const sections = liens.map((l) => document.querySelector(l.getAttribute("href")));
+  const maj = () => {
+    const ligne = window.scrollY + window.innerHeight * 0.35;
+    let ici = 0;
+    sections.forEach((s, i) => {
+      if (s && !s.hidden && s.offsetTop <= ligne) ici = i;
+    });
+    liens.forEach((l, i) => l.classList.toggle("ici", i === ici));
+  };
+  window.addEventListener("scroll", maj, { passive: true });
+  maj();
 }
 
 // site/src/viewer_abri.ts

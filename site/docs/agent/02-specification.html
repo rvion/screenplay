@@ -192,12 +192,20 @@ et élévations, débit des panneaux, <strong>matériaux à acheter</strong>, <s
 aménagement, pourquoi cette forme. Tout est calculé dans
 le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
 aucune cote dans le HTML, et la page marche en <code>file://</code>.</li>
-<li><strong>Menu de gauche</strong> : les versions listées dans <code>abri_menu</code> (aujourd&#39;hui <code>abri_v3</code>, <code>abri_v4</code>), chacune
-avec son <code>nom_court</code> et ses chiffres clés calculés (intérieur, murs, passage, budget), la retenue
-marquée. Un clic charge <code>?v=N</code> : <strong>toute la page</strong> (3D, plans, débit, budget, montage) se refait
-pour cette version, avec un bandeau « une étude » et le lien vers son document. Toute version
-calculable reste atteignable par <code>?v=N</code> même hors menu ; un numéro inconnu retombe sur la
-retenue. Sous les versions, les sections de la page. Sur petit écran la colonne passe en haut.</li>
+<li><strong>Menu de gauche</strong> (196 px) : le sommaire des sections, la section sous le tiers haut de l&#39;écran
+surlignée, puis les liens « ailleurs ». Un bloc <strong>Versions</strong> n&#39;apparaît que si <code>abri_menu</code> en
+liste <strong>au moins deux</strong> (aujourd&#39;hui <code>abri_v4</code> seule : aucun lien vers une autre version sur la
+page). Chaque entrée porte son <code>nom_court</code> et ses chiffres clés calculés ; un clic charge <code>?v=N</code> :
+<strong>toute la page</strong> se refait pour cette version, avec un bandeau « une étude » et le lien vers son
+document. Toute version calculable reste atteignable par <code>?v=N</code>, même hors menu ; un numéro
+inconnu retombe sur la retenue. Sur petit écran la colonne passe en haut.</li>
+<li><strong>Liste + détail</strong> (<code>src/maitre_detail.ts</code>, un composant DOM pour deux usages) : une liste à
+gauche, l&#39;entrée choisie seule à droite, boutons précédente / suivante au pied de chaque
+entrée, et une bascule <strong>« tout afficher »</strong> (décochée par défaut) qui déroule tout. L&#39;entrée
+choisie et la bascule sont gardées dans le navigateur, par version. L&#39;impression montre toujours
+tout. Les <strong>matériaux</strong> l&#39;utilisent par groupe (sous-total sur chaque ligne, « ? » quand un prix
+est à confirmer) et le <strong>guide</strong> par étape (« avant de commander » et « outillage » en tête, puis
+les étapes numérotées avec leur avancement <code>cochées/contrôles</code>, bleu en cours, vert fait).</li>
 <li><strong>Matériaux à acheter</strong> (<code>src/chantier.ts</code>, <code>nomenclature_abri</code>) : une <strong>nomenclature</strong>, pas un
 budget. Que des matériaux, en <strong>TTC</strong>, quantités <strong>calculées</strong> depuis le modèle avec leur règle
 affichée (« comment c&#39;est compté »). <strong>Ni main-d&#39;œuvre, ni forfait, ni livraison</strong> (la livraison
@@ -212,7 +220,8 @@ rail, coupes à plat, mur gauche monté à plat, autres murs, angles, rehausse, 
 <code>toit.panne_intermediaire</code>, couverture, gouttière, porte, fenêtres, étanchéité, plancher,
 ventilation et électricité). Chaque étape : but, outils, gestes numérotés, <strong>contrôles à
 cocher</strong> avec les cotes du modèle (diagonales du tracé, hauteurs des coins, débords). Les cases
-cochées sont gardées dans le navigateur, par version. Le même guide est écrit dans <code>abri.md</code>.</li>
+cochées sont gardées dans le navigateur, par version, et comptées dans la liste des étapes. Le
+même guide est écrit dans <code>abri.md</code>.</li>
 <li><code>chantier.ts</code> est pur et <strong>n&#39;importe pas <code>compute.ts</code></strong> (pas de cycle) : il reçoit la variante et
 le modèle déjà calculés.</li>
 <li>L&#39;étude initiale (rectangle réglable) vit sur <code>site/configurateur.html</code> (bundle <code>site/app.js</code>).</li>

@@ -109,7 +109,6 @@ window.SHED_PARAMS = {
   },
   "abri_principal": "abri_v4",
   "abri_menu": [
-    "abri_v3",
     "abri_v4"
   ],
   "_abri_menu_comment": "Les versions montrees dans le menu de gauche du site, celles qui sont pretes. Les autres restent atteignables par ?v=N et ont leur document dans docs/.",

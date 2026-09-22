@@ -1,6 +1,7 @@
 // Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
 import { buildCore, params_v2, version_principale, versions_abri, textes_variante, ou_descente, type Params } from "./compute";
+import { maitre_detail, type Entree } from "./maitre_detail";
 
 const fr = (x: number) => String(x).replace(".", ",");
 const fz = (x: number) => fr(Math.round(x * 10) / 10);
@@ -76,10 +77,13 @@ export function rend_abri(a: Abri) {
   const nom_face = (f: any) => (f.cle === "A" ? "façade" : f.nom);
   const NOMBRES = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
 
-  // menu des versions, en-tete
-  html("versions", menu_versions(a.p).map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  // menu des versions (seulement s'il y a un choix), en-tete
+  const menu = menu_versions(a.p);
+  html("versions", menu.map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
+  const bloc_versions = el("bloc-versions"); if (bloc_versions) (bloc_versions as HTMLElement).hidden = menu.length < 2;
   texte("titre", `Bureau de jardin à ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `Dossier de construction · version ${a.version}${retenue ? " (retenue)" : " (étude)"} · panneaux sandwich ${fz(ep)} cm autoportants · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  texte("sous-titre", `version ${a.version}${retenue ? "" : " (étude)"} · panneaux sandwich ${fz(ep)} cm · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  surligne_section();
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
   const doc = el("lien-document") as HTMLAnchorElement | null;
@@ -122,25 +126,20 @@ export function rend_abri(a: Abri) {
   table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [`<b>${r.id}</b>`, r.face, `${fr(r.L)} cm`, `${fr(r.h0)} → ${fr(r.h1)} cm`]));
 
   // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait
-  html("materiaux", B.groupes.map((gr: any) => `<h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th><th>comment c'est compté · d'où vient le prix</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div>`).join(""));
-  html("materiaux-total", `<b>Total des matériaux : ${eur(B.materiaux_eur)} TTC</b> (fourchette ${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}). Équipement optionnel en plus : ${eur(B.options_eur)}.${B.hors_materiaux.length ? ` Hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}.` : ""} Ni main-d'œuvre ni forfait : seulement ce qu'on achète.`);
-
-  // guide de montage : cases a cocher, etat garde dans le navigateur (par version)
-  const Gd = m.guide, cle_cases = `abri-v${a.version}-cases`;
-  let faites: Record<string, boolean> = {};
-  try { faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}"); } catch { faites = {}; }
-  liste("guide-avant", Gd.avant.map(md_en_ligne));
-  liste("guide-outillage", Gd.outillage.map(md_en_ligne));
-  html("etapes", Gd.etapes.map((e: any, i: number) => `<li class="etape"><h3><span class="num-etape">${i + 1}</span>${e.titre}</h3><p class="but">${md_en_ligne(e.but)}</p><p class="outils"><b>Outils :</b> ${e.outils.join(", ")}</p><ol>${e.faire.map((x: string) => `<li>${md_en_ligne(x)}</li>`).join("")}</ol><div class="controle"><b>À contrôler avant de continuer</b>${e.controler.map((x: string, k: number) => `<label><input type="checkbox" data-case="${i}.${k}"${faites[`${i}.${k}`] ? " checked" : ""}> ${md_en_ligne(x)}</label>`).join("")}</div></li>`).join(""));
-  const etapes = el("etapes");
-  if (etapes) etapes.addEventListener("change", (ev) => {
-    const c = ev.target as HTMLInputElement;
-    if (!c || !c.dataset || !c.dataset.case) return;
-    faites[c.dataset.case] = c.checked;
-    try { window.localStorage.setItem(cle_cases, JSON.stringify(faites)); } catch { /* navigation privee : l'etat ne survit pas, la page marche */ }
+  html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th><th>règle · source</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
+  const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
+  if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
+    liste: liste_materiaux, mode: mode_materiaux, panneaux: materiaux, memoire: `abri-v${a.version}-materiaux`, ancre: el("materiaux-section") || undefined,
+    entrees: () => B.groupes.map((gr: any): Entree => {
+      const lignes = B.lignes.filter((l: any) => l.groupe === gr.nom), incertain = lignes.some((l: any) => l.a_confirmer);
+      return { cle: gr.nom, titre: gr.nom, badge: eur(gr.total_eur), etat: lignes.every((l: any) => l.optionnel) ? "optionnel" : incertain ? "a-confirmer" : "", panneau: materiaux.querySelector(`article[data-cle="${gr.nom}"]`) as HTMLElement };
+    }),
   });
+  html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}) · équipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` · hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
 
-  // ouvertures et amenagement
+  rend_guide(m.guide, a.version);
+
+  // ouvertures et mobilier
   table("ouvertures-table", ["ouverture", "taille", "où", "détail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitrée"}`, `${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm (cadre ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)})`, `face ${m.faces[po.cote].cle}, de ${fr(po.debut_cm)} à ${fr(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} cm depuis la façade`, "ouvre vers l'extérieur, ferrée côté fond"],
     ...v.fenetres.map((f: any) => [`fenêtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, `${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)} cm`, `face A, de ${fr(f.debut_cm)} à ${fr(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} cm depuis le coin gauche`, `allège ${fz(f.allege_cm)} cm, dans un seul panneau`]),
@@ -156,4 +155,53 @@ export function rend_abri(a: Abri) {
   const bloc = (titre: string, items: string[], ordonne = false) => (items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "");
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
   html("pourquoi-corps", T ? bloc("Ce que cette disposition apporte", T.atouts) + bloc("Ce qu'elle coûte", T.pertes) + bloc("Pourquoi ces choix", T.notes, true) + bloc("Conseils que les plans ne montrent pas", T.hors_modele) : "");
+}
+
+// guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).
+// cases cochees gardees dans le navigateur, par version ; la liste montre l'avancement de chaque etape.
+function rend_guide(Gd: any, version: number) {
+  const cle_cases = `abri-v${version}-cases`;
+  let faites: Record<string, boolean> = {};
+  try { faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}"); } catch { faites = {}; }
+  liste("guide-avant", Gd.avant.map(md_en_ligne));
+  liste("guide-outillage", Gd.outillage.map(md_en_ligne));
+
+  const conteneur = el("etapes"), lst = el("etapes-liste"), mode = el("etapes-mode");
+  if (!conteneur || !lst || !mode) return;
+  for (const vieux of conteneur.querySelectorAll("article[data-etape]")) vieux.remove();
+  conteneur.insertAdjacentHTML("beforeend", Gd.etapes.map((e: any, i: number) => `<article class="etape" data-etape="${i}"><h3><span class="num-etape">${i + 1}</span>${e.titre}</h3><p class="but">${md_en_ligne(e.but)}</p><p class="outils"><b>Outils :</b> ${e.outils.join(", ")}</p><ol>${e.faire.map((x: string) => `<li>${md_en_ligne(x)}</li>`).join("")}</ol><div class="controle"><b>À contrôler avant de continuer</b>${e.controler.map((x: string, k: number) => `<label><input type="checkbox" data-case="${i}.${k}"${faites[`${i}.${k}`] ? " checked" : ""}> ${md_en_ligne(x)}</label>`).join("")}</div></article>`).join(""));
+
+  const avancement = (i: number) => { const n = Gd.etapes[i].controler.length, f = Gd.etapes[i].controler.filter((_x: string, k: number) => faites[`${i}.${k}`]).length; return { n, f }; };
+  const guide = maitre_detail({
+    liste: lst, mode, panneaux: conteneur, memoire: `abri-v${version}-etape`, ancre: el("montage") || undefined,
+    entrees: () => [
+      { cle: "avant", titre: "Avant de commander", etat: "prealable", panneau: el("guide-avant-etape") as HTMLElement },
+      { cle: "outillage", titre: "Outillage", etat: "prealable", panneau: el("guide-outillage-etape") as HTMLElement },
+      ...Gd.etapes.map((e: any, i: number): Entree => {
+        const av = avancement(i);
+        return { cle: String(i), titre: e.titre, num: String(i + 1), badge: `${av.f}/${av.n}`, etat: av.f === av.n ? "faite" : av.f ? "en-cours" : "", panneau: conteneur.querySelector(`article[data-etape="${i}"]`) as HTMLElement };
+      }),
+    ],
+  });
+  conteneur.addEventListener("change", (ev) => {
+    const c = ev.target as HTMLInputElement;
+    if (!c || !c.dataset || !c.dataset.case) return;
+    faites[c.dataset.case] = c.checked;
+    try { window.localStorage.setItem(cle_cases, JSON.stringify(faites)); } catch { /* navigation privee : l'etat ne survit pas, la page marche */ }
+    guide.rafraichir();
+  });
+}
+
+// la section sous le tiers haut de l'ecran se surligne dans le sommaire (sous jsdom rien ne defile : rien ne bouge)
+function surligne_section() {
+  const liens = [...document.querySelectorAll<HTMLAnchorElement>("#sommaire a")];
+  const sections = liens.map((l) => document.querySelector<HTMLElement>(l.getAttribute("href")!));
+  const maj = () => {
+    const ligne = window.scrollY + window.innerHeight * 0.35;
+    let ici = 0;
+    sections.forEach((s, i) => { if (s && !s.hidden && s.offsetTop <= ligne) ici = i; });
+    liens.forEach((l, i) => l.classList.toggle("ici", i === ici));
+  };
+  window.addEventListener("scroll", maj, { passive: true });
+  maj();
 }

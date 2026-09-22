@@ -25,19 +25,17 @@ const a = run(params), m = a.m, v = a.v;
 
 ok(a.version > 1 && params.abri_principal === "abri_v" + a.version && a.pp.disposition_trapeze.toit.sens === m.sens, "la page montre la version principale (" + params.abri_principal + ", toit vers " + (m.sens === "droite" ? "la droite" : "le fond") + ")");
 ok(params.abri_principal === "abri_v4" && m.sens === "arriere" && m.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "abri retenu : toit vers le fond, gouttière derrière (mur du fond et pan à 45°)");
-ok(m.faces.length === 5 && /cinq murs/.test($("#titre").textContent) && /Dossier de construction · version 4 \(retenue\)/.test($("#sous-titre").textContent), "en-tete sobre : titre, version, systeme (" + $("#sous-titre").textContent.slice(0, 70) + "…)");
+ok(m.faces.length === 5 && /cinq murs/.test($("#titre").textContent) && /^version 4 · panneaux sandwich 6 cm · toit vers le fond$/.test($("#sous-titre").textContent), "en-tete court : titre, puis « " + $("#sous-titre").textContent + " »");
 ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(html) && /href="abri\.css/.test(html) && !/href="style\.css/.test(html), "page sobre : ni bandeau colore, ni badges, ni emoji ; feuille abri.css seule");
-// menu de gauche : toutes les versions pretes, la retenue marquee, chacune a un clic
+// menu de gauche : une seule version montree (abri_menu), donc pas de bloc « versions » ni de lien vers une autre
 {
-  const items = $$("#versions li"), pretes = versions_pretes(params).filter((n) => params.abri_menu.includes("abri_v" + n));
-  ok(versions_pretes(params).join() === "1,2,3,4" && pretes.join() === "3,4" && items.length === 2, "menu : seulement les versions de abri_menu (" + pretes.join(", ") + "), sur " + versions_pretes(params).length + " calculables");
-  const ordre = items.map((li) => li.querySelector("a").getAttribute("href"));
-  ok(ordre.join() === "?v=4,?v=3", "menu : la version retenue en premier, puis les autres (" + ordre.join(", ") + ")");
-  ok(items.filter((li) => li.querySelector(".v-retenue")).length === 1 && items[0].querySelector(".v-retenue") && items[0].className === "ici", "menu : une seule version « retenue », en tête et surlignée");
-  ok(items.every((li) => /m² int\./.test(li.textContent) && /passage \d+ cm/.test(li.textContent) && /€/.test(li.textContent) && li.querySelector(".v-desc").textContent.length > 8), "menu : nom court et chiffres clés de chaque version");
+  const pretes = versions_pretes(params).filter((n) => params.abri_menu.includes("abri_v" + n));
+  ok(versions_pretes(params).join() === "1,2,3,4" && pretes.join() === "4" && $$("#versions li").length === 1 && $("#bloc-versions").hidden === true, "menu : abri_menu ne garde que la version 4, le bloc des versions est caché (" + versions_pretes(params).length + " versions restent calculables par ?v=N)");
+  ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
   ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
   ok(ancres.length === 8 && ancres.every((h) => $(h)), "menu : les 8 sections de la page, toutes existantes");
+  ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 22), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
 ok($$("#fiche tr").length === 12 && /Hauteurs finies des coins/.test($("#fiche").textContent) && /sans main-d'œuvre/.test($("#fiche").textContent), "fiche chantier : 12 lignes, des murs aux matériaux");
 ok($$("#murs tbody tr").length === m.faces.length, "tableau des murs : une ligne par face");
@@ -48,23 +46,43 @@ ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux
 // materiaux : que des achats, quantite x prix = montant, total = somme hors options, rien de forfaitaire
 {
   const B = m.budget, L = B.lignes;
-  ok($$("#materiaux table.bom").length === B.groupes.length && $$("#materiaux tbody tr").length === L.length, "matériaux : " + B.groupes.length + " groupes, " + L.length + " lignes");
+  ok($$("#materiaux article.detail table.bom").length === B.groupes.length && $$("#materiaux tbody tr").length === L.length, "matériaux : " + B.groupes.length + " groupes, " + L.length + " lignes");
+  // liste a gauche, un groupe a la fois a droite ; la bascule montre tout
+  const visibles = () => $$("#materiaux article.detail").filter((x) => !x.hidden);
+  ok($$("#materiaux-liste li").length === B.groupes.length && visibles().length === 1 && $("#materiaux-liste li.ici .t").textContent === visibles()[0].dataset.cle, "matériaux : liste des groupes à gauche (sous-total sur chaque ligne), un seul groupe ouvert à droite, le même");
+  ok($$("#materiaux-liste .badge").every((x) => /€/.test(x.textContent)) && $$("#materiaux-liste li.a-confirmer").length >= 1, "matériaux : chaque groupe porte son sous-total, ceux qui ont un prix à confirmer sont marqués");
+  $$("#materiaux-liste button")[2].click();
+  ok(visibles().length === 1 && visibles()[0].dataset.cle === B.groupes[2].nom && JSON.parse(dom.window.localStorage.getItem("abri-v4-materiaux")).cle === B.groupes[2].nom, "matériaux : un clic ouvre ce groupe et le garde en mémoire");
+  const bascule = $("#materiaux-mode input"); bascule.checked = true; bascule.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  ok(visibles().length === B.groupes.length && $("#materiaux").classList.contains("tout") && JSON.parse(dom.window.localStorage.getItem("abri-v4-materiaux")).tout === true, "matériaux : « tout afficher » ouvre tous les groupes (et reste en mémoire)");
+  bascule.checked = false; bascule.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  ok(visibles().length === 1, "matériaux : la bascule relâchée revient à un seul groupe");
   ok(L.every((l) => Math.abs(l.montant_eur - Math.round(l.qte * l.pu_eur)) <= 1 && l.qte > 0 && l.regle.length > 5), "matériaux : montant = quantité × prix, chaque quantité a sa règle de calcul");
   ok(Math.abs(B.materiaux_eur - L.filter((l) => !l.optionnel).reduce((t, l) => t + l.montant_eur, 0)) <= 1 && B.total_eur === B.materiaux_eur, "matériaux : total = somme des lignes hors équipement optionnel");
   ok(!L.some((l) => /forfait|livraison|main|pose /i.test(l.poste + l.unite)) && B.hors_materiaux.every((h) => !L.some((l) => l.poste === h.poste)), "matériaux : aucun forfait, aucune main-d'œuvre, la livraison est hors total");
-  ok(/TTC/.test($("#materiaux-total").textContent) && /Ni main-d'œuvre ni forfait/.test($("#materiaux-total").textContent), "matériaux : total TTC annoncé comme tel");
+  ok(/^Total : [\d  ]+ € TTC/.test($("#materiaux-total").textContent) && /optionnel/.test($("#materiaux-total").textContent), "matériaux : total TTC, équipement optionnel à part");
   ok(["Panneaux", "Bois", "Profils et bavettes", "Fixations", "Étanchéité", "Ouvertures", "Eaux pluviales"].every((g) => B.groupes.some((x) => x.nom === g)), "matériaux : panneaux, bois, profils, fixations, étanchéité, ouvertures, eaux pluviales");
 }
-// guide de montage
+// guide de montage : meme composant, liste des etapes a gauche, l'etape choisie a droite
 {
-  const Gd = m.guide;
+  const Gd = m.guide, etapes = () => $$("#etapes article.etape"), visibles = () => $$("#etapes article.detail").filter((x) => !x.hidden);
   ok($$("#guide-avant li").length === Gd.avant.length && $$("#guide-outillage li").length === Gd.outillage.length && /Pas de meuleuse/.test($("#guide-outillage").textContent), "guide : avant de commander, outillage");
-  ok($$("#etapes li.etape").length === Gd.etapes.length && Gd.etapes.length >= 13, "guide : " + Gd.etapes.length + " étapes");
-  ok($$("#etapes li.etape").every((li) => li.querySelector("p.but") && li.querySelector("p.outils") && li.querySelectorAll("ol li").length >= 2 && li.querySelectorAll(".controle input[type=checkbox]").length >= 1), "guide : chaque étape a son but, ses outils, ses gestes et ses contrôles à cocher");
+  ok(etapes().length === Gd.etapes.length && Gd.etapes.length >= 13 && $$("#etapes-liste li").length === Gd.etapes.length + 2, "guide : " + Gd.etapes.length + " étapes, la liste les nomme toutes après « avant de commander » et « outillage »");
+  ok(etapes().every((li) => li.querySelector("p.but") && li.querySelector("p.outils") && li.querySelectorAll("ol li").length >= 2 && li.querySelectorAll(".controle input[type=checkbox]").length >= 1), "guide : chaque étape a son but, ses outils, ses gestes et ses contrôles à cocher");
   ok(/à plat/.test($("#etapes").textContent) && /panne/i.test($("#etapes").textContent) && !/undefined|NaN/.test($("#etapes").textContent), "guide : mur gauche monté à plat, panne intermédiaire, aucune valeur manquante");
-  // une case cochee est gardee dans le navigateur
-  const c = $("#etapes input[type=checkbox]"); c.checked = true; c.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
-  ok(JSON.parse(dom.window.localStorage.getItem("abri-v4-cases"))["0.0"] === true, "guide : une case cochée est gardée (localStorage, par version)");
+  ok(visibles().length === 1 && visibles()[0].id === "guide-avant-etape" && $("#etapes-liste li.ici .t").textContent === "Avant de commander", "guide : au premier passage, « avant de commander » est ouvert, seul");
+  $$("#etapes-liste button")[3].click();
+  ok(visibles().length === 1 && visibles()[0].dataset.etape === "1" && $$("#etapes-liste li")[3].className.includes("ici"), "guide : un clic dans la liste ouvre l'étape 2, seule");
+  ok($$("#etapes article.etape p.suivante button").length === Gd.etapes.length * 2 - 1 && /←/.test($$("#etapes article.etape p.suivante")[0].textContent), "guide : chaque étape a ses boutons précédente / suivante");
+  visibles()[0].querySelector("p.suivante button:last-child").click();
+  ok(visibles()[0].dataset.etape === "2", "guide : « suivante » ouvre l'étape 3");
+  // une case cochee est gardee dans le navigateur et compte dans la liste
+  const c = $("#etapes article[data-etape='2'] input[type=checkbox]"); c.checked = true; c.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  ok(JSON.parse(dom.window.localStorage.getItem("abri-v4-cases"))["2.0"] === true && /^1\/\d+$/.test($$("#etapes-liste li")[4].querySelector(".badge").textContent) && $$("#etapes-liste li")[4].className.includes("en-cours"), "guide : une case cochée est gardée (localStorage, par version) et la liste montre 1/n en cours");
+  const bascule = $("#etapes-mode input"); bascule.checked = true; bascule.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  ok(visibles().length === Gd.etapes.length + 2, "guide : « tout afficher » déroule toutes les étapes");
+  bascule.checked = false; bascule.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  ok(visibles().length === 1 && visibles()[0].dataset.etape === "2", "guide : la bascule relâchée revient à l'étape choisie");
 }
 ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte pleine/.test($("#ouvertures-table").textContent) && $$("#amenagement tbody tr").length >= 4, "ouvertures et aménagement");
 ok($$("#pourquoi-corps li").length >= 8 && !/\{\w+\}/.test($("#pourquoi-corps").textContent), "pourquoi : textes de la version, tous les {champs} remplacés");
@@ -84,7 +102,7 @@ for (const n of versions_pretes(params).filter((k) => k !== a.principale)) {
   ok(b.version === n && $("#bandeau").hidden === false && new RegExp("version " + n).test($("#bandeau").textContent) && $("#bandeau a").getAttribute("href") === "?v=" + a.principale, `?v=${n} : bandeau « version ${n}, une étude », retour à la version retenue`);
   ok($("#lien-document").getAttribute("href") === `docs/abri-v${n}.html` && existsSync(join(ROOT, "site/docs", `abri-v${n}.html`)), `?v=${n} : lien vers docs/abri-v${n}.html, qui existe`);
   ok($$("#murs tbody tr").length === b.m.faces.length && $$("#facades figure svg").length === b.m.faces.length && new RegExp(b.m.faces.length === 5 ? "cinq" : "quatre").test($("#titre").textContent), `?v=${n} : ${b.m.faces.length} murs, autant d'élévations, titre accordé`);
-  ok(!/undefined|NaN|\[object/.test($("main").textContent) && $$("#etapes li.etape").length >= 12 && $("#pourquoi").hidden === (n === 1), `?v=${n} : aucune valeur manquante, montage complet${n === 1 ? ", pas de section « pourquoi » (forme de base)" : ""}`);
+  ok(!/undefined|NaN|\[object/.test($("main").textContent) && $$("#etapes article.etape").length >= 12 && $("#pourquoi").hidden === (n === 1), `?v=${n} : aucune valeur manquante, montage complet${n === 1 ? ", pas de section « pourquoi » (forme de base)" : ""}`);
 }
 ok(run(params, 99).version === a.principale, "?v=99 (version inconnue) : retombe sur la version retenue");
 

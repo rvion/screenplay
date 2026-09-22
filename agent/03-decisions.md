@@ -392,3 +392,20 @@ impression). La version retenue passe en tête du menu. *Pourquoi une feuille à
 forfaits « pour arrondir » ; un guide écrit à la main dans le HTML (il citerait des cotes fausses
 au premier changement).
 
+## D37 — Polish de la page : une seule version, liste + détail partagée, fond gris et cartes blanches
+Retours de Rémi (2026-09-22) : ne garder que la version 4 (plus de lien vers la 3), moins de mots, un
+menu plus fin, le guide en deux colonnes (liste des étapes à gauche, l'étape choisie à droite), les
+matériaux pareil, une bascule pour tout déplier (fermée par défaut), **le même composant pour les
+deux**, un fond un peu plus sombre avec des boîtes plus claires. Il laissait le choix d'un outil de
+build ou de React + MobX. *Retenu :* rester en DOM pur. La page doit marcher en `file://`, se teste
+sous jsdom sans navigateur, et le composant tient en 60 lignes (`maitre_detail.ts`) : un framework
+ajouterait un runtime et une étape de build pour deux listes. *Mécanismes :* `abri_menu` ne liste
+que `abri_v4`, et le bloc des versions ne s'affiche qu'à partir de deux entrées (la version 3 reste
+à `?v=3` et dans `docs/`) ; le sommaire surligne la section sous le tiers haut de l'écran par un
+écouteur de défilement (un `IntersectionObserver` ne se laisse pas vérifier en Chrome headless à
+temps virtuel, l'écouteur oui) ; l'entrée choisie, la bascule et les cases cochées vivent dans
+`localStorage`, par version ; l'impression déroule tout. *Mots retirés :* sous-titre réduit à
+« version 4 · panneaux sandwich 6 cm · toit vers le fond », libellés du sommaire à un ou deux mots,
+notes et total des matériaux raccourcis. *Écarté :* une liste de versions à une seule entrée (un
+choix sans choix) ; deux composants proches (un par section).
+
