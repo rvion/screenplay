@@ -74,11 +74,14 @@ td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: t
 td.regle { color: var(--muted); font-size: .78rem; }
 .note-prix { color: #7a8591; }
 a.source { font-size: .72rem; white-space: nowrap; }
-p.intro { margin: 0 0 .7rem; font-size: .92rem; line-height: 1.55; }
-.cartes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
-.carte { background: var(--creux); border-radius: 6px; padding: .45rem .65rem .5rem; }
-.carte .k { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .15rem; }
-.carte .v { display: block; font-size: .88rem; line-height: 1.45; }
+p.intro { margin: 0 0 .6rem; font-size: .92rem; line-height: 1.55; }
+.resume-figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-bottom: .5rem; }
+.resume-figs figure { margin: 0; min-width: 0; background: var(--creux); border-radius: 6px; padding: .4rem; }
+.resume-figs svg { display: block; width: 100%; height: auto; max-height: 230px; }
+.resume-figs figcaption { font-size: .72rem; color: var(--muted); text-align: center; margin-top: .2rem; }
+.resume-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .15rem .7rem; margin: 0; font-size: .86rem; }
+.resume-dl dt { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; padding-top: .15rem; }
+.resume-dl dd { margin: 0; }
 .cote { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); font-weight: 500; }
 .cote .u { color: var(--muted); font-weight: 400; font-size: .74em; margin-left: .1em; }
 .cote .d { font-size: .82em; }

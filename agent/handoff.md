@@ -34,6 +34,7 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Matériaux : règle et source sous le nom de l'article, quatre colonnes ; panneau qui débordait
 - [x] Formes étudiées en liste + détail (icône de la forme à gauche, plan à droite)
 - [x] Barre caméra : reset en tête, icônes verticales, une pilule de verre par curseur, texte nu et tamisé
+- [x] Résumé : dessin des murs (longueurs, angles), dessin des marges sur la dalle (10, 10, 52, passage 57,8), phrase d'intro sans la marge, quatre lignes de chiffres
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

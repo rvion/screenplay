@@ -132,8 +132,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
     serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
-    Sections : **Résumé** (deux phrases calculées, puis six cartes : murs, hauteurs, toit, surfaces,
-    passage, matériaux ; le détail vit dans les sections) à côté du **modèle 3D** ; **Implantation sur la
+    Sections : **Résumé** (deux phrases calculées ; deux petits dessins nus, `resume_murs_svg` avec la longueur
+    de chaque mur et l'angle de chaque coin, `resume_marges_svg` avec l'abri sur la dalle et chaque marge
+    (gauche, devant, droite, passage derrière, limite en trait) ; puis quatre lignes : hauteurs, toit,
+    surfaces, matériaux ; le détail vit dans les sections) à côté du **modèle 3D** ; **Implantation sur la
     dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
     rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
     **Mobilier** (l'une sous l'autre) ; **Pourquoi cette forme** (le bloc `dossier` de la version retenue :
