@@ -1,8 +1,8 @@
 # Abri de jardin : le bureau trapèze, version 2 (calée sur les panneaux)
 
-> Généré par `npm run emit` depuis `params.json` (bloc `abri_v2`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri-v1.md](abri-v1.md). Autres formes étudiées : [variantes.md](variantes.md).
+> **Archive figée le 2026-09-22.** Cette étude n'est plus recalculée : ses paramètres ne sont plus dans `params.json`, ses chiffres et ses plans datent de ce jour. L'abri retenu est dans [abri.md](../abri.md). Les autres formes étudiées : [variantes.md](variantes.md).
 
-![implantation sur la dalle](../site/assets/modele-v2-implantation.svg)
+![implantation sur la dalle](../site/assets/etudes/v2/modele-v2-implantation.svg)
 
 ## Ce qui change par rapport à la version 1
 
@@ -91,35 +91,35 @@
 
 ### Implantation sur la dalle
 
-![Implantation sur la dalle](../site/assets/modele-v2-implantation.svg)
+![Implantation sur la dalle](../site/assets/etudes/v2/modele-v2-implantation.svg)
 
 ### Plan de sol
 
-![Plan de sol](../site/assets/modele-v2-sol.svg)
+![Plan de sol](../site/assets/etudes/v2/modele-v2-sol.svg)
 
 ### Toiture
 
-![Toiture](../site/assets/modele-v2-toit.svg)
+![Toiture](../site/assets/etudes/v2/modele-v2-toit.svg)
 
 ### Face A · façade (jardin)
 
-![Face A · façade (jardin)](../site/assets/modele-v2-facade-A.svg)
+![Face A · façade (jardin)](../site/assets/etudes/v2/modele-v2-facade-A.svg)
 
 ### Face D · droite (porte)
 
-![Face D · droite (porte)](../site/assets/modele-v2-facade-D.svg)
+![Face D · droite (porte)](../site/assets/etudes/v2/modele-v2-facade-D.svg)
 
 ### Face B · fond en biais
 
-![Face B · fond en biais](../site/assets/modele-v2-facade-B.svg)
+![Face B · fond en biais](../site/assets/etudes/v2/modele-v2-facade-B.svg)
 
 ### Face G · gauche
 
-![Face G · gauche](../site/assets/modele-v2-facade-G.svg)
+![Face G · gauche](../site/assets/etudes/v2/modele-v2-facade-G.svg)
 
 ### Rehausse bois : débit des madriers
 
-![Rehausse bois : débit des madriers](../site/assets/modele-v2-rehausse.svg)
+![Rehausse bois : débit des madriers](../site/assets/etudes/v2/modele-v2-rehausse.svg)
 
 ## Dimensions
 

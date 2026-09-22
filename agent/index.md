@@ -1,15 +1,11 @@
 # screenplay — abri de jardin / bureau paramétrique
 
-> **L'abri retenu aujourd'hui** = la version nommée par `abri_principal` dans `params.json`
-> (`abri_v4` : bureau à cinq murs, toit vers le fond). C'est elle que montrent `abri.md`, la page d'accueil du site
-> (`site/index.html`, bundle `site/abri.js`) et le modèle 3D. Le rectangle décrit ci-dessous est
-> l'étude initiale, toujours réglable sur `site/configurateur.html` (bundle `site/app.js`).
->
-> **Où vivent ses cotes** : `abri_v4` n'est qu'une surcouche. Ses paramètres réels = la base de
-> `params.json` (`disposition_trapeze`, `dalle_cm`, `panneau`, `prix_materiaux_eur_ttc`…) fusionnée avec
-> `abri_v2.params`, puis `abri_v3.params`, puis `abri_v4.params` (chaîne `herite`, `params_v2`). Ses textes
-> (résumé, points forts, questions, idées) vivent dans `abri_v4.dossier`. Les autres versions et les
-> formes étudiées sont archivées, générées, sous `etudes/` (D39).
+> **L'abri** = ce que décrit `params.json` (bureau à cinq murs, toit vers le fond) : ses cotes dans la
+> base (`disposition_trapeze`, `dalle_cm`, `panneau`, `prix_materiaux_eur_ttc`…), ses textes dans le bloc
+> `abri` (`titre`, `dossier`). Aucune version, aucune surcouche (D40). C'est lui que montrent `abri.md`, la
+> page d'accueil du site (`site/index.html`, bundle `site/abri.js`) et le modèle 3D. Les formes qui l'ont
+> précédé sont archivées, figées, sous `etudes/`. Le rectangle décrit ci-dessous est l'étude initiale,
+> toujours réglable sur `site/configurateur.html` (bundle `site/app.js`).
 
 Conception, plans, débit, budget et modèle 3D d'un petit bureau de jardin (rectangle 200 × 240,
 panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,

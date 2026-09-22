@@ -16,7 +16,8 @@ let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
 const near = (a, b, eps = 0.05) => Math.abs(a - b) <= eps;
 const clone = (o) => JSON.parse(JSON.stringify(o));
-const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
+// solveur de l'option 13 (interieur vise, passage vise) : exerce sur l'etude v1, qui n'impose pas ses cotes
+const base = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/etude-v1.json"), "utf8"));
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
 // triangle 3-4-5 : L=(0,0), R=(5,0), pointe a 3 de L et 4 de R -> (1.8, 2.4)

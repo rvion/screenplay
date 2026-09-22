@@ -15,7 +15,7 @@ await esbuild.build({
   outfile: "scripts/build.mjs", logLevel: "warning",
 });
 
-const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
+const base = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/etude-v1.json"), "utf8"));
 const cases = makeCases(base);
 const SNAP = join(ROOT, "tests/snapshots");
 mkdirSync(SNAP, { recursive: true });

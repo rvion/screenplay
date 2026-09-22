@@ -425,6 +425,24 @@ fonction (<code>relativise</code>, <code>docs.ts</code>) les rend relatifs au do
 textes de <code>params.json</code> suivent la même règle, ce qui sert aussi la page d&#39;accueil (lien vers
 <code>docs/etudes/…</code>). <em>Écarté :</em> supprimer ces pages (les comparaisons calculées gardent leur valeur) ;
 un dossier <code>archive/</code> (les versions restent recalculées, ce ne sont pas des fichiers figés).</p>
+<h2 id="d40--plus-de-versions--paramsjson-décrit-l39abri-actuel-les-études-sont-figées">D40 — Plus de versions : <code>params.json</code> décrit l&#39;abri actuel, les études sont figées</h2>
+<p>Demande de Rémi (2026-09-22) : la seule version qu&#39;il connaît est la quatrième, et elle ne doit pas
+s&#39;appeler « v4 » : c&#39;est l&#39;abri actuel. Avant, ses cotes n&#39;existaient nulle part en clair : la base de
+<code>params.json</code> (la première forme), puis les surcouches <code>abri_v2</code>, <code>abri_v3</code>, <code>abri_v4</code> fusionnées en
+chaîne (<code>herite</code>, <code>params_v2</code>), pointées par <code>abri_principal</code>. <em>Maintenant :</em> la fusion est écrite une
+fois pour toutes dans <code>params.json</code>, et les textes de la page vont dans un bloc <code>abri</code> (<code>titre</code>,
+<code>dossier</code>). Le code perd le menu des versions, <code>?v=N</code>, le bandeau d&#39;étude, le tableau comparé
+(<code>compare_md</code>) et les textes comparatifs (<code>atouts/pertes/notes</code> de chaque version) ; <code>abri.md</code> finit sur
+le <code>dossier</code>, comme la page. <em>Les études 1 à 3</em> ne peuvent plus se recalculer : leurs pages sont
+<strong>figées</strong> dans <code>etudes/</code> (bandeau « archive figée », plans copiés sous <code>site/assets/etudes/vN/</code>), et
+leurs paramètres fusionnés deviennent des <strong>fixtures de test</strong> (<code>tests/fixtures/etude-v{1,2,3}.json</code>) :
+le solveur d&#39;intérieur visé, les 4 murs à angle aigu et le toit vers la droite restent couverts.
+<em>Vérification :</em> la sortie complète de l&#39;abri (24 plans, modèle, scène 3D, planches) est identique
+octet pour octet avant et après la fusion. <em>Garde :</em> <code>tests/abri_dom.mjs</code> refuse tout bloc <code>abri_vN</code> ou
+<code>abri_principal</code>, <code>tests/modele.mjs</code> tout numéro de version dans <code>abri.md</code>. La clé du navigateur reste
+<code>abri-v4-…</code> pour ne pas perdre les cases déjà cochées. <em>Écarté :</em> supprimer les études (elles gardent
+leurs comparaisons, et l&#39;archive était demandée) ; les régénérer depuis les fixtures (des données de
+test ne pilotent pas des documents publiés). <em>Remplace</em> D33 (pointeur <code>abri_principal</code>) et D35 (menu).</p>
 </main>
 </body>
 </html>

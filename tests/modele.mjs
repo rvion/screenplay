@@ -14,7 +14,9 @@ const { buildCore, poly_area, ranger_rehausse } = await import(pathToFileURL(out
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
 const near = (a, b, eps = 0.05) => Math.abs(a - b) <= eps;
-const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
+// etudes figees (tests/fixtures) : les cas a 4 murs et a toit vers la droite ; params.json = l'abri actuel
+const fixture = (n) => JSON.parse(readFileSync(join(ROOT, `tests/fixtures/etude-v${n}.json`), "utf8"));
+const base = fixture(1), actuel = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
 const core = buildCore(base), m = core.modele, v = core.variantes.find((x) => x.id === 13);
 const H = base.murs.hauteur_cm, c = base.disposition_trapeze.toit.chute_cm;
 
@@ -108,17 +110,9 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m.budget.ttc === true && m.budget.lignes.every((l) => !/forfait/i.test(l.unite)) && near(m.budget.options_eur, m.budget.lignes.filter((l) => l.optionnel).reduce((s, l) => s + l.montant_eur, 0), 1), "materiaux : TTC, aucun forfait, l'equipement optionnel compte a part");
 }
 
-// variante proposee (abri_v2) : murs au module, sous le seuil, toit vers la droite
+// etude v2 : murs au module, sous le seuil, toit vers la droite
 {
-  const { params_v2, versions_abri } = await import(pathToFileURL(out).href);
-  const p2 = params_v2(base);
-  {
-    // un bloc abri_v3 de plus est pris sans rien declarer, dans l'ordre des numeros
-    const p = JSON.parse(JSON.stringify(base)); p.abri_v10 = { params: {} }; p.abri_v3 = { params: { disposition_trapeze: { porte_largeur_cm: 90 } } }; p.abri_vide = {};
-    ok(versions_abri(p).map((x) => x.cle).join() === "abri_v2,abri_v3,abri_v4,abri_v10", "variantes : abri_v2, abri_v3, abri_v4, abri_v10 dans l'ordre des numeros, blocs sans params ignores");
-    ok(params_v2(p, "abri_v3").disposition_trapeze.porte_largeur_cm === 90 && params_v2(p, "abri_v3").disposition_trapeze.toit.sens === "arriere", "abri_v3 : sa surcouche seule, pas celle de la v2");
-  }
-  ok(!!p2 && base.disposition_trapeze.toit.sens !== "droite", "abri_v2 : surcouche fusionnee sans toucher aux parametres de base");
+  const p2 = fixture(2);
   const c2 = buildCore(p2), m2 = c2.modele, v2 = c2.variantes.find((x) => x.id === 13), mod = base.panneau.largeur_utile_cm;
   const L = Object.fromEntries(m2.faces.map((f) => [f.cle, f]));
   ok(near(L.A.longueur_cm, 200) && near(L.D.longueur_cm, 200) && near(L.G.longueur_cm, 300), "v2 : facade 200, droite 200, gauche 300");
@@ -154,26 +148,14 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   // le fond de la v2 (223,6) est trop court pour un lit de 190 rabattable : il est pose au sol libre
   ok(v2.lit_pliant.tient === true && !v2.lit_pliant.replie, "v2 : lit 70 x 190 pose au sol libre (pas rabattable)");
   {
-    const p3 = params_v2(base); p3.disposition_trapeze.lit_pliant.contre = "fond";
+    const p3 = fixture(2); p3.disposition_trapeze.lit_pliant.contre = "fond";
     ok(buildCore(p3).variantes.find((x) => x.id === 13).lit_pliant.tient === false, "v2 : le meme lit rabattable contre le fond ne tient pas (perte affichee dans abri-v2.md)");
   }
-  const { abri_md } = await import(pathToFileURL(out).href);
-  const page2 = abri_md(p2, c2, { prefixe: "modele-v2-", titre: base.abri_v2.titre, atouts: base.abri_v2.atouts, pertes: base.abri_v2.pertes, notes: base.abri_v2.notes, hors_modele: base.abri_v2.hors_modele, base: core });
-  ok(["regards", "lumière de côté", "outils de jardin"].every((mot) => page2.includes(mot)) && page2.indexOf("### Ce que cette disposition apporte") < page2.indexOf("### Ce que la version 2 perd"), "abri-v2.md : vie privee, lumiere, rangement, avant les pertes");
-  ok(!/\{\w+\}/.test(page2) && page2.includes(`${String(v2.arriere.aire_m2).replace(".", ",")} m² de dalle`), "abri-v2.md : chiffres du rangement injectes depuis le calcul, aucun {champ} oublie");
-  ok(page2.includes("### Ce que la version 2 perd") && page2.includes("pliant, posé au sol libre"), "abri-v2.md dit ce que la v2 perd");
-  ok(page2.includes("site/assets/modele-v2-toit.svg") && !page2.includes("site/assets/modele-toit.svg"), "abri-v2.md pointe vers ses propres plans");
-  ok(page2.includes("## Ce qui change par rapport à la version 1") && page2.includes("vers la droite (jardin)"), "abri-v2.md s'ouvre sur le tableau compare");
-  ok(!abri_md(base, core).includes("version 1"), "abri.md inchange par les options de la v2");
 }
 
-// version 3 : cinq murs (fond d'un module + pan a 45 deg), 5 cm a gauche, heritee de la version 2
+// etude v3 : cinq murs (fond d'un module + pan a 45 deg), toit vers la droite
 {
-  const { params_v2, abri_md } = await import(pathToFileURL(out).href);
-  const p2 = params_v2(base), p3 = params_v2(base, "abri_v3");
-  ok(p3.disposition_trapeze.toit.sens === "droite" && p3.disposition_trapeze.porte_vitree === false && p3.disposition_trapeze.fenetres.length === 2, "v3 : herite des reglages de la v2 (toit a droite, porte pleine, fenetres)");
-  ok(p3.dalle_cm.bandes_libres_cm.avant === 10 && p2.dalle_cm.bandes_libres_cm.avant === 1, "v3 : 10 cm de dalle devant (la v2 reste a 1)");
-  ok(p3.dalle_cm.bandes_libres_cm.gauche === 10 && p2.dalle_cm.bandes_libres_cm.gauche === 10 && base.dalle_cm.bandes_libres_cm.gauche === 12, "v2 et v3 : 10 cm a gauche (la v1 garde 12)");
+  const p2 = fixture(2), p3 = fixture(3);
   const c2 = buildCore(p2), c3 = buildCore(p3), m3 = c3.modele, v3 = c3.variantes.find((x) => x.id === 13), v2 = c2.variantes.find((x) => x.id === 13);
   ok(m3.faces.map((f) => f.cle).join("") === "ADCBG", "v3 : cinq murs A, D, C (pan), B (fond), G");
   const L = Object.fromEntries(m3.faces.map((f) => [f.cle, f]));
@@ -182,7 +164,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(near(v3.aire_m2, 5, 0.001) && v3.aire_m2 <= base.reglementaire.seuil_sans_formalite_m2 && near(L.C.longueur_cm, 141.4, 0.05) && near(L.B.longueur_cm, 100), "v3 : 5,00 m² de murs, au seuil ; pan de 141,4, fond de 100 (" + v3.aire_m2 + ", " + L.C.longueur_cm + ")");
   {
     // le meme abri raccourci de 20 au lieu de 25 depasse le seuil : c'est la raison du 25
-    const p20 = params_v2(base, "abri_v3"); Object.assign(p20.disposition_trapeze.cotes_cm, { droite: 180, gauche: 280 });
+    const p20 = fixture(3); Object.assign(p20.disposition_trapeze.cotes_cm, { droite: 180, gauche: 280 });
     ok(near(buildCore(p20).variantes.find((x) => x.id === 13).aire_m2, 5.1, 0.001), "v3 : a 280 / 180 l'abri ferait 5,10 m², au-dessus du seuil");
   }
   ok(near(Math.min(...v3.polygone.map((z) => z[1])), 10, 0.05), "v3 : facade a 10 cm du bord avant de la dalle");
@@ -206,26 +188,20 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m3.rehausse.pieces.map((r) => r.face).sort().join("") === "ABCG", "v3 : rehausse sur A, C, B, G (rien sur le mur droit)");
   ok(["modele-facade-C", "modele-facade-B"].every((k) => c3.svg[k] && c3.svg[k].startsWith("<svg")), "v3 : une elevation par mur, pan C compris");
   ok(v3.porte.tient !== false && v3.fenetres.every((f) => f.tient !== false) && v3.lit_pliant.tient === true, "v3 : porte, fenetres et lit pliant tiennent");
-  const b3 = base.abri_v3, page3 = abri_md(p3, c3, { prefixe: "modele-v3-", version: 3, depuis: 2, titre: b3.titre, atouts: b3.atouts, pertes: b3.pertes, notes: b3.notes, hors_modele: b3.hors_modele, base: c2 });
-  ok(page3.includes("## Ce qui change par rapport à la version 2") && page3.includes("| | version 2 ([abri-v2.md](etudes/abri-v2.md)) | **version 3** |"), "abri-v3.md se compare a la version 2");
-  ok(page3.includes("**5 murs**") && page3.includes("site/assets/modele-v3-facade-C.svg") && page3.includes("5 angles"), "abri-v3.md : 5 murs, 5 angles, l'elevation du pan");
-  ok(!/\{\w+\}/.test(page3) && page3.includes("aucune formalité"), "abri-v3.md : tous les {champs} remplaces, et aucune formalite annoncee");
   ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
 }
 
-// fenetres 80 x 80, allege 110, sur la v2 et tout ce qui en herite
+// fenetres 80 x 80, allege 110, depuis l'etude v2
 {
-  const { params_v2 } = await import(pathToFileURL(out).href);
-  for (const cle of ["abri_v2", "abri_v3", "abri_v4"]) {
-    const f = buildCore(params_v2(base, cle)).variantes.find((x) => x.id === 13).fenetres;
+  for (const [cle, p] of [["etude v2", fixture(2)], ["etude v3", fixture(3)], ["abri actuel", actuel]]) {
+    const f = buildCore(p).variantes.find((x) => x.id === 13).fenetres;
     ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 80 && w.allege_cm === 110 && w.tient !== false) && f[0].ouvrant && !f[1].ouvrant, cle + " : deux fenetres 80 x 80, allege 110 (haut a 190), l'ouvrante a gauche");
   }
 }
 
-// version 4 : la version 3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)
+// abri actuel : l'etude v3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)
 {
-  const { params_v2, abri_md } = await import(pathToFileURL(out).href);
-  const p3 = params_v2(base, "abri_v3"), p4 = params_v2(base, "abri_v4"), c3 = buildCore(p3), c4 = buildCore(p4);
+  const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
   ok(JSON.stringify(v4.polygone) === JSON.stringify(v3.polygone) && v4.aire_interieure_m2 === v3.aire_interieure_m2, "v4 : meme forme et meme interieur que la v3");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
@@ -239,9 +215,10 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.gouttiere.descente[0] === Math.max(...bouts.map((z) => z[0])), "v4 : descente au bout droit de la gouttiere (" + m4.toit.gouttiere.descente + ")");
   ok(m4.toit.panneaux.length === 2 && m4.toit.panneaux.every((t) => near(t.largeur_cm, 100)) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit de 100, un seul coupe en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
-  const b4 = base.abri_v4, page4 = abri_md(p4, c4, { prefixe: "modele-v4-", version: 4, depuis: 3, titre: b4.titre, atouts: b4.atouts, pertes: b4.pertes, notes: b4.notes, hors_modele: b4.hors_modele, base: c3 });
-  ok(page4.includes("| | version 3 ([abri-v3.md](etudes/abri-v3.md)) | **version 4** |") && !/\{\w+\}/.test(page4), "abri-v4.md se compare a la version 3, tous les {champs} remplaces");
-  ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("à l'entrée du passage"), "abri-v4.md : gouttiere derriere en 2 troncons, descente a l'entree du passage");
+  const page4 = abri_md(p4, c4);
+  ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme") && page4.includes("**Q1**"), "abri.md : tous les {champs} remplaces, points forts, questions et idees en fin de page");
+  ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("à l'entrée du passage"), "abri.md : gouttiere derriere en 2 troncons, descente a l'entree du passage");
+  ok(!/version \d|abri_v\d/i.test(page4), "abri.md : aucun numero de version, l'abri actuel n'en a pas");
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
 }
 

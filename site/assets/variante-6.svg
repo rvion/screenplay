@@ -2,7 +2,7 @@
 <rect width="548" height="803" fill="#fbfbf8"/>
 <defs><pattern id="bande" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3e3cf"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e0b98a" stroke-width="2"/></pattern></defs>
 <polygon points="110.0,627.9 437.5,627.9 437.5,349.1 200.9,130.0 110.0,222.9" fill="url(#bande)" stroke="#6f675a" stroke-width="2"/>
-<polygon points="125.0,621.6 431.2,621.6 431.2,420.0 172.6,180.4 125.0,229.0" fill="#e3efe0" stroke="#2a8a4a" stroke-width="1.8" stroke-dasharray="5 4"/>
+<polygon points="122.5,615.4 431.2,615.4 431.2,420.0 172.6,180.4 122.5,231.5" fill="#e3efe0" stroke="#2a8a4a" stroke-width="1.8" stroke-dasharray="5 4"/>
 <line x1="110.0" y1="635.9" x2="110.0" y2="662.9" stroke="#999" stroke-width="0.8"/>
 <line x1="437.5" y1="635.9" x2="437.5" y2="662.9" stroke="#999" stroke-width="0.8"/>
 <line x1="110.0" y1="657.9" x2="437.5" y2="657.9" stroke="#2b5d8a" stroke-width="1.2"/>
@@ -42,34 +42,34 @@
 <text x="202.0" y="178.0" text-anchor="middle" fill="#b0452a" font-size="12" font-weight="bold">91.6°</text>
 <polyline points="110.0,244.9 113.2,244.6 116.4,243.9 119.4,242.7 122.3,241.1 124.8,239.1 127.1,236.8 128.9,234.1 130.4,231.2 131.4,228.1 131.9,224.9 132.0,221.6 131.5,218.4 130.7,215.3 129.3,212.3 127.5,209.6 125.4,207.2" fill="none" stroke="#b0452a" stroke-width="1.5"/>
 <text x="150.7" y="243.5" text-anchor="middle" fill="#b0452a" font-size="12" font-weight="bold">135.6°</text>
-<polygon points="125.0,621.6 431.2,621.6 431.2,420.0 172.6,180.4 125.0,229.0" fill="#cfe0f1" stroke="#2b5d8a" stroke-width="2.5"/>
-<text x="278.1" y="607.6" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 278.1 607.6)">245</text>
-<text x="417.2" y="520.8" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-90.0 417.2 520.8)">161.3</text>
+<polygon points="122.5,615.4 431.2,615.4 431.2,420.0 172.6,180.4 122.5,231.5" fill="#cfe0f1" stroke="#2b5d8a" stroke-width="2.5"/>
+<text x="276.9" y="601.4" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(0.0 276.9 601.4)">247</text>
+<text x="417.2" y="517.7" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-90.0 417.2 517.7)">156.3</text>
 <text x="292.4" y="310.5" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(42.8 292.4 310.5)">282.1</text>
-<text x="158.8" y="214.5" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-45.6 158.8 214.5)">54.5</text>
-<text x="139.0" y="425.3" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(90.0 139.0 425.3)">314.1</text>
-<polyline points="141.0,621.6 140.9,619.5 140.5,617.5 139.8,615.5 138.9,613.6 137.7,611.9 136.3,610.3 134.7,608.9 133.0,607.8 131.1,606.8 129.1,606.2 127.1,605.8 125.0,605.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<polyline points="431.2,605.6 429.2,605.8 427.1,606.2 425.1,606.8 423.2,607.8 421.5,608.9 419.9,610.3 418.6,611.9 417.4,613.6 416.5,615.5 415.8,617.5 415.4,619.5 415.2,621.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<text x="157.6" y="215.7" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(-45.6 157.6 215.7)">57.3</text>
+<text x="136.5" y="423.4" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="13" font-weight="bold" transform="rotate(90.0 136.5 423.4)">307.1</text>
+<polyline points="138.5,615.4 138.4,613.3 138.0,611.2 137.3,609.3 136.4,607.4 135.2,605.6 133.8,604.1 132.2,602.7 130.5,601.5 128.6,600.6 126.6,599.9 124.6,599.5 122.5,599.4" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<polyline points="431.2,599.4 429.2,599.5 427.1,599.9 425.1,600.6 423.2,601.5 421.5,602.7 419.9,604.1 418.6,605.6 417.4,607.4 416.5,609.3 415.8,611.2 415.4,613.3 415.2,615.4" fill="none" stroke="#b0452a" stroke-width="1.2"/>
 <polyline points="419.5,409.1 417.6,411.6 416.3,414.3 415.5,417.3 415.3,420.4 415.6,423.5 416.6,426.4 418.1,429.1 420.1,431.5 422.5,433.4 425.2,434.8 428.2,435.7 431.2,436.0" fill="none" stroke="#b0452a" stroke-width="1.2"/>
 <text x="394.6" y="440.0" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">132.8°</text>
-<polyline points="161.4,191.8 163.0,193.2 164.8,194.4 166.8,195.3 168.8,195.9 170.9,196.3 173.0,196.4 175.1,196.2 177.2,195.7 179.2,195.0 181.1,194.0 182.8,192.7 184.4,191.2" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<polyline points="161.4,191.8 163.0,193.2 164.8,194.3 166.8,195.3 168.8,195.9 170.9,196.3 173.0,196.4 175.1,196.2 177.2,195.7 179.2,195.0 181.1,194.0 182.8,192.7 184.4,191.3" fill="none" stroke="#b0452a" stroke-width="1.2"/>
 <text x="173.6" y="224.4" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">91.6°</text>
-<polyline points="125.0,245.0 128.1,244.7 131.1,243.8 133.9,242.3 136.4,240.3 138.3,237.8 139.8,235.0 140.7,232.0 141.0,228.9 140.7,225.8 139.7,222.7 138.2,220.0 136.2,217.6" fill="none" stroke="#b0452a" stroke-width="1.2"/>
-<text x="162.0" y="248.1" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">135.6°</text>
-<line x1="306.2" y1="621.6" x2="431.2" y2="621.6" stroke="#c0392b" stroke-width="5"/>
-<line x1="431.2" y1="621.6" x2="431.2" y2="746.6" stroke="#c0392b" stroke-width="2"/>
-<polyline points="306.2,621.6 306.9,633.9 308.7,646.0 311.6,657.9 315.8,669.5 321.0,680.5 327.3,691.1 334.6,700.9 342.9,710.0 352.0,718.3 361.8,725.6 372.3,731.9 383.4,737.1 395.0,741.2 406.9,744.2 419.0,746.0 431.2,746.6" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
-<text x="368.8" y="639.6" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold">porte 100</text>
+<polyline points="122.5,247.5 125.6,247.2 128.6,246.3 131.4,244.8 133.9,242.8 135.8,240.3 137.3,237.5 138.2,234.5 138.5,231.4 138.2,228.3 137.2,225.2 135.7,222.5 133.7,220.1" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+<text x="159.5" y="250.6" text-anchor="middle" fill="#b0452a" font-size="11" font-weight="bold">135.6°</text>
+<line x1="306.2" y1="615.4" x2="431.2" y2="615.4" stroke="#c0392b" stroke-width="5"/>
+<line x1="431.2" y1="615.4" x2="431.2" y2="740.4" stroke="#c0392b" stroke-width="2"/>
+<polyline points="306.2,615.4 306.9,627.6 308.7,639.8 311.6,651.7 315.8,663.2 321.0,674.3 327.3,684.8 334.6,694.7 342.9,703.8 352.0,712.0 361.8,719.3 372.3,725.6 383.4,730.9 395.0,735.0 406.9,738.0 419.0,739.8 431.2,740.4" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="368.8" y="633.4" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold">porte 100</text>
 <line x1="172.6" y1="180.4" x2="210.8" y2="139.1" stroke="#c77d0a" stroke-width="2.5"/>
 <circle cx="172.6" cy="180.4" r="3" fill="#c77d0a"/>
 <text x="198.3" y="165.9" text-anchor="middle" dominant-baseline="middle" fill="#c77d0a" font-size="11" font-weight="bold" transform="rotate(-47.3 198.3 165.9)">44.9</text>
-<line x1="125.0" y1="229.0" x2="114.2" y2="218.5" stroke="#c0392b" stroke-width="2.5"/>
-<circle cx="125.0" cy="229.0" r="3" fill="#c0392b"/>
-<text x="113.3" y="230.2" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(44.3 113.3 230.2)">12</text>
-<text x="257.0" y="414.5" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">6.59 m²</text>
-<text x="257.0" y="432.5" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 5.97 m²</text>
+<line x1="122.5" y1="231.5" x2="111.8" y2="221.0" stroke="#c0392b" stroke-width="2.5"/>
+<circle cx="122.5" cy="231.5" r="3" fill="#c0392b"/>
+<text x="110.8" y="232.7" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="11" font-weight="bold" transform="rotate(44.3 110.8 232.7)">12</text>
+<text x="256.0" y="412.5" text-anchor="middle" fill="#2b5d8a" font-size="22" font-weight="bold">6.53 m²</text>
+<text x="256.0" y="430.5" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="normal">intérieur 5.91 m²</text>
 <text x="273.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Option 6 · toute la zone utile</text>
-<text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 6.59 m² · intérieur 5.97 m² · 5 côtés</text>
+<text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 6.53 m² · intérieur 5.91 m² · 5 côtés</text>
 <text x="273.8" y="64.0" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">suit toute la zone : 3 angles non droits, pointe à l'arrière</text>
 <text x="273.8" y="776.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage</text>
 <text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">vert pointillé = zone utile · trait coloré = passage (cm)</text>

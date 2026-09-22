@@ -2386,26 +2386,6 @@ function modele_facade_svg(m, f, sans_entete = false, largeur_commune = 0) {
   if (!sans_entete) svg += dessine_entete(W, entete_facade(f));
   return svg + "</svg>\n";
 }
-var DOSSIER_ETUDES = "etudes";
-var nom_page = (n, principale = 0) => (principale ? n === principale : n === 1) ? "abri.md" : `${DOSSIER_ETUDES}/abri-v${n}.md`;
-var version_principale = (p) => {
-  const m = /^abri_v(\d+)$/.exec(p.abri_principal || "");
-  return m && p[p.abri_principal] ? +m[1] : 0;
-};
-function versions_abri(p) {
-  return Object.keys(p).map((cle) => ({ cle, m: /^abri_v(\d+)$/.exec(cle) })).filter((x) => x.m && p[x.cle] && p[x.cle].params).map((x) => ({ n: +x.m[1], cle: x.cle })).sort((a, b) => a.n - b.n);
-}
-function params_v2(p, cle = "abri_v2") {
-  if (!p[cle] || !p[cle].params) return null;
-  const fusion = (a, b) => {
-    if (Array.isArray(b) || b === null || typeof b !== "object") return JSON.parse(JSON.stringify(b));
-    const out = a && typeof a === "object" && !Array.isArray(a) ? { ...a } : {};
-    for (const k of Object.keys(b)) out[k] = fusion(out[k], b[k]);
-    return out;
-  };
-  const depart = p[cle].herite && p[cle].herite !== cle ? params_v2(p, p[cle].herite) : null;
-  return fusion(depart || JSON.parse(JSON.stringify(p)), p[cle].params);
-}
 function ou_descente(m) {
   const xs = m.faces.flatMap((f) => [f.de[0], f.a[0]]), ys = m.faces.flatMap((f) => [f.de[1], f.a[1]]);
   const [x, y] = m.toit.gouttiere.descente, mx = (Math.min(...xs) + Math.max(...xs)) / 2, y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -2413,10 +2393,9 @@ function ou_descente(m) {
   if (y < y0 + (y1 - y0) * 0.2) return `devant \xE0 ${cote2 === "droit" ? "droite" : "gauche"}, c\xF4t\xE9 jardin`;
   return y > y0 + (y1 - y0) * 0.85 ? `au coin arri\xE8re ${cote2}` : `\xE0 l'arri\xE8re du mur ${cote2}, \xE0 l'entr\xE9e du passage`;
 }
-function injecteur(v, m, base) {
+function injecteur(v, m) {
   const fr3 = (x) => String(x).replace(".", ",");
   const po = v.porte, derriere = v.passages.find((q) => q.cote === "arriere_droite");
-  const opts = { base };
   const valeurs = {
     arriere_m2: v.arriere ? fr3(v.arriere.aire_m2) : "?",
     arriere_profondeur_cm: v.arriere ? fz2(v.arriere.profondeur_max_cm) : "?",
@@ -2438,32 +2417,13 @@ function injecteur(v, m, base) {
     madriers: String(m.rehausse.nb_madriers),
     pan_cm: fr3((m.faces.find((f) => f.cle === "C") || m.faces[2]).longueur_cm)
   };
-  if (opts.base) {
-    const vb = opts.base.variantes.find((x) => x.id === 13), mb = opts.base.modele, pb = vb.passages.find((q) => q.cote === "arriere_droite");
-    Object.assign(valeurs, {
-      base_murs_m2: fr3(vb.aire_m2),
-      base_interieur_m2: fr3(vb.aire_interieure_m2),
-      base_arriere_m2: vb.arriere ? fr3(vb.arriere.aire_m2) : "?",
-      base_passage_cm: fz2(Math.floor(pb.cm)),
-      gain_interieur_m2: fr3(rnd2(v.aire_interieure_m2 - vb.aire_interieure_m2, 2)),
-      gain_sol_libre_m2: fr3(rnd2(v.sol_libre_m2 - vb.sol_libre_m2, 2)),
-      ecart_budget_eur: String(Math.round(m.budget.total_eur - mb.budget.total_eur)),
-      base_debord_droite_cm: fz2(mb.toit.debord_cm.droite),
-      base_pente_pourcent: fr3(mb.pente.pourcent),
-      base_portee_m: fr3(rnd2(mb.portee_cm / 100, 1)),
-      base_descente: ou_descente(mb),
-      base_panneaux_toit: String(mb.toit.panneaux.length),
-      base_madriers: String(mb.rehausse.nb_madriers)
-    });
-  }
-  const injecte = (s) => s.replace(/\{(\w+)\}/g, (tout, k) => k in valeurs ? valeurs[k] : tout);
-  return injecte;
+  return (s) => s.replace(/\{(\w+)\}/g, (tout, k) => k in valeurs ? valeurs[k] : tout);
 }
-function textes_variante(bloc, core, base) {
-  const v = core.variantes.find((x) => x.id === 13), injecte = injecteur(v, core.modele, base);
-  const liste2 = (k, de = bloc) => (de[k] || []).map(injecte);
-  const dossier = bloc.dossier ? { atouts: liste2("atouts", bloc.dossier), limites: liste2("limites", bloc.dossier), questions: liste2("questions", bloc.dossier), idees: liste2("idees", bloc.dossier) } : null;
-  return { atouts: liste2("atouts"), pertes: liste2("pertes"), notes: liste2("notes"), hors_modele: liste2("hors_modele"), dossier };
+function textes_abri(p, core) {
+  const v = core.variantes.find((x) => x.id === 13), dossier = p.abri && p.abri.dossier;
+  if (!v || !core.modele || !dossier) return null;
+  const injecte = injecteur(v, core.modele), liste2 = (k) => (dossier[k] || []).map(injecte);
+  return { atouts: liste2("atouts"), limites: liste2("limites"), questions: liste2("questions"), idees: liste2("idees") };
 }
 
 // site/src/maitre_detail.ts
@@ -2545,44 +2505,12 @@ var paire = (id, c) => `<span class="paire">${face(id)} ${c}</span>`;
 function md_en_ligne(s) {
   return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
 }
-var versions_pretes = (p) => [1, ...versions_abri(p).map((x) => x.n)];
-var coeurs = /* @__PURE__ */ new WeakMap();
-function coeur(p, n) {
-  let cache = coeurs.get(p);
-  if (!cache) {
-    cache = /* @__PURE__ */ new Map();
-    coeurs.set(p, cache);
-  }
-  if (!cache.has(n)) {
-    const pp = n > 1 ? params_v2(p, `abri_v${n}`) : p;
-    cache.set(n, { pp, core: buildCore(pp) });
-  }
-  return cache.get(n);
+var MEMOIRE = "abri-v4";
+function calcule_abri(p) {
+  const core = buildCore(p), v = core.variantes.find((x) => x.id === 13), m = core.modele;
+  return { p, core, v, m, textes: textes_abri(p, core) };
 }
-function calcule_abri(p, demande = 0) {
-  const principale = version_principale(p) || 1;
-  const version = versions_pretes(p).includes(demande) ? demande : principale;
-  const bloc = version > 1 ? p[`abri_v${version}`] : null, { pp, core } = coeur(p, version);
-  const v = core.variantes.find((x) => x.id === 13), m = core.modele;
-  let textes = null;
-  if (bloc && v && m) {
-    const depuis = versions_pretes(p).includes(+bloc.compare_a) ? +bloc.compare_a : 1;
-    textes = textes_variante(bloc, core, coeur(p, depuis).core);
-  }
-  return { p, pp, core, v, m, version, principale, bloc, textes };
-}
-function menu_versions(p) {
-  const principale = version_principale(p) || 1;
-  const montrees = Array.isArray(p.abri_menu) ? versions_pretes(p).filter((n) => p.abri_menu.includes(`abri_v${n}`)) : versions_pretes(p);
-  montrees.sort((a, b) => a === principale ? -1 : b === principale ? 1 : b - a);
-  return montrees.map((n) => {
-    const { core } = coeur(p, n), v = core.variantes.find((x) => x.id === 13), m = core.modele, passage = v.passages.find((q) => q.cote === "arriere_droite");
-    const nom = p[`abri_v${n}`] && p[`abri_v${n}`].nom_court || `version ${n}`;
-    return { n, nom, principale: n === principale, murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, budget_eur: m.budget.total_eur, sens: m.sens };
-  });
-}
-function formes_etudiees(p) {
-  const base = coeur(p, 1).core;
+function formes_etudiees(p, base) {
   return (p.formes_etudiees || []).map((f) => {
     if (f.type === "commerce") {
       const [a, b] = f.cotes_cm, s = 1.1, W = a * s + 40, H = b * s + 40;
@@ -2590,16 +2518,11 @@ function formes_etudiees(p) {
       return { nom: f.nom, svg, chiffres: `${fr2(Math.round(a * b) / 1e4)} m\xB2 au sol \xB7 ${f.note || ""}`, href: f.url || "", commerce: true };
     }
     if (f.type === "variante") {
-      const v2 = base.variantes.find((x) => x.id === f.id), q = base.planches[`variante-${f.id}`];
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v2.polygone.length} murs \xB7 ${fr2(v2.aire_m2)} m\xB2 de murs \xB7 ${fr2(v2.aire_interieure_m2)} m\xB2 int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
+      const v = base.variantes.find((x) => x.id === f.id), q = base.planches[`variante-${f.id}`];
+      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs \xB7 ${fr2(v.aire_m2)} m\xB2 de murs \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
     }
-    if (f.type === "rectangle") {
-      const g = base.geometrie, q = base.planches.rectangle;
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `4 murs \xB7 ${fr2(g.aire_m2)} m\xB2 de murs \xB7 ${fr2(g.aire_interieure_m2)} m\xB2 int. \xB7 \xE9tude initiale, r\xE9glable`, href: "configurateur.html" };
-    }
-    const { core } = coeur(p, f.n), v = core.variantes.find((x) => x.id === 13), m = core.modele, passage = v.passages.find((q) => q.cote === "arriere_droite");
-    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs \xB7 ${fr2(v.aire_m2)} m\xB2 de murs \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(passage.cm))} cm \xB7 ${eur(m.budget.total_eur)}`, href: "docs/" + nom_page(f.n, version_principale(p)).replace(/\.md$/, ".html") };
-  });
+    return null;
+  }).filter(Boolean);
 }
 var el = (id) => document.getElementById(id);
 var texte = (id, s) => {
@@ -2616,7 +2539,7 @@ var table = (id, tetes, lignes, pliables = [], pied = null) => {
 };
 var liste = (id, items) => html(id, items.map((s) => `<li>${s}</li>`).join(""));
 function rend_abri(a) {
-  const { pp, core, v, m } = a;
+  const { p: pp, core, v, m } = a;
   if (!v || !m) {
     html("fiche", "<tr><td>Aucun abri retenu dans params.json.</td></tr>");
     return;
@@ -2625,19 +2548,12 @@ function rend_abri(a) {
   const passage = v.passages.find((q) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
   const gauche = Math.min(...v.polygone.map((z) => z[0])), avant = Math.min(...v.polygone.map((z) => z[1]));
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z) => z[0]));
-  const sans_formalite = v.aire_m2 <= seuil, retenue = a.version === a.principale;
+  const sans_formalite = v.aire_m2 <= seuil;
   const nom_face = (f) => f.cle === "A" ? "fa\xE7ade" : f.nom;
   const NOMBRES = ["z\xE9ro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
-  const menu = menu_versions(a.p);
-  html("versions", menu.map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr2(x.interieur_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(x.passage_cm))} cm \xB7 ${eur(x.budget_eur)}</span></a></li>`).join(""));
-  const bloc_versions = el("bloc-versions");
-  if (bloc_versions) bloc_versions.hidden = menu.length < 2;
   texte("titre", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `Dossier de construction : plans cot\xE9s, mat\xE9riaux \xE0 acheter, guide de montage${retenue ? "" : ` \xB7 \xE9tude, version ${a.version}`}`);
+  texte("sous-titre", `Dossier de construction : plans cot\xE9s, mat\xE9riaux \xE0 acheter, guide de montage`);
   surligne_section();
-  html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une \xE9tude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
-  const bandeau = el("bandeau");
-  if (bandeau) bandeau.hidden = retenue;
   const fait = (x) => `<span class="fait">${x}</span>`;
   html("intro", [
     `Bureau de jardin \xE0 ${fait(`${NOMBRES[n] || n} murs`)}, panneaux sandwich ${fait(cote(ep))} autoportants, sur la dalle existante`,
@@ -2697,7 +2613,7 @@ function rend_abri(a) {
       liste: liste_plans,
       mode: mode_plans,
       panneaux: details_plans,
-      memoire: `abri-v${a.version}-plans`,
+      memoire: `${MEMOIRE}-plans`,
       ancre: el("plans-liste") || void 0,
       entrees: () => cles.map((k) => {
         const f = m.faces.find((x) => `facade-${x.cle}` === k);
@@ -2724,7 +2640,7 @@ function rend_abri(a) {
     liste: liste_materiaux,
     mode: mode_materiaux,
     panneaux: materiaux,
-    memoire: `abri-v${a.version}-materiaux`,
+    memoire: `${MEMOIRE}-materiaux`,
     ancre: el("materiaux-section") || void 0,
     entrees: () => B.groupes.map((gr) => {
       const lignes = B.lignes.filter((l) => l.groupe === gr.nom), incertain = lignes.some((l) => l.a_confirmer);
@@ -2732,7 +2648,7 @@ function rend_abri(a) {
     })
   });
   html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
-  rend_guide(m.guide, a.version);
+  rend_guide(m.guide);
   table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
     ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm)} \xE0 ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `all\xE8ge ${cote(f.allege_cm)}, dans un seul panneau`])
@@ -2756,33 +2672,32 @@ function rend_abri(a) {
   const bloc = (marque, titre, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "";
   const section = el("pourquoi");
   if (section) section.hidden = !T;
-  const D = T && T.dossier;
-  html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) : T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
+  const D = T;
+  html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) : "");
   const sq = el("questions");
   if (sq) sq.hidden = !(D && (D.questions.length || D.idees.length));
   const numerotee = (marque, titre, lettre2, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre2}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "";
   html("questions-corps", D ? numerotee("\u2753", "Questions", "Q", D.questions) + numerotee("\u{1F4A1}", "Id\xE9es \xE0 explorer", "I", D.idees) : "");
-  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  const formes = formes_etudiees(a.p, core), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
     liste: liste_formes,
     mode: mode_formes,
     panneaux: corps_formes,
-    memoire: `abri-v${a.version}-formes`,
+    memoire: `${MEMOIRE}-formes`,
     ancre: el("alternatives-liste") || void 0,
     entrees: () => formes.map((x, i) => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) }))
   });
 }
-function mode_document(a, actif) {
+function mode_document(actif) {
   document.body.classList.toggle("document", actif);
   const lien = el("lien-document");
   if (!lien) return;
-  const q = [a.version === a.principale ? "" : `v=${a.version}`, actif ? "" : "doc=1"].filter(Boolean).join("&");
-  lien.setAttribute("href", window.location.pathname + (q ? `?${q}` : ""));
+  lien.setAttribute("href", window.location.pathname + (actif ? "" : "?doc=1"));
   lien.textContent = actif ? "Vue interactive" : "Document complet";
 }
-function rend_guide(Gd, version) {
-  const cle_cases = `abri-v${version}-cases`;
+function rend_guide(Gd) {
+  const cle_cases = `${MEMOIRE}-cases`;
   let faites = {};
   try {
     faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}");
@@ -2803,7 +2718,7 @@ function rend_guide(Gd, version) {
     liste: lst,
     mode,
     panneaux: conteneur,
-    memoire: `abri-v${version}-etape`,
+    memoire: `${MEMOIRE}-etape`,
     ancre: el("montage") || void 0,
     entrees: () => [
       { cle: "avant", titre: "Avant de commander", etat: "prealable", panneau: el("guide-avant-etape") },
@@ -3527,15 +3442,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   const url = new URLSearchParams(window.location.search);
-  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), Number(url.get("v")) || 0);
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
   rend_abri(abri);
-  mode_document(abri, url.has("doc"));
+  mode_document(url.has("doc"));
   let mode_avant = false;
   window.addEventListener("beforeprint", () => {
     mode_avant = document.body.classList.contains("document");
-    mode_document(abri, true);
+    mode_document(true);
   });
-  window.addEventListener("afterprint", () => mode_document(abri, mode_avant));
+  window.addEventListener("afterprint", () => mode_document(mode_avant));
   const boite = document.getElementById("viewer");
   let vue = null;
   try {

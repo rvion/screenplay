@@ -6,50 +6,6 @@
     "auteur": "Remi Vion",
     "depot_url": "https://github.com/rvion/screenplay"
   },
-  "abri": {
-    "_comment": "Textes de l'abri (page d'accueil et abri.md). Les {champs} sont remplaces par des valeurs calculees ; aucune cote n'est saisie ici.",
-    "titre": "Abri de jardin : le bureau à cinq murs",
-    "dossier": {
-      "atouts": [
-        "**Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais ({pan_cm} cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
-        "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
-        "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
-        "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres 80 × 80 : écrans sur le bureau gauche, lumière de côté.",
-        "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
-        "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
-        "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
-      ],
-      "limites": [
-        "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : une panne en bois à mi-profondeur, de mur à mur, est prévue dans les matériaux et le guide.",
-        "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
-        "**La descente est {descente}.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
-        "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
-        "**Deux profils d'angle à 135°** à faire plier sur mesure, en même temps que les panneaux.",
-        "**Un mur à {gauche_cm} cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse."
-      ],
-      "questions": [
-        "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
-        "Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?",
-        "Fenêtres : 80 × 80 sur mesure (4 à 5 semaines), ou 80 × 75 de stock ?",
-        "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
-        "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
-        "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
-      ],
-      "idees": [
-        "**Deux fenêtres identiques.** Les deux oscillo-battantes, ou les deux fixes avec une grille de ventilation à part : une seule référence, une seule découpe, un seul délai.",
-        "**Fenêtre fixe sans châssis.** Un double vitrage posé sur parcloses bois dans la découpe du panneau, comme dans les tiny houses : moins cher qu'un châssis PVC, aucun délai, et le cadre bois ferme la tranche du panneau.",
-        "**Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
-        "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
-        "**Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.",
-        "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
-        "**Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.",
-        "**Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.",
-        "**Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.",
-        "**Rail de pied simplifié.** Une cornière alu de 40 vissée sur la bande d'arase, dedans et dehors, plutôt qu'un profil en U introuvable au détail : deux longueurs de stock, le même mastic.",
-        "**Électricité sous les bureaux.** Une seule goulotte sous le plateau du bureau gauche et de la façade, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble."
-      ]
-    }
-  },
   "emprise_cm": {
     "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (262 de large, 223 a droite, pointe arriere).",
     "avant_A": 200,
@@ -83,7 +39,7 @@
     "passage_souhaite_cm": 50,
     "bandes_libres_cm": {
       "_comment": "Bande reservee (laissee libre) le long de chaque cote de la dalle, vers l'interieur. Ce qui reste au centre = zone utile (plan-dalle-bandes.svg).",
-      "avant": 10,
+      "avant": 1,
       "droite": 5,
       "arriere_droite": 45,
       "arriere_gauche": 12,
@@ -103,17 +59,15 @@
     "porte_chambranle_cm": 5,
     "porte_marge_cm": 5,
     "toit": {
-      "sens": "arriere",
+      "sens": "droite",
       "chute_cm": 22.5,
       "debord_cm": {
-        "avant": 5,
-        "arriere": 5,
+        "avant": 0,
+        "arriere": 0,
         "cotes": 0,
         "gauche": 0,
-        "droite": 0
-      },
-      "descente": "droite",
-      "panne_intermediaire": true
+        "droite": 15
+      }
     },
     "rehausse_section_mm": [
       75,
@@ -177,9 +131,8 @@
     ],
     "cotes_cm": {
       "avant": 200,
-      "droite": 175,
-      "gauche": 275,
-      "fond": 100
+      "droite": 200,
+      "gauche": 300
     },
     "porte_vitree": false,
     "lit_pliant_2": {
@@ -188,10 +141,7 @@
       "parallele_a": "fond en biais",
       "sieges_ranges": true,
       "_comment": "seconde position, en biais au fond : le lit est parallele au pan a 45 degres et au plus pres de lui ; les sieges sont ranges (leur gene ne compte pas), le fauteuil pousse vers le bureau de facade"
-    },
-    "panneaux_depuis_la_fin": [
-      "droite"
-    ]
+    }
   },
   "formes_etudiees": [
     {
@@ -208,9 +158,18 @@
       "type": "variante",
       "id": 1,
       "nom": "Carré 2 × 2 m"
+    },
+    {
+      "type": "rectangle",
+      "nom": "Rectangle 200 × 240"
+    },
+    {
+      "type": "version",
+      "n": 1,
+      "nom": "Trapèze"
     }
   ],
-  "_formes_etudiees_comment": "Section « Formes étudiées » de la page d'accueil : une carte par forme. commerce = produit du commerce (dessin d'un simple rectangle aux cotes donnees, note, url facultative) ; variante = une des 13 formes de etudes/variantes.md (id).",
+  "_formes_etudiees_comment": "Section « Formes étudiées » de la page d'accueil : une carte par forme. commerce = produit du commerce (dessin d'un simple rectangle aux cotes donnees, note, url facultative) ; variante = une des 13 formes de variantes.md (id) ; rectangle = l'etude initiale (emprise_cm, configurateur) ; version = un bloc abri_vN.",
   "reglementaire": {
     "seuil_sans_formalite_m2": 5,
     "seuil_declaration_m2": 20,

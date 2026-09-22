@@ -1,6 +1,6 @@
-// Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
+// Page d'accueil : l'abri decrit par params.json, tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
-import { buildCore, params_v2, version_principale, versions_abri, textes_variante, nom_page, type Params } from "site/src/compute.ts";
+import { buildCore, textes_abri, type Params } from "site/src/compute.ts";
 import { maitre_detail, type Entree } from "site/src/maitre_detail.ts";
 
 const fr = (x: number) => String(x).replace(".", ",");
@@ -25,51 +25,18 @@ export function md_en_ligne(s: string): string {
     .replace(/`([^`]+)`/g, "<code>$1</code>");
 }
 
-export interface Abri { p: Params; pp: Params; core: any; v: any; m: any; version: number; principale: number; bloc: any; textes: ReturnType<typeof textes_variante> | null }
+export interface Abri { p: Params; core: any; v: any; m: any; textes: ReturnType<typeof textes_abri> }
 
-// versions pretes a montrer : la 1 (disposition de base) et chaque bloc abri_vN, dans l'ordre
-export const versions_pretes = (p: Params): number[] => [1, ...versions_abri(p).map((x) => x.n)];
+// cle des reglages gardes dans le navigateur (entree choisie, cases cochees) : stable, pour ne pas perdre les cases deja cochees
+const MEMOIRE = "abri-v4";
 
-// un calcul par version et par jeu de parametres (le menu et les comparaisons reutilisent les memes)
-const coeurs = new WeakMap<object, Map<number, { pp: Params; core: any }>>();
-function coeur(p: Params, n: number) {
-  let cache = coeurs.get(p);
-  if (!cache) { cache = new Map(); coeurs.set(p, cache); }
-  if (!cache.has(n)) { const pp = n > 1 ? params_v2(p, `abri_v${n}`)! : p; cache.set(n, { pp, core: buildCore(pp) }); }
-  return cache.get(n)!;
-}
-
-// une version de l'abri ; sans numero (ou numero inconnu) : la version retenue
-export function calcule_abri(p: Params, demande = 0): Abri {
-  const principale = version_principale(p) || 1;
-  const version = versions_pretes(p).includes(demande) ? demande : principale;
-  const bloc = version > 1 ? p[`abri_v${version}`] : null, { pp, core } = coeur(p, version);
-  const v = core.variantes.find((x: any) => x.id === 13), m = core.modele;
-  let textes = null;
-  if (bloc && v && m) {
-    const depuis = versions_pretes(p).includes(+bloc.compare_a) ? +bloc.compare_a : 1;
-    textes = textes_variante(bloc, core, coeur(p, depuis).core);
-  }
-  return { p, pp, core, v, m, version, principale, bloc, textes };
-}
-
-// le menu : chaque version prete avec son nom court et ses chiffres cles
-export function menu_versions(p: Params) {
-  const principale = version_principale(p) || 1;
-  // abri_menu : les versions montrees dans le menu (les autres restent atteignables par ?v=N)
-  const montrees = Array.isArray(p.abri_menu) ? versions_pretes(p).filter((n) => p.abri_menu.includes(`abri_v${n}`)) : versions_pretes(p);
-  // la version retenue d'abord, puis les autres de la plus recente a la plus ancienne
-  montrees.sort((a, b) => (a === principale ? -1 : b === principale ? 1 : b - a));
-  return montrees.map((n) => {
-    const { core } = coeur(p, n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
-    const nom = (p[`abri_v${n}`] && p[`abri_v${n}`].nom_court) || `version ${n}`;
-    return { n, nom, principale: n === principale, murs: m.faces.length, murs_m2: v.aire_m2, interieur_m2: v.aire_interieure_m2, passage_cm: passage.cm, budget_eur: m.budget.total_eur, sens: m.sens };
-  });
+export function calcule_abri(p: Params): Abri {
+  const core = buildCore(p), v = core.variantes.find((x: any) => x.id === 13), m = core.modele;
+  return { p, core, v, m, textes: textes_abri(p, core) };
 }
 
 // formes etudiees (params.formes_etudiees) : une carte par forme, avec son dessin sans entete, ses chiffres et son document
-export function formes_etudiees(p: Params) {
-  const base = coeur(p, 1).core;
+export function formes_etudiees(p: Params, base: any) {
   return ((p.formes_etudiees || []) as any[]).map((f) => {
     if (f.type === "commerce") {
       const [a, b] = f.cotes_cm, s = 1.1, W = a * s + 40, H = b * s + 40;
@@ -80,13 +47,8 @@ export function formes_etudiees(p: Params) {
       const v = base.variantes.find((x: any) => x.id === f.id), q = base.planches[`variante-${f.id}`];
       return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
     }
-    if (f.type === "rectangle") {
-      const g = base.geometrie, q = base.planches.rectangle;
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `4 murs · ${fr(g.aire_m2)} m² de murs · ${fr(g.aire_interieure_m2)} m² int. · étude initiale, réglable`, href: "configurateur.html" };
-    }
-    const { core } = coeur(p, f.n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
-    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int. · passage ${fz(Math.round(passage.cm))} cm · ${eur(m.budget.total_eur)}`, href: "docs/" + nom_page(f.n, version_principale(p)).replace(/\.md$/, ".html") };
-  });
+    return null;
+  }).filter(Boolean);
 }
 
 const el = (id: string) => document.getElementById(id);
@@ -100,25 +62,20 @@ const table = (id: string, tetes: string[], lignes: string[][], pliables: number
 const liste = (id: string, items: string[]) => html(id, items.map((s) => `<li>${s}</li>`).join(""));
 
 export function rend_abri(a: Abri) {
-  const { pp, core, v, m } = a;
+  const { p: pp, core, v, m } = a;
   if (!v || !m) { html("fiche", "<tr><td>Aucun abri retenu dans params.json.</td></tr>"); return; }
   const seuil = +(pp.reglementaire && pp.reglementaire.seuil_sans_formalite_m2) || 5, ep = +pp.panneau.epaisseur_mm / 10, mod = +pp.panneau.largeur_utile_cm;
   const passage = v.passages.find((q: any) => q.cote === "arriere_droite"), B = m.budget, n = m.faces.length, G = m.toit.gouttiere, po = v.porte;
   const gauche = Math.min(...v.polygone.map((z: number[]) => z[0])), avant = Math.min(...v.polygone.map((z: number[]) => z[1]));
   const droite_libre = core.geometrie.dalle.avant - Math.max(...v.polygone.map((z: number[]) => z[0]));
-  const sans_formalite = v.aire_m2 <= seuil, retenue = a.version === a.principale;
+  const sans_formalite = v.aire_m2 <= seuil;
   const nom_face = (f: any) => (f.cle === "A" ? "façade" : f.nom);
   const NOMBRES = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit"];
 
-  // menu des versions (seulement s'il y a un choix), en-tete
-  const menu = menu_versions(a.p);
-  html("versions", menu.map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
-  const bloc_versions = el("bloc-versions"); if (bloc_versions) (bloc_versions as HTMLElement).hidden = menu.length < 2;
+  // en-tete
   texte("titre", `Bureau de jardin à ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `Dossier de construction : plans cotés, matériaux à acheter, guide de montage${retenue ? "" : ` · étude, version ${a.version}`}`);
+  texte("sous-titre", `Dossier de construction : plans cotés, matériaux à acheter, guide de montage`);
   surligne_section();
-  html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
-  const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
 
   // resume : une suite de faits, chaque fait cle en surbrillance (span.fait)
   const fait = (x: string) => `<span class="fait">${x}</span>`;
@@ -172,7 +129,7 @@ export function rend_abri(a: Abri) {
     const cles = [...m.faces.map((f: any) => `facade-${f.cle}`), "toit", "rehausse"];
     html("plans-details", cles.map((k) => `<article data-cle="${k}">${planche(k, k.startsWith("facade-") ? (v.porte && m.faces[v.porte.cote].cle === k.slice(7) ? " (porte)" : k === "facade-A" ? " (jardin)" : "") : "")}</article>`).join(""));
     maitre_detail({
-      liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `abri-v${a.version}-plans`, ancre: el("plans-liste") || undefined,
+      liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `${MEMOIRE}-plans`, ancre: el("plans-liste") || undefined,
       entrees: () => cles.map((k): Entree => { const f = m.faces.find((x: any) => `facade-${x.cle}` === k); return { cle: k, titre: f ? `Face ${f.cle} · ${nom_face(f)}` : PL[k].nom, num: PL[k].lettre, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement }; }),
     });
   }
@@ -188,7 +145,7 @@ export function rend_abri(a: Abri) {
   html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap fixe"><table class="bom"><thead><tr><th>matériau</th><th class="num">qté</th><th class="num">p.u.</th><th class="num">montant</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? ` · <span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
   const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
   if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
-    liste: liste_materiaux, mode: mode_materiaux, panneaux: materiaux, memoire: `abri-v${a.version}-materiaux`, ancre: el("materiaux-section") || undefined,
+    liste: liste_materiaux, mode: mode_materiaux, panneaux: materiaux, memoire: `${MEMOIRE}-materiaux`, ancre: el("materiaux-section") || undefined,
     entrees: () => B.groupes.map((gr: any): Entree => {
       const lignes = B.lignes.filter((l: any) => l.groupe === gr.nom), incertain = lignes.some((l: any) => l.a_confirmer);
       return { cle: gr.nom, titre: gr.nom, badge: eur(gr.total_eur), etat: lignes.every((l: any) => l.optionnel) ? "optionnel" : incertain ? "a-confirmer" : "", panneau: materiaux.querySelector(`article[data-cle="${gr.nom}"]`) as HTMLElement };
@@ -196,7 +153,7 @@ export function rend_abri(a: Abri) {
   });
   html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}) · équipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` · hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
 
-  rend_guide(m.guide, a.version);
+  rend_guide(m.guide);
 
   // ouvertures et mobilier
   table("ouvertures-table", ["ouverture", "taille", "où", "détail"], [
@@ -221,38 +178,36 @@ export function rend_abri(a: Abri) {
   const bloc = (marque: string, titre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "");
   // questions ouvertes, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
-  const D = T && T.dossier;
-  html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites)
-    : T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
+  const D = T;
+  html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites) : "");
   // questions ouvertes (Q1, Q2…) et idees a explorer (I1, I2…) : deux listes cote a cote, meme repere partout ou l'une est citee
   const sq = el("questions"); if (sq) (sq as HTMLElement).hidden = !(D && (D.questions.length || D.idees.length));
   const numerotee = (marque: string, titre: string, lettre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "");
   html("questions-corps", D ? numerotee("❓", "Questions", "Q", D.questions) + numerotee("💡", "Idées à explorer", "I", D.idees) : "");
 
   // formes etudiees : une carte par forme de params.formes_etudiees
-  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  const formes = formes_etudiees(a.p, core), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` · <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
-    liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `abri-v${a.version}-formes`, ancre: el("alternatives-liste") || undefined,
+    liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `${MEMOIRE}-formes`, ancre: el("alternatives-liste") || undefined,
     entrees: () => formes.map((x, i): Entree => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) as HTMLElement })),
   });
 }
 
 // document complet (?doc=1, body.document) : la meme page, tout deroule, sans menu ni listes.
 // l'impression passe par ce mode ; le bouton en haut a droite bascule entre les deux
-export function mode_document(a: Abri, actif: boolean) {
+export function mode_document(actif: boolean) {
   document.body.classList.toggle("document", actif);
   const lien = el("lien-document") as HTMLAnchorElement | null;
   if (!lien) return;
-  const q = [a.version === a.principale ? "" : `v=${a.version}`, actif ? "" : "doc=1"].filter(Boolean).join("&");
-  lien.setAttribute("href", window.location.pathname + (q ? `?${q}` : ""));
+  lien.setAttribute("href", window.location.pathname + (actif ? "" : "?doc=1"));
   lien.textContent = actif ? "Vue interactive" : "Document complet";
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).
-// cases cochees gardees dans le navigateur, par version ; la liste montre l'avancement de chaque etape.
-function rend_guide(Gd: any, version: number) {
-  const cle_cases = `abri-v${version}-cases`;
+// cases cochees gardees dans le navigateur ; la liste montre l'avancement de chaque etape.
+function rend_guide(Gd: any) {
+  const cle_cases = `${MEMOIRE}-cases`;
   let faites: Record<string, boolean> = {};
   try { faites = JSON.parse(window.localStorage.getItem(cle_cases) || "{}"); } catch { faites = {}; }
   liste("guide-avant", Gd.avant.map(md_en_ligne));
@@ -265,7 +220,7 @@ function rend_guide(Gd: any, version: number) {
 
   const avancement = (i: number) => { const n = Gd.etapes[i].controler.length, f = Gd.etapes[i].controler.filter((_x: string, k: number) => faites[`${i}.${k}`]).length; return { n, f }; };
   const guide = maitre_detail({
-    liste: lst, mode, panneaux: conteneur, memoire: `abri-v${version}-etape`, ancre: el("montage") || undefined,
+    liste: lst, mode, panneaux: conteneur, memoire: `${MEMOIRE}-etape`, ancre: el("montage") || undefined,
     entrees: () => [
       { cle: "avant", titre: "Avant de commander", etat: "prealable", panneau: el("guide-avant-etape") as HTMLElement },
       { cle: "outillage", titre: "Outillage", etat: "prealable", panneau: el("guide-outillage-etape") as HTMLElement },

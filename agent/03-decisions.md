@@ -456,3 +456,22 @@ textes de `params.json` suivent la même règle, ce qui sert aussi la page d'acc
 `docs/etudes/…`). *Écarté :* supprimer ces pages (les comparaisons calculées gardent leur valeur) ;
 un dossier `archive/` (les versions restent recalculées, ce ne sont pas des fichiers figés).
 
+
+## D40 — Plus de versions : `params.json` décrit l'abri actuel, les études sont figées
+Demande de Rémi (2026-09-22) : la seule version qu'il connaît est la quatrième, et elle ne doit pas
+s'appeler « v4 » : c'est l'abri actuel. Avant, ses cotes n'existaient nulle part en clair : la base de
+`params.json` (la première forme), puis les surcouches `abri_v2`, `abri_v3`, `abri_v4` fusionnées en
+chaîne (`herite`, `params_v2`), pointées par `abri_principal`. *Maintenant :* la fusion est écrite une
+fois pour toutes dans `params.json`, et les textes de la page vont dans un bloc `abri` (`titre`,
+`dossier`). Le code perd le menu des versions, `?v=N`, le bandeau d'étude, le tableau comparé
+(`compare_md`) et les textes comparatifs (`atouts/pertes/notes` de chaque version) ; `abri.md` finit sur
+le `dossier`, comme la page. *Les études 1 à 3* ne peuvent plus se recalculer : leurs pages sont
+**figées** dans `etudes/` (bandeau « archive figée », plans copiés sous `site/assets/etudes/vN/`), et
+leurs paramètres fusionnés deviennent des **fixtures de test** (`tests/fixtures/etude-v{1,2,3}.json`) :
+le solveur d'intérieur visé, les 4 murs à angle aigu et le toit vers la droite restent couverts.
+*Vérification :* la sortie complète de l'abri (24 plans, modèle, scène 3D, planches) est identique
+octet pour octet avant et après la fusion. *Garde :* `tests/abri_dom.mjs` refuse tout bloc `abri_vN` ou
+`abri_principal`, `tests/modele.mjs` tout numéro de version dans `abri.md`. La clé du navigateur reste
+`abri-v4-…` pour ne pas perdre les cases déjà cochées. *Écarté :* supprimer les études (elles gardent
+leurs comparaisons, et l'archive était demandée) ; les régénérer depuis les fixtures (des données de
+test ne pilotent pas des documents publiés). *Remplace* D33 (pointeur `abri_principal`) et D35 (menu).

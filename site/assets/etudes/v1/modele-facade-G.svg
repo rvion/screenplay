@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 573 506" font-family="system-ui,sans-serif" font-size="13">
+<rect width="573" height="506" fill="#fbfbf8"/>
+<polygon points="90.0,416.2 215.0,416.2 215.0,147.5 90.0,147.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="152.5" y="170.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G1</text>
+<polygon points="215.0,416.2 340.0,416.2 340.0,147.5 215.0,147.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="277.5" y="170.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G2</text>
+<polygon points="340.0,416.2 465.0,416.2 465.0,147.5 340.0,147.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="402.5" y="170.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G3</text>
+<polygon points="465.0,416.2 482.6,416.2 482.6,147.5 465.0,147.5" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
+<text x="473.8" y="170.0" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">G4</text>
+<text x="473.8" y="184.0" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">14.1</text>
+<polygon points="90.0,147.5 482.6,147.5 482.6,110.0 90.0,147.5" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="286.3" y="138.0" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R4 · rehausse 0 → 30</text>
+<line x1="90.0" y1="420.2" x2="90.0" y2="440.2" stroke="#aaa" stroke-width="0.7"/>
+<line x1="482.6" y1="420.2" x2="482.6" y2="440.2" stroke="#aaa" stroke-width="0.7"/>
+<line x1="90.0" y1="436.2" x2="482.6" y2="436.2" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="87.0" y1="439.2" x2="93.0" y2="433.2" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="479.6" y1="439.2" x2="485.6" y2="433.2" stroke="#2b5d8a" stroke-width="1"/>
+<text x="286.3" y="444.2" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 286.3 444.2)">314.1 cm</text>
+<text x="82.0" y="151.5" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="bold">215</text>
+<text x="490.6" y="114.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="bold">245</text>
+<text x="82.0" y="163.5" text-anchor="end" fill="#888" font-size="10" font-weight="normal">215</text>
+<text x="286.3" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face G · gauche</text>
+<text x="286.3" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">vue de l'extérieur · 4 panneaux de 215 · hauteurs finies aux deux bouts</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 569 807" font-family="system-ui,sans-serif" font-size="13">
+<rect width="569" height="807" fill="#fbfbf8"/>
+<polygon points="110.0,697.4 270.0,697.4 270.0,259.4 110.0,160.0" fill="#f3f0e8" stroke="#7a6f5a" stroke-width="1.5"/>
+<text x="190.0" y="422.7" text-anchor="middle" fill="#5a4f3a" font-size="16" font-weight="bold">T1</text>
+<text x="190.0" y="440.7" text-anchor="middle" fill="#5a4f3a" font-size="11" font-weight="normal">100 × 337.4</text>
+<line x1="150.0" y1="697.4" x2="150.0" y2="184.3" stroke="#cfc6b3" stroke-width="1"/>
+<line x1="190.0" y1="697.4" x2="190.0" y2="209.2" stroke="#cfc6b3" stroke-width="1"/>
+<line x1="230.0" y1="697.4" x2="230.0" y2="234.0" stroke="#cfc6b3" stroke-width="1"/>
+<polygon points="270.0,697.4 430.0,697.4 430.0,358.7 270.0,259.4" fill="#f3f0e8" stroke="#7a6f5a" stroke-width="1.5"/>
+<text x="350.0" y="472.4" text-anchor="middle" fill="#5a4f3a" font-size="16" font-weight="bold">T2</text>
+<text x="350.0" y="490.4" text-anchor="middle" fill="#5a4f3a" font-size="11" font-weight="normal">100 × 275.1</text>
+<line x1="310.0" y1="697.4" x2="310.0" y2="283.7" stroke="#cfc6b3" stroke-width="1"/>
+<line x1="350.0" y1="697.4" x2="350.0" y2="308.5" stroke="#cfc6b3" stroke-width="1"/>
+<line x1="390.0" y1="697.4" x2="390.0" y2="333.4" stroke="#cfc6b3" stroke-width="1"/>
+<polygon points="430.0,697.4 458.8,697.4 458.8,376.5 430.0,358.7" fill="#f3f0e8" stroke="#7a6f5a" stroke-width="1.5"/>
+<text x="444.4" y="522.1" text-anchor="middle" fill="#5a4f3a" font-size="16" font-weight="bold">T3</text>
+<text x="444.4" y="540.1" text-anchor="middle" fill="#5a4f3a" font-size="11" font-weight="normal">18 × 212.7</text>
+<polygon points="110.0,681.4 458.8,681.4 458.8,395.4 110.0,178.9" fill="none" stroke="#2b5d8a" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="458.8" y1="376.5" x2="110.0" y2="160.0" stroke="#1b6fa8" stroke-width="6"/>
+<circle cx="110.0" cy="160.0" r="7" fill="#1b6fa8"/>
+<text x="122.0" y="150.0" text-anchor="start" fill="#1b6fa8" font-size="11" font-weight="bold">descente</text>
+<text x="294.4" y="256.2" text-anchor="start" fill="#1b6fa8" font-size="11" font-weight="bold">gouttière 256.6</text>
+<line x1="270.0" y1="633.4" x2="270.0" y2="489.4" stroke="#c0392b" stroke-width="2.5"/>
+<polygon points="270.0,487.4 263.0,501.4 277.0,501.4" fill="#c0392b"/>
+<text x="260.0" y="561.4" text-anchor="end" fill="#c0392b" font-size="12" font-weight="bold">pente 9,6 % (5,46°)</text>
+<line x1="110.0" y1="701.4" x2="110.0" y2="727.4" stroke="#aaa" stroke-width="0.7"/>
+<line x1="458.8" y1="701.4" x2="458.8" y2="727.4" stroke="#aaa" stroke-width="0.7"/>
+<line x1="110.0" y1="723.4" x2="458.8" y2="723.4" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="107.0" y1="726.4" x2="113.0" y2="720.4" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="455.8" y1="726.4" x2="461.8" y2="720.4" stroke="#7a6f5a" stroke-width="1"/>
+<text x="284.4" y="731.4" text-anchor="middle" dominant-baseline="middle" fill="#7a6f5a" font-size="11" font-weight="bold" transform="rotate(0.0 284.4 731.4)">218</text>
+<line x1="462.8" y1="697.4" x2="488.8" y2="697.4" stroke="#aaa" stroke-width="0.7"/>
+<line x1="462.8" y1="376.5" x2="488.8" y2="376.5" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.8" y1="697.4" x2="484.8" y2="376.5" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="487.8" y1="700.4" x2="481.8" y2="694.4" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="487.8" y1="379.5" x2="481.8" y2="373.5" stroke="#7a6f5a" stroke-width="1"/>
+<text x="492.8" y="537.0" text-anchor="middle" dominant-baseline="middle" fill="#7a6f5a" font-size="11" font-weight="bold" transform="rotate(-90.0 492.8 537.0)">200.6</text>
+<line x1="460.9" y1="373.1" x2="474.6" y2="351.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="112.1" y1="156.6" x2="125.8" y2="134.5" stroke="#aaa" stroke-width="0.7"/>
+<line x1="472.5" y1="354.4" x2="123.7" y2="137.9" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="476.6" y1="353.4" x2="468.4" y2="355.4" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="127.8" y1="136.9" x2="119.6" y2="138.9" stroke="#7a6f5a" stroke-width="1"/>
+<text x="302.3" y="239.4" text-anchor="middle" dominant-baseline="middle" fill="#7a6f5a" font-size="11" font-weight="bold" transform="rotate(31.8 302.3 239.4)">256.6</text>
+<line x1="106.0" y1="160.0" x2="80.0" y2="160.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="106.0" y1="697.4" x2="80.0" y2="697.4" stroke="#aaa" stroke-width="0.7"/>
+<line x1="84.0" y1="160.0" x2="84.0" y2="697.4" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="81.0" y1="157.0" x2="87.0" y2="163.0" stroke="#7a6f5a" stroke-width="1"/>
+<line x1="81.0" y1="694.4" x2="87.0" y2="700.4" stroke="#7a6f5a" stroke-width="1"/>
+<text x="76.0" y="428.7" text-anchor="middle" dominant-baseline="middle" fill="#7a6f5a" font-size="11" font-weight="bold" transform="rotate(90.0 76.0 428.7)">335.9</text>
+<text x="284.4" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face T · Toiture · 3 panneaux · 5.85 m² couverts</text>
+<text x="284.4" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">panneaux dans le sens de la pente (longueur = rampant) · murs en pointillé · débords avant et fond</text>
+<text x="284.4" y="795.4" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (jardin)</text>
+</svg>

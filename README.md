@@ -22,13 +22,13 @@ propriété et garde un passage vers l'arrière. Il reste au seuil des 5 m² de 
 formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
 vers le fond : la gouttière court derrière l'abri, le long du mur du fond et du pan à 45°.
 
-![implantation de l'abri retenu sur la dalle](site/assets/modele-v4-implantation.svg)
+![implantation de l'abri retenu sur la dalle](site/assets/modele-implantation.svg)
 
 - **Le document complet** (plans, débit, budget, raisons), généré : **[abri.md](abri.md)**
 - **La page d'accueil du site** montre le même abri : modèle 3D, plans, à commander, montage pas à pas
-- Les autres versions étudiées, archivées dans [`etudes/`](etudes/) : [abri-v1.md](etudes/abri-v1.md), [abri-v2.md](etudes/abri-v2.md), [abri-v3.md](etudes/abri-v3.md) (le même abri, toit vers le jardin) ;
+- Les formes qui l'ont précédé, archivées (figées) dans [`etudes/`](etudes/) : [abri-v1.md](etudes/abri-v1.md), [abri-v2.md](etudes/abri-v2.md), [abri-v3.md](etudes/abri-v3.md) (le même abri, toit vers le jardin) ;
   toutes les formes envisagées : [variantes.md](etudes/variantes.md)
-- Pour retenir une autre version : changer `abri_principal` dans [`params.json`](params.json)
+- Toutes ses cotes vivent dans [`params.json`](params.json) : les changer, puis `npm run emit`
 
 Aucun chiffre n'est recopié ici : ils vivent dans `abri.md`, recalculé à chaque `npm run emit`.
 

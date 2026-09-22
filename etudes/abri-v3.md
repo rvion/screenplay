@@ -1,8 +1,8 @@
 # Abri de jardin : le bureau à cinq murs, version 3 (fond d'équerre et pan à 45°)
 
-> Généré par `npm run emit` depuis `params.json` (bloc `abri_v3`) et `site/src/compute.ts` : ne pas éditer à la main. Version de départ : [abri-v2.md](abri-v2.md). Autres formes étudiées : [variantes.md](variantes.md).
+> **Archive figée le 2026-09-22.** Cette étude n'est plus recalculée : ses paramètres ne sont plus dans `params.json`, ses chiffres et ses plans datent de ce jour. L'abri retenu est dans [abri.md](../abri.md). Les autres formes étudiées : [variantes.md](variantes.md).
 
-![implantation sur la dalle](../site/assets/modele-v3-implantation.svg)
+![implantation sur la dalle](../site/assets/etudes/v3/modele-v3-implantation.svg)
 
 ## Ce qui change par rapport à la version 2
 
@@ -84,39 +84,39 @@
 
 ### Implantation sur la dalle
 
-![Implantation sur la dalle](../site/assets/modele-v3-implantation.svg)
+![Implantation sur la dalle](../site/assets/etudes/v3/modele-v3-implantation.svg)
 
 ### Plan de sol
 
-![Plan de sol](../site/assets/modele-v3-sol.svg)
+![Plan de sol](../site/assets/etudes/v3/modele-v3-sol.svg)
 
 ### Toiture
 
-![Toiture](../site/assets/modele-v3-toit.svg)
+![Toiture](../site/assets/etudes/v3/modele-v3-toit.svg)
 
 ### Face A · façade (jardin)
 
-![Face A · façade (jardin)](../site/assets/modele-v3-facade-A.svg)
+![Face A · façade (jardin)](../site/assets/etudes/v3/modele-v3-facade-A.svg)
 
 ### Face D · droite (porte)
 
-![Face D · droite (porte)](../site/assets/modele-v3-facade-D.svg)
+![Face D · droite (porte)](../site/assets/etudes/v3/modele-v3-facade-D.svg)
 
 ### Face C · fond en biais
 
-![Face C · fond en biais](../site/assets/modele-v3-facade-C.svg)
+![Face C · fond en biais](../site/assets/etudes/v3/modele-v3-facade-C.svg)
 
 ### Face B · fond
 
-![Face B · fond](../site/assets/modele-v3-facade-B.svg)
+![Face B · fond](../site/assets/etudes/v3/modele-v3-facade-B.svg)
 
 ### Face G · gauche
 
-![Face G · gauche](../site/assets/modele-v3-facade-G.svg)
+![Face G · gauche](../site/assets/etudes/v3/modele-v3-facade-G.svg)
 
 ### Rehausse bois : débit des madriers
 
-![Rehausse bois : débit des madriers](../site/assets/modele-v3-rehausse.svg)
+![Rehausse bois : débit des madriers](../site/assets/etudes/v3/modele-v3-rehausse.svg)
 
 ## Dimensions
 

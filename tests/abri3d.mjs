@@ -20,9 +20,11 @@ const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
 const site = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")), html = readFileSync(join(ROOT, "site/index.html"), "utf8");
 ok(html.includes(`three@${site.devDependencies.three.replace(/^[^0-9]*/, "")}/`), "meme version de three dans le test et sur le site (" + site.devDependencies.three + ")");
 
-for (const version of [0, 1, 2, 3, 4]) {
-console.log(version ? `\n— version ${version} —` : "\n— version retenue —");
-const a = calcule_abri(base, version), d = a.core.modele3d, m = a.m, v = a.v;
+// l'abri actuel, puis les etudes figees (angles aigus, toit vers la droite) : la scene tient pour toute forme
+const fixture = (n) => JSON.parse(readFileSync(join(ROOT, `tests/fixtures/etude-v${n}.json`), "utf8"));
+for (const [nom, p] of [["abri actuel", base], ["etude v1", fixture(1)], ["etude v2", fixture(2)], ["etude v3", fixture(3)]]) {
+console.log(`\n— ${nom} —`);
+const a = calcule_abri(p), d = a.core.modele3d, m = a.m, v = a.v;
 ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.murs.length + ")");
 
 const racine = new THREE.Group();
@@ -105,7 +107,7 @@ d.murs.forEach((f, i) => {
 // enveloppe des murs = emprise de l'abri, a l'epaisseur pres
 const tout = new THREE.Box3(); murs.forEach((o) => tout.union(boite(o)));
 const px = v.polygone.map((z) => z[0]), py = v.polygone.map((z) => z[1]);
-// coupes d'onglet : aucun mur ne depasse du trace de l'abri, meme a un angle aigu (versions 1 et 2)
+// coupes d'onglet : aucun mur ne depasse du trace de l'abri, meme a un angle aigu (etudes v1 et v2)
 ok(murs.every((o) => { const b = boite(o); return b.min.x >= (Math.min(...px) - cx) / 100 - 1e-4 && b.max.x <= (Math.max(...px) - cx) / 100 + 1e-4 && -b.max.z >= (Math.min(...py) - cy) / 100 - 1e-4 && -b.min.z <= (Math.max(...py) - cy) / 100 + 1e-4; }), "aucun mur ne traverse son voisin (angles " + m.angles_deg.join(" · ") + ")");
 ok(near(tout.max.x - tout.min.x, (Math.max(...px) - Math.min(...px)) / 100, 0.001) && near(tout.max.z - tout.min.z, (Math.max(...py) - Math.min(...py)) / 100, 0.001), `emprise 3D des murs = ${((tout.max.x - tout.min.x)).toFixed(2)} × ${((tout.max.z - tout.min.z)).toFixed(2)} m, celle du plan`);
 

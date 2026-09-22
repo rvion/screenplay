@@ -99,20 +99,20 @@
     "dalle": {
       "zone_utile": {
         "bandes_cm": [
-          5,
+          10,
           5,
           45,
           12,
-          12
+          10
         ],
         "polygone": [
           [
-            12,
-            5
+            10,
+            10
           ],
           [
             257,
-            5
+            10
           ],
           [
             257,
@@ -123,16 +123,16 @@
             358
           ],
           [
-            12,
-            319.1
+            10,
+            317.1
           ]
         ],
         "cotes_cm": [
-          245,
-          161.3,
+          247,
+          156.3,
           282.1,
-          54.4,
-          314.1
+          57.3,
+          307.1
         ],
         "angles_deg": [
           90,
@@ -141,8 +141,8 @@
           91.6,
           135.6
         ],
-        "aire_m2": 6.59,
-        "bandes_m2": 1.92
+        "aire_m2": 6.53,
+        "bandes_m2": 1.98
       },
       "avant": 262,
       "droite": 223,
@@ -425,7 +425,7 @@
         75,
         225
       ],
-      "longueur_stock_cm": 480,
+      "longueur_stock_cm": 450,
       "ml": 4.4,
       "nb_madriers": 1
     },
@@ -462,7 +462,7 @@
     },
     {
       "poste": "Rehausse bois : madrier 75x225 mm traite classe 4",
-      "qte": "1 x 4.80 m (4.4 ml : R1 = 200 cm droit, R2+R3 = 240 cm coupe en diagonale)",
+      "qte": "1 x 4.50 m (4.4 ml : R1 = 200 cm droit, R2+R3 = 240 cm coupe en diagonale)",
       "note": "Pose sur le chant des panneaux (bande butyle), visse dans les panneaux ; sert de lisse haute qui lie murs et toit. Larmier par-dessus cote exterieur."
     },
     {
@@ -1018,6 +1018,7 @@
     "modele-rehausse.svg",
     "modele-facade-A.svg",
     "modele-facade-D.svg",
+    "modele-facade-C.svg",
     "modele-facade-B.svg",
     "modele-facade-G.svg",
     "facade-A.svg",
