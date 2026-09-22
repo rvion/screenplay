@@ -43,6 +43,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Clôture translucide par défaut
 - [x] Porte : béquille et cylindre de serrure sur le battant
 - [x] Section « Questions et axes d'amélioration » sous « Pourquoi cette forme »
+- [x] Vignettes rendues au chargement (le rendu différé manquait du bundle)
+- [x] Résumé : légende « marge avant dalle », dessin plus grand et lisible
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

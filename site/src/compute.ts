@@ -1864,7 +1864,8 @@ export function resume_svg(g: any, v: any, m: any): string {
   const d = g.dalle, [ox, oy] = d.decalage_cm, dalle: Pt[] = d.polygone.map(([x, y]: Pt) => [x + ox, y + oy]), q: Pt[] = v.polygone;
   const xs = dalle.map((z) => z[0]), ys = dalle.map((z) => z[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
-  const scale = 0.7, padx = 40, pady = 24, W = (maxx - minx) * scale + 2 * padx, H = (maxy - miny) * scale + 2 * pady;
+  // petite echelle et marges serrees : affiche en pleine largeur, le texte en ressort plus gros
+  const scale = 0.5, padx = 24, pady = 14, W = (maxx - minx) * scale + 2 * padx, H = (maxy - miny) * scale + 2 * pady;
   const P = (z: Pt) => [padx + (z[0] - minx) * scale, pady + (maxy - z[1]) * scale];
   const qx = q.map((z) => z[0]), qy = q.map((z) => z[1]), gx = Math.min(...qx), dx = Math.max(...qx), av = Math.min(...qy), ymid = (av + Math.max(...qy)) / 2;
   const mur = new Set(d.murs.map((w: any) => w.cote)), grillage = new Set(d.murs.filter((w: any) => w.type === "grillage").map((w: any) => w.cote));
@@ -1879,18 +1880,20 @@ export function resume_svg(g: any, v: any, m: any): string {
   // murs : lettre et longueur a l'interieur, le long du mur ; angle a chaque coin, sur la bissectrice interieure
   m.faces.forEach((f: any, i: number) => {
     const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / L, ny = -(b[0] - a[0]) / L;
-    svg += text((a[0] + b[0]) / 2 + nx * 13, (a[1] + b[1]) / 2 + ny * 13 + 4, `${f.cle} ${fr1(f.longueur_cm)}`, "middle", "#1f5a8c", 11, "bold");
+    // mur vertical : texte ancre au bord, decale de 6 ; mur horizontal ou en biais : centre, decale de 15
+    const vertical = Math.abs(nx) > 0.6, ancre = vertical ? (nx > 0 ? "start" : "end") : "middle", off = vertical ? 6 : 18;
+    svg += text((a[0] + b[0]) / 2 + nx * off, (a[1] + b[1]) / 2 + ny * off + 4, `${f.cle} ${fr1(f.longueur_cm)}`, ancre, "#1f5a8c", 11, "bold");
     const p0 = P(q[i]), prev = P(q[(i - 1 + q.length) % q.length]), next = P(q[(i + 1) % q.length]);
     const bx = (prev[0] - p0[0]) + (next[0] - p0[0]), by = (prev[1] - p0[1]) + (next[1] - p0[1]), bl = Math.hypot(bx, by) || 1;
-    svg += text(p0[0] + bx / bl * 24, p0[1] + by / bl * 24 + 3, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 9);
+    svg += text(p0[0] + bx / bl * 28, p0[1] + by / bl * 28 + 3, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 8.5);
   });
   // marges : trait entre l'abri et le bord, libelle hors de la dalle
   const marge = (a: Pt, b: Pt, label: string, ou: "gauche" | "bas" | "droite", col = "#b86e1f") => {
     const pa = P(a), pb = P(b);
     svg += line(pa[0], pa[1], pb[0], pb[1], col, 1.4);
-    if (ou === "gauche") svg += text(pa[0] - 5, pa[1] + 4, label, "end", col, 11, "bold");
-    else if (ou === "bas") svg += text(pa[0], pa[1] + 14, label, "middle", col, 11, "bold");
-    else svg += text(pb[0] + 5, pb[1] + 4, label, "start", col, 11, "bold");
+    if (ou === "gauche") svg += text(pa[0] - 4, pa[1] + 4, label, "end", col, 10.5, "bold");
+    else if (ou === "bas") svg += text(pa[0], pa[1] + 12, label, "middle", col, 10.5, "bold");
+    else svg += text(pb[0] + 4, pb[1] + 4, label, "start", col, 10.5, "bold");
   };
   // les traits de marge passent pres de la facade, loin des libelles des murs G et D (au milieu de leur mur)
   const yb = av + 40;
@@ -1902,7 +1905,7 @@ export function resume_svg(g: any, v: any, m: any): string {
     const [s0, s1] = pas.segment, pa = P(s0), pb = P(s1), L = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
     svg += line(pa[0], pa[1], pb[0], pb[1], "#2a8a4a", 1.6);
     // le libelle du passage est au-dela du mur, hors de la dalle, dans le prolongement du trait
-    svg += text(pb[0] + (pb[0] - pa[0]) / L * 22 + 4, pb[1] + (pb[1] - pa[1]) / L * 22 + 2, `${fr1(pas.cm)}`, "middle", "#2a8a4a", 11, "bold");
+    svg += text(pb[0] + (pb[0] - pa[0]) / L * 18 + 3, pb[1] + (pb[1] - pa[1]) / L * 18 + 2, `${fr1(pas.cm)}`, "middle", "#2a8a4a", 10.5, "bold");
   }
   return svg + "</svg>\n";
 }

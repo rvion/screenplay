@@ -75,10 +75,10 @@ td.regle { color: var(--muted); font-size: .78rem; }
 .note-prix { color: #7a8591; }
 a.source { font-size: .72rem; white-space: nowrap; }
 p.intro { margin: 0 0 .6rem; font-size: .92rem; line-height: 1.55; }
-.resume-figs { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: .6rem; align-items: center; background: var(--creux); border-radius: 6px; padding: .5rem .6rem; }
+.resume-figs { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: .5rem; align-items: center; background: var(--creux); border-radius: 6px; padding: .4rem .5rem; }
 .resume-figs figure { margin: 0; min-width: 0; }
-.resume-figs svg { display: block; width: 100%; height: auto; max-height: 420px; }
-ul.legende { list-style: none; margin: 0; padding: 0; font-size: .74rem; color: var(--muted); display: grid; gap: .3rem; }
+.resume-figs svg { display: block; width: 100%; height: auto; max-height: 460px; }
+ul.legende { list-style: none; margin: 0; padding: 0; font-size: .7rem; color: var(--muted); display: grid; gap: .28rem; }
 ul.legende li { display: flex; align-items: center; gap: .4rem; white-space: nowrap; }
 ul.legende i { flex: none; width: 18px; height: 10px; display: inline-block; }
 ul.legende i.trait { border-top: 2px solid var(--c); height: 0; }
