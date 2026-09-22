@@ -7,20 +7,20 @@
 ## En bref
 
 - **Dalle existante** : 8,51 m², côtés 262 / 223 / 258 / 104 / 324 cm, murs de propriété à gauche et au fond.
-- **4,44 m² intérieur** (4,96 m² de murs), 50,3 cm de passage derrière.
-- **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 99, fond 138, gauche 250 cm.
+- **4,44 m² intérieur** (4,95 m² de murs), 51,3 cm de passage derrière.
+- **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 100, fond 136,6, gauche 250 cm.
 - **Toit** mono-pente vers le fond, 5,14° : 237,5 cm devant, 215 cm au plus bas.
 - **Porte pleine** 73 × 204 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
 - **Matériaux** : 2 850 € TTC (2 423 € à 3 277 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
-- **Formalités** : emprise au sol 4,96 m², surface de plancher 4,44 m² ⇒ aucune formalité.
+- **Formalités** : emprise au sol 4,95 m², surface de plancher 4,44 m² ⇒ aucune formalité.
 
 ## À trancher
 
 - **Toit** : vers l'arrière, chute 22,5 cm (5,14°) = choix par défaut. Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
-- **Formalités** : emprise au sol **4,96 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,44 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
+- **Formalités** : emprise au sol **4,95 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,44 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
 - **Portée du toit** (~2,5 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
-- **Angles non droits** (135°, 135°) : profils d'angle pliés sur mesure.
+- **Angles non droits** (134,4°, 135,6°) : profils d'angle pliés sur mesure.
 
 ## Plans
 
@@ -66,11 +66,11 @@
 |---|---|---|---|---|
 | A · avant | 208 cm | 196 cm | 237,5 → 237,5 cm | 90° |
 | D · droite | 180 cm | 171,5 cm | 237,5 → 221,3 cm | 90° |
-| C · fond en biais | 99 cm | 94 cm | 221,3 → 215 cm | 135° |
-| B · fond | 138 cm | 129,5 cm | 215 → 215 cm | 135° |
+| C · fond en biais | 100 cm | 95 cm | 221,3 → 215 cm | 134,4° |
+| B · fond | 136,6 cm | 128,1 cm | 215 → 215 cm | 135,6° |
 | G · gauche | 250 cm | 238 cm | 215 → 237,5 cm | 90° |
 
-Murs 4,96 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,78 m² · hauteur sous plafond 2,28 m devant, 2,05 m au plus bas (plancher isolé déduit).
+Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,77 m² · hauteur sous plafond 2,28 m devant, 2,05 m au plus bas (plancher isolé déduit).
 
 ## Débit
 
@@ -83,9 +83,9 @@ Murs 4,96 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors b
 | A3 | 8 cm | chute d'un autre panneau | – |
 | D1 | 80 cm | panneau recoupé | – |
 | D2 | 100 cm | panneau entier | porte 83 × 209 |
-| C1 | 99 cm | panneau recoupé | – |
+| C1 | 100 cm | panneau entier | – |
 | B1 | 100 cm | panneau entier | – |
-| B2 | 38 cm | chute d'un autre panneau | – |
+| B2 | 36,6 cm | chute d'un autre panneau | – |
 | G1 | 100 cm | panneau entier | – |
 | G2 | 100 cm | panneau entier | – |
 | G3 | 50 cm | panneau recoupé | – |
@@ -98,9 +98,9 @@ Murs 4,96 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors b
 |---|---|---|---|
 | T1 | 100 cm | 261,1 cm | entier, coupes droites |
 | T2 | 100 cm | 261,1 cm | bout arrière en biais |
-| T3 | 8 cm | 200,9 cm | refendu en largeur, bout arrière en biais |
+| T3 | 8 cm | 200,7 cm | refendu en largeur, bout arrière en biais |
 
-Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surface couverte 5,18 m².
+Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surface couverte 5,17 m².
 
 ### Rehausse bois (madrier 75 × 225, stock 450 cm)
 
@@ -108,15 +108,15 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|
 | R1 | A | 208 cm | 22,5 → 22,5 cm |
 | R2 | D | 180 cm | 22,5 → 6,3 cm |
-| R3 | C | 99 cm | 6,3 → 0 cm |
+| R3 | C | 100 cm | 6,3 → 0 cm |
 | R4 | G | 250 cm | 0 → 22,5 cm |
 
-**2 madriers** : n°1 = R4 + R2 puis R3 (chute 101 cm) ; n°2 = R1 (chute 242 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
+**2 madriers** : n°1 = R4 + R2 puis R3 (chute 100 cm) ; n°2 = R1 (chute 242 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
 
 ### Gouttière et profils
 
-- Gouttière 236,1 cm derrière l'abri, en 2 tronçon(s) (C 96,1 + B 140,1) : les nervures du toit mènent toute l'eau aux bouts arrière des panneaux. Descente au coin arrière gauche.
-- 5 angles : G/A 90°, A/D 90°, D/C 135°, C/B 135°, B/G 90° ; hauteur de chaque angle = hauteur finie du coin.
+- Gouttière 235,8 cm derrière l'abri, en 2 tronçon(s) (C 97,1 + B 138,6) : les nervures du toit mènent toute l'eau aux bouts arrière des panneaux. Descente au coin arrière gauche.
+- 5 angles : G/A 90°, A/D 90°, D/C 134,4°, C/B 135,6°, B/G 90° ; hauteur de chaque angle = hauteur finie du coin.
 - Rail de pied sur tout le périmètre (8,75 m), bavettes de rive sur les côtés D et G.
 
 ## Ouvertures
@@ -141,7 +141,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 19,35 m² | 44 € | 851 € | 9 panneaux entiers à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
-| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 7,23 m² | 45 € | 325 € | 3 panneaux coupés à longueur : T1 261,1 cm, T2 261,1 cm, T3 200,9 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
+| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 7,23 m² | 45 € | 325 € | 3 panneaux coupés à longueur : T1 261,1 cm, T2 261,1 cm, T3 200,7 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
 
 ### Bois · 157 €
 
@@ -156,7 +156,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Profil de départ en U (rail de pied) *(prix à confirmer)* | 7,92 ml | 12 € | 95 € | périmètre des murs moins le cadre de la porte. 4,86 EUR HT la longueur de 0,5 m ([source](https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs)) |
 | Profils d'angle à 90°, extérieur + intérieur | 13,8 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
-| Profils d'angle pliés sur mesure (135°), extérieur + intérieur *(prix à confirmer)* | 8,73 ml | 15 € | 131 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
+| Profils d'angle pliés sur mesure (134,4°, 135,6°), extérieur + intérieur *(prix à confirmer)* | 8,73 ml | 15 € | 131 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
 | Bandes de rive de toit | 4,52 ml | 14 € | 63 € | bords du toit parallèles à la pente. 12,90 EUR/m en longueurs de 2,1 m ([source](https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html)) |
 | Bavette de tête (bord haut du toit) | 2,08 ml | 14 € | 29 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
 | Closoirs mousse sous les nervures *(prix à confirmer)* | 4,44 ml | 4 € | 16 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
@@ -191,7 +191,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Gouttière demi-ronde | 2,36 ml | 5 € | 11 € | 2 tronçon(s) : C 96,1 cm + B 140,1 cm. PVC demi-ronde de 25 : 9,40 EUR les 2 m (zinc : 22,50 EUR les 2 m) ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/gros-oeuvre-et-evacuation-des-eaux/evacuation-des-eaux-de-pluie/gouttiere-pvc)) |
+| Gouttière demi-ronde | 2,36 ml | 5 € | 11 € | 2 tronçon(s) : C 97,1 cm + B 138,6 cm. PVC demi-ronde de 25 : 9,40 EUR les 2 m (zinc : 22,50 EUR les 2 m) ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/gros-oeuvre-et-evacuation-des-eaux/evacuation-des-eaux-de-pluie/gouttiere-pvc)) |
 | Crochets de gouttière | 6 u | 2 € | 12 € | un tous les 50 cm ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
 | Naissance, fonds, angle, coudes et colliers (lot) | 1 lot | 45 € | 45 € | un angle, une naissance, deux fonds, deux coudes, deux colliers. naissance 14 + 2 fonds 6 + jonction ou angle 5 + 2 coudes 11 + 3 colliers 8 ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
 | Tuyau de descente | 2,15 ml | 5 € | 11 € | hauteur du mur côté égout. tube de 80 : 10 EUR les 2 m ([source](https://www.brico-toiture.com/175-gouttiere-pvc-25-80-gris)) |
@@ -236,7 +236,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
 - Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
 - Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,5 m ici ; et la **pente minimale** (9 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
-- Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.
+- Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 134,4° et 135,6° **pliés sur mesure**, en même temps que les panneaux.
 - Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
 
@@ -254,13 +254,13 @@ Tout le reste s'aligne sur ce tracé : dix minutes de plus ici évitent un mur q
 **Outils :** cordeau, mètre, grande équerre
 
 1. Tracer la façade à 10 cm du bord avant de la dalle et le mur gauche à 10 cm du bord gauche.
-2. Reporter les 5 murs dans l'ordre : A 208 cm, D 180 cm, C 99 cm, B 138 cm, G 250 cm.
-3. Angles, dans le même ordre : 90°, 90°, 135°, 135°, 90°.
+2. Reporter les 5 murs dans l'ordre : A 208 cm, D 180 cm, C 100 cm, B 136,6 cm, G 250 cm.
+3. Angles, dans le même ordre : 90°, 90°, 134,4°, 135,6°, 90°.
 
 **À contrôler avant de continuer :**
 
 - [ ] Diagonales du tracé : coin avant gauche → haut du mur droit = 275,1 cm ; coin avant droit → coin arrière gauche = 325,2 cm.
-- [ ] Passage derrière l'abri : 50,3 cm au plus étroit, à mesurer une fois le tracé fait.
+- [ ] Passage derrière l'abri : 51,3 cm au plus étroit, à mesurer une fois le tracé fait.
 
 ### Étape 2 · Poser le rail de pied
 
@@ -284,10 +284,10 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 
 **Outils :** scie circulaire lame métal, rail de guidage, scie sauteuse
 
-1. Bandes de mur : A3 8 cm, D1 80 cm, C1 99 cm, B2 38 cm, G3 50 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
+1. Bandes de mur : A3 8 cm, D1 80 cm, B2 36,6 cm, G3 50 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
 2. Fenêtres : 80 × 75 cm, bas à 115 cm ; 80 × 75 cm, bas à 115 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
 3. Toit : T2, T3 à couper en biais d'après le plan de toiture.
-4. Rehausse : R1 (mur A, 208 cm, 22,5 → 22,5 cm), R2 (mur D, 180 cm, 22,5 → 6,3 cm), R3 (mur C, 99 cm, 6,3 → 0 cm), R4 (mur G, 250 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
+4. Rehausse : R1 (mur A, 208 cm, 22,5 → 22,5 cm), R2 (mur D, 180 cm, 22,5 → 6,3 cm), R3 (mur C, 100 cm, 6,3 → 0 cm), R4 (mur G, 250 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
 
 **À contrôler avant de continuer :**
 
@@ -316,8 +316,8 @@ On tourne dans un seul sens pour que chaque panneau s'emboîte dans le précéde
 
 **Outils :** visseuse, niveau, étais
 
-1. Mur B (fond, 138 cm) : B1 (100), B2 (38).
-2. Mur C (fond en biais, 99 cm) : C1 (99).
+1. Mur B (fond, 136,6 cm) : B1 (100), B2 (36,6).
+2. Mur C (fond en biais, 100 cm) : C1 (100).
 3. Mur D (droite, 180 cm) : D1 (80), D2 (100), en laissant le vide du cadre de porte.
 4. Mur A (façade, 208 cm) : A1 (100), A2 (100), A3 (8).
 5. Butyle dans chaque emboîtement, panneau serré contre le précédent, vissé au pied dans le rail.
@@ -335,7 +335,7 @@ Les profils d'angle lient deux murs et ferment la mousse.
 **Outils :** visseuse, mastic
 
 1. Profil extérieur puis intérieur à chacun des 5 angles, vissé tous les 30 cm (vis de couture), mastic sous les deux ailes.
-2. Les angles de 135° reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.
+2. Les angles de 134,4° et 135,6° reçoivent les profils pliés sur mesure : les présenter à blanc avant de percer.
 3. Bourrer le vide de l'angle à la mousse avant de fermer le profil intérieur.
 
 **À contrôler avant de continuer :**
@@ -363,7 +363,7 @@ Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que pa
 
 **Outils :** visseuse, 2 personnes, échelle
 
-1. Poser T1 (100 × 261,1 cm), T2 (100 × 261,1 cm), T3 (8 × 200,9 cm), en commençant du côté opposé aux vents dominants.
+1. Poser T1 (100 × 261,1 cm), T2 (100 × 261,1 cm), T3 (8 × 200,7 cm), en commençant du côté opposé aux vents dominants.
 2. Closoirs mousse sous les nervures, en haut et en bas, avant de visser.
 3. Visser dans la rehausse par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
 4. Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.
@@ -380,7 +380,7 @@ Recueillir toute l'eau du toit et l'emmener au jardin.
 
 **Outils :** visseuse, niveau, scie à métaux
 
-1. 236,1 cm de gouttière en 2 tronçon(s) : C 96,1 cm + B 140,1 cm.
+1. 235,8 cm de gouttière en 2 tronçon(s) : C 97,1 cm + B 138,6 cm.
 2. Crochets tous les 50 cm, pente de 5 mm par mètre vers la descente.
 3. Descente au point bas, évacuée loin de la dalle.
 
@@ -465,11 +465,11 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 ### Points forts
 
-- **Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais (99 cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
-- **4,96 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,78 m² de sol libre hors bureaux.
-- **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (236.1 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
+- **Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais (100 cm, un panneau entier) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
+- **4,95 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,77 m² de sol libre hors bureaux.
+- **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
-- **Passage derrière de 50 cm.** 2,01 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
+- **Passage derrière de 51 cm.** 2,02 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.
 - **Un bureau, un lit.** Le bureau court sur tout le mur gauche (10 cm, trois écrans de 27"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau.
 
@@ -479,7 +479,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 - **Pente 9 %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.
 - **La descente est au coin arrière gauche.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.
 - **Aucun débord au-dessus de la porte.** Prévoir une petite marquise.
-- **Deux profils d'angle à 135°** à faire plier sur mesure, en même temps que les panneaux.
+- **Deux profils d'angle proches de 135°** à faire plier sur mesure, en même temps que les panneaux.
 - **Un mur à 10 cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse.
 
 ### Questions
@@ -493,7 +493,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 ### Idées à explorer
 
-- **I1** **Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.
+- **I1** **Fixation visible derrière.** Le mur du fond et le pan en biais ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.
 - **I2** **Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.
 - **I3** **Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.
 - **I4** **Toit en 80 ou 100 mm.** Un panneau plus épais porte 2,5 m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.

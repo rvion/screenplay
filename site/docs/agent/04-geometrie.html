@@ -43,10 +43,11 @@ de propriété, infranchissables. <code>grillages = [gauche, arriere_gauche]</co
 Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la forme et chaque mur du fond
 (<code>v.passages</code>, extrémités du mur comprises), visée : <code>passage_souhaite_cm</code>.</p>
 <h2 id="l39abri--option-13-à-cotes-imposées-modele_trapeze">L&#39;abri : option 13 à cotes imposées (<code>modele_trapeze</code>)</h2>
-<p><code>disposition_trapeze.cotes_cm</code> impose façade 208, droite 180, gauche 250 et un mur du fond de 138
-d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Le pan reste à
-<strong>45°</strong> tant que A − B = G − D (70) : le fond suit la façade (B = A − 70), et C = 70 √2 = 99 quelle que
-soit la façade. Contour : <code>(10,10) → (218,10) → (218,190) → (148,260) → (10,260)</code> : 10 cm de dalle à
+<p><code>disposition_trapeze.cotes_cm</code> impose façade 208, droite 180, gauche 250 et un mur du fond de 136,6
+d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond et fait <strong>100</strong>, un
+panneau entier. Il monte de G − D = 70, donc il avance de √(100² − 70²) = 71,4 : il fait <strong>44,4°</strong> et
+non 45°, et le fond est ce qui reste (B = A − 71,4). La façade ne change rien à l&#39;angle. Contour :
+<code>(10,10) → (218,10) → (218,190) → (146,6 ; 260) → (10,260)</code> : 10 cm de dalle à
 gauche et devant, 44 à droite.</p>
 <div class="doc-table"><table>
 <thead>
@@ -70,16 +71,16 @@ gauche et devant, 44 à droite.</p>
 <td>80 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
 </tr>
 <tr>
-<td>C pan à 45°</td>
-<td>99</td>
+<td>C pan en biais</td>
+<td>100</td>
 <td>221,3 → 215</td>
-<td>99 (un seul panneau, aucune bande)</td>
+<td>100 (un panneau entier, aucune coupe)</td>
 </tr>
 <tr>
 <td>B fond</td>
-<td>138</td>
+<td>136,6</td>
 <td>215 → 215</td>
-<td>100 + 38</td>
+<td>100 + 36,6</td>
 </tr>
 <tr>
 <td>G gauche</td>
@@ -89,12 +90,12 @@ gauche et devant, 44 à droite.</p>
 </tr>
 </tbody></table></div>
 <ul>
-<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,955 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m², comparé
+<li>Angles <strong>90 / 90 / 134,4 / 135,6 / 90</strong> (profils d&#39;angle pliés sur mesure de toute façon). Murs <strong>4,95 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m², comparé
 à l&#39;aire exacte, jamais arrondie : <code>tests/formalites.mjs</code>). Intérieur 4,44 m², sol libre hors
-bureau 2,78 m². Cotes intérieures : façade <strong>196</strong>, droite 171,5, pan 94, fond 129,5, gauche 238.
-Passage derrière : 50,3 cm au grand pan, 64,8 au petit pan. Matériaux 2 850 € TTC.</li>
-<li><strong>Pourquoi 208 et pas 210</strong> : à 210 avec droite 180 et gauche 250, les murs font 5,005 m², au-dessus
-du seuil ; 208 repasse dessous en gardant le pan à 45°.</li>
+bureau 2,77 m². Cotes intérieures : façade <strong>196</strong>, droite 171,5, pan 95, fond 128,1, gauche 238.
+Passage derrière : 51,3 cm au grand pan, 64,8 au petit pan. Matériaux 2 850 € TTC.</li>
+<li><strong>Pourquoi 208 et pas 210</strong> : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
+5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).</li>
 <li><strong>Le plancher isolé prend 10 cm</strong> (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
 la hauteur sous plafond tombe à <strong>2,05 m au plus bas et 2,28 m en façade</strong>, et c&#39;est cette hauteur
 que montre le modèle 3D.</li>

@@ -586,11 +586,11 @@ l'usage (rien, au bureau, couché) et l'allège des fenêtres passe à 115 pour 
 plateau qui passe au-dessus du pied du lit n'est pas coupé), `sieges_decalage_cm`, et la règle de rangement
 qui garde le dossier d'un fauteuil hors du plateau. *Gardes :* `tests/abri3d.mjs` mesure, pour chaque lit à
 demeure, la baie de porte qui reste (55 cm minimum), refuse toute pièce DANS le lit (un plateau au-dessus
-est permis) et toute pièce de siège qui traverse un plateau. *Corrigé le 2026-09-23 :* la forme voulue par Rémi est **droite 180, gauche 250, pan à 45°**, le fond
-étant ce qu'il faut pour fermer. Un commit de la branche avait remis 178 / 248 sans le dire, en lisant
-« garde 210 » comme un retour à l'ancienne forme. À 210 de façade, ces murs font 5,005 m², au-dessus du
-seuil ; la façade passe donc à **208** (fond 138, pan de 99) : 4,955 m², aucune formalité, 6 cm de jeu
-pour le lit. Au passage, le calcul comparait une aire arrondie au seuil (5,0001 m² passait pour 5,00,
+est permis) et toute pièce de siège qui traverse un plateau. *Corrigé le 2026-09-23 :* la forme voulue par Rémi est **droite 180, gauche 250, pan de 100** (un
+panneau entier), le fond étant ce qu'il faut pour fermer. Un commit de la branche avait remis 178 / 248 sans le dire, en lisant
+« garde 210 » comme un retour à l'ancienne forme. Avec un pan de 100 qui monte de 70, le pan fait 44,4° et non
+45° (la façade n'y change rien). À 210 de façade, ces murs font 5,0001 m², au-dessus du seuil ; la façade
+passe donc à **208** (fond 136,6) : 4,95 m², aucune formalité, 6 cm de jeu pour le lit. Au passage, le calcul comparait une aire arrondie au seuil (5,0001 m² passait pour 5,00,
 « aucune formalité ») : il compare désormais l'aire exacte. *État :* essayé sur la
 branche `test-bed-front-head-right`, **retenu par Rémi le 2026-09-22** : fusionné dans `main` et publié.
 La liste des changements est dans `changelog.md`.

@@ -2,8 +2,8 @@
 
 ## Branche `test-bed-front-head-right` (lit en façade)
 
-- Dimensions changées : façade 208, droite 180, gauche 250, fond 138, pan à 45° de 99 cm en un seul panneau
-- Murs 4,955 m² : sous le seuil des 5 m², aucune formalité
+- Dimensions changées : façade 208, droite 180, gauche 250, fond 136,6, pan de 100 cm en un panneau entier (44,4°)
+- Murs 4,95 m² : sous le seuil des 5 m², aucune formalité
 - Le seuil de 5 m² se compare à l'aire exacte, plus à une aire arrondie
 - Lit 80 × 190 à demeure le long de la façade, tête côté porte : couché, on voit les écrans
 - Le lit fait canapé le jour (coussins de dossier contre la façade), lit seulement en vue « couché »

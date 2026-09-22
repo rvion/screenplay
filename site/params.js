@@ -12,7 +12,7 @@ window.SHED_PARAMS = {
     "titre": "Abri de jardin : le bureau à cinq murs",
     "dossier": {
       "atouts": [
-        "**Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais ({pan_cm} cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
+        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm, un panneau entier) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
         "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
         "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
@@ -25,7 +25,7 @@ window.SHED_PARAMS = {
         "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
         "**La descente est {descente}.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
         "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
-        "**Deux profils d'angle à 135°** à faire plier sur mesure, en même temps que les panneaux.",
+        "**Deux profils d'angle proches de 135°** à faire plier sur mesure, en même temps que les panneaux.",
         "**Un mur à {gauche_cm} cm du grillage** : le mur gauche se monte à plat puis se lève, et le vide se ferme par une bavette, pas par une visseuse."
       ],
       "questions": [
@@ -37,7 +37,7 @@ window.SHED_PARAMS = {
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
       ],
       "idees": [
-        "**Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
+        "**Fixation visible derrière.** Le mur du fond et le pan en biais ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
         "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
         "**Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.",
         "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
@@ -146,7 +146,7 @@ window.SHED_PARAMS = {
       "avant": 208,
       "droite": 180,
       "gauche": 250,
-      "fond": 138
+      "fond": 136.6
     },
     "porte_vitree": false,
     "panneaux_depuis_la_fin": [
