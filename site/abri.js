@@ -2878,7 +2878,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
         battant.rotation.y = angle;
         pose(battant, groupes.porte || groupe("porte"));
         const matP = mat(COUL.personne, { roughness: 0.9 });
-        const silhouette = (z, y) => {
+        const silhouette = (z, y, decale = 0) => {
           const corps = new THREE.Group();
           for (const dx of [-0.09, 0.09]) {
             const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
@@ -2891,10 +2891,10 @@ function peuple_abri(abri, data, visible_demande = {}) {
           const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP);
           tete.position.y = 1.8 - 0.115;
           corps.add(ombre(tete));
-          corps.position.set((s0 + s1) / 200, y, z);
+          corps.position.set((s0 + s1) / 200 + decale, y, z);
           return corps;
         };
-        pose(silhouette(0.45, 0), groupe("personne"));
+        pose(silhouette(0.45, 0, -0.3), groupe("personne"));
         pose(silhouette(-(ep + 60) / 100, data.sol.epaisseur_cm / 100), groupe("personne_dedans"));
       } else {
         const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(16053750), c = 4;

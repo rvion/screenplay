@@ -191,15 +191,16 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
         pose(battant, groupes.porte || groupe("porte"));
         // silhouette de 1,80 m pour l'echelle (cachee au depart) : devant la porte, ou dedans a 60 cm du seuil
         const matP = mat(COUL.personne, { roughness: 0.9 });
-        const silhouette = (z: number, y: number) => {
+        const silhouette = (z: number, y: number, decale = 0) => {
           const corps = new THREE.Group();
           for (const dx of [-0.09, 0.09]) { const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP); jambe.position.set(dx, 0.42, 0); corps.add(ombre(jambe)); }
           const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP); tronc.position.y = 0.84 + 0.33; corps.add(ombre(tronc));
           const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP); tete.position.y = 1.8 - 0.115; corps.add(ombre(tete));
-          corps.position.set((s0 + s1) / 200, y, z);
+          corps.position.set((s0 + s1) / 200 + decale, y, z);
           return corps;
         };
-        pose(silhouette(0.45, 0), groupe("personne"));
+        // dehors : 30 cm vers le debut du mur (la facade), hors de l'arc du battant
+        pose(silhouette(0.45, 0, -0.3), groupe("personne"));
         pose(silhouette(-(ep + 60) / 100, data.sol.epaisseur_cm / 100), groupe("personne_dedans"));
       } else {
         const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(0xf4f5f6), c = 4;

@@ -94,7 +94,7 @@ ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "des
   ok(!!battant && bb.max.x > xmur + 0.3 && bb.min.x > xmur - 0.1, "porte : battant entrouvert vers l'extérieur du mur " + fp.cle);
   // silhouette : 1,80 m de haut, pieds au sol, hors des murs, devant la porte
   const bp = boite(groupes.personne), sp = monde(fp.de[0] + (fp.a[0] - fp.de[0]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, fp.de[1] + (fp.a[1] - fp.de[1]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, 0);
-  ok(near(bp.max.y, 1.8, 1e-6) && near(bp.min.y, 0, 1e-6) && bp.min.x > tout.max.x - 1e-6 && Math.abs((bp.min.z + bp.max.z) / 2 - sp[2]) < 0.5, "personne : 1,80 m, pieds au sol, dehors devant la porte du mur " + fp.cle);
+  ok(near(bp.max.y, 1.8, 1e-6) && near(bp.min.y, 0, 1e-6) && bp.min.x > tout.max.x - 1e-6 && Math.abs((bp.min.z + bp.max.z) / 2 - sp[2] - 0.3) < 0.05 && !boite(battant).intersectsBox(bp), "personne : 1,80 m, pieds au sol, dehors, 30 cm devant la porte du mur " + fp.cle + ", hors du battant");
   const bd = boite(groupes.personne_dedans), sol_h = d.sol.epaisseur_cm / 100;
   ok(near(bd.max.y, 1.8 + sol_h, 1e-6) && near(bd.min.y, sol_h, 1e-6) && bd.max.x < tout.max.x && bd.min.x > tout.min.x && -bd.max.z > -tout.max.z && -bd.min.z < -tout.min.z, "personne dedans : sur le plancher, à l'intérieur des murs, à 60 cm du seuil");
 }
