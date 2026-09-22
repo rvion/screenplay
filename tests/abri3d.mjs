@@ -111,6 +111,11 @@ const paroi = groupes.murs.children;
       const pieds = (l.pieds_bureau || []);
       const bed2 = l.polygone, dans_bed = (pt) => pt[0] > Math.min(...bed2.map((z) => z[0])) - 0.5 && pt[0] < Math.max(...bed2.map((z) => z[0])) + 0.5 && pt[1] > Math.min(...bed2.map((z) => z[1])) - 0.5 && pt[1] < Math.max(...bed2.map((z) => z[1])) + 0.5;
       ok(pieds.length === 4 && !pieds.some(dans_bed), `lit ${l.nom} : quatre pieds sous le plateau, aucun dans le lit`);
+      // le poste de travail : deux dalles de 27 pouces et le portable, poses sur le plateau, hors du lit
+      const plateau_h = Math.max(...g("bureaux").children.filter((o) => o.isMesh).map((o) => boite(o).max.y));
+      const dessus = g("bureaux").children.filter((o) => o.isMesh && boite(o).min.y >= plateau_h - 0.005);
+      const dalles = dessus.filter((o) => { const b = boite(o); return Math.abs((b.max.z - b.min.z) - 0.62) < 0.02 && (b.max.y - b.min.y) > 0.3; });
+      ok(dalles.length === 2 && dessus.length >= 8 && !dessus.some((o) => bl.intersectsBox(serre(boite(o)))), `lit ${l.nom} : deux dalles de 27 pouces et le portable sur le plateau (${dessus.length} pièces), rien au-dessus du lit`);
       const siege_usage = v.sieges.filter((st) => st.tient !== false);
       ok(siege_usage.every((st) => !st.polygone.some(dans_bed)), `lit ${l.nom} : le siège en usage est hors du lit, centré sur la partie libre du bureau`);
     });

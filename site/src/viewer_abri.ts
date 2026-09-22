@@ -507,6 +507,30 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
     gs.visible = visible[`sieges_ranges${n}`] === true;
     for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+    // le poste de travail sur le plateau : deux 27 pouces (62 x 37 de dalle) et un MacBook Pro 16 ouvert.
+    // Cotes reelles, pour voir ce que le bureau porte vraiment. Seulement sur un bureau d'axe y (mur gauche)
+    for (const b of lm.bureaux.slice(0, 1)) {
+      const xs = b.map((z: Pt) => z[0]), ys = b.map((z: Pt) => z[1]);
+      const axe_y = Math.max(...xs) - Math.min(...xs) < Math.max(...ys) - Math.min(...ys);
+      if (!axe_y) continue;
+      const x0 = Math.min(...xs), x1 = Math.max(...xs), haut = sol + 75;
+      // centre sur la partie du bureau qui n'est pas au-dessus du lit
+      const y_lit = Math.max(...lm.polygone.map((z: Pt) => z[1])), y_libre0 = Math.max(Math.min(...ys), y_lit), y_libre1 = Math.max(...ys);
+      const cy2 = (y_libre0 + y_libre1) / 2;
+      const boite_cm = (xa: number, xb: number, ya: number, yb: number, h0: number, h1: number, couleur: number, rough = 0.6) =>
+        ombre(new THREE.Mesh(prisme([[xa, ya], [xb, ya], [xb, yb], [xa, yb]] as Pt[], plat(h0), plat(h1)), mat(couleur, { roughness: rough })));
+      const ecran = (yc: number) => {
+        const x_pied = x0 + 18;
+        gb.add(boite_cm(x_pied - 9, x_pied + 9, yc - 12, yc + 12, haut, haut + 1.5, 0x30343a));     // socle
+        gb.add(boite_cm(x_pied - 2.5, x_pied + 2.5, yc - 3, yc + 3, haut + 1.5, haut + 13, 0x30343a)); // pied
+        gb.add(boite_cm(x_pied - 1.5, x_pied + 1.5, yc - 31, yc + 31, haut + 13, haut + 50, 0x14171a)); // dalle 62 x 37
+      };
+      ecran(cy2 - 32); ecran(cy2 + 32);
+      // MacBook Pro 16 ouvert, devant les ecrans, cote piece
+      const xm = x1 - 30;
+      gb.add(boite_cm(xm, xm + 25, cy2 - 17.5, cy2 + 17.5, haut, haut + 1.6, 0x9aa0a6));            // base 35 x 25
+      gb.add(boite_cm(xm - 1, xm + 1.2, cy2 - 17.5, cy2 + 17.5, haut + 1.6, haut + 24, 0x14171a));  // ecran releve
+    }
     // quatre pieds sous le plateau : deux au ras du lit, deux au fond
     for (const [px, py] of lm.pieds_bureau || []) {
       const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));

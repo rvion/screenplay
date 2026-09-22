@@ -68,7 +68,7 @@ d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout d
 - **Porte** pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
   **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade.
 - **Mobilier, une seule disposition** : le bureau gauche **70 de profondeur sur 236 cm** (trois écrans
-  de 27" = 190), le fauteuil qui se range dessous et se **centre sur la partie libre** du bureau quand on s'en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), et le lit **80 × 190** le long de la façade,
+  de 27" = 190), le fauteuil qui se range dessous et se **centre sur la partie libre** du bureau quand on s'en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27" de 62 × 37 et un MacBook Pro 16 ouvert, aux cotes réelles), et le lit **80 × 190** le long de la façade,
   calé à droite (`position: "fin"`), **tête côté porte** : couché, les pieds vont vers les écrans, et le
   plateau passe **au-dessus du pied du lit** sans être coupé (`bureaux_entiers`). Plus de lit pliant ni de
   bureau de façade : le bouton **mobilier** ne dit plus que l'usage (rien, au bureau, couché).

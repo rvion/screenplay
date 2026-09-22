@@ -2757,6 +2757,26 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
       gs.visible = visible[`sieges_ranges${n}`] === true;
       for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+      for (const b of lm.bureaux.slice(0, 1)) {
+        const xs2 = b.map((z) => z[0]), ys2 = b.map((z) => z[1]);
+        const axe_y = Math.max(...xs2) - Math.min(...xs2) < Math.max(...ys2) - Math.min(...ys2);
+        if (!axe_y) continue;
+        const x0 = Math.min(...xs2), x1 = Math.max(...xs2), haut2 = sol + 75;
+        const y_lit = Math.max(...lm.polygone.map((z) => z[1])), y_libre0 = Math.max(Math.min(...ys2), y_lit), y_libre1 = Math.max(...ys2);
+        const cy2 = (y_libre0 + y_libre1) / 2;
+        const boite_cm = (xa, xb, ya, yb, h0, h1, couleur, rough = 0.6) => ombre(new THREE.Mesh(prisme([[xa, ya], [xb, ya], [xb, yb], [xa, yb]], plat(h0), plat(h1)), mat(couleur, { roughness: rough })));
+        const ecran = (yc) => {
+          const x_pied = x0 + 18;
+          gb.add(boite_cm(x_pied - 9, x_pied + 9, yc - 12, yc + 12, haut2, haut2 + 1.5, 3159098));
+          gb.add(boite_cm(x_pied - 2.5, x_pied + 2.5, yc - 3, yc + 3, haut2 + 1.5, haut2 + 13, 3159098));
+          gb.add(boite_cm(x_pied - 1.5, x_pied + 1.5, yc - 31, yc + 31, haut2 + 13, haut2 + 50, 1316634));
+        };
+        ecran(cy2 - 32);
+        ecran(cy2 + 32);
+        const xm = x1 - 30;
+        gb.add(boite_cm(xm, xm + 25, cy2 - 17.5, cy2 + 17.5, haut2, haut2 + 1.6, 10133670));
+        gb.add(boite_cm(xm - 1, xm + 1.2, cy2 - 17.5, cy2 + 17.5, haut2 + 1.6, haut2 + 24, 1316634));
+      }
       for (const [px, py] of lm.pieds_bureau || []) {
         const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));
         pied.position.copy(W(px, py, sol + 36));
