@@ -10,7 +10,7 @@
 - **4,81 m² intérieur** (5,37 m² de murs), 50,6 cm de passage derrière.
 - **4 murs** en panneaux sandwich 6 cm autoportants : façade 218, droite 178,8, fond en biais 256,6, gauche 314,1 cm.
 - **Toit** mono-pente vers le fond, 5,46° : 245 cm devant, 215 cm au plus bas.
-- **Porte** 65 × 205 sur le mur droit, **une fenêtre de 100** en façade, **bureau en L** sur la façade et le mur gauche, **lit 75 × 190 rabattable** contre le fond.
+- **Porte** 65 × 205 sur le mur droit, **une fenêtre de 100** en façade, **bureau en L** sur la façade et le mur gauche, **lit 70 × 190 rabattable** contre le fond.
 - **Matériaux** : 3 680 € TTC (3 128 € à 4 232 €), sans main-d'œuvre ni livraison ; équipement optionnel 186 €.
 
 - **Formalités** : emprise au sol 5,37 m², surface de plancher 4,81 m² ⇒ déclaration préalable.
@@ -19,7 +19,7 @@
 
 - **Toit** : vers l'arrière, chute 30 cm (5,46°) = choix par défaut. Madrier 75 × 300 classe 4 à trouver (sinon deux pièces superposées).
 - **Formalités** : emprise au sol **5,37 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,81 m² ⇒ **déclaration préalable** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
-- **Lit 75 × 190 rabattable** contre le mur du fond : déplié, son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).
+- **Lit 70 × 190 rabattable** contre le mur du fond : déplié, son pied passe sous le bureau gauche (lit plus bas que le plateau, pas de tiroir ni de traverse à cet endroit) et il va jusque devant la porte (elle ouvre dehors) ; fixations à dimensionner (2 charnières sur le mur du fond, reprise dans la rehausse ou une lisse).
 - **Fenêtre de 100** : aussi large qu'un module, elle prend tout le panneau A2, qui ne garde qu'une allège de 95 cm et un linteau de 10 cm. Elle est **fixe** : la seule aération est la porte (plus la ventilation prévue) ; une ouvrante coûte ~120 € de plus.
 - **Portée du toit** (~3,1 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (121,8°, 58,2°) : profils d'angle pliés sur mesure.
@@ -132,7 +132,7 @@ Débords : 10 cm devant, 10 cm au fond, rives affleurantes sur les côtés. Surf
 | bureau de façade | 50 × 206 cm | tout le mur de façade |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
 | tabouret | 30 × 30 cm | devant le bureau de façade |
-| lit rabattable (déplié) | 75 × 190 cm | contre le mur du fond (replié : 10 cm), pied sous le bureau gauche, sièges rangés |
+| lit rabattable (déplié) | 70 × 190 cm | contre le mur du fond (replié : 10 cm), pied sous le bureau gauche, sièges rangés |
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 

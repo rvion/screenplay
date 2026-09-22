@@ -83,7 +83,7 @@ window.SHED_PARAMS = {
       }
     ],
     "lit_pliant": {
-      "largeur_cm": 75,
+      "largeur_cm": 70,
       "longueur_cm": 190,
       "contre": "fond",
       "epaisseur_replie_cm": 10,

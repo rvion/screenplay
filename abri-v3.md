@@ -29,7 +29,7 @@
 | porte | pleine, 80 × 205, débord de toit au-dessus : 15 cm | pleine, 80 × 205, débord de toit au-dessus : 15 cm |
 | fenêtres en façade | 80 ouvrante + 80 fixe | 80 ouvrante + 80 fixe |
 | sol libre hors bureaux | 2,21 m² | 2,26 m² |
-| lit | 75 × 190, pliant, posé au sol libre | 75 × 190, pliant, posé au sol libre |
+| lit | 70 × 190, pliant, posé au sol libre | 70 × 190, pliant, posé au sol libre |
 | budget indicatif HT | 3 001 € (coque 2 789 €) | 3 022 € (coque 2 810 €) |
 
 ### Ce que cette disposition apporte
@@ -76,7 +76,7 @@
 
 - **Toit** : vers la droite (jardin), chute 22,5 cm (6,42°). Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
 - **Formalités** : emprise au sol **5 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,48 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²). secteur protégé ou abords d'un monument historique : déclaration préalable même sous le seuil ; le PLU (implantation, hauteur, distance aux limites) s'applique dans tous les cas.
-- **Lit 75 × 190** : déplié au milieu, le pied sous un bureau, fauteuil et tabouret rangés.
+- **Lit 70 × 190** : déplié au milieu, le pied sous un bureau, fauteuil et tabouret rangés.
 - **Portée du toit** (~2 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (135°, 135°) : profils d'angle pliés sur mesure.
 
@@ -192,7 +192,7 @@ Débords : 15 cm à droite (égout, au-dessus de la porte), 0 cm contre le mur d
 | bureau de façade | 50 × 188 cm | tout le mur de façade |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
 | tabouret | 30 × 30 cm | devant le bureau de façade |
-| lit pliant (déplié) | 75 × 190 cm | au milieu, pied sous un bureau, sièges rangés |
+| lit pliant (déplié) | 70 × 190 cm | au milieu, pied sous un bureau, sièges rangés |
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 

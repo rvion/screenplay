@@ -42,7 +42,7 @@
     "toit": { "sens": "arriere", "chute_cm": 30, "debord_cm": { "avant": 10, "arriere": 10, "cotes": 0 } },
     "rehausse_section_mm": [75, 300],
     "bureaux": [{ "cote": "gauche", "profondeur_cm": 60 }, { "cote": "avant", "profondeur_cm": 50 }],
-    "lit_pliant": { "largeur_cm": 75, "longueur_cm": 190, "contre": "fond", "epaisseur_replie_cm": 10, "acces_porte_cm": 0, "sous_bureau": true },
+    "lit_pliant": { "largeur_cm": 70, "longueur_cm": 190, "contre": "fond", "epaisseur_replie_cm": 10, "acces_porte_cm": 0, "sous_bureau": true },
     "rehausse_prix_ml_eur": 13,
     "sieges": [
       { "type": "fauteuil de bureau", "largeur_cm": 70, "profondeur_cm": 70, "contre": "gauche", "position": "centre" },

@@ -25,7 +25,7 @@ ok(m.pente.degres >= 5, "pente >= 5 degres (" + m.pente.degres + ")");
 ok(m.faces.every((f) => near(f.panneaux.reduce((s, p) => s + p.largeur_cm, 0), f.longueur_cm, 0.2)), "les panneaux couvrent chaque face");
 ok(m.faces.every((f) => f.panneaux.every((p) => p.largeur_cm <= base.panneau.largeur_utile_cm + 1e-9)), "aucun panneau plus large que la largeur utile");
 ok(m.faces.find((f) => f.cle === "D").ouvertures.some((o) => o.type === "porte") && m.faces.find((f) => f.cle === "A").ouvertures.filter((o) => o.type === "fenetre").length === base.disposition_trapeze.fenetres.length, "porte face D, fenetres face A");
-ok(v.lit_pliant.contre && v.lit_pliant.contre.startsWith("fond") && v.lit_pliant.largeur_cm >= 75 && v.lit_pliant.longueur_cm >= 190, "lit 75 x 190 rabattable contre le mur du fond");
+ok(v.lit_pliant.contre && v.lit_pliant.contre.startsWith("fond") && v.lit_pliant.largeur_cm >= 70 && v.lit_pliant.longueur_cm >= 190, "lit 70 x 190 (taille standard une place) rabattable contre le mur du fond");
 ok(m.rehausse.pieces.every((p) => near(p.h0, m.faces.find((f) => f.cle === p.face).hauteur_debut_cm - H, 0.11) && near(p.h1, m.faces.find((f) => f.cle === p.face).hauteur_fin_cm - H, 0.11)), "chaque piece de rehausse suit le toit a ses deux bouts");
 ok(m.rehausse.barres.every((b) => b.L <= base.rehausse.longueur_stock_cm + 1e-9), "chaque madrier tient dans la longueur de stock");
 ok(m.rehausse.barres.flatMap((b) => b.troncons.flatMap((t) => t.pieces)).length === m.rehausse.pieces.length, "toutes les pieces sont rangees une fois");
@@ -58,7 +58,7 @@ ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol
   const lp = v.lit_pliant, I = inset_ordre(v.polygone, base.panneau.epaisseur_mm / 10);
   const dedans = (z) => I.every((a, i) => { const b = I[(i + 1) % I.length]; return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -0.2 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
   ok(lp && lp.tient && lp.polygone.every(dedans), "lit pliant dans l'interieur");
-  ok(lp.largeur_cm >= 75 && lp.longueur_cm >= 190, "lit d'au moins 75 x 190");
+  ok(lp.largeur_cm >= 70 && lp.longueur_cm >= 190, "lit d'au moins 70 x 190");
   ok(base.disposition_trapeze.lit_pliant.sous_bureau || v.bureaux.every((b) => poly_area(clip_convex(lp.polygone, b.polygone)) < 2), "lit pliant hors des bureaux, sauf sous_bureau");
   // controle : un lit court tient sur le sol libre, sans passer sous un bureau
   const court = JSON.parse(JSON.stringify(base)); court.disposition_trapeze.lit_pliant = { largeur_cm: 65, longueur_cm: 150, acces_porte_cm: 60, sous_bureau: true };
@@ -152,7 +152,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(v2.arriere.aire_m2 >= v.arriere.aire_m2 - 0.05, "v2 : autant de place derriere que la v1 (" + v.arriere.aire_m2 + " m²), ce n'est pas un avantage de la v2");
   ok(c2.svg["modele-implantation"].includes("rangement caché"), "v2 : la zone cachee est dessinee sur le plan d'implantation");
   // le fond de la v2 (223,6) est trop court pour un lit de 190 rabattable : il est pose au sol libre
-  ok(v2.lit_pliant.tient === true && !v2.lit_pliant.replie, "v2 : lit 75 x 190 pose au sol libre (pas rabattable)");
+  ok(v2.lit_pliant.tient === true && !v2.lit_pliant.replie, "v2 : lit 70 x 190 pose au sol libre (pas rabattable)");
   {
     const p3 = params_v2(base); p3.disposition_trapeze.lit_pliant.contre = "fond";
     ok(buildCore(p3).variantes.find((x) => x.id === 13).lit_pliant.tient === false, "v2 : le meme lit rabattable contre le fond ne tient pas (perte affichee dans abri-v2.md)");

@@ -117,7 +117,7 @@ en biais 256,6, **G** gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.
   pente : T1 100 × 337,4, T2 100 × 275,1, T3 18 × 212,7 (longueurs = rampant) ; 5,85 m² couverts.
   Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).
 - **Sièges et lit** : fauteuil 70 × 70 contre le bureau gauche, tabouret 30 × 30 contre le bureau de
-  façade. Lit **75 × 190 rabattable contre le mur du fond** (couchette), replié sur 10 cm, 2 fixations
+  façade. Lit **70 × 190** (taille standard une place, réglée le 2026-09-22 ; 75 avant) **rabattable contre le mur du fond** (couchette), replié sur 10 cm, 2 fixations
   intérieures ; déplié, son pied passe sous le bureau gauche et il va jusque devant la porte (aucun
   dégagement demandé : elle ouvre dehors). Avec 20 cm devant la porte, il ne tiendrait plus contre le fond.
 - **Fenêtre** : une seule, fixe, 100 × 110, allège 95, de 100 à 200 depuis le coin gauche : elle prend

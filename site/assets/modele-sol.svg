@@ -14,9 +14,9 @@
 <polygon points="458.2,391.3 200.0,231.0 191.5,244.6 449.9,404.9" fill="#d9c8ec" stroke="#6a3d9a" stroke-width="1.5"/>
 <rect x="434.9" y="375.6" width="6" height="6" fill="#6a3d9a"/>
 <rect x="217.3" y="240.6" width="6" height="6" fill="#6a3d9a"/>
-<polygon points="458.2,391.3 200.0,231.0 136.8,332.9 395.0,493.2" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
-<text x="395.7" y="421.0" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit rabattable 75 × 190</text>
-<text x="395.7" y="434.0" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
+<polygon points="458.2,391.3 200.0,231.0 141.0,326.2 399.2,486.5" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
+<text x="397.7" y="417.6" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit rabattable 70 × 190</text>
+<text x="397.7" y="430.6" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
 <polygon points="280.0,672.6 440.0,672.6 440.0,663.0 280.0,663.0" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
 <line x1="120.0" y1="676.6" x2="120.0" y2="704.6" stroke="#aaa" stroke-width="0.7"/>
 <line x1="280.0" y1="676.6" x2="280.0" y2="704.6" stroke="#aaa" stroke-width="0.7"/>
