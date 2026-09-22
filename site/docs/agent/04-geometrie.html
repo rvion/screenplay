@@ -43,9 +43,11 @@ de propriété, infranchissables. <code>grillages = [gauche, arriere_gauche]</co
 Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la forme et chaque mur du fond
 (<code>v.passages</code>, extrémités du mur comprises), visée : <code>passage_souhaite_cm</code>.</p>
 <h2 id="l39abri--option-13-à-cotes-imposées-modele_trapeze">L&#39;abri : option 13 à cotes imposées (<code>modele_trapeze</code>)</h2>
-<p><code>disposition_trapeze.cotes_cm</code> impose façade 210, droite 178, gauche 248 et un mur du fond de 140
-d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Contour :
-<code>(10,10) → (220,10) → (220,188) → (150,258) → (10,258)</code> : 10 cm de dalle à gauche et devant, 42 à droite.</p>
+<p><code>disposition_trapeze.cotes_cm</code> impose façade 208, droite 180, gauche 250 et un mur du fond de 138
+d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Le pan reste à
+<strong>45°</strong> tant que A − B = G − D (70) : le fond suit la façade (B = A − 70), et C = 70 √2 = 99 quelle que
+soit la façade. Contour : <code>(10,10) → (218,10) → (218,190) → (148,260) → (10,260)</code> : 10 cm de dalle à
+gauche et devant, 44 à droite.</p>
 <div class="doc-table"><table>
 <thead>
 <tr>
@@ -57,54 +59,56 @@ d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mu
 </thead>
 <tbody><tr>
 <td>A façade</td>
-<td>210</td>
+<td>208</td>
 <td>237,5 → 237,5</td>
-<td>100 + 100 + 10</td>
+<td>100 + 100 + 8</td>
 </tr>
 <tr>
 <td>D droite</td>
-<td>178</td>
-<td>237,5 → 221,4</td>
-<td>78 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
+<td>180</td>
+<td>237,5 → 221,3</td>
+<td>80 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
 </tr>
 <tr>
 <td>C pan à 45°</td>
 <td>99</td>
-<td>221,4 → 215</td>
+<td>221,3 → 215</td>
 <td>99 (un seul panneau, aucune bande)</td>
 </tr>
 <tr>
 <td>B fond</td>
-<td>140</td>
+<td>138</td>
 <td>215 → 215</td>
-<td>100 + 40</td>
+<td>100 + 38</td>
 </tr>
 <tr>
 <td>G gauche</td>
-<td>248</td>
+<td>250</td>
 <td>215 → 237,5</td>
-<td>100 + 100 + 48</td>
+<td>100 + 100 + 50</td>
 </tr>
 </tbody></table></div>
 <ul>
-<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,96 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m²),
-intérieur 4,45 m², sol libre hors bureau et lit 2,16 m². Cotes intérieures : façade <strong>198</strong>,
-droite 169,5, pan 94, fond 131,5, gauche 236. Passage derrière : 50,4 cm au grand pan, 66,8 au
-petit pan. Matériaux 2 861 € TTC.</li>
+<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,955 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m², comparé
+à l&#39;aire exacte, jamais arrondie : <code>tests/formalites.mjs</code>). Intérieur 4,44 m², sol libre hors
+bureau 2,78 m². Cotes intérieures : façade <strong>196</strong>, droite 171,5, pan 94, fond 129,5, gauche 238.
+Passage derrière : 50,3 cm au grand pan, 64,8 au petit pan. Matériaux 2 850 € TTC.</li>
+<li><strong>Pourquoi 208 et pas 210</strong> : à 210 avec droite 180 et gauche 250, les murs font 5,005 m², au-dessus
+du seuil ; 208 repasse dessous en gardant le pan à 45°.</li>
 <li><strong>Le plancher isolé prend 10 cm</strong> (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
 la hauteur sous plafond tombe à <strong>2,05 m au plus bas et 2,28 m en façade</strong>, et c&#39;est cette hauteur
 que montre le modèle 3D.</li>
-<li><strong>La façade de 198 dedans porte le lit</strong> : 190 de long, donc 8 cm de jeu pour le cadre.</li>
-<li><strong>Le mur droit de 178 dégage la porte</strong> : la baie est <strong>entièrement libre</strong>, même avec une porte
+<li><strong>La façade de 196 dedans porte le lit</strong> : 190 de long, donc 6 cm de jeu pour le cadre.</li>
+<li><strong>Le mur droit de 180 dégage la porte</strong> : la baie est <strong>entièrement libre</strong>, même avec une porte
 de 80, parce que le lit (80 de profondeur) s&#39;arrête avant elle.</li>
-<li><strong>Toit plan vers le fond</strong> : <code>H</code> = 215, <code>c</code> = 22,5, <code>D</code> = 248 ⇒ pente <strong>9,1 %</strong> (5,18°), portée 2,48 m.
-<strong>3 panneaux de toit</strong> (100 × 259, 100 × 259 en biais, bande de 10 × 201 en biais).</li>
+<li><strong>Toit plan vers le fond</strong> : <code>H</code> = 215, <code>c</code> = 22,5, <code>D</code> = 250 ⇒ pente <strong>9 %</strong> (5,14°), portée 2,50 m.
+<strong>3 panneaux de toit</strong> (100 × 261, 100 × 261 en biais, bande de 8 × 201 en biais).</li>
 <li><strong>Rehausse</strong> (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.</li>
 <li><strong>Gouttière</strong> derrière l&#39;abri, sur le pan C et le fond B ; <strong>descente au coin arrière gauche</strong>
 (angle G/B, <code>toit.descente = &quot;gauche&quot;</code>), le point le plus reculé : l&#39;eau part de là.</li>
 <li><strong>Porte</strong> pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
-<strong>Fenêtres</strong> 80 × 75 de stock, oscillo-battantes, allège 110, en façade.</li>
-<li><strong>Mobilier, une seule disposition</strong> : le bureau gauche <strong>70 de profondeur sur 236 cm</strong> (trois écrans
+<strong>Fenêtres</strong> 80 × 75 de stock, oscillo-battantes, allège 115, en façade.</li>
+<li><strong>Mobilier, une seule disposition</strong> : le bureau gauche <strong>70 de profondeur sur 238 cm</strong> (trois écrans
 de 27&quot; = 190), le fauteuil qui se range dessous et se <strong>centre sur la partie libre</strong> du bureau quand on s&#39;en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27&quot; de 62 × 37 près du mur, un MacBook Pro 16 ouvert, puis un clavier nomade au bord du plateau, aux cotes réelles), et le lit <strong>80 × 190</strong> le long de la façade,
 calé à droite (<code>position: &quot;fin&quot;</code>), <strong>tête côté porte</strong> : couché, les pieds vont vers les écrans, et le
 plateau passe <strong>au-dessus du pied du lit</strong> sans être coupé (<code>bureaux_entiers</code>). Plus de lit pliant ni de

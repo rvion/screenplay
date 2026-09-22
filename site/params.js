@@ -143,10 +143,10 @@ window.SHED_PARAMS = {
       }
     ],
     "cotes_cm": {
-      "avant": 210,
-      "droite": 178,
-      "gauche": 248,
-      "fond": 140
+      "avant": 208,
+      "droite": 180,
+      "gauche": 250,
+      "fond": 138
     },
     "porte_vitree": false,
     "panneaux_depuis_la_fin": [
