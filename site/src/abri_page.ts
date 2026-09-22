@@ -8,7 +8,7 @@ const fz = (x: number) => fr(Math.round(x * 10) / 10);
 const eur = (x: number) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} €`;
 const echappe = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 // une cote (nombre + unite) et un repere de face ou de panneau (A, D1, T2, R3) : un style unique sur toute la page
-const cote = (x: number | string, u = "cm") => `<span class="cote">${typeof x === "number" ? fr(x) : x}${u ? `<span class="u">${u === "°" ? "" : " "}${u}</span>` : ""}</span>`;
+const cote = (x: number | string, u = "cm") => `<span class="cote">${typeof x === "number" ? fr(x) : x}${u ? `<span class="u">${u}</span>` : ""}</span>`;
 const face = (id: string) => `<span class="face">${id}</span>`;
 
 // markdown en ligne des textes de params.json : gras, code, liens (un .md publie pointe vers sa page de docs/)
@@ -85,7 +85,7 @@ export function rend_abri(a: Abri) {
   html("versions", menu.map((x) => `<li${x.n === a.version ? ' class="ici"' : ""}><a href="?v=${x.n}"><span class="v-nom">Version ${x.n}${x.principale ? ' <span class="v-retenue">retenue</span>' : ""}</span><span class="v-desc">${echappe(x.nom)}</span><span class="v-chiffres">${fr(x.interieur_m2)} m² int. · passage ${fz(Math.round(x.passage_cm))} cm · ${eur(x.budget_eur)}</span></a></li>`).join(""));
   const bloc_versions = el("bloc-versions"); if (bloc_versions) (bloc_versions as HTMLElement).hidden = menu.length < 2;
   texte("titre", `Bureau de jardin à ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `version ${a.version}${retenue ? "" : " (étude)"} · panneaux sandwich ${fz(ep)} cm · toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  texte("sous-titre", `Dossier de construction : plans cotés, matériaux à acheter, guide de montage${retenue ? "" : ` · étude, version ${a.version}`}`);
   surligne_section();
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
@@ -97,7 +97,7 @@ export function rend_abri(a: Abri) {
   const grillage_gauche = ((a.pp.dalle_cm && a.pp.dalle_cm.grillages) || []).includes("gauche");
   html("intro", `Bureau de jardin à ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, posé sur la dalle existante à ${cote(gauche)} ${grillage_gauche ? "du grillage" : "du mur"} de la limite, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau en L le long des murs ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   const paires: [string, string][] = [
-    ["Murs", m.faces.map((f: any) => `${face(f.cle)} ${cote(f.longueur_cm, "")}`).join(" · ") + " cm"],
+    ["Murs", m.faces.map((f: any) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" · ")],
     ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}<br>finies ${cote(Math.max(...m.hauteurs_coins_cm))} → ${cote(Math.min(...m.hauteurs_coins_cm))}`],
     ["Toit", `pente ${cote(m.pente.pourcent, "%")} · portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}<br>gouttière ${G.troncons.map((t: any) => face(t.face)).join(" ")}`],
     ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}<br>${cote(v.aire_interieure_m2, "m²")} intérieur`],
@@ -106,15 +106,20 @@ export function rend_abri(a: Abri) {
   ];
   html("fiche", paires.map(([k, val]) => `<div class="carte"><span class="k">${k}</span><span class="v">${val}</span></div>`).join(""));
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
-    m.faces.map((f: any, i: number) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)} ${cote(pn.largeur_cm, "")}`).join(" · "), cote(m.angles_deg[i], "°")]));
+    m.faces.map((f: any, i: number) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)} ${cote(pn.largeur_cm)}`).join(" · "), cote(m.angles_deg[i], "°")]));
 
   // implantation et plans : les SVG du modele, injectes tels quels
   // planches : l'entete en texte (titre, detail, legende), le dessin sans titre dessous
   const PL = core.planches || {};
   // chaque planche a son lien « agrandir » : le SVG s'ouvre seul dans un nouvel onglet (blob : marche aussi en file://)
   const planche = (cle: string, extra = "") => { const q = PL[cle], f = m.faces.find((x: any) => `facade-${x.cle}` === cle); return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} · ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">· ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" · ")}</p><div class="planbox" id="plan-${cle}"><a class="zoom" href="#" data-zoom="${cle}" title="Ouvrir en grand dans un nouvel onglet">agrandir ↗</a>${q.svg}</div>` : ""; };
-  html("planche-implantation", planche("implantation"));
-  html("planche-sol", planche("sol"));
+  // les deux planches de tete sont des sections : leur titre est le h2 de la boite
+  for (const k of ["implantation", "sol"]) {
+    const q = PL[k];
+    if (!q) continue;
+    html(`titre-${k}`, `${q.nom}${q.detail ? ` <span class="precision">· ${q.detail}</span>` : ""}`);
+    html(`planche-${k}`, `<p class="note">${q.lignes.join(" · ")}</p><div class="planbox" id="plan-${k}"><a class="zoom" href="#" data-zoom="${k}" title="Ouvrir en grand dans un nouvel onglet">agrandir ↗</a>${q.svg}</div>`);
+  }
   const main = document.querySelector("main");
   if (main && !(main as any).__zoom) {
     (main as any).__zoom = true;
@@ -161,8 +166,8 @@ export function rend_abri(a: Abri) {
 
   // ouvertures et mobilier
   table("ouvertures-table", ["ouverture", "taille", "où", "détail"], [
-    [`porte ${po.vitree === false ? "pleine" : "vitrée"}`, `${cote(`${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)}`)} (cadre ${cote(`${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm, "")} à ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la façade`, "ouvre vers l'extérieur, ferrée côté fond"],
-    ...v.fenetres.map((f: any) => [`fenêtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm, "")} à ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `allège ${cote(f.allege_cm)}, dans un seul panneau`]),
+    [`porte ${po.vitree === false ? "pleine" : "vitrée"}`, `${cote(`${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)}`)} (cadre ${cote(`${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} à ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la façade`, "ouvre vers l'extérieur, ferrée côté fond"],
+    ...v.fenetres.map((f: any) => [`fenêtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm)} à ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `allège ${cote(f.allege_cm)}, dans un seul panneau`]),
   ]);
   table("amenagement", ["élément", "taille", "place"], [
     ...v.bureaux.map((b: any) => [`bureau ${b.cote === "avant" ? "de façade" : b.cote}`, cote(`${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de façade" : b.cote}`]),

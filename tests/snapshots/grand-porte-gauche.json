@@ -4389,6 +4389,7 @@
    "sieges": [
     {
      "type": "fauteuil de bureau",
+     "contre": "gauche",
      "polygone": [
       [
        78,
@@ -4410,6 +4411,7 @@
     },
     {
      "type": "tabouret",
+     "contre": "avant",
      "polygone": [
       [
        136,

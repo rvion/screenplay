@@ -34,11 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
   if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
   const etat_el = document.getElementById("cam-etat");
-  const affiche_etat = () => { if (vue && etat_el) { const e = vue.etat(); etat_el.innerHTML = `<i class="pos">pos (${e.position.join(", ")})</i> <i class="cible">cible (${e.cible.join(", ")})</i> <i class="fov">${e.fov}°</i> <i class="dist">${e.distance} m</i>`; } };
+  const affiche_etat = () => { if (vue && etat_el) { const e = vue.etat(); etat_el.innerHTML = `<i class="pos">pos(${e.position.join(",")})</i><i class="cible">cible(${e.cible.join(",")})</i><i class="fov">${e.fov}°</i><i class="dist">${e.distance}m</i>`; } };
   if (vue) vue.surChangement((e) => { if (dist && document.activeElement !== dist) dist.value = String(e.distance); if (fov) fov.value = String(e.fov); affiche_etat(); });
   if (fov) fov.addEventListener("input", affiche_etat);
   if (dist) dist.addEventListener("input", affiche_etat);
   affiche_etat();
+  const reset = document.getElementById("cam-reset");
+  if (reset) reset.addEventListener("click", () => { if (vue) vue.voir("jardin"); });
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
     const texte = JSON.stringify(vue.etat());
@@ -56,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
       if (!vue) return;
       if (nom === "personne") { vue.montrer("personne", etat === 1); vue.montrer("personne_dedans", etat === 2); }
+      else if (nom === "porte") { vue.montrer("porte", etat === 1); vue.montrer("porte_fermee", etat === 2); }
       else vue.montrer(nom, etat > 0);
       rend_vignettes();
     });

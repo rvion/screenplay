@@ -2038,7 +2038,7 @@ function modele3d_abri(p, g, v, m) {
     gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
     mobilier: {
       bureaux: (v.bureaux || []).map((b) => ({ cote: b.cote, polygone: b.polygone })),
-      sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, polygone: st.polygone })),
+      sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
       lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null
     }
   };

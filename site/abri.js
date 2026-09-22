@@ -2038,7 +2038,7 @@ function modele3d_abri(p, g, v, m) {
     gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
     mobilier: {
       bureaux: (v.bureaux || []).map((b) => ({ cote: b.cote, polygone: b.polygone })),
-      sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, polygone: st.polygone })),
+      sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
       lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null
     }
   };
@@ -2438,7 +2438,7 @@ var fr2 = (x) => String(x).replace(".", ",");
 var fz3 = (x) => fr2(Math.round(x * 10) / 10);
 var eur = (x) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} \u20AC`;
 var echappe = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-var cote = (x, u = "cm") => `<span class="cote">${typeof x === "number" ? fr2(x) : x}${u ? `<span class="u">${u === "\xB0" ? "" : " "}${u}</span>` : ""}</span>`;
+var cote = (x, u = "cm") => `<span class="cote">${typeof x === "number" ? fr2(x) : x}${u ? `<span class="u">${u}</span>` : ""}</span>`;
 var face = (id) => `<span class="face">${id}</span>`;
 function md_en_ligne(s) {
   return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -2510,7 +2510,7 @@ function rend_abri(a) {
   const bloc_versions = el("bloc-versions");
   if (bloc_versions) bloc_versions.hidden = menu.length < 2;
   texte("titre", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs`);
-  texte("sous-titre", `version ${a.version}${retenue ? "" : " (\xE9tude)"} \xB7 panneaux sandwich ${fz3(ep)} cm \xB7 toit vers ${m.sens === "droite" ? "le jardin" : "le fond"}`);
+  texte("sous-titre", `Dossier de construction : plans cot\xE9s, mat\xE9riaux \xE0 acheter, guide de montage${retenue ? "" : ` \xB7 \xE9tude, version ${a.version}`}`);
   surligne_section();
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une \xE9tude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau");
@@ -2520,7 +2520,7 @@ function rend_abri(a) {
   const grillage_gauche = (a.pp.dalle_cm && a.pp.dalle_cm.grillages || []).includes("gauche");
   html("intro", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, pos\xE9 sur la dalle existante \xE0 ${cote(gauche)} ${grillage_gauche ? "du grillage" : "du mur"} de la limite, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L le long des murs ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   const paires = [
-    ["Murs", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm, "")}`).join(" \xB7 ") + " cm"],
+    ["Murs", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" \xB7 ")],
     ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}<br>finies ${cote(Math.max(...m.hauteurs_coins_cm))} \u2192 ${cote(Math.min(...m.hauteurs_coins_cm))}`],
     ["Toit", `pente ${cote(m.pente.pourcent, "%")} \xB7 port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}<br>goutti\xE8re ${G.troncons.map((t) => face(t.face)).join(" ")}`],
     ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}<br>${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
@@ -2531,15 +2531,19 @@ function rend_abri(a) {
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
-    m.faces.map((f, i) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)} ${cote(pn.largeur_cm, "")}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")])
+    m.faces.map((f, i) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)} ${cote(pn.largeur_cm)}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")])
   );
   const PL = core.planches || {};
   const planche = (cle, extra = "") => {
     const q = PL[cle], f = m.faces.find((x) => `facade-${x.cle}` === cle);
     return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} \xB7 ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">\xB7 ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" \xB7 ")}</p><div class="planbox" id="plan-${cle}"><a class="zoom" href="#" data-zoom="${cle}" title="Ouvrir en grand dans un nouvel onglet">agrandir \u2197</a>${q.svg}</div>` : "";
   };
-  html("planche-implantation", planche("implantation"));
-  html("planche-sol", planche("sol"));
+  for (const k of ["implantation", "sol"]) {
+    const q = PL[k];
+    if (!q) continue;
+    html(`titre-${k}`, `${q.nom}${q.detail ? ` <span class="precision">\xB7 ${q.detail}</span>` : ""}`);
+    html(`planche-${k}`, `<p class="note">${q.lignes.join(" \xB7 ")}</p><div class="planbox" id="plan-${k}"><a class="zoom" href="#" data-zoom="${k}" title="Ouvrir en grand dans un nouvel onglet">agrandir \u2197</a>${q.svg}</div>`);
+  }
   const main = document.querySelector("main");
   if (main && !main.__zoom) {
     main.__zoom = true;
@@ -2596,8 +2600,8 @@ function rend_abri(a) {
   html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
   rend_guide(m.guide, a.version);
   table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
-    [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm, "")} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
-    ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm, "")} \xE0 ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `all\xE8ge ${cote(f.allege_cm)}, dans un seul panneau`])
+    [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
+    ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm)} \xE0 ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `all\xE8ge ${cote(f.allege_cm)}, dans un seul panneau`])
   ]);
   table("amenagement", ["\xE9l\xE9ment", "taille", "place"], [
     ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, cote(`${fz3(b.profondeur_cm)} \xD7 ${fr2(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
@@ -2732,7 +2736,7 @@ function dessine_tuile_grillage() {
   return c;
 }
 function peuple_abri(abri, data, visible_demande = {}) {
-  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, ...visible_demande };
+  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2870,13 +2874,17 @@ function peuple_abri(abri, data, visible_demande = {}) {
           pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s0, s1, o.hauteur_cm, o.hauteur_cm + ch, -ep, 0, matCadre));
         }
-        const battant = new THREE.Group(), angle = 1.15;
-        const geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
-        geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
-        battant.add(ombre(new THREE.Mesh(geoB, o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }))));
-        battant.position.set(s1 / 100, 0, -0.01);
-        battant.rotation.y = angle;
-        pose(battant, groupes.porte || groupe("porte"));
+        const matB = o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 });
+        const battant = (angle) => {
+          const g = new THREE.Group(), geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
+          geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
+          g.add(ombre(new THREE.Mesh(geoB, matB)));
+          g.position.set(s1 / 100, 0, -0.01);
+          g.rotation.y = angle;
+          return g;
+        };
+        pose(battant(1.15), groupes.porte || groupe("porte"));
+        pose(battant(0), groupes.porte_fermee || groupe("porte_fermee"));
         const matP = mat(COUL.personne, { roughness: 0.9 });
         const silhouette = (z, y, decale = 0) => {
           const corps = new THREE.Group();
@@ -2966,12 +2974,19 @@ function peuple_abri(abri, data, visible_demande = {}) {
   mob.add(sieges);
   groupes.sieges = sieges;
   for (const st of data.mobilier.sieges) {
-    const haut2 = /tabouret/.test(st.type) ? 45 : 47;
-    sieges.add(ombre(new THREE.Mesh(prisme(st.polygone, plat(sol + haut2 - 6), plat(sol + haut2)), mat(COUL.siege))));
-    const mxs = st.polygone.reduce((s, z) => s + z[0], 0) / st.polygone.length, mys = st.polygone.reduce((s, z) => s + z[1], 0) / st.polygone.length;
-    const pied = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, (haut2 - 6) / 100, 12), mat(COUL.siege));
-    pied.position.copy(W(mxs, mys, sol + (haut2 - 6) / 2));
-    sieges.add(pied);
+    const tabouret = /tabouret/.test(st.type), haut2 = tabouret ? 45 : 47, matS = mat(COUL.siege), q = st.polygone;
+    const xs2 = q.map((z) => z[0]), ys2 = q.map((z) => z[1]), x0 = Math.min(...xs2), x1 = Math.max(...xs2), y0 = Math.min(...ys2), y1 = Math.max(...ys2);
+    const marge = tabouret ? 2 : 4, a0 = x0 + marge, a1 = x1 - marge, b0 = y0 + marge, b1 = y1 - marge;
+    sieges.add(ombre(new THREE.Mesh(prisme([[a0, b0], [a1, b0], [a1, b1], [a0, b1]], plat(sol + haut2 - 5), plat(sol + haut2)), matS)));
+    for (const [px, py] of [[a0 + 3, b0 + 3], [a1 - 3, b0 + 3], [a1 - 3, b1 - 3], [a0 + 3, b1 - 3]]) {
+      const pied = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, (haut2 - 5) / 100, 8), matS);
+      pied.position.copy(W(px, py, sol + (haut2 - 5) / 2));
+      sieges.add(ombre(pied));
+    }
+    if (!tabouret) {
+      const d = st.contre === "gauche" ? [[a1 - 4, b0], [a1, b0], [a1, b1], [a1 - 4, b1]] : st.contre === "droite" ? [[a0, b0], [a0 + 4, b0], [a0 + 4, b1], [a0, b1]] : [[a0, b1 - 4], [a1, b1 - 4], [a1, b1], [a0, b1]];
+      sieges.add(ombre(new THREE.Mesh(prisme(d, plat(sol + haut2), plat(sol + haut2 + 42)), matS)));
+    }
   }
   const lit = groupe("lit");
   if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
@@ -3008,7 +3023,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3034,6 +3049,7 @@ function createAbriViewer(container, data0) {
     controls.target.set(...v.cible);
     regler({ fov: v.fov });
     controls.update();
+    controls.dispatchEvent({ type: "change" });
   }
   const r2 = (x) => Math.round(x * 100) / 100;
   function etat() {
@@ -3123,7 +3139,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const affiche_etat = () => {
     if (vue && etat_el) {
       const e = vue.etat();
-      etat_el.innerHTML = `<i class="pos">pos (${e.position.join(", ")})</i> <i class="cible">cible (${e.cible.join(", ")})</i> <i class="fov">${e.fov}\xB0</i> <i class="dist">${e.distance} m</i>`;
+      etat_el.innerHTML = `<i class="pos">pos(${e.position.join(",")})</i><i class="cible">cible(${e.cible.join(",")})</i><i class="fov">${e.fov}\xB0</i><i class="dist">${e.distance}m</i>`;
     }
   };
   if (vue) vue.surChangement((e) => {
@@ -3134,6 +3150,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (fov) fov.addEventListener("input", affiche_etat);
   if (dist) dist.addEventListener("input", affiche_etat);
   affiche_etat();
+  const reset = document.getElementById("cam-reset");
+  if (reset) reset.addEventListener("click", () => {
+    if (vue) vue.voir("jardin");
+  });
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
     const texte2 = JSON.stringify(vue.etat());
@@ -3159,6 +3179,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (nom === "personne") {
         vue.montrer("personne", etat === 1);
         vue.montrer("personne_dedans", etat === 2);
+      } else if (nom === "porte") {
+        vue.montrer("porte", etat === 1);
+        vue.montrer("porte_fermee", etat === 2);
       } else vue.montrer(nom, etat > 0);
       rend_vignettes();
     });

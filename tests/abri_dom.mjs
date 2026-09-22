@@ -25,7 +25,7 @@ const a = run(params), m = a.m, v = a.v;
 
 ok(a.version > 1 && params.abri_principal === "abri_v" + a.version && a.pp.disposition_trapeze.toit.sens === m.sens, "la page montre la version principale (" + params.abri_principal + ", toit vers " + (m.sens === "droite" ? "la droite" : "le fond") + ")");
 ok(params.abri_principal === "abri_v4" && m.sens === "arriere" && m.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "abri retenu : toit vers le fond, gouttière derrière (mur du fond et pan à 45°)");
-ok(m.faces.length === 5 && /cinq murs/.test($("#titre").textContent) && /^version 4 · panneaux sandwich 6 cm · toit vers le fond$/.test($("#sous-titre").textContent), "en-tete court : titre, puis « " + $("#sous-titre").textContent + " »");
+ok(m.faces.length === 5 && /cinq murs/.test($("#titre").textContent) && /^Dossier de construction : plans cotés, matériaux à acheter, guide de montage$/.test($("#sous-titre").textContent), "en-tete court : titre, puis « " + $("#sous-titre").textContent + " »");
 ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(html) && /href="abri\.css/.test(html) && !/href="style\.css/.test(html), "page sobre : ni bandeau colore, ni badges, ni emoji ; feuille abri.css seule");
 // menu de gauche : une seule version montree (abri_menu), donc pas de bloc « versions » ni de lien vers une autre
 {
@@ -34,19 +34,19 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
   ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
-  ok(ancres.length === 8 && ancres.every((h) => $(h)), "menu : les 8 sections de la page, toutes existantes");
+  ok(ancres.length === 9 && ancres.every((h) => $(h)), "menu : les 9 sections de la page, toutes existantes");
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
   ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 20), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
 ok($("#fiche-chantier h2").textContent === "Résumé" && $$("#fiche .carte").length === 6 && $("#fiche").textContent.length < 340 && /TTC/.test($("#fiche").textContent), "résumé : 6 cartes, " + $("#fiche").textContent.length + " caractères");
 ok(/cinq murs/.test($("#intro").textContent) && /grillage/.test($("#intro").textContent) && $$("#intro .cote").length >= 2 && $$("#intro .face").length >= 3, "résumé : deux phrases d'introduction calculées (murs, grillage, porte, fenêtres, bureaux)");
-ok($$("#implantation #murs tbody tr").length === m.faces.length && $("#implantation .plans-haut").nextElementSibling.contains($("#murs")), "tableau des murs : une ligne par face, sous les deux plans de tête");
-ok($$("#implantation .plans-haut figure").length === 2 && $("#implantation #plan-implantation svg") && $("#implantation #plan-sol svg") && $("#plans").previousElementSibling === $("#implantation"), "implantation et plan de sol côte à côte, dans leur section, au-dessus des élévations");
+ok($$("#murs-section #murs tbody tr").length === m.faces.length && $("#murs-section").previousElementSibling.classList.contains("rangee") && $("#murs-section").nextElementSibling === $("#plans"), "tableau des murs : sa propre boîte pleine largeur, entre la rangée des deux plans et les élévations");
+ok($(".rangee > section#implantation #plan-implantation svg") && $(".rangee > section#sol #plan-sol svg") && /^Implantation sur la dalle/.test($("#titre-implantation").textContent) && /^Plan de sol/.test($("#titre-sol").textContent), "implantation et plan de sol : deux boîtes côte à côte, chacune avec son titre");
 // les titres des plans sont du texte de la page, pas du dessin : le SVG de la page n'a plus d'entete, le fichier SVG la garde
 ok(!/Face G · gauche/.test($("#plan-facade-G svg").innerHTML) && /Face G · gauche/.test(a.core.svg["modele-facade-G"]) && $("#plans-details article[data-cle='facade-G'] h3").textContent.replace(/\s+/g, " ").trim() === "Face G · gauche" && /vue de l'extérieur · 3 panneaux de 215/.test($("#plans-details article[data-cle='facade-G'] p.note").textContent), "planches : titre et légende en texte au-dessus du dessin, absents du dessin de la page, présents dans le fichier SVG");
-ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg") && $("#plan-" + k).previousElementSibling.tagName === "P" && /Plan de sol|Implantation|Toiture|Rehausse/.test($("#plan-" + k).parentElement.querySelector("h3").textContent)), "planches : implantation, sol, toiture, rehausse ont leur titre en h3 et leur légende en p.note");
+ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg") && $("#plan-" + k).previousElementSibling.tagName === "P" && /Plan de sol|Implantation|Toiture|Rehausse/.test($("#plan-" + k).closest("section, article").querySelector("h2, h3").textContent)), "planches : implantation, sol, toiture, rehausse ont leur titre (h2 de boîte ou h3 de détail) et leur légende en p.note");
 ok(+(a.core.planches["facade-G"].svg.match(/viewBox="0 0 [\d.]+ ([\d.]+)"/)[1]) < +(a.core.svg["modele-facade-G"].match(/viewBox="0 0 [\d.]+ ([\d.]+)"/)[1]) - 40, "planches : le dessin sans entête est plus court que le fichier SVG");
-ok(!$("#implantation-points") && $$("#implantation .plans-haut p.note").every((x) => x.textContent.length < 130), "implantation : plus de liste sous le plan, une légende courte par planche");
+ok(!$("#implantation-points") && $$(".rangee .planche p.note").every((x) => x.textContent.length < 130), "implantation : plus de liste sous le plan, une légende courte par planche");
 ok($$("a.zoom[data-zoom]").length === Object.keys(a.core.planches).length && $("#plan-implantation a.zoom") && $("#plan-sol a.zoom"), "chaque planche a son lien « agrandir » (nouvel onglet)");
 ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg")), "4 plans SVG injectés");
 ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.length && /Face C/.test($("#plans-details").textContent), "une élévation par mur, pan C compris");
@@ -60,7 +60,8 @@ ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.leng
 }
 // cotes et reperes : un style unique
 ok($$("#fiche .cote").length >= 10 && $$("#fiche .face").length >= 6 && $$("#murs .face").length === m.faces.length + m.faces.reduce((n, f) => n + f.panneaux.length, 0) && $$("#debit-murs .face, #debit-toit .face, #debit-rehausse .face").length >= 12, "cotes (.cote) et repères (.face) balisés dans la fiche, les murs et le débit");
-ok($$("main .cote").every((x) => /^[\d,]+( ?×? ?[\d,]+)*(°| (cm|m|mm|m²|%))?$/.test(x.textContent.trim())), "chaque .cote est un nombre (ou a × b) suivi de son unité, le degré collé");
+ok($$("main .cote").every((x) => /^[\d,]+( ?×? ?[\d,]+)*(°|cm|mm|m²|m|%)?$/.test(x.textContent.trim())), "chaque .cote est un nombre (ou a × b) suivi de son unité, collée");
+ok($$("#murs td:nth-child(5) .cote").every((x) => /cm$/.test(x.textContent)) && $$("#fiche .carte:first-child .cote").every((x) => /cm$/.test(x.textContent)), "tableau des murs et carte des murs : chaque largeur de panneau porte son cm");
 ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux.length, 0) && $$("#debit-toit tbody tr").length === m.toit.panneaux.length && $$("#debit-rehausse tbody tr").length === m.rehausse.pieces.length, "débit : murs, toit, rehausse");
 // materiaux : que des achats, quantite x prix = montant, total = somme hors options, rien de forfaitaire
 {
@@ -119,8 +120,8 @@ ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a 
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
 ok(["docs/abri.html", "docs/index.html"].every((h) => html.includes(`href="${h}"`) && existsSync(join(ROOT, "site", h))), "liens : document complet, index des documents");
-ok(["voir-toit", "voir-porte", "voir-mobilier", "voir-lit", "voir-etiquettes", "voir-personne"].every((id) => $("#" + id) && $("#" + id).tagName === "BUTTON" && $("#" + id + " svg") && $("#" + id + " span")) && $("#voir-personne").dataset.etats === "3" && $$("#voir-personne .points b").length === 3 && $("#voir-porte").getAttribute("aria-pressed") === "true" && $("#voir-personne").getAttribute("aria-pressed") === "false", "bascules de la 3D : boutons carrés à icône (porte active), personne à trois états avec ses trois points, éteinte au départ");
-ok($(".vue .vue-barre #cam-fov[type=range]") && +$("#cam-fov").max >= 100 && $(".vue .vue-barre #cam-dist[type=range]") && $(".vue .vue-barre #cam-etat") && $(".vue .vue-barre #cam-copier"), "barre de caméra sur la vue : angle (jusqu'au grand angle), distance, valeurs en clair, copier la vue");
+ok(["voir-toit", "voir-porte", "voir-mobilier", "voir-lit", "voir-etiquettes", "voir-personne"].every((id) => $("#" + id) && $("#" + id).tagName === "BUTTON" && $("#" + id + " svg") && $("#" + id + " span")) && $("#voir-personne").dataset.etats === "3" && $$("#voir-personne .points b").length === 3 && $("#voir-porte").dataset.etats === "3" && $("#voir-porte span").textContent === "ouverte" && $("#voir-porte").getAttribute("aria-pressed") === "true" && $("#voir-personne").getAttribute("aria-pressed") === "false", "bascules de la 3D : boutons carrés à icône (porte active), personne à trois états avec ses trois points, éteinte au départ");
+ok($(".vue .vue-barre #cam-fov[type=range]") && +$("#cam-fov").max >= 100 && $(".vue .vue-barre #cam-dist[type=range]") && $(".vue .vue-barre #cam-etat") && $(".vue .vue-barre #cam-reset svg") && $(".vue .vue-barre #cam-copier svg") && $$(".vue-barre label.tip[data-tip] svg").length === 2, "barre de caméra : deux curseurs à icône et infobulle, valeurs, retour à la vue de départ, copier");
 ok($$("#vignettes button[data-vue] canvas").length === 3 && $$("#vignettes button").map((b) => b.dataset.vue).join() === "porte,arriere,dessus", "trois vignettes 3D sous la vue principale : porte, arrière, dessus");
 
 // chaque autre version prete se rend sans valeur manquante, avec son bandeau et son document
