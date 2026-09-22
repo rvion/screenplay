@@ -224,10 +224,13 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   Sur la vue, une **barre de caméra** fine et translucide (angle 15 à 110°, distance, les valeurs en petit
   sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
   et distance en JSON : c'est ainsi que Rémi transmet un point de vue à régler dans `VUES` ;
-  `window.abri_vue.placer({...})` rejoue un état copié). Sous la vue, **trois
-  vignettes** (côté porte, derrière avec le passage, dessus) : des rendus fixes des points de vue `VUES`,
-  tirés du même contexte WebGL (rendu puis copie du tampon dans un canvas 2D), refaits à chaque case cochée ;
-  un clic sur une vignette amène la caméra principale à ce point de vue. `peuple_abri`
+  `window.abri_vue.placer({...})` rejoue un état copié). Sous les deux colonnes du résumé, **six vignettes** (`VUES` : jardin = vue de
+  départ, côté porte, derrière avec le passage, vue de droite collée par Rémi, intérieur sans toit, lit
+  déplié) : des rendus fixes tirés du même contexte WebGL (la scène prend les **états d'options** de la
+  vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
+  mobilier, lit, repères, personne, clôture) ; un clic règle la caméra **et** les boutons ; la première
+  vignette ramène à l'état de départ, comme le bouton reset ; « copier la vue » copie position, cible,
+  angle, distance **et** les états. `peuple_abri`
   construit la scène **sans renderer**, ce qui permet de la mesurer sous Node.
 - Tests : `tests/abri3d.mjs` construit la scène avec le vrai three.js (devDependency, même version
   que le CDN) et vérifie, **pour chaque version**, les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers
