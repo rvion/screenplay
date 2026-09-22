@@ -38,7 +38,7 @@
       en panneaux entiers, 4,0 m². À trancher ; le site montre la bande en direct.
 - [ ] **Fenêtre fixe de la face G** : elle regarde le mur de propriété à 2 cm. La déplacer
       (module A1 côté jardin, ou face B vers l'arrière) ou la supprimer.
-- [ ] **Mur de propriété** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé). S'il dépasse
+- [ ] **Mur de propriété** (grand pan de 258) : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage fait 1 m (`grillage_hauteur_cm`). S'il dépasse
       215 cm, le débord de toit arrière doit aussi dégager le mur.
 - [ ] **Formalités** : l'emprise au sol est celle des murs, débords de toiture exclus (R*420-1,
       D29). Reste à vérifier en mairie : secteur protégé / abords MH (déclaration préalable même

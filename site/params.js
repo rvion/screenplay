@@ -28,8 +28,9 @@ window.SHED_PARAMS = {
       "gauche",
       "arriere_gauche"
     ],
-    "_grillages_comment": "Parmi murs_mitoyens, les cotes fermes par un grillage metallique et non par un mur : le cote gauche et le petit pan de 104. Seul le grand pan de 258 est un mur. Meme limite infranchissable ; dessin different (pointille vert sur les plans, poteaux et treillis en 3D).",
+    "_grillages_comment": "Parmi murs_mitoyens, les cotes fermes par un grillage metallique et non par un mur : le cote gauche et le petit pan de 104. Seul le grand pan de 258 est un mur. Meme limite infranchissable ; dessin different (pointille vert sur les plans, poteaux et treillis en 3D). grillage_hauteur_cm = hauteur du grillage (environ 1 m, mesure de Remi) ; mur_hauteur_cm reste l'hypothese pour le mur.",
     "mur_hauteur_cm": 180,
+    "grillage_hauteur_cm": 100,
     "mur_epaisseur_cm": 15,
     "passage_souhaite_cm": 50,
     "bandes_libres_cm": {

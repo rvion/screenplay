@@ -246,6 +246,7 @@
         }
       ],
       "mur_hauteur_cm": 180,
+      "grillage_hauteur_cm": 100,
       "mur_epaisseur_cm": 15,
       "passage": {
         "cm": 26.8,

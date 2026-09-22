@@ -34,8 +34,8 @@ des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.</l
 fond), infranchissables. <code>dalle_cm.grillages</code> nomme ceux fermés par un <strong>grillage</strong> et non un mur
 (gauche, petit pan de 104) : <code>dalle.murs[].type</code> vaut <code>grillage</code> ou <code>mur</code>. Un mur est un trait brun
 épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
-translucide avec poteaux tous les 2 m et lisse haute (même hauteur <code>mur_hauteur_cm</code>, hypothèse à
-mesurer). La légende (<code>legende_clotures</code>) et les textes du guide suivent. <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
+translucide avec poteaux tous les 2 m et lisse haute, haut de <code>grillage_hauteur_cm</code> (100, mesuré) ; le mur
+garde <code>mur_hauteur_cm</code> (180, hypothèse à mesurer). La légende (<code>legende_clotures</code>) et les textes du guide suivent. <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
 point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
 garde <code>passage_souhaite_cm</code>. Carte <strong>Passage derrière l&#39;abri</strong> en vigilance. Un débord hors
 dalle contre un mur est signalé comme impossible à combler.</li>

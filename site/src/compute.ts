@@ -335,6 +335,7 @@ export function geometry(p: Params) {
       cotes_noms: noms,
       murs,
       mur_hauteur_cm: +d.mur_hauteur_cm || 0,
+      grillage_hauteur_cm: +d.grillage_hauteur_cm || +d.mur_hauteur_cm || 0,
       mur_epaisseur_cm: +d.mur_epaisseur_cm || 15,
       passage,
       toit_touche_mur: murs.some((w) => w.toit_cm < 0),
@@ -1799,7 +1800,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
-    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: w.type === "grillage" ? d.grillage_hauteur_cm : d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f: any, i: number) => ({
