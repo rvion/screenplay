@@ -1060,7 +1060,7 @@ export function plan_sol_svg(p: Params, g: any, openings: any[], sans_entete = f
   const W = Math.max(base_W, tw(title, 15) + 24);
   const xoff = (W - base_W) / 2;
   const P = (v: number[]) => [pad + xoff + (v[0] - minx) * scale, H - pad - (v[1] - miny) * scale];
-  let svg = svgHeader(rnd(W), rnd(H));
+  let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   if (d) svg += poly(d.polygone.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
   svg += poly(g.verts.map(P), "#dce8f5", "#2b5d8a", 2);
   if (d) for (const w of d.murs) {
@@ -1387,7 +1387,9 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   } else svg += text(W / 2, 26, zu ? `Dalle réelle ${d.aire_m2} m² · zone utile ${zu.aire_m2} m²` : `Dalle réelle · ${n} côtés · ${d.aire_m2} m²`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus · cotes relevées au mètre · somme des angles ${f0(somme)}°`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant supposés droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, m ? `AVANT (jardin) · ${leg_cloture}` : v ? `AVANT (jardin) · ${leg_cloture} · vert pointillé = zone utile · trait coloré = passage (cm)` : `AVANT (jardin) · ${leg_cloture}`, "middle", "#666", 11);
+  // une forme dans la zone utile : la legende tient sur deux lignes, une seule depasse du dessin
+  if (v && !m) svg += text(W / 2, H - 26, `AVANT (jardin) · ${leg_cloture}`, "middle", "#666", 11) + text(W / 2, H - 12, "vert pointillé = zone utile · trait coloré = passage (cm)", "middle", "#666", 11);
+  else svg += text(W / 2, H - 12, `AVANT (jardin) · ${leg_cloture}`, "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
@@ -2248,8 +2250,8 @@ export function injecteur(v: any, m: any, base: any): (s: string) => string {
 export function textes_variante(bloc: any, core: any, base: any) {
   const v = core.variantes.find((x: any) => x.id === 13), injecte = injecteur(v, core.modele, base);
   const liste = (k: string, de: any = bloc): string[] => (de[k] || []).map(injecte);
-  // dossier : textes autonomes de la page d'accueil (points forts, points faibles, questions), sans comparaison
-  const dossier = bloc.dossier ? { atouts: liste("atouts", bloc.dossier), limites: liste("limites", bloc.dossier), questions: liste("questions", bloc.dossier) } : null;
+  // dossier : textes autonomes de la page d'accueil (points forts, points faibles, questions, idees a explorer), sans comparaison
+  const dossier = bloc.dossier ? { atouts: liste("atouts", bloc.dossier), limites: liste("limites", bloc.dossier), questions: liste("questions", bloc.dossier), idees: liste("idees", bloc.dossier) } : null;
   return { atouts: liste("atouts"), pertes: liste("pertes"), notes: liste("notes"), hors_modele: liste("hors_modele"), dossier };
 }
 

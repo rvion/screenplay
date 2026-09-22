@@ -15,7 +15,7 @@ globalThis.window = dom.window; globalThis.document = dom.window.document;
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri_dom_entry.mjs");
 await esbuild.build({ entryPoints: ["tests/abri_dom_entry.ts"], bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
-const { run, md_en_ligne, versions_pretes } = await import(pathToFileURL(out).href);
+const { run, md_en_ligne, versions_pretes, mode_document } = await import(pathToFileURL(out).href);
 
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
@@ -32,7 +32,8 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   const pretes = versions_pretes(params).filter((n) => params.abri_menu.includes("abri_v" + n));
   ok(versions_pretes(params).join() === "1,2,3,4" && pretes.join() === "4" && $$("#versions li").length === 1 && $("#bloc-versions").hidden === true, "menu : abri_menu ne garde que la version 4, le bloc des versions est caché (" + versions_pretes(params).length + " versions restent calculables par ?v=N)");
   ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
-  ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
+  ok($("#bandeau").hidden === true, "version retenue : pas de bandeau");
+  ok(!$("aside.menu > h2") && $("aside.menu nav.sections") && !/Sommaire/.test($("aside.menu").textContent), "menu : le sommaire n'a pas de titre");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
   ok(ancres.length === 12 && ancres.every((h) => $(h)) && $$("aside.menu nav.sections a").map((x) => x.textContent).join("|") === "Résumé|Plan|Murs|Élévations|Débit|Matériaux|Montage|Ouvertures|Mobilier|Pourquoi|Questions|Alternatives", "menu : douze entrées d'un ou deux mots, toutes existantes");
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
@@ -116,7 +117,8 @@ ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte p
 ok($$("#debit-murs td .cote .n").length >= 10 && $$("#debit-murs td .cote").some((c) => c.querySelector(".d")) && $$("#debit-murs td .cote .d").every((d) => /^,\d+$/.test(d.textContent)), "cotes des tableaux : partie entière et décimales séparées (alignement sur le dernier chiffre entier)");
 ok($$("#pourquoi-corps li").length >= 8 && !/\{\w+\}/.test($("#pourquoi-corps").textContent), "pourquoi : textes de la version, tous les {champs} remplacés");
 ok($$("#pourquoi-corps .pourquoi-bloc").length === 2 && $$("#pourquoi-corps li b").length >= 10 && $$("#pourquoi-corps li .suite").length >= 10 && $$("#pourquoi-corps h3 .marque").length === 2 && !/version 3|au lieu de/.test($("#pourquoi-corps").textContent), "pourquoi : points forts et points faibles ; textes autonomes (aucune comparaison avec une autre version)");
-ok($("#questions h2").textContent === "Questions et axes d'amélioration" && $("#pourquoi").nextElementSibling === $("#questions") && $$("#questions-corps ol.questions li .question").map((q) => q.textContent).join() === "Q1,Q2,Q3,Q4,Q5,Q6" && $$("#questions-corps li").every((li) => /\?$/.test(li.textContent.trim())) && /8,2 %/.test($("#questions-corps").textContent), "questions : leur section sous « pourquoi », Q1 à Q6, chacune finit par un point d'interrogation, champs calculés");
+ok($("#questions h2").textContent === "Questions et idées" && $("#pourquoi").nextElementSibling === $("#questions") && $$("#questions-corps .pourquoi-bloc").length === 2 && $$("#questions-corps ol.questions").every((o) => o.closest(".pourquoi-bloc")) && $$("#questions-corps .pourquoi-bloc:first-child .question").map((q) => q.textContent).join() === "Q1,Q2,Q3,Q4,Q5,Q6" && $$("#questions-corps .pourquoi-bloc:first-child li").every((li) => /\?$/.test(li.textContent.trim())) && /8,2 %/.test($("#questions-corps").textContent), "questions : leur section sous « pourquoi », un bloc de questions Q1..Q6 en liste simple, chacune finit par « ? »");
+ok($$("#questions-corps .pourquoi-bloc:last-child .question").length >= 10 && $$("#questions-corps .pourquoi-bloc:last-child .question")[0].textContent === "I1" && $$("#questions-corps .pourquoi-bloc:last-child li b").length >= 10 && /porte 2,8 m sans panne/.test($("#questions-corps .pourquoi-bloc:last-child").textContent) && !/columns: 2/.test(readFileSync(join(ROOT, "site/abri.css"), "utf8").split("ol.questions")[1].split("}")[0]), "idées : un second bloc I1.., accroche en gras, chiffres injectés, liste simple sans colonnes de texte");
 ok($$("#alternatives-liste li").length === 4 && $$("#alternatives-liste li .icone svg").length === 4 && $$("#alternatives-liste .t").map((b) => b.textContent).join("|") === "Everbox 2 × 2 m|Carré 2 × 2 m|Rectangle 200 × 240|Trapèze" && $$("#alternatives-corps article.detail").filter((x) => !x.hidden).length === 1 && $$("#alternatives-corps article a").every((x) => existsSync(join(ROOT, "site", x.getAttribute("href").split("#")[0]))) && $$("#alternatives-corps article .planbox svg").length === 4, "formes étudiées : liste (icône de la forme + titre) et plan complet à droite ; Everbox, carré, rectangle, trapèze ; liens existants");
 ok(!/undefined|NaN|\[object/.test($("main").textContent), "aucune valeur manquante dans la page");
 // liens des textes : un .md publie pointe vers sa page de docs/, qui existe
@@ -125,7 +127,22 @@ ok(liens.every((h) => /^[a-z]+:/.test(h) || existsSync(join(ROOT, "site", h.spli
 ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a href="docs/abri-v2.html">c</a> &lt;x&gt;', "markdown en ligne : gras, code, lien vers docs/, HTML échappé");
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
-ok(["docs/abri.html", "docs/index.html"].every((h) => html.includes(`href="${h}"`) && existsSync(join(ROOT, "site", h))), "liens : document complet, index des documents");
+ok(html.includes('href="docs/index.html"') && !html.includes('href="docs/abri.html"') && existsSync(join(ROOT, "site/docs/index.html")), "liens : l'index des documents dans le menu, plus de lien vers la page markdown en haut a droite");
+// document complet (?doc=1) : le meme rendu, tout deroule sans menu ni listes, c'est aussi ce que l'impression montre
+{
+  const css = readFileSync(join(ROOT, "site/abri.css"), "utf8");
+  mode_document(a, false);
+  ok(!document.body.classList.contains("document") && $("#lien-document").getAttribute("href") === "/?doc=1" && $("#lien-document").textContent === "Document complet", "vue interactive : le bouton mene au document complet (?doc=1)");
+  mode_document(a, true);
+  ok(document.body.classList.contains("document") && $("#lien-document").getAttribute("href") === "/" && $("#lien-document").textContent === "Vue interactive", "document complet : body.document, le bouton ramene a la vue interactive");
+  const b3 = run(params, 3); mode_document(b3, true);
+  ok($("#lien-document").getAttribute("href") === "/?v=3" && (mode_document(b3, false), $("#lien-document").getAttribute("href") === "/?v=3&doc=1"), "document complet d'une autre version : ?v=3 garde sa version dans les deux sens");
+  run(params); mode_document(a, false);
+  const regle = (sel) => new RegExp(sel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "[^{]*\\{[^}]*display: none").test(css);
+  ok(regle("body.document aside.menu") && regle("body.document .maitre .cote-liste") && regle("body.document h2 .mode") && /body\.document \.detail\[hidden\] \{ display: block/.test(css), "document complet : menu, listes et bascules caches, chaque detail deroule (abri.css)");
+  ok(!/@media print \{[\s\S]*\.detail\[hidden\][\s\S]*\}/.test(css.slice(css.indexOf("@media print"))) && /@media print \{[^]*aside\.menu/.test(css) === false, "impression : rien de deroule deux fois, @media print ne porte que le papier (le mode document est pose avant d'imprimer)");
+  ok(/beforeprint/.test(readFileSync(join(ROOT, "site/src/abri_main.ts"), "utf8")) && /afterprint/.test(readFileSync(join(ROOT, "site/src/abri_main.ts"), "utf8")), "imprimer passe par le mode document, puis la page retrouve le sien");
+}
 ok(["voir-toit", "voir-murs", "voir-porte", "voir-mobilier", "voir-etiquettes", "voir-personne", "voir-cloture"].every((id) => $("#" + id) && $("#" + id).tagName === "BUTTON" && $("#" + id + " svg") && $("#" + id + " span") && $$("#" + id + " .points b").length === +$("#" + id).dataset.etats) && $("#voir-porte span").textContent === "porte" && $("#voir-porte").getAttribute("aria-pressed") === "true" && $("#voir-cloture").dataset.etat === "0" && $("#voir-cloture span").textContent === "clôture" && $$("#bascules .groupe").length === 0 && $$("#bascules > button").length === 7 && $("#voir-mobilier").dataset.etats === "4" && $$("#voir-mobilier .points b").length === 4 && !$("#voir-lit") && $("#bascules").parentElement.classList.contains("scene") && $("#bascules").previousElementSibling.classList.contains("vue-barre"), "bascules : colonne posée sur la vue (dans .scene, après la barre caméra), huit boutons sans groupe, libellés fixes, autant de points que d'états");
 ok($(".vue .vue-barre #cam-fov[type=range]") && +$("#cam-fov").max >= 100 && $(".vue .vue-barre #cam-dist[type=range]") && $(".vue .vue-barre #cam-etat") && $(".vue .vue-barre #cam-reset svg") && $(".vue .vue-barre #cam-copier svg") && $$(".vue-barre label.pilule.tip[data-tip] svg").length === 2 && $(".vue-barre").firstElementChild.id === "cam-reset", "barre de caméra : deux curseurs à icône et infobulle, valeurs, retour à la vue de départ, copier");
 ok($$("#vignettes button[data-vue] canvas").length === 7 && $$("#vignettes button").map((b) => b.dataset.vue).join() === "jardin,arriere,droite,porte,interieur,lit,lit2" && $("#vignettes").previousElementSibling.classList.contains("fiche-vue"), "sept vignettes sous les deux colonnes du résumé, la première est la vue de départ");
@@ -134,7 +151,7 @@ ok($$("#vignettes button[data-vue] canvas").length === 7 && $$("#vignettes butto
 for (const n of versions_pretes(params).filter((k) => k !== a.principale)) {
   const b = run(params, n);
   ok(b.version === n && $("#bandeau").hidden === false && new RegExp("version " + n).test($("#bandeau").textContent) && $("#bandeau a").getAttribute("href") === "?v=" + a.principale, `?v=${n} : bandeau « version ${n}, une étude », retour à la version retenue`);
-  ok($("#lien-document").getAttribute("href") === `docs/abri-v${n}.html` && existsSync(join(ROOT, "site/docs", `abri-v${n}.html`)), `?v=${n} : lien vers docs/abri-v${n}.html, qui existe`);
+  ok(existsSync(join(ROOT, "site/docs", `abri-v${n}.html`)), `?v=${n} : son document docs/abri-v${n}.html existe`);
   ok($$("#murs tbody tr").length === b.m.faces.length && $$("#plans-details article[data-cle^='facade-'] svg").length === b.m.faces.length && new RegExp(b.m.faces.length === 5 ? "cinq" : "quatre").test($("#titre").textContent), `?v=${n} : ${b.m.faces.length} murs, autant d'élévations, titre accordé`);
   ok(!/undefined|NaN|\[object/.test($("main").textContent) && $$("#etapes article.etape").length >= 12 && $("#pourquoi").hidden === (n === 1), `?v=${n} : aucune valeur manquante, montage complet${n === 1 ? ", pas de section « pourquoi » (forme de base)" : ""}`);
 }

@@ -119,8 +119,6 @@ export function rend_abri(a: Abri) {
   surligne_section();
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une étude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau"); if (bandeau) (bandeau as HTMLElement).hidden = retenue;
-  const doc = el("lien-document") as HTMLAnchorElement | null;
-  if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
 
   // resume : une suite de faits, chaque fait cle en surbrillance (span.fait)
   const fait = (x: string) => `<span class="fait">${x}</span>`;
@@ -213,21 +211,23 @@ export function rend_abri(a: Abri) {
 
   // pourquoi : une puce par idee, l'accroche en gras, le reste en petit ; un marqueur par groupe
   const T = a.textes;
-  const puce = (s: string) => {
+  const accroche = (s: string) => {
     const gras = s.match(/^\*\*(.+?)\*\*\s*[:.]?\s*([\s\S]*)$/);
     const [tete, suite] = gras ? [gras[1], gras[2]] : (() => { const i = s.search(/[.!?]\s/); return i > 0 ? [s.slice(0, i + 1), s.slice(i + 2)] : [s, ""]; })();
-    if (!gras && !suite) return `<li>${md_en_ligne(s)}</li>`;
-    return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
+    if (!gras && !suite) return md_en_ligne(s);
+    return `<b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}`;
   };
+  const puce = (s: string) => `<li>${accroche(s)}</li>`;
   const bloc = (marque: string, titre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "");
   // questions ouvertes, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
   const section = el("pourquoi"); if (section) (section as HTMLElement).hidden = !T;
   const D = T && T.dossier;
   html("pourquoi-corps", D ? bloc("✅", "Points forts", D.atouts) + bloc("⚠️", "Points faibles", D.limites)
     : T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
-  // questions ouvertes : leur section, numerotees Q1, Q2… (span.question, le meme repere partout ou une question est citee)
-  const sq = el("questions"); if (sq) (sq as HTMLElement).hidden = !(D && D.questions.length);
-  html("questions-corps", D && D.questions.length ? `<ol class="questions">${D.questions.map((s: string, i: number) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol>` : "");
+  // questions ouvertes (Q1, Q2…) et idees a explorer (I1, I2…) : deux listes cote a cote, meme repere partout ou l'une est citee
+  const sq = el("questions"); if (sq) (sq as HTMLElement).hidden = !(D && (D.questions.length || D.idees.length));
+  const numerotee = (marque: string, titre: string, lettre: string, items: string[]) => (items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "");
+  html("questions-corps", D ? numerotee("❓", "Questions", "Q", D.questions) + numerotee("💡", "Idées à explorer", "I", D.idees) : "");
 
   // formes etudiees : une carte par forme de params.formes_etudiees
   const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
@@ -236,6 +236,17 @@ export function rend_abri(a: Abri) {
     liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `abri-v${a.version}-formes`, ancre: el("alternatives-liste") || undefined,
     entrees: () => formes.map((x, i): Entree => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) as HTMLElement })),
   });
+}
+
+// document complet (?doc=1, body.document) : la meme page, tout deroule, sans menu ni listes.
+// l'impression passe par ce mode ; le bouton en haut a droite bascule entre les deux
+export function mode_document(a: Abri, actif: boolean) {
+  document.body.classList.toggle("document", actif);
+  const lien = el("lien-document") as HTMLAnchorElement | null;
+  if (!lien) return;
+  const q = [a.version === a.principale ? "" : `v=${a.version}`, actif ? "" : "doc=1"].filter(Boolean).join("&");
+  lien.setAttribute("href", window.location.pathname + (q ? `?${q}` : ""));
+  lien.textContent = actif ? "Vue interactive" : "Document complet";
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).

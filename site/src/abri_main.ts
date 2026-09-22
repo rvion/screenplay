@@ -1,15 +1,20 @@
 // Point d'entree de la page d'accueil : calcule l'abri retenu depuis window.SHED_PARAMS,
 // remplit la page, puis branche la scene 3D (qui echoue proprement sans WebGL).
-import { calcule_abri, rend_abri } from "./abri_page";
+import { calcule_abri, rend_abri, mode_document } from "./abri_page";
 import { createAbriViewer, applique_etats, VUES, ETATS_DEFAUT, type AbriViewer, type NomVue, type Etats } from "./viewer_abri";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = (window as any).SHED_PARAMS;
   if (!params) { console.error("params.js manquant (window.SHED_PARAMS)."); return; }
-  // ?v=2 : une autre version prete ; sans rien, la version retenue
-  const demande = Number(new URLSearchParams(window.location.search).get("v")) || 0;
-  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), demande);
+  // ?v=2 : une autre version prete ; sans rien, la version retenue. ?doc=1 : le document complet, tout deroule
+  const url = new URLSearchParams(window.location.search);
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), Number(url.get("v")) || 0);
   rend_abri(abri);
+  mode_document(abri, url.has("doc"));
+  // imprimer = le document complet, quel que soit le mode a l'ecran ; la page retrouve le sien apres
+  let mode_avant = false;
+  window.addEventListener("beforeprint", () => { mode_avant = document.body.classList.contains("document"); mode_document(abri, true); });
+  window.addEventListener("afterprint", () => mode_document(abri, mode_avant));
 
   const boite = document.getElementById("viewer");
   let vue: AbriViewer | null = null;
@@ -21,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent entièrement valables.</p>';
     console.error(e);
   }
+  // sans scene, les vignettes resteraient des boites vides (a l'ecran comme sur papier)
+  const grille_vignettes = document.getElementById("vignettes"); if (grille_vignettes) grille_vignettes.hidden = !vue;
   // boutons d'etat : un clic avance l'etat ; un point de vue les regle tous d'un coup
   const NOMS = ["toit", "murs", "porte", "mobilier", "etiquettes", "personne", "cloture"] as const;
   const bouton = (nom: string) => document.getElementById("voir-" + nom) as HTMLButtonElement | null;

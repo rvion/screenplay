@@ -144,7 +144,13 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   - **`site/index.html` = le dossier de construction de l'abri retenu** (bundle `site/abri.js`, entrée
     `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
-    serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
+    serrés. Deux boutons en haut à droite : **Document complet** (`?doc=1`, `body.document` : la même
+    page tout déroulée, sans menu, sans listes ni bascules, plans et alternatives en grille de deux, le
+    plan de rehausse sur toute la largeur ; le bouton devient « Vue interactive » et garde `?v=N`) et
+    **Imprimer**, qui pose ce mode le temps de l'impression (`beforeprint` / `afterprint`) : `@media print`
+    ne porte que le papier (3D et liens « agrandir » cachés, colonnes rendues aux plans, tableaux sans
+    défilement, page neuve avant les élévations, le guide et les alternatives). Aucun bouton ne mène à
+    la page markdown : `docs/abri.html` reste atteignable par « Tous les documents » dans le menu.
     Sections : **Résumé** (un paragraphe de faits séparés par des points médians, les faits clés surlignés
     en `span.fait` : murs, panneaux, toit, pente, portée, porte, fenêtres, bureaux, hauteurs, surfaces,
     matériaux ; un petit dessin nu, `resume_svg` : l'abri sur
@@ -157,8 +163,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
     rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
     **Mobilier** (l'une sous l'autre) ; **Pourquoi cette forme** (le bloc `dossier` de la version retenue :
-    ✅ points forts, ⚠️ points faibles) ; **Questions et axes d'amélioration** (`dossier.questions`,
-    numérotées `Q1`… en `span.question`, chacune finit par « ? ») ; textes
+    ✅ points forts, ⚠️ points faibles) ; **Questions et idées** (deux listes simples côte à côte :
+    `dossier.questions`, numérotées `Q1`… en `span.question`, chacune finit par « ? », et
+    `dossier.idees`, numérotées `I1`…, des pistes pour simplifier sans changer la forme, accroche en
+    gras ; aucune n'est décidée ni dessinée) ; textes
     **autonomes**, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
     suite en petit ; à défaut de `dossier`, les textes comparés `atouts/pertes/notes/hors_modele`) ;
     **Formes étudiées** (`params.formes_etudiees` : une carte par forme, produit du commerce dessiné en
@@ -167,7 +175,7 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     la source sont sous le nom de l'article, en petit italique. Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
     aucune cote dans le HTML, et la page marche en `file://`.
-  - **Menu de gauche** (196 px) : le sommaire des sections, la section sous le tiers haut de l'écran
+  - **Menu de gauche** (196 px) : le sommaire des sections sans titre, la section sous le tiers haut de l'écran
     surlignée, puis les liens « ailleurs ». Un bloc **Versions** n'apparaît que si `abri_menu` en
     liste **au moins deux** (aujourd'hui `abri_v4` seule : aucun lien vers une autre version sur la
     page). Chaque entrée porte son `nom_court` et ses chiffres clés calculés ; un clic charge `?v=N` :

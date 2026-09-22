@@ -153,7 +153,8 @@ figcaption { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
 /* dans une liste de plans, meme hauteur de dessin pour chaque entree (la largeur suit, plafonnee a la colonne) */
 .details .planbox svg { height: min(62vh, 520px); }
 #plans-details.tout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-#plans-details.tout article[data-cle="implantation"], #plans-details.tout article[data-cle="sol"] { grid-column: 1 / -1; }
+/* le plan de rehausse est large et bas : sur toute la largeur quand les plans sont en grille */
+#plans-details.tout article[data-cle="rehausse"], body.document #plans-details article[data-cle="rehausse"] { grid-column: 1 / -1; }
 #plans-details h3 { margin-bottom: .45rem; }
 
 /* maitre / detail : liste a gauche, l'entree choisie a droite (guide de montage, materiaux) */
@@ -197,8 +198,9 @@ p.suivante button:hover { border-color: var(--accent); }
 .pourquoi-bloc ul { padding-left: 1.1rem; }
 .pourquoi-bloc li { margin: .3rem 0; }
 .pourquoi-bloc .suite { display: block; font-size: .8rem; color: var(--muted); line-height: 1.4; }
-ol.questions { list-style: none; padding-left: 0; margin: 0; columns: 2; column-gap: 1.2rem; }
-ol.questions li { break-inside: avoid; margin: .3rem 0; }
+/* questions et idees : une liste simple par bloc, le repere Q1 / I1 devant chaque entree */
+ol.questions { list-style: none; padding-left: 0; margin: 0; }
+ol.questions li { margin: .3rem 0; }
 .question { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72em; font-weight: 700; color: #fff; background: var(--alerte); border-radius: 3px; padding: 0 .35em; vertical-align: .1em; margin-right: .2em; }
 /* formes etudiees : icone de la forme dans la liste */
 ol.liste.formes .icone { flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
@@ -222,7 +224,6 @@ ol.liste.formes button { padding: .2rem .5rem; }
   .fiche-vue .vue { grid-column: 1 / -1; }
   .resume-figs { max-width: none; }
   .vue .scene, #viewer { min-height: 380px; height: 380px; }
-  ol.questions { columns: 1; }
   .rangee { grid-template-columns: minmax(0, 1fr); }
   .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
@@ -236,17 +237,39 @@ ol.liste.formes button { padding: .2rem .5rem; }
   ul.legende { font-size: .6rem; }
   .vue .scene, #viewer { min-height: 300px; height: 300px; }
 }
+/* document complet (body.document, ?doc=1) : la meme page, tout deroule, sans menu ni listes.
+   l'impression passe par ce mode (abri_main.ts le pose le temps d'imprimer) : @media print ne porte que le papier */
+body.document aside.menu, body.document .maitre .cote-liste, body.document h2 .mode, body.document p.suivante { display: none; }
+body.document .mise-en-page { grid-template-columns: minmax(0, 1fr); }
+body.document main { padding-left: 1.1rem; }
+body.document .maitre { grid-template-columns: minmax(0, 1fr); }
+body.document .detail[hidden] { display: block; }
+body.document #plans-details, body.document #alternatives-corps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+body.document .details .planbox svg { height: auto; max-height: 60vh; }
+@media (max-width: 640px) {
+  body.document #plans-details, body.document #alternatives-corps { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media print {
+  /* la page fait ~800 px de large : les regles « tablette » ci-dessus s'appliquent, on rend leurs colonnes au papier */
   body { background: #fff; font-size: 11px; }
-  .planbox svg { max-height: none; height: auto; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
-  .actions, aside.menu, .vue, .vue-barre, .bascules, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
-  .mise-en-page { display: block; max-width: none; }
+  .actions, .vue, a.zoom, .viewer-fallback { display: none; }
+  .mise-en-page { max-width: none; }
   main { padding: 0; }
-  section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; break-inside: auto; }
-  .deux, .maitre { grid-template-columns: minmax(0, 1fr); }
-  .detail[hidden] { display: block; }
-  section > h2 { break-after: avoid; }
-  #plans, #montage, #materiaux-section { break-before: page; }
+  section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; }
+  .fiche-vue { grid-template-columns: minmax(0, 1fr); }
+  .rangee, .trois, .pourquoi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .resume-figs { max-width: 480px; }
+  /* jamais un titre orphelin en bas de page, jamais un dessin ou une fiche coupes en deux */
+  h2, h3, p.note { break-after: avoid; }
+  .planbox, .detail, .rangee section, #debit, tr { break-inside: avoid; }
+  .details .planbox svg { max-height: 40vh; }
+  .planbox svg { border: 0; }
+  #plans, #montage, #alternatives { break-before: page; }
+  /* les tableaux tiennent dans la page : le nom d'un article peut se replier, rien ne defile */
+  .table-wrap { overflow: visible; }
+  .bom td .poste { white-space: normal; }
+  table { font-size: 10px; }
   a { color: inherit; text-decoration: none; }
 }

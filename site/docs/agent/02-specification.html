@@ -204,7 +204,13 @@ adresse de cette version (<code>abri-v4.md</code>) devient une page relais ; les
 <li><strong><code>site/index.html</code> = le dossier de construction de l&#39;abri retenu</strong> (bundle <code>site/abri.js</code>, entrée
 <code>src/abri_main.ts</code>, feuille <code>site/abri.css</code> autonome). C&#39;est un document de travail pour Rémi et
 pour les personnes qu&#39;il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
-serrés, mise en page d&#39;impression (bouton Imprimer : sans menu ni 3D, une section par page).
+serrés. Deux boutons en haut à droite : <strong>Document complet</strong> (<code>?doc=1</code>, <code>body.document</code> : la même
+page tout déroulée, sans menu, sans listes ni bascules, plans et alternatives en grille de deux, le
+plan de rehausse sur toute la largeur ; le bouton devient « Vue interactive » et garde <code>?v=N</code>) et
+<strong>Imprimer</strong>, qui pose ce mode le temps de l&#39;impression (<code>beforeprint</code> / <code>afterprint</code>) : <code>@media print</code>
+ne porte que le papier (3D et liens « agrandir » cachés, colonnes rendues aux plans, tableaux sans
+défilement, page neuve avant les élévations, le guide et les alternatives). Aucun bouton ne mène à
+la page markdown : <code>docs/abri.html</code> reste atteignable par « Tous les documents » dans le menu.
 Sections : <strong>Résumé</strong> (un paragraphe de faits séparés par des points médians, les faits clés surlignés
 en <code>span.fait</code> : murs, panneaux, toit, pente, portée, porte, fenêtres, bureaux, hauteurs, surfaces,
 matériaux ; un petit dessin nu, <code>resume_svg</code> : l&#39;abri sur
@@ -217,8 +223,10 @@ la largeur), téléphone (tout empilé, dessin réduit avec sa légende à droit
 dalle</strong> et <strong>Plan de sol</strong> (deux boîtes côte à côte) ; <strong>Murs</strong> (le tableau) ; élévations, toiture,
 rehausse ; débit des panneaux ; <strong>matériaux à acheter</strong> ; <strong>guide de montage</strong> ; <strong>Ouvertures</strong> et
 <strong>Mobilier</strong> (l&#39;une sous l&#39;autre) ; <strong>Pourquoi cette forme</strong> (le bloc <code>dossier</code> de la version retenue :
-✅ points forts, ⚠️ points faibles) ; <strong>Questions et axes d&#39;amélioration</strong> (<code>dossier.questions</code>,
-numérotées <code>Q1</code>… en <code>span.question</code>, chacune finit par « ? ») ; textes
+✅ points forts, ⚠️ points faibles) ; <strong>Questions et idées</strong> (deux listes simples côte à côte :
+<code>dossier.questions</code>, numérotées <code>Q1</code>… en <code>span.question</code>, chacune finit par « ? », et
+<code>dossier.idees</code>, numérotées <code>I1</code>…, des pistes pour simplifier sans changer la forme, accroche en
+gras ; aucune n&#39;est décidée ni dessinée) ; textes
 <strong>autonomes</strong>, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
 suite en petit ; à défaut de <code>dossier</code>, les textes comparés <code>atouts/pertes/notes/hors_modele</code>) ;
 <strong>Formes étudiées</strong> (<code>params.formes_etudiees</code> : une carte par forme, produit du commerce dessiné en
@@ -227,7 +235,7 @@ entête, chiffres, lien). Les <strong>matériaux</strong> tiennent en quatre col
 la source sont sous le nom de l&#39;article, en petit italique. Tout est calculé dans
 le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
 aucune cote dans le HTML, et la page marche en <code>file://</code>.</li>
-<li><strong>Menu de gauche</strong> (196 px) : le sommaire des sections, la section sous le tiers haut de l&#39;écran
+<li><strong>Menu de gauche</strong> (196 px) : le sommaire des sections sans titre, la section sous le tiers haut de l&#39;écran
 surlignée, puis les liens « ailleurs ». Un bloc <strong>Versions</strong> n&#39;apparaît que si <code>abri_menu</code> en
 liste <strong>au moins deux</strong> (aujourd&#39;hui <code>abri_v4</code> seule : aucun lien vers une autre version sur la
 page). Chaque entrée porte son <code>nom_court</code> et ses chiffres clés calculés ; un clic charge <code>?v=N</code> :

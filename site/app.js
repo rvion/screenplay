@@ -1324,7 +1324,7 @@ function plan_sol_svg(p, g, openings, sans_entete = false) {
   const W = Math.max(base_W, tw(title, 15) + 24);
   const xoff = (W - base_W) / 2;
   const P = (v) => [pad + xoff + (v[0] - minx) * scale, H - pad - (v[1] - miny) * scale];
-  let svg = svgHeader(rnd2(W), rnd2(H));
+  let svg = svgHeader(rnd2(W), rnd2(H), sans_entete);
   if (d) svg += poly(d.polygone.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
   svg += poly(g.verts.map(P), "#dce8f5", "#2b5d8a", 2);
   if (d) for (const w of d.murs) {
@@ -1670,7 +1670,8 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
   } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, m ? `AVANT (jardin) \xB7 ${leg_cloture}` : v ? `AVANT (jardin) \xB7 ${leg_cloture} \xB7 vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)` : `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11);
+  if (v && !m) svg += text(W / 2, H - 26, `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11) + text(W / 2, H - 12, "vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)", "middle", "#666", 11);
+  else svg += text(W / 2, H - 12, `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }

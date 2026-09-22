@@ -425,3 +425,21 @@ infranchissable, dessin différent (pointillé vert, treillis en 3D), et les tex
 « mur de propriété » à gauche disent « grillage de la limite ». La fiche devient un **Résumé** (deux
 phrases calculées et six cartes), les étiquettes 3D passent sur plaque blanche, le menu à 164 px.
 
+
+## D38 — « Document complet » est un mode de la page, pas un lien vers la page markdown
+Retour de Rémi (2026-09-22) : les deux boutons du haut à droite doivent donner le site entier, déroulé,
+sans menu, et rien d'ancien. Avant, « Document complet » ouvrait `docs/abri.html`, le rendu de `abri.md`,
+une seconde présentation des mêmes données avec sa propre mise en page. Désormais `?doc=1` pose
+`body.document` : la même page, chaque liste déroulée par CSS (`.detail[hidden]` visible, listes et
+bascules cachées), et « Imprimer » pose ce mode le temps de l'impression. *Pourquoi un mode CSS et non un
+état des listes :* l'état « tout afficher » de chaque liste reste celui de Rémi dans `localStorage`, le
+document ne l'écrase pas ; et `@media print` ne porte plus que le papier, donc rien n'est déroulé deux
+fois. *Trouvé en imprimant :* la page imprimée fait ~800 px de large, donc les règles « tablette »
+(`max-width: 980px`) s'appliquaient au papier : une colonne partout, chaque plan à sa hauteur d'écran,
+27 pages dont la moitié blanches, les tableaux de matériaux coupés à droite. Le bloc d'impression rend
+leurs colonnes aux plans, aux débits et aux blocs « pourquoi », borne les dessins à 40 % de page, et le
+plan du rectangle (seul SVG sans `width`/`height`) reçoit ses cotes pour ne plus disparaître en
+`height: auto`. Vérifié par un PDF de Chrome headless (19 pages, vignettes 3D rendues) ; l'aspect à
+l'écran reste à juger par Rémi. Dans la foulée : le titre « Sommaire » du menu tombe, et la section
+des questions devient « Questions et idées », deux listes simples (Q1…, I1…) au lieu d'un texte en
+deux colonnes, les idées étant des pistes de simplification à explorer, aucune décidée.

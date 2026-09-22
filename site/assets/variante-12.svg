@@ -70,5 +70,6 @@
 <text x="273.8" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Option 12 · coin coupé au module</text>
 <text x="273.8" y="46.0" text-anchor="middle" fill="#2b5d8a" font-size="13" font-weight="bold">murs 4.81 m² · intérieur 4.3 m² · 5 côtés</text>
 <text x="273.8" y="64.0" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">l'option 1 élargie à toute la façade : mur du fond 2 et mur gauche 2 modules de 100 sans recoupe, pan coupé parallèle au grand pan</text>
-<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage · vert pointillé = zone utile · trait coloré = passage (cm)</text>
+<text x="273.8" y="776.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">AVANT (jardin) · brun = palissade bois, vert pointillé = grillage</text>
+<text x="273.8" y="790.9" text-anchor="middle" fill="#666" font-size="11" font-weight="normal">vert pointillé = zone utile · trait coloré = passage (cm)</text>
 </svg>

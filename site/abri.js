@@ -1324,7 +1324,7 @@ function plan_sol_svg(p, g, openings, sans_entete = false) {
   const W = Math.max(base_W, tw(title, 15) + 24);
   const xoff = (W - base_W) / 2;
   const P = (v) => [pad + xoff + (v[0] - minx) * scale, H - pad - (v[1] - miny) * scale];
-  let svg = svgHeader(rnd2(W), rnd2(H));
+  let svg = svgHeader(rnd2(W), rnd2(H), sans_entete);
   if (d) svg += poly(d.polygone.map(P), "#eeeae0", "#a89f8a", 1.5, "6 4");
   svg += poly(g.verts.map(P), "#dce8f5", "#2b5d8a", 2);
   if (d) for (const w of d.murs) {
@@ -1670,7 +1670,8 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
   } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, m ? `AVANT (jardin) \xB7 ${leg_cloture}` : v ? `AVANT (jardin) \xB7 ${leg_cloture} \xB7 vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)` : `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11);
+  if (v && !m) svg += text(W / 2, H - 26, `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11) + text(W / 2, H - 12, "vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)", "middle", "#666", 11);
+  else svg += text(W / 2, H - 12, `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
@@ -2459,7 +2460,7 @@ function injecteur(v, m, base) {
 function textes_variante(bloc, core, base) {
   const v = core.variantes.find((x) => x.id === 13), injecte = injecteur(v, core.modele, base);
   const liste2 = (k, de = bloc) => (de[k] || []).map(injecte);
-  const dossier = bloc.dossier ? { atouts: liste2("atouts", bloc.dossier), limites: liste2("limites", bloc.dossier), questions: liste2("questions", bloc.dossier) } : null;
+  const dossier = bloc.dossier ? { atouts: liste2("atouts", bloc.dossier), limites: liste2("limites", bloc.dossier), questions: liste2("questions", bloc.dossier), idees: liste2("idees", bloc.dossier) } : null;
   return { atouts: liste2("atouts"), pertes: liste2("pertes"), notes: liste2("notes"), hors_modele: liste2("hors_modele"), dossier };
 }
 
@@ -2635,8 +2636,6 @@ function rend_abri(a) {
   html("bandeau", retenue ? "" : `Vous regardez la <b>version ${a.version}</b>, une \xE9tude. L'abri retenu est la <a href="?v=${a.principale}">version ${a.principale}</a>.`);
   const bandeau = el("bandeau");
   if (bandeau) bandeau.hidden = retenue;
-  const doc = el("lien-document");
-  if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
   const fait = (x) => `<span class="fait">${x}</span>`;
   html("intro", [
     `Bureau de jardin \xE0 ${fait(`${NOMBRES[n] || n} murs`)}, panneaux sandwich ${fait(cote(ep))} autoportants, sur la dalle existante`,
@@ -2742,23 +2741,25 @@ function rend_abri(a) {
     ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
   ], [2]);
   const T = a.textes;
-  const puce = (s) => {
+  const accroche = (s) => {
     const gras = s.match(/^\*\*(.+?)\*\*\s*[:.]?\s*([\s\S]*)$/);
     const [tete, suite] = gras ? [gras[1], gras[2]] : (() => {
       const i = s.search(/[.!?]\s/);
       return i > 0 ? [s.slice(0, i + 1), s.slice(i + 2)] : [s, ""];
     })();
-    if (!gras && !suite) return `<li>${md_en_ligne(s)}</li>`;
-    return `<li><b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}</li>`;
+    if (!gras && !suite) return md_en_ligne(s);
+    return `<b>${md_en_ligne(tete)}</b>${suite.trim() ? ` <span class="suite">${md_en_ligne(suite.trim())}</span>` : ""}`;
   };
+  const puce = (s) => `<li>${accroche(s)}</li>`;
   const bloc = (marque, titre, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ul>${items.map(puce).join("")}</ul></div>` : "";
   const section = el("pourquoi");
   if (section) section.hidden = !T;
   const D = T && T.dossier;
   html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) : T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
   const sq = el("questions");
-  if (sq) sq.hidden = !(D && D.questions.length);
-  html("questions-corps", D && D.questions.length ? `<ol class="questions">${D.questions.map((s, i) => `<li><span class="question">Q${i + 1}</span> ${md_en_ligne(s)}</li>`).join("")}</ol>` : "");
+  if (sq) sq.hidden = !(D && (D.questions.length || D.idees.length));
+  const numerotee = (marque, titre, lettre2, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre2}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "";
+  html("questions-corps", D ? numerotee("\u2753", "Questions", "Q", D.questions) + numerotee("\u{1F4A1}", "Id\xE9es \xE0 explorer", "I", D.idees) : "");
   const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
@@ -2769,6 +2770,14 @@ function rend_abri(a) {
     ancre: el("alternatives-liste") || void 0,
     entrees: () => formes.map((x, i) => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) }))
   });
+}
+function mode_document(a, actif) {
+  document.body.classList.toggle("document", actif);
+  const lien = el("lien-document");
+  if (!lien) return;
+  const q = [a.version === a.principale ? "" : `v=${a.version}`, actif ? "" : "doc=1"].filter(Boolean).join("&");
+  lien.setAttribute("href", window.location.pathname + (q ? `?${q}` : ""));
+  lien.textContent = actif ? "Vue interactive" : "Document complet";
 }
 function rend_guide(Gd, version) {
   const cle_cases = `abri-v${version}-cases`;
@@ -3513,9 +3522,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("params.js manquant (window.SHED_PARAMS).");
     return;
   }
-  const demande = Number(new URLSearchParams(window.location.search).get("v")) || 0;
-  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), demande);
+  const url = new URLSearchParams(window.location.search);
+  const abri = calcule_abri(JSON.parse(JSON.stringify(params)), Number(url.get("v")) || 0);
   rend_abri(abri);
+  mode_document(abri, url.has("doc"));
+  let mode_avant = false;
+  window.addEventListener("beforeprint", () => {
+    mode_avant = document.body.classList.contains("document");
+    mode_document(abri, true);
+  });
+  window.addEventListener("afterprint", () => mode_document(abri, mode_avant));
   const boite = document.getElementById("viewer");
   let vue = null;
   try {
@@ -3525,6 +3541,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
+  const grille_vignettes = document.getElementById("vignettes");
+  if (grille_vignettes) grille_vignettes.hidden = !vue;
   const NOMS = ["toit", "murs", "porte", "mobilier", "etiquettes", "personne", "cloture"];
   const bouton = (nom) => document.getElementById("voir-" + nom);
   const montre_bouton = (nom, etat) => {
