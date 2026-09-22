@@ -2241,7 +2241,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1);
     vue.montrer("personne_couchee", false);
     vue.montrer("personne_couchee2", false);
-    vue.montrer("cloture", e.cloture > 0);
+    vue.montrer("cloture", e.cloture === 1);
+    vue.montrer("cloture_absente", e.cloture === 2);
     vue.montrer("murs", e.murs > 0);
     vue.montrer("murs_coupes", e.murs === 2);
     vue.montrer("murs_voile", e.murs === 3);
@@ -2813,7 +2814,10 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const g_lit = cache(`lit${n}`);
       fait_lit(lm.polygone, g_lit, cache(`personne_couchee${n}`), lm.tete, cache(`couchage${n}`), cache(`canape${n}`));
     });
-    if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
+    if (groupes.cloture) {
+      cloture_pleine(groupes.cloture, visible.cloture !== false);
+      groupes.cloture.visible = !visible.cloture_absente;
+    }
     return groupes;
   }
   function createAbriViewer(container, data0) {
@@ -2858,7 +2862,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const abri = new THREE.Group();
     scene.add(abri);
     let groupes = {};
-    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false, cloture_absente: false };
     const construit = (data) => {
       groupes = peuple_abri(abri, data, visible);
     };
@@ -2877,6 +2881,10 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       visible[nom] = oui;
       if (nom === "cloture") {
         if (groupes.cloture) cloture_pleine(groupes.cloture, oui);
+        return;
+      }
+      if (nom === "cloture_absente") {
+        if (groupes.cloture) groupes.cloture.visible = !oui;
         return;
       }
       if (nom === "murs_coupes") {

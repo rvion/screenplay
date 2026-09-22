@@ -11,8 +11,8 @@ const ROOT = process.cwd();
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri3d.mjs");
 // three vient ici de node_modules, comme site/three.js ; le bundle abri.js le lit sur window.ABRI_THREE
-await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES, TAILLE_PERSONNE } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
-const { THREE, peuple_abri, VUES, TAILLE_PERSONNE, calcule_abri } = await import(pathToFileURL(out).href);
+await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
+const { THREE, peuple_abri, VUES, TAILLE_PERSONNE, applique_etats, ETATS_DEFAUT, calcule_abri } = await import(pathToFileURL(out).href);
 
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
@@ -38,6 +38,14 @@ ok(["porte", "interieur", "debout", "couche"].every((k) => JSON.stringify([VUES[
 ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.couche.etats.mobilier === 2 && VUES.couche.etats.personne === 2 && VUES.couche.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, couché = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
+{
+  // clôture : 0 translucide, 1 pleine, 2 absente ; l'etat 2 cache toute la palissade, les deux autres la montrent
+  const vu = (cloture) => { const m = {}; applique_etats({ montrer: (n, oui) => { m[n] = oui; } }, { ...ETATS_DEFAUT, cloture }); return m; };
+  const [e0, e1, e2] = [0, 1, 2].map(vu);
+  ok(!e0.cloture && !e0.cloture_absente && e1.cloture && !e1.cloture_absente && e2.cloture_absente, "clôture : translucide, pleine, puis absente au troisième état");
+  const r = new THREE.Group(), g = peuple_abri(r, d, { toit: true, mobilier: true, etiquettes: true, cloture_absente: true });
+  ok(g.cloture && g.cloture.visible === false, "clôture absente : la palissade n'est plus dans la scène");
+}
 ok(groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry").length >= 4 && groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry").length >= 3, "porte : béquille, tige et cylindre de serrure sur chaque face du battant");
 racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;

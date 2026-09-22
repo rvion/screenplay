@@ -13,14 +13,14 @@ export interface AbriViewer {
   etat(): EtatCamera; regler(o: { fov?: number; distance?: number }): void; placer(e: Partial<EtatCamera>): void; surChangement(cb: (e: EtatCamera) => void): void;
 }
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
-// etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
+// etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 0 translucide 1 pleine 2 absente)
 export type Etats = { toit: number; murs: number; porte: number; mobilier: number; etiquettes: number; personne: number; cloture: number };
 // toit : 0 sans, 1 plein, 2 voile ; murs : 0 sans, 1 pleins, 2 coupes a 1 m, 3 voiles, 4 sans les faces D et C ; porte : 0 sans, 1 ouverte, 2 fermee, 3 fermee voilee ;
 // mobilier : 0 rien d'utilise (siege range), 1 au bureau (siege tire), 2 couche (siege range) ;
 // le lit est pose a demeure : il est toujours la, comme le bureau ;
 // personne : 0 sans, 1 dehors, 2 dedans (debout, assise au bureau ou couchee selon le mobilier)
 export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, etiquettes: 1, personne: 0, cloture: 0 };
-// la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
+// la palissade : translucide pour voir l'abri derriere, pleine, ou absente (cachee a part)
 export function cloture_pleine(gr: Vec, oui: boolean) {
   gr.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } });
 }
@@ -64,14 +64,14 @@ export function applique_etats(vue: AbriViewer, e: Etats) {
   vue.montrer("porte", e.porte === 1); vue.montrer("porte_fermee", e.porte >= 2); vue.montrer("porte_voile", e.porte === 3);
   vue.montrer("personne", e.personne === 1);
   vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0); vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1); vue.montrer("personne_couchee", false); vue.montrer("personne_couchee2", false);
-  vue.montrer("cloture", e.cloture > 0);
+  vue.montrer("cloture", e.cloture === 1); vue.montrer("cloture_absente", e.cloture === 2);
   vue.montrer("murs", e.murs > 0); vue.montrer("murs_coupes", e.murs === 2); vue.montrer("murs_voile", e.murs === 3);
   vue.montrer("murs_sans_DC", e.murs === 4);
 }
 export const LITS_MURAUX_MAX = 6;
 // taille de la silhouette d'echelle, en metres
 export const TAILLE_PERSONNE = 1.85;
-export type Masquable = "toit" | "toit_voile" | "murs_voile" | "murs_sans_DC" | "porte_voile" | `couchage${number}` | `canape${number}` | "mobilier" | "lit" | `lit${number}` | `bureaux${number}` | "sieges" | "sieges_mi" | "sieges_ranges" | `sieges_ranges${number}` | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | `personne_couchee${number}` | "porte" | "porte_fermee" | "cloture" | "murs" | "murs_coupes";
+export type Masquable = "toit" | "toit_voile" | "murs_voile" | "murs_sans_DC" | "porte_voile" | `couchage${number}` | `canape${number}` | "mobilier" | "lit" | `lit${number}` | `bureaux${number}` | "sieges" | "sieges_mi" | "sieges_ranges" | `sieges_ranges${number}` | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | `personne_couchee${number}` | "porte" | "porte_fermee" | "cloture" | "cloture_absente" | "murs" | "murs_coupes";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
 const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
@@ -575,7 +575,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const g_lit = cache(`lit${n}`);
     fait_lit(lm.polygone, g_lit, cache(`personne_couchee${n}`), lm.tete, cache(`couchage${n}`), cache(`canape${n}`));
   });
-  if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
+  if (groupes.cloture) { cloture_pleine(groupes.cloture, visible.cloture !== false); groupes.cloture.visible = !visible.cloture_absente; }
   return groupes;
 }
 
@@ -614,7 +614,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false, cloture_absente: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -629,8 +629,9 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
 
   function montrer(nom: Masquable, oui: boolean) {
     visible[nom] = oui;
-    // cloture : jamais cachee, mais pleine (oui) ou translucide (non), pour voir l'abri derriere
+    // cloture : pleine (oui) ou translucide (non) ; cloture_absente la cache toute
     if (nom === "cloture") { if (groupes.cloture) cloture_pleine(groupes.cloture, oui); return; }
+    if (nom === "cloture_absente") { if (groupes.cloture) groupes.cloture.visible = !oui; return; }
     if (nom === "murs_coupes") { const c = (groupes as any).coupe; if (c) c.value = oui ? 1.0 : 100; return; }
     // les etats voiles ne cachent rien : ils rendent la paroi translucide
     if (nom === "toit_voile") { voile(groupes.toit, oui); return; }

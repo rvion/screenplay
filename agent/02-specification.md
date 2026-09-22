@@ -19,7 +19,7 @@
   258) : `dalle.murs[].type` vaut `grillage`, `palissade` ou `mur`. Un mur est un trait brun épais sur le
   plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
   travée (`palissade_travee_cm`) et entre eux un panneau de planches de `palissade_epaisseur_cm` à sommet
-  bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
+  bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » à trois états : translucide, pleine, absente) ;
   les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
   bouton « murs » les laisse pleins, les **coupe net à 1 m**, les **voile** (translucides, `voile()`), **retire les faces D et C**
