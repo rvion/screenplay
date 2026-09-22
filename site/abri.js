@@ -2308,7 +2308,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     return c;
   }
   function peuple_abri(abri, data, visible_demande = {}) {
-    const groupes = {}, visible = { lit: false, lit2: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
+    const groupes = {}, visible = { lit: false, lit2: false, couchage3: false, personne_couchee3: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
     const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
     const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
     const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2740,16 +2740,20 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       couchage.add(ombre(new THREE.Mesh(prisme(rect(-1, L * 0.66, -1), plat(sol + 45), plat(sol + 48)), mat(7311295, { roughness: 0.95 }))));
       couchage.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(14934e3, { roughness: 1 }))));
       if (canape) {
-        const nb = Math.max(2, Math.round(L / 62));
-        for (let i = 0; i < nb; i++) {
-          const s0c = 6 + i * (L - 12) / nb, s1c = s0c + (L - 12) / nb - 6;
+        const pts = data.sol.polygone;
+        const ctr = [pts.reduce((s, z) => s + z[0], 0) / pts.length, pts.reduce((s, z) => s + z[1], 0) / pts.length];
+        const loin = (sgn) => Math.hypot(mp[0] + nx * sgn * lw / 2 - ctr[0], mp[1] + ny * sgn * lw / 2 - ctr[1]);
+        const cote2 = loin(1) > loin(-1) ? 1 : -1;
+        const d0 = cote2 * (lw / 2 - 2), d1 = cote2 * (lw / 2 - 16), depart = L * 0.38;
+        for (let i = 0; i < 2; i++) {
+          const pas = (L - depart - 8) / 2, s0c = depart + i * pas, s1c = s0c + pas - 8;
           const dossier = [
-            [mp[0] + ux * s0c + nx * (lw / 2 - 16), mp[1] + uy * s0c + ny * (lw / 2 - 16)],
-            [mp[0] + ux * s1c + nx * (lw / 2 - 16), mp[1] + uy * s1c + ny * (lw / 2 - 16)],
-            [mp[0] + ux * s1c + nx * (lw / 2 - 2), mp[1] + uy * s1c + ny * (lw / 2 - 2)],
-            [mp[0] + ux * s0c + nx * (lw / 2 - 2), mp[1] + uy * s0c + ny * (lw / 2 - 2)]
+            [mp[0] + ux * s0c + nx * d1, mp[1] + uy * s0c + ny * d1],
+            [mp[0] + ux * s1c + nx * d1, mp[1] + uy * s1c + ny * d1],
+            [mp[0] + ux * s1c + nx * d0, mp[1] + uy * s1c + ny * d0],
+            [mp[0] + ux * s0c + nx * d0, mp[1] + uy * s0c + ny * d0]
           ];
-          canape.add(ombre(new THREE.Mesh(prisme(dossier, plat(sol + 45), plat(sol + 90)), mat(i % 2 ? 13154720 : 12167309, { roughness: 1 }))));
+          canape.add(ombre(new THREE.Mesh(prisme(dossier, plat(sol + 45), plat(sol + 90)), mat(i ? 13154720 : 12167309, { roughness: 1 }))));
         }
       }
       const tx = etiquette(`${Math.round(lw)} \xD7 ${Math.round(L)}`);
@@ -2797,6 +2801,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         gb.add(boite_cm(xm, xm + 25, cy2 - 17.5, cy2 + 17.5, haut2, haut2 + 1.6, 10133670));
         gb.add(boite_cm(xm - 1, xm + 1.2, cy2 - 17.5, cy2 + 17.5, haut2 + 1.6, haut2 + 24, 1316634));
         gb.add(boite_cm(x1 - 16, x1 - 4, cy2 - 22, cy2 + 22, haut2, haut2 + 1.8, 14210511));
+        const y_coin = Math.min(...ys2) + 2;
+        gb.add(boite_cm(x0 + 2, x0 + 37, y_coin, y_coin + 45, haut2, haut2 + 20, 4869973, 0.8));
       }
       for (const [px, py] of lm.pieds_bureau || []) {
         const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));
@@ -2852,7 +2858,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const abri = new THREE.Group();
     scene.add(abri);
     let groupes = {};
-    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, personne_couchee2: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
     const construit = (data) => {
       groupes = peuple_abri(abri, data, visible);
     };

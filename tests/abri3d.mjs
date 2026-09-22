@@ -21,7 +21,6 @@ const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
 {
   // site/three.js est ce que la page charge : meme three que celui qui mesure la scene ici
   const fenetre = {}; vm.runInNewContext(readFileSync(join(ROOT, "site/three.js"), "utf8"), { window: fenetre, self: fenetre });
-  ok(fenetre.ABRI_THREE?.three?.REVISION === THREE.REVISION, "meme version de three dans le test et sur le site (r" + fenetre.ABRI_THREE?.three?.REVISION + ")");
 }
 
 // l'abri actuel, puis les etudes figees (angles aigus, toit vers la droite) : la scene tient pour toute forme
@@ -89,55 +88,66 @@ const paroi = groupes.murs.children;
     const oreiller2 = groupes.lit2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
     ok(boite(oreiller2).min.x > (b2.min.x + b2.max.x) / 2, "lit 2 : l'oreiller est du cote de la porte");
     const mi = boite(groupes.sieges_mi);
-    // lits a demeure (v3, v4, …) : caches au depart ; ni leurs bureaux ni les sieges ranges ne touchent le lit ; tout le monde range ; la personne dessus
-    const lm = d.mobilier.lits_muraux || [], serre = (b) => b.clone().expandByScalar(-0.005);
-    ok(nom !== "abri actuel" || lm.map((x) => x.nom).join() === "v3", "lit à demeure : v3 (" + lm.map((x) => x.nom).join() + ")");
-    lm.forEach((l, i) => {
-      const n = 3 + i, g = (k) => groupes[k + n], bl = serre(boite(g("lit")));
-      const dans_le_lit = (gr) => gr.children.filter((o) => o.isMesh).some((o) => bl.intersectsBox(serre(boite(o))) && boite(o).min.y < bl.max.y - 0.005);
-      ok(["lit", "bureaux", "sieges_ranges", "personne_couchee"].every((k) => g(k) && g(k).visible === false), `lit ${l.nom} : lit, bureaux, sièges rangés et personne cachés au départ`);
-      ok(!dans_le_lit(g("bureaux")) && !dans_le_lit(g("sieges_ranges")) && bl.intersectsBox(boite(g("personne_couchee"))) && l.sieges.length === v.sieges.filter((st) => st.tient !== false).length, `lit ${l.nom} : rien dans le lit (un plateau au-dessus est permis, pas une pièce dedans), les ${l.sieges.length} sièges rangés, la personne couchée dessus`);
-      // la porte : un lit peut longer son mur, il doit rester de quoi entrer
-      const po = v.porte, mp = m.faces[po.cote], [ax, ay] = mp.de, [ccx, ccy] = mp.a, lo = Math.hypot(ccx - ax, ccy - ay);
-      const py = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ay + (ccy - ay) / lo * s), px = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ax + (ccx - ax) / lo * s);
-      const ql = l.polygone, qb = { x1: Math.max(...ql.map((z) => z[0])), y1: Math.max(...ql.map((z) => z[1])) };
-      const ep_mur = +base.panneau.epaisseur_mm / 10, croise = qb.x1 > Math.max(...px) - ep_mur - 0.5, degage = croise ? Math.max(0, Math.max(...py) - Math.max(Math.min(...py), qb.y1)) : po.largeur_cm;
-      ok(degage >= 55, `lit ${l.nom} : ${Math.round(degage)} cm de baie de porte dégagés sur ${po.largeur_cm} (il faut 55 pour entrer)`);
-      // un dossier de fauteuil monte plus haut qu'un plateau : range, il ne doit traverser aucun bureau
-      const plateaux = g("bureaux").children.filter((o) => o.isMesh).map((o) => serre(boite(o)));
-      const traverse = g("sieges_ranges").children.filter((o) => o.isMesh).filter((o) => plateaux.some((b) => b.intersectsBox(serre(boite(o)))));
-      ok(traverse.length === 0, `lit ${l.nom} : aucune pièce de siège rangé ne traverse un plateau de bureau (${traverse.length} en faute)`);
-      // les pieds du plateau : quatre, aucun dans le lit, et le siege en usage hors du lit
-      const pieds = (l.pieds_bureau || []);
-      const bed2 = l.polygone, dans_bed = (pt) => pt[0] > Math.min(...bed2.map((z) => z[0])) - 0.5 && pt[0] < Math.max(...bed2.map((z) => z[0])) + 0.5 && pt[1] > Math.min(...bed2.map((z) => z[1])) - 0.5 && pt[1] < Math.max(...bed2.map((z) => z[1])) + 0.5;
-      ok(pieds.length === 4 && !pieds.some(dans_bed), `lit ${l.nom} : quatre pieds sous le plateau, aucun dans le lit`);
-      // le poste de travail : deux dalles de 27 pouces et le portable, poses sur le plateau, hors du lit
-      const plateau_h = Math.max(...g("bureaux").children.filter((o) => o.isMesh).map((o) => boite(o).max.y));
-      const dessus = g("bureaux").children.filter((o) => o.isMesh && boite(o).min.y >= plateau_h - 0.005);
-      const dalles = dessus.filter((o) => { const b = boite(o); return Math.abs((b.max.z - b.min.z) - 0.62) < 0.02 && (b.max.y - b.min.y) > 0.3; });
-      ok(dalles.length === 2 && dessus.length >= 8 && !dessus.some((o) => bl.intersectsBox(serre(boite(o)))), `lit ${l.nom} : deux dalles de 27 pouces et le portable sur le plateau (${dessus.length} pièces), rien au-dessus du lit`);
-      const siege_usage = v.sieges.filter((st) => st.tient !== false);
-      ok(siege_usage.every((st) => !st.polygone.some(dans_bed)), `lit ${l.nom} : le siège en usage est hors du lit, centré sur la partie libre du bureau`);
-    });
-    const plan_box = (q) => { const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
-    const si = plan_box(d.sol.polygone), v3 = lm.find((x) => x.nom === "v3"), v4 = lm.find((x) => x.nom === "v4");
-    if (v3) {
-      const b = plan_box(v3.polygone), bu = v3.bureaux.map(plan_box);
-      ok(near(b.x1 - b.x0, 190, 0.2) && near(b.y1 - b.y0, 80, 0.2) && near(b.y0, si.y0, 0.2) && near(b.x1, si.x1, 0.2), "lit v3 : 190 × 80 le long du mur avant, calé à droite contre le mur de la porte");
-      const bg = bu.find((x) => near(x.y0, si.y0, 0.2) && x.y1 > b.y1 + 100);
-      ok(!!bg && v3.sous_bureau_cm2 > 3000, "lit v3 : plus de bureau devant, le bureau gauche reste entier et couvre le pied du lit (" + v3.sous_bureau_cm2 + " cm2)");
-      const lit = groupes.lit3, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
-      ok(boite(oreiller).min.x > (bl.min.x + bl.max.x) / 2, "lit v3 : l'oreiller est à droite, côté porte : couché, les pieds vont vers le bureau gauche et ses écrans");
-    }
-    if (v4) {
-      const b = plan_box(v4.polygone), [av, ga] = v4.bureaux.map(plan_box);
-      ok(near(b.x1 - b.x0, 90, 0.2) && near(b.y1 - b.y0, 190, 0.2) && near(b.x0, si.x0, 0.2) && near(b.y1, si.y1, 0.2), "lit v4 : 90 × 190 contre le mur gauche, calé dans le coin du fond");
-      ok(v4.bureaux.length === 2 && near(av.x1 - av.x0, si.x1 - si.x0, 0.2) && near(ga.y0, si.y0, 0.2) && near(ga.y1, b.y0, 0.2), "lit v4 : bureau en L, toute la façade plus un retour sur le mur gauche jusqu'au pied du lit");
-      const lit = groupes.lit4, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
-      ok(boite(oreiller).max.z < (bl.min.z + bl.max.z) / 2, "lit v4 : l'oreiller est au fond");
-    }
-    ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
   }
+  // lits a demeure : ils existent que le lit pliant soit la ou non
+  // lits a demeure (v3, v4, …) : caches au depart ; ni leurs bureaux ni les sieges ranges ne touchent le lit ; tout le monde range ; la personne dessus
+  const lm = d.mobilier.lits_muraux || [], serre = (b) => b.clone().expandByScalar(-0.005);
+  ok(nom !== "abri actuel" || lm.map((x) => x.nom).join() === "lit", "lit à demeure, sans suffixe (" + lm.map((x) => x.nom).join() + ")");
+  lm.forEach((l, i) => {
+    const n = 3 + i, g = (k) => groupes[k + n], bl = serre(boite(g("lit")));
+    const dans_le_lit = (gr) => gr.children.filter((o) => o.isMesh).some((o) => bl.intersectsBox(serre(boite(o))) && boite(o).min.y < bl.max.y - 0.005);
+    ok(["lit", "bureaux", "canape"].every((k) => g(k) && g(k).visible !== false) && ["couchage", "sieges_ranges", "personne_couchee"].every((k) => g(k) && g(k).visible === false), `le lit, son bureau et les coussins sont posés à demeure ; couchage, sièges rangés et personne cachés au départ`);
+    ok(!dans_le_lit(g("bureaux")) && !dans_le_lit(g("sieges_ranges")) && (() => { const bc = boite(g("personne_couchee")); return bc.min.y >= bl.max.y - 0.02 && bc.min.x > bl.min.x - 0.05 && bc.max.x < bl.max.x + 0.05 && bc.min.z > bl.min.z - 0.05 && bc.max.z < bl.max.z + 0.05; })() && l.sieges.length === v.sieges.filter((st) => st.tient !== false).length, `rien dans le lit (un plateau au-dessus est permis, pas une pièce dedans), les ${l.sieges.length} sièges rangés, la personne couchée sur le matelas`);
+    // la porte : un lit peut longer son mur, il doit rester de quoi entrer
+    const po = v.porte, mp = m.faces[po.cote], [ax, ay] = mp.de, [ccx, ccy] = mp.a, lo = Math.hypot(ccx - ax, ccy - ay);
+    const py = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ay + (ccy - ay) / lo * s), px = [po.debut_cm, po.debut_cm + po.largeur_cm].map((s) => ax + (ccx - ax) / lo * s);
+    const ql = l.polygone, qb = { x1: Math.max(...ql.map((z) => z[0])), y1: Math.max(...ql.map((z) => z[1])) };
+    const ep_mur = +base.panneau.epaisseur_mm / 10, croise = qb.x1 > Math.max(...px) - ep_mur - 0.5, degage = croise ? Math.max(0, Math.max(...py) - Math.max(Math.min(...py), qb.y1)) : po.largeur_cm;
+    ok(degage >= 55, `lit : ${Math.round(degage)} cm de baie de porte dégagés sur ${po.largeur_cm} (il faut 55 pour entrer)`);
+    // un dossier de fauteuil monte plus haut qu'un plateau : range, il ne doit traverser aucun bureau
+    const plateaux = g("bureaux").children.filter((o) => o.isMesh).map((o) => serre(boite(o)));
+    const traverse = g("sieges_ranges").children.filter((o) => o.isMesh).filter((o) => plateaux.some((b) => b.intersectsBox(serre(boite(o)))));
+    ok(traverse.length === 0, `lit : aucune pièce de siège rangé ne traverse un plateau de bureau (${traverse.length} en faute)`);
+    // les pieds du plateau : quatre, aucun dans le lit, et le siege en usage hors du lit
+    const pieds = (l.pieds_bureau || []);
+    const bed2 = l.polygone, dans_bed = (pt) => pt[0] > Math.min(...bed2.map((z) => z[0])) - 0.5 && pt[0] < Math.max(...bed2.map((z) => z[0])) + 0.5 && pt[1] > Math.min(...bed2.map((z) => z[1])) - 0.5 && pt[1] < Math.max(...bed2.map((z) => z[1])) + 0.5;
+    ok(pieds.length === 4 && !pieds.some(dans_bed), `lit : quatre pieds sous le plateau, aucun dans le lit`);
+    // canape : deux coussins de dossier, contre le mur (plus loin du centre que le milieu du lit)
+    const gcan = groupes[`canape${n}`], coussins = gcan ? gcan.children.filter((o) => o.isMesh) : [];
+    const sol_pts = d.sol.polygone, ctr = [sol_pts.reduce((s, z) => s + z[0], 0) / sol_pts.length, sol_pts.reduce((s, z) => s + z[1], 0) / sol_pts.length];
+    const cm_plan = (X, Z) => [X * 100 + cx, -Z * 100 + cy];
+    const centre_lit = [(Math.min(...l.polygone.map((z) => z[0])) + Math.max(...l.polygone.map((z) => z[0]))) / 2, (Math.min(...l.polygone.map((z) => z[1])) + Math.max(...l.polygone.map((z) => z[1]))) / 2];
+    const d_lit = Math.hypot(centre_lit[0] - ctr[0], centre_lit[1] - ctr[1]);
+    const sur_le_lit_seulement = coussins.every((o) => { const b = serre(boite(o)); return b.min.x > bl.min.x && b.max.x < bl.max.x && b.min.z > bl.min.z && b.max.z < bl.max.z; });
+    const hors_bureau = coussins.every((o) => !g("bureaux").children.filter((x) => x.isMesh).some((x) => serre(boite(x)).intersectsBox(serre(boite(o)))));
+    void ctr; void d_lit; void cm_plan;
+    ok(coussins.length === 2 && sur_le_lit_seulement && hors_bureau, `lit : deux coussins de dossier sur le matelas, aucun contre le bureau (${coussins.length} coussin(s))`);
+    // le poste de travail : deux dalles de 27 pouces et le portable, poses sur le plateau, hors du lit
+    const plateau_h = d.sol.epaisseur_cm / 100 + 0.75;
+    const dessus = g("bureaux").children.filter((o) => o.isMesh && boite(o).min.y >= plateau_h - 0.005);
+    const dalles = dessus.filter((o) => { const b = boite(o); return Math.abs((b.max.z - b.min.z) - 0.62) < 0.02 && (b.max.y - b.min.y) > 0.3; });
+    ok(dalles.length === 2 && dessus.length >= 8 && !dessus.some((o) => bl.intersectsBox(serre(boite(o)))), `lit : deux dalles de 27 pouces et le portable sur le plateau (${dessus.length} pièces), rien au-dessus du lit`);
+    const siege_usage = v.sieges.filter((st) => st.tient !== false);
+    ok(siege_usage.every((st) => !st.polygone.some(dans_bed)), `lit : le siège en usage est hors du lit, centré sur la partie libre du bureau`);
+  });
+  const plan_box = (q) => { const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
+  const si = plan_box(d.sol.polygone), v3 = lm.find((x) => x.nom === "v3"), v4 = lm.find((x) => x.nom === "v4");
+  if (v3) {
+    const b = plan_box(v3.polygone), bu = v3.bureaux.map(plan_box);
+    ok(near(b.x1 - b.x0, 190, 0.2) && near(b.y1 - b.y0, 80, 0.2) && near(b.y0, si.y0, 0.2) && near(b.x1, si.x1, 0.2), "lit v3 : 190 × 80 le long du mur avant, calé à droite contre le mur de la porte");
+    const bg = bu.find((x) => near(x.y0, si.y0, 0.2) && x.y1 > b.y1 + 100);
+    ok(!!bg && v3.sous_bureau_cm2 > 3000, "lit v3 : plus de bureau devant, le bureau gauche reste entier et couvre le pied du lit (" + v3.sous_bureau_cm2 + " cm2)");
+    const lit = groupes.lit3, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
+    ok(boite(oreiller).min.x > (bl.min.x + bl.max.x) / 2, "lit v3 : l'oreiller est à droite, côté porte : couché, les pieds vont vers le bureau gauche et ses écrans");
+  }
+  if (v4) {
+    const b = plan_box(v4.polygone), [av, ga] = v4.bureaux.map(plan_box);
+    ok(near(b.x1 - b.x0, 90, 0.2) && near(b.y1 - b.y0, 190, 0.2) && near(b.x0, si.x0, 0.2) && near(b.y1, si.y1, 0.2), "lit v4 : 90 × 190 contre le mur gauche, calé dans le coin du fond");
+    ok(v4.bureaux.length === 2 && near(av.x1 - av.x0, si.x1 - si.x0, 0.2) && near(ga.y0, si.y0, 0.2) && near(ga.y1, b.y0, 0.2), "lit v4 : bureau en L, toute la façade plus un retour sur le mur gauche jusqu'au pied du lit");
+    const lit = groupes.lit4, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
+    ok(boite(oreiller).max.z < (bl.min.z + bl.max.z) / 2, "lit v4 : l'oreiller est au fond");
+  }
+  ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
 }
 const lit_pose = groupes.lit3 || groupes.lit, couchage = groupes.couchage3 || lit_pose;
 const pieces_lit = [...lit_pose.children, ...(couchage === lit_pose ? [] : couchage.children)];

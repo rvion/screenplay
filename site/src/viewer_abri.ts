@@ -122,7 +122,7 @@ function dessine_tuile_grillage(): HTMLCanvasElement | null {
 
 // construit la scene de l'abri dans `abri` (sans renderer ni DOM : testable sous Node) ; rend les groupes masquables
 export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string, boolean> = {}): Record<string, Vec> {
-  const groupes: Record<string, Vec> = {}, visible: Record<string, boolean> = { lit: false, lit2: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
+  const groupes: Record<string, Vec> = {}, visible: Record<string, boolean> = { lit: false, lit2: false, couchage3: false, personne_couchee3: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
   const mat = (couleur: number, extra: any = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z: Pt) => z[0]), ys = data.dalle.map((z: Pt) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -494,16 +494,22 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     couchage.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(0xe3dff0, { roughness: 1 }))));
     // canape : de gros coussins de dossier le long du mur, le reste du temps
     if (canape) {
-      const nb = Math.max(2, Math.round(L / 62));
-      for (let i = 0; i < nb; i++) {
-        const s0c = 6 + i * (L - 12) / nb, s1c = s0c + (L - 12) / nb - 6;
+      // deux coussins de dossier CONTRE LE MUR (le cote du lit le plus loin du centre de la piece),
+      // et seulement du cote de la tete : au pied, le plateau du bureau passe au-dessus du lit
+      const pts: Pt[] = data.sol.polygone;
+      const ctr: Pt = [pts.reduce((s: number, z: Pt) => s + z[0], 0) / pts.length, pts.reduce((s: number, z: Pt) => s + z[1], 0) / pts.length];
+      const loin = (sgn: number) => Math.hypot(mp[0] + nx * sgn * lw / 2 - ctr[0], mp[1] + ny * sgn * lw / 2 - ctr[1]);
+      const cote = loin(1) > loin(-1) ? 1 : -1;
+      const d0 = cote * (lw / 2 - 2), d1 = cote * (lw / 2 - 16), depart = L * 0.38;
+      for (let i = 0; i < 2; i++) {
+        const pas = (L - depart - 8) / 2, s0c = depart + i * pas, s1c = s0c + pas - 8;
         const dossier: Pt[] = [
-          [mp[0] + ux * s0c + nx * (lw / 2 - 16), mp[1] + uy * s0c + ny * (lw / 2 - 16)],
-          [mp[0] + ux * s1c + nx * (lw / 2 - 16), mp[1] + uy * s1c + ny * (lw / 2 - 16)],
-          [mp[0] + ux * s1c + nx * (lw / 2 - 2), mp[1] + uy * s1c + ny * (lw / 2 - 2)],
-          [mp[0] + ux * s0c + nx * (lw / 2 - 2), mp[1] + uy * s0c + ny * (lw / 2 - 2)],
+          [mp[0] + ux * s0c + nx * d1, mp[1] + uy * s0c + ny * d1],
+          [mp[0] + ux * s1c + nx * d1, mp[1] + uy * s1c + ny * d1],
+          [mp[0] + ux * s1c + nx * d0, mp[1] + uy * s1c + ny * d0],
+          [mp[0] + ux * s0c + nx * d0, mp[1] + uy * s0c + ny * d0],
         ];
-        canape.add(ombre(new THREE.Mesh(prisme(dossier, plat(sol + 45), plat(sol + 90)), mat(i % 2 ? 0xc8b9a0 : 0xb9a88d, { roughness: 1 }))));
+        canape.add(ombre(new THREE.Mesh(prisme(dossier, plat(sol + 45), plat(sol + 90)), mat(i ? 0xc8b9a0 : 0xb9a88d, { roughness: 1 }))));
       }
     }
     // la taille du lit sur une petite plaque posee a plat au coin de l'oreiller
@@ -555,6 +561,9 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       gb.add(boite_cm(xm - 1, xm + 1.2, cy2 - 17.5, cy2 + 17.5, haut + 1.6, haut + 24, 0x14171a));  // ecran releve
       // clavier nomade devant le portable, a portee de main sur le bord du plateau
       gb.add(boite_cm(x1 - 16, x1 - 4, cy2 - 22, cy2 + 22, haut, haut + 1.8, 0xd8d5cf));
+      // imprimante au coin A/G : le bout du plateau cote facade, celui qui passe au-dessus du pied du lit
+      const y_coin = Math.min(...ys) + 2;
+      gb.add(boite_cm(x0 + 2, x0 + 37, y_coin, y_coin + 45, haut, haut + 20, 0x4a4f55, 0.8));
     }
     // quatre pieds sous le plateau : deux au ras du lit, deux au fond
     for (const [px, py] of lm.pieds_bureau || []) {
@@ -605,7 +614,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, personne_couchee2: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, couchage3: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
