@@ -77,7 +77,7 @@ td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: t
 td.regle { color: var(--muted); font-size: .78rem; }
 .note-prix { color: #7a8591; }
 a.source { font-size: .72rem; white-space: nowrap; }
-p.intro { margin: 0 0 .6rem; font-size: .92rem; line-height: 1.55; }
+p.intro { margin: 0 0 .6rem; font-size: .9rem; line-height: 1.7; }
 .resume-figs { display: grid; grid-template-columns: minmax(0, 2fr) minmax(6.5rem, 1fr); gap: .5rem; align-items: center; background: var(--creux); border-radius: 6px; padding: .4rem .5rem; max-width: 480px; }
 .resume-figs figure { margin: 0; min-width: 0; }
 .resume-figs svg { display: block; width: auto; max-width: 100%; height: auto; max-height: 300px; margin: 0 auto; }
@@ -89,9 +89,8 @@ ul.legende i.trait-epais { border-top: 4px solid var(--c); height: 0; }
 ul.legende i.pointille { border-top: 2.5px dashed var(--c); height: 0; }
 ul.legende i.aplat { background: var(--c); border: 1px solid #b5b0a5; }
 ul.legende i.arc { width: 12px; height: 12px; border: 1.5px solid var(--c); border-color: transparent transparent var(--c) var(--c); border-radius: 50%; }
-ul.tags { list-style: none; margin: 0 0 .6rem; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
-ul.tags li { display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .5rem .15rem .4rem; border: 1px solid var(--line); border-radius: 12px; background: var(--carte); font-size: .76rem; white-space: nowrap; }
-ul.tags svg { width: 12px; height: 12px; color: var(--muted); }
+/* faits cles du resume : surlignes dans la phrase */
+.fait { background: #eef3f8; border-radius: 3px; padding: 0 .25em; white-space: nowrap; }
 .cote { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); font-weight: 500; }
 .cote .u { color: var(--muted); font-weight: 400; font-size: .74em; margin-left: .1em; }
 .cote .d { font-size: .82em; }
@@ -217,17 +216,21 @@ ol.liste.formes button { padding: .2rem .5rem; }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre, .pourquoi { grid-template-columns: minmax(0, 1fr); }
-  /* tablette : le resume reste a cote de la 3D, en deux colonnes egales */
-  .fiche-vue { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .vue .scene, #viewer { min-height: 340px; }
+  /* tablette : texte a gauche, dessin a droite, puis la 3D sur toute la largeur */
+  .fiche-vue { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .fiche-vue > div:first-child { display: contents; }
+  .fiche-vue .vue { grid-column: 1 / -1; }
+  .resume-figs { max-width: none; }
+  .vue .scene, #viewer { min-height: 380px; height: 380px; }
   ol.questions { columns: 1; }
   .rangee { grid-template-columns: minmax(0, 1fr); }
   .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 }
 @media (max-width: 640px) {
-  /* telephone : resume puis 3D l'un sous l'autre ; le dessin reste a gauche, plus petit, la legende a droite */
+  /* telephone : texte, dessin, 3D l'un sous l'autre ; le dessin reste a gauche, plus petit, la legende a droite */
   .fiche-vue { grid-template-columns: minmax(0, 1fr); }
+  .fiche-vue > div:first-child { display: block; }
   .resume-figs { grid-template-columns: minmax(0, 1fr) max-content; gap: .4rem; }
   .resume-figs svg { max-height: 240px; width: auto; max-width: 100%; }
   ul.legende { font-size: .6rem; }

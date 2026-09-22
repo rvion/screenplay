@@ -57,6 +57,9 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Lit pliant placé le long du mur de la porte, pied sous le bureau de façade (`pied_sous`, `pres_de`) ; fauteuil poussé jusqu'au bord du bureau
 - [x] Résumé : chiffres en étiquettes sous le paragraphe ; sur téléphone dessin plus petit, légende à droite ; en-tête qui se replie
 - [x] Résumé et 3D côte à côte jusqu'à 640 px (l'un sous l'autre seulement sur téléphone) ; dessin plafonné à 300 px sur grand écran ; la 3D remplit toute la hauteur de la colonne
+- [x] Résumé : plus d'étiquettes, les faits clés surlignés dans le paragraphe (points médians)
+- [x] Trois mises en page : large (texte + dessin | 3D), moyenne (texte | dessin, puis 3D pleine largeur), téléphone (tout empilé)
+- [x] Preset « Lit déplié » porte fermée ; fauteuil rangé sans traverser le plateau
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

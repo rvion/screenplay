@@ -2630,21 +2630,16 @@ function rend_abri(a) {
   if (bandeau) bandeau.hidden = retenue;
   const doc = el("lien-document");
   if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
-  html("intro", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, sur la dalle existante, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L le long des murs ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
+  const fait = (x) => `<span class="fait">${x}</span>`;
+  html("intro", [
+    `Bureau de jardin \xE0 ${fait(`${NOMBRES[n] || n} murs`)}, panneaux sandwich ${fait(cote(ep))} autoportants, sur la dalle existante`,
+    `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
+    `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}`,
+    `murs ${fait(cote(m.hauteur_mur_cm))}, fa\xEEte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
+    `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`,
+    `mat\xE9riaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`
+  ].join(" \xB7 ") + ".");
   const RS = core.planches || {};
-  const ICO = {
-    hauteurs: '<svg viewBox="0 0 16 16"><path d="M8 2v12M5.5 4.5 8 2l2.5 2.5M5.5 11.5 8 14l2.5-2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    toit: '<svg viewBox="0 0 16 16"><path d="M2 8.5 8 3l6 5.5M4 7.5V13h8V7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
-    surfaces: '<svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1.5"/></svg>',
-    materiaux: '<svg viewBox="0 0 16 16"><path d="M2 4h2l1.6 7h7.2L14 6H5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/></svg>'
-  };
-  const tags = [
-    ["hauteurs", `murs ${cote(m.hauteur_mur_cm)}, fa\xEEte ${cote(Math.max(...m.hauteurs_coins_cm))}`],
-    ["toit", `pente ${cote(m.pente.pourcent, "%")}, port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`],
-    ["surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? ", sans formalit\xE9" : ", d\xE9claration pr\xE9alable"}`],
-    ["surfaces", `${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
-    ["materiaux", `${eur(B.materiaux_eur)} TTC`]
-  ];
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w) => w.type));
   const legende = [
     ["trait", "#2b5d8a", "mur"],
@@ -2656,7 +2651,6 @@ function rend_abri(a) {
     ["aplat", "#f3f1ec", "dalle"]
   ];
   html("fiche", `<div class="resume-figs"><figure>${RS.resume ? RS.resume.svg : ""}</figure><ul class="legende">${legende.map(([k, c, t]) => `<li><i class="${k}" style="--c:${c}"></i>${t}</li>`).join("")}</ul></div>`);
-  html("tags", tags.map(([ico, val]) => `<li>${ICO[ico]}<span>${val}</span></li>`).join(""));
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
@@ -2849,7 +2843,7 @@ var VUES = {
   arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
+  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
 };
 function applique_etats(vue, e) {
   vue.montrer("toit", e.toit > 0);
@@ -3294,7 +3288,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
   };
   for (const st of data.mobilier.sieges) {
     const s = siege(st, sieges);
-    const pousse = st.contre === "gauche" ? [-(s.largeur - 4), 0] : st.contre === "droite" ? [s.largeur - 4, 0] : [0, -(s.profondeur - 4)];
+    const pousse = st.contre === "gauche" ? [-(s.largeur - 12), 0] : st.contre === "droite" ? [s.largeur - 12, 0] : [0, -(s.profondeur - 12)];
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     if (!s.tabouret) {
       const g = assise(s.haut / 100);

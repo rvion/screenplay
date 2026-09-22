@@ -29,7 +29,7 @@ export const VUES = {
   arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)
@@ -398,8 +398,8 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   for (const st of data.mobilier.sieges) {
     const s = siege(st, sieges);
     // range : pousse sous son bureau (a gauche pour le bureau gauche, vers la facade pour celui de facade)
-    // pousse jusqu'a ce que le dossier touche le bord du bureau (l'assise passe dessous, le dossier reste dehors)
-    const pousse = st.contre === "gauche" ? [-(s.largeur - 4), 0] : st.contre === "droite" ? [s.largeur - 4, 0] : [0, -(s.profondeur - 4)];
+    // pousse jusqu'a ce que le dossier arrive a 4 cm du bord du bureau (l'assise passe dessous, le dossier reste dehors, sans toucher)
+    const pousse = st.contre === "gauche" ? [-(s.largeur - 12), 0] : st.contre === "droite" ? [s.largeur - 12, 0] : [0, -(s.profondeur - 12)];
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     // la personne assise sur le fauteuil, tournee vers son bureau
     if (!s.tabouret) {

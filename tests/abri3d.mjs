@@ -53,6 +53,10 @@ const paroi = groupes.murs.children;
   const fauteuil = v.sieges.find((s) => /fauteuil/.test(s.type)), lit3 = d.mobilier.lit;
   const b_ass = boite(groupes.personne_assise), b_cou = boite(groupes.personne_couchee), b_rang = boite(groupes.sieges_ranges), b_sieges = boite(groupes.sieges);
   ok(groupes.sieges_ranges.children.length === groupes.sieges.children.length && b_rang.min.x < b_sieges.min.x - 0.3, "sieges ranges : autant de pieces, poussees vers le bureau gauche");
+  // le dossier range (piece la plus haute du fauteuil) ne traverse pas le plateau du bureau gauche
+  const bureau_g = groupes.mobilier.children.find((o) => o.isMesh && boite(o).max.y > 0.7 && boite(o).max.y < 0.9 && (boite(o).max.z - boite(o).min.z) > 2);
+  const dossier = groupes.sieges_ranges.children.filter((o) => o.isMesh).sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
+  ok(!bureau_g || !dossier || !boite(dossier).intersectsBox(boite(bureau_g)), "sieges ranges : le dossier du fauteuil ne traverse pas le plateau du bureau");
   ok(!fauteuil || (b_ass.max.y > 1.1 && b_ass.max.y < 1.5 && near(b_ass.min.y, d.sol.epaisseur_cm / 100, 0.02)), "personne assise : tete entre 1,10 et 1,50 m, pieds sur le plancher");
   ok(!lit3 || (b_cou.max.y < 1.0 && b_cou.min.y > 0.4 && Math.max(b_cou.max.z - b_cou.min.z, b_cou.max.x - b_cou.min.x) > 1.5), "personne couchee : allongee sur le lit, sous 1 m de haut, longue de plus de 1,5 m");
 }
