@@ -107,24 +107,23 @@ export function rend_abri(a: Abri) {
     m.faces.map((f: any, i: number) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)} ${cote(pn.largeur_cm, "")}`).join(" · "), cote(m.angles_deg[i], "°")]));
 
   // implantation et plans : les SVG du modele, injectes tels quels
+  // planches : l'entete en texte (titre, detail, legende), le dessin sans titre dessous
+  const PL = core.planches || {};
+  const planche = (cle: string, extra = "") => { const q = PL[cle], f = m.faces.find((x: any) => `facade-${x.cle}` === cle); return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} · ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">· ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" · ")}</p><div class="planbox" id="plan-${cle}">${q.svg}</div>` : ""; };
+  html("planche-implantation", planche("implantation") + `<ul id="implantation-points"></ul>`);
+  html("planche-sol", planche("sol"));
   liste("implantation-points", [
     `${cote(gauche)} du bord gauche (mur de propriété), ${cote(avant)} du bord avant, ${cote(droite_libre)} de dalle à droite : le chemin vers la porte et l'arrière.`,
     `Passage derrière, le long du grand pan : ${cote(passage.cm)} au plus étroit.`,
     v.arriere ? `${cote(v.arriere.aire_m2, "m²")} de dalle cachés derrière l'abri (hachures vertes), jusqu'à ${cote(v.arriere.profondeur_max_cm)} de profondeur : les outils de jardin.` : "",
   ].filter(Boolean));
-  const plans: [string, string][] = [["modele-implantation", "implantation"], ["modele-sol", "sol"], ["modele-toit", "toit"], ["modele-rehausse", "rehausse"]];
-  for (const [nom, id] of plans) html(`plan-${id}`, core.svg[nom] || "");
   const details_plans = el("plans-details"), liste_plans = el("plans-liste"), mode_plans = el("plans-mode");
   if (details_plans && liste_plans && mode_plans) {
-    for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
-    details_plans.insertAdjacentHTML("beforeend", m.faces.map((f: any, i: number) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} · ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
-    const fixes: [string, string, string][] = [["toit", "Toiture", "T"], ["rehausse", "Rehausse", "R"]];
+    const cles = [...m.faces.map((f: any) => `facade-${f.cle}`), "toit", "rehausse"];
+    html("plans-details", cles.map((k) => `<article data-cle="${k}">${planche(k, k.startsWith("facade-") ? (v.porte && m.faces[v.porte.cote].cle === k.slice(7) ? " (porte)" : k === "facade-A" ? " (jardin)" : "") : "")}</article>`).join(""));
     maitre_detail({
       liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `abri-v${a.version}-plans`, ancre: el("plans-liste") || undefined,
-      entrees: () => [
-        ...m.faces.map((f: any): Entree => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} · ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) as HTMLElement })),
-        ...fixes.map(([k, t, lettre]): Entree => ({ cle: k, titre: t, num: lettre, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement })),
-      ],
+      entrees: () => cles.map((k): Entree => { const f = m.faces.find((x: any) => `facade-${x.cle}` === k); return { cle: k, titre: f ? `Face ${f.cle} · ${nom_face(f)}` : PL[k].nom, num: PL[k].lettre, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement }; }),
     });
   }
 

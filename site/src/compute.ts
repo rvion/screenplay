@@ -1208,12 +1208,18 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, sobre = fal
 // sommet, position de la pointe. Les murs de propriete en brun, l'abri en fantome.
 // m (modele de l'abri retenu) : plan d'implantation, sans bandes ni zone, avec toit, gouttiere et
 // distances de l'abri aux bords de la dalle
-export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any = null): string {
+export function entete_implantation(v: any, d: any): EntetePlan {
+  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, lignes: [
+    "murs pleins, intérieur en pointillé fin, toit (débords) en pointillé brun, gouttière et descente en bleu",
+    "orange = distance aux bords de la dalle · vert/orange = passage derrière, jusqu'aux murs de propriété (cm)",
+  ] };
+}
+export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any = null, sans_entete = false): string {
   const d = g.dalle;
   const zu = !m && (avecBandes || v) ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
   const q: Pt[] = d.polygone.map(([x, y]: Pt) => [x + ox, y + oy]);
-  const n = q.length, scale = 1.25, pad = 110, top = 90;
+  const n = q.length, scale = 1.25, pad = 110, top = sans_entete ? 0 : 90;
   const xs = q.map((v) => v[0]), ys = q.map((v) => v[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
   const pw = v && v.porte ? v.porte.largeur_cm * scale - 60 : 0;
@@ -1335,9 +1341,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   }
   const somme = d.angles_deg.reduce((s: number, x: number) => s + x, 0);
   if (m && v) {
-    svg += text(W / 2, 26, `Implantation sur la dalle · abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, "middle", "#222", 15, "bold");
-    svg += text(W / 2, 46, `murs pleins, intérieur en pointillé fin, toit (débords) en pointillé brun, gouttière et descente en bleu`, "middle", "#2b5d8a", 12);
-    svg += text(W / 2, 64, `orange = distance aux bords de la dalle · vert/orange = passage derrière, jusqu'aux murs de propriété (cm)`, "middle", "#666", 11);
+    if (!sans_entete) svg += dessine_entete(W, entete_implantation(v, d));
   } else if (v) {
     svg += text(W / 2, 26, `Option ${v.id} · ${v.titre}`, "middle", "#222", 15, "bold");
     svg += text(W / 2, 46, `murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m² · ${v.polygone.length} côtés`, "middle", "#2b5d8a", 13, "bold");
@@ -1573,7 +1577,16 @@ export function buildCore(p: Params) {
     for (const f of modele.faces) svg[`modele-facade-${f.cle}`] = modele_facade_svg(modele, f);
   }
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
-  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg };
+  // planches de la page : le meme corps que les fichiers SVG, l'entete a part (la page la rend en texte)
+  const planches: Record<string, Planche> = {};
+  if (modele && g.dalle) {
+    planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
+    planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
+    planches.toit = { ...entete_toit(modele), svg: modele_toit_svg(v13, modele, true) };
+    planches.rehausse = { ...entete_rehausse(modele), svg: modele_rehausse_svg(modele, true) };
+    for (const f of modele.faces) planches[`facade-${f.cle}`] = { ...entete_facade(f), svg: modele_facade_svg(modele, f, true) };
+  }
+  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg, planches };
 }
 
 /* ----------------------------------------------------------------- */
@@ -1823,6 +1836,18 @@ function cote_svg(pa: number[], pb: number[], label: string, off: number, col = 
 }
 
 // repere plan commun (y vers l'arriere = vers le haut de l'image)
+// entete d'un plan : la lettre de face (A, D, T, R), le nom, un detail chiffre, des lignes de legende.
+// dessinee dans le fichier SVG (image autonome) ; la page la rend en texte et prend le corps seul (sans_entete)
+export interface EntetePlan { lettre?: string; nom: string; detail?: string; lignes: string[] }
+export interface Planche extends EntetePlan { svg: string }
+export const titre_plan = (e: EntetePlan) => `${e.lettre ? `Face ${e.lettre} · ` : ""}${e.nom}${e.detail ? ` · ${e.detail}` : ""}`;
+const hauteur_entete = (e: EntetePlan) => 34 + 18 * e.lignes.length;
+function dessine_entete(W: number, e: EntetePlan): string {
+  let svg = text(W / 2, 26, titre_plan(e), "middle", "#222", 15, "bold");
+  e.lignes.forEach((l, i) => { svg += text(W / 2, 46 + 18 * i, l, "middle", i === 0 ? "#888" : "#666", 11); });
+  return svg;
+}
+
 function cadre_plan(pts: Pt[], scale: number, pad: number, top: number) {
   const xs = pts.map((z) => z[0]), ys = pts.map((z) => z[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
@@ -1830,9 +1855,14 @@ function cadre_plan(pts: Pt[], scale: number, pad: number, top: number) {
   return { W, H, P: (z: Pt) => [pad + (z[0] - minx) * scale, top + pad + (maxy - z[1]) * scale] };
 }
 
-export function modele_sol_svg(p: Params, v: any, m: any): string {
+export function entete_sol(p: Params, v: any): EntetePlan {
+  const lignes = [`murs ${fz(+p.panneau.epaisseur_mm / 10)} cm · porte ${fz(v.porte.largeur_cm)} ouvrant dehors · fenêtres en façade (bleu)${v.sol_libre_m2 != null ? ` · sol libre hors bureaux ${v.sol_libre_m2} m²` : ""}`];
+  if (v.lit_pliant && v.lit_pliant.tient) lignes.push(`violet pointillé = lit déplié${v.lit_pliant.replie ? " · violet plein = replié contre le mur · carrés = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " · on range les sièges pour le déplier" : ""}`);
+  return { nom: "Plan de sol", detail: `murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m²`, lignes };
+}
+export function modele_sol_svg(p: Params, v: any, m: any, sans_entete = false): string {
   const q: Pt[] = v.polygone, n = q.length, scale = 1.6;
-  const { W, H, P } = cadre_plan(q, scale, 120, 50);
+  const { W, H, P } = cadre_plan(q, scale, 120, sans_entete ? 0 : 50);
   let svg = svgHeader(rnd(W), rnd(H));
   svg += poly(q.map(P), "#8fa3b8", "#2b5d8a", 1.5);
   svg += poly(m.interieur.map(P), "#fbfbf8", "#2b5d8a", 1.2);
@@ -1906,16 +1936,18 @@ export function modele_sol_svg(p: Params, v: any, m: any): string {
     if (rot > 90) rot -= 180; else if (rot < -90) rot += 180;
     svg += `<text x="${f1(mpt[0])}" y="${f1(mpt[1])}" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(${f1(rot)} ${f1(mpt[0])} ${f1(mpt[1])})">int. ${fz(rnd(L, 1))}</text>\n`;
   });
-  svg += text(W / 2, 26, `Plan de sol · murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m²`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `murs ${fz(+p.panneau.epaisseur_mm / 10)} cm · porte ${fz(v.porte.largeur_cm)} ouvrant dehors · fenêtres en façade (bleu)${v.sol_libre_m2 != null ? ` · sol libre hors bureaux ${v.sol_libre_m2} m²` : ""}`, "middle", "#888", 11);
-  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, `violet pointillé = lit déplié${v.lit_pliant.replie ? " · violet plein = replié contre le mur · carrés = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " · on range les sièges pour le déplier" : ""}`, "middle", "#6a3d9a", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_sol(p, v));
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
 
-export function modele_toit_svg(v: any, m: any): string {
+export function entete_toit(m: any): EntetePlan {
+  const T = m.toit;
+  return { lettre: "T", nom: "Toiture", detail: `${T.panneaux.length} panneaux · ${T.aire_m2} m² couverts`, lignes: [`panneaux dans le sens de la pente (longueur = rampant) · murs en pointillé · ${m.sens === "droite" ? "égout côté jardin (droite), haut contre le mur gauche" : "débords avant et fond"}`] };
+}
+export function modele_toit_svg(v: any, m: any, sans_entete = false): string {
   const T = m.toit, scale = 1.6;
-  const { W, H, P } = cadre_plan(T.contour, scale, 110, 50);
+  const { W, H, P } = cadre_plan(T.contour, scale, 110, sans_entete ? 0 : 50);
   let svg = svgHeader(rnd(W), rnd(H));
   for (const pn of T.panneaux) {
     svg += poly(pn.polygone.map(P), "#f3f0e8", "#7a6f5a", 1.5);
@@ -1959,19 +1991,22 @@ export function modele_toit_svg(v: any, m: any): string {
   }
   const q = T.contour, n = q.length;
   q.forEach((z: Pt, i: number) => { svg += cote_svg(P(z), P(q[(i + 1) % n]), fz(rnd(Math.hypot(q[(i + 1) % n][0] - z[0], q[(i + 1) % n][1] - z[1]), 1)), 26, "#7a6f5a", 11); });
-  svg += text(W / 2, 26, `Toiture · ${T.panneaux.length} panneaux · ${T.aire_m2} m² couverts`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `panneaux dans le sens de la pente (longueur = rampant) · murs en pointillé · ${m.sens === "droite" ? "égout côté jardin (droite), haut contre le mur gauche" : "débords avant et fond"}`, "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_toit(m));
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
 const fr1 = (x: number) => String(x).replace(".", ",");
 
-export function modele_rehausse_svg(m: any): string {
-  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = 50, gap = 60;
-  const W = stock * sx + 2 * pad, H = 70 + R.barres.length * (section * sy + gap) + 30;
+export function entete_rehausse(m: any): EntetePlan {
+  const R = m.rehausse;
+  return { lettre: "R", nom: "Rehausse bois", detail: `${R.pieces.length} pièces dans ${R.nb_madriers} madrier${R.nb_madriers > 1 ? "s" : ""}`, lignes: ["hauteur de chaque pièce : de son début à sa fin, dans le sens de la face (vue de l'extérieur, de gauche à droite)"] };
+}
+export function modele_rehausse_svg(m: any, sans_entete = false): string {
+  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = 50, gap = 60, ent = sans_entete ? 20 : 70;
+  const W = stock * sx + 2 * pad, H = ent + R.barres.length * (section * sy + gap) + 30;
   let svg = svgHeader(rnd(W), rnd(H));
   R.barres.forEach((b: any, k: number) => {
-    const top = 70 + k * (section * sy + gap), X = (x: number) => pad + x * sx, Y = (h: number) => top + (section - h) * sy;
+    const top = ent + k * (section * sy + gap), X = (x: number) => pad + x * sx, Y = (h: number) => top + (section - h) * sy;
     svg += text(pad, top - 10, `madrier ${k + 1} · ${R.section_mm[0]} × ${R.section_mm[1]} · ${fz(stock)} cm · chute ${fz(b.chute_cm)} cm`, "start", "#5a4f3a", 12, "bold");
     svg += poly([[X(0), Y(0)], [X(stock), Y(0)], [X(stock), Y(section)], [X(0), Y(section)]], "#f3ece0", "#b8a888", 1, "4 3");
     for (const t of b.troncons) t.pieces.forEach((pc: any, j: number) => {
@@ -1985,13 +2020,15 @@ export function modele_rehausse_svg(m: any): string {
       svg += text(cx, cy + 4, `${pc.id} · face ${pc.face} · ${fz(pc.L)} · ${fz(pc.h0)} → ${fz(pc.h1)}`, "middle", "#5a3a1a", 11, "bold");
     });
   });
-  svg += text(W / 2, 26, `Rehausse bois · ${R.pieces.length} pièces dans ${R.nb_madriers} madrier${R.nb_madriers > 1 ? "s" : ""}`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, "hauteur de chaque pièce : de son début à sa fin, dans le sens de la face (vue de l'extérieur, de gauche à droite)", "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_rehausse(m));
   return svg + "</svg>\n";
 }
 
-export function modele_facade_svg(m: any, f: any): string {
-  const scale = 1.25, pad = 60, top = 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
+export function entete_facade(f: any): EntetePlan {
+  return { lettre: f.cle, nom: f.nom, lignes: [`vue de l'extérieur · ${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(f.hauteur_mur_cm)} · hauteurs finies aux deux bouts`] };
+}
+export function modele_facade_svg(m: any, f: any, sans_entete = false): string {
+  const scale = 1.25, pad = 60, top = sans_entete ? 0 : 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
   const W = L * scale + 2 * pad + 60, H = Math.max(h0, h1) * scale + 2 * pad + top + 30;
   const P = (x: number, h: number) => [pad + 30 + x * scale, H - pad - 30 - h * scale];
   let svg = svgHeader(rnd(W), rnd(H));
@@ -2029,8 +2066,7 @@ export function modele_facade_svg(m: any, f: any): string {
   svg += text(P(0, h0)[0] - 8, P(0, h0)[1] + 4, `${fz(h0)}`, "end", "#2b5d8a", 12, "bold");
   svg += text(P(L, h1)[0] + 8, P(L, h1)[1] + 4, `${fz(h1)}`, "start", "#2b5d8a", 12, "bold");
   svg += text(P(0, Hm)[0] - 8, P(0, Hm)[1] + 16, `${fz(Hm)}`, "end", "#888", 10);
-  svg += text(W / 2, 26, `Face ${f.cle} · ${f.nom} · vue de l'extérieur`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(Hm)} · hauteurs finies aux deux bouts`, "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_facade(f));
   return svg + "</svg>\n";
 }
 

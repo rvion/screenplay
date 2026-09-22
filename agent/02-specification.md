@@ -145,13 +145,18 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     gauche, l'entrée choisie seule à droite, boutons précédente / suivante au pied de chaque
     entrée, et une bascule **« tout afficher »** (décochée par défaut) qui déroule tout. L'entrée
     choisie et la bascule sont gardées dans le navigateur, par version. L'impression montre toujours
-    tout. La bascule est à droite du titre de la section. La section **Plans** s'ouvre sur
-    l'implantation sur la dalle et le plan de sol **côte à côte**, puis le tableau des murs, puis la liste
-    (une élévation par mur, toiture, rehausse : chaque plan prend toute la colonne, borné à la hauteur de
-    l'écran ; « tout afficher » les range sur deux colonnes), les
+    tout. La bascule est à droite du titre de la section. La section **Implantation et plan de sol**
+    montre ces deux plans **côte à côte** puis le tableau des murs ; la section **Élévations, toiture,
+    rehausse** est la liste (une élévation par mur, T toiture, R rehausse : chaque plan prend toute la
+    colonne, borné à la hauteur de l'écran ; « tout afficher » les range sur deux colonnes), les
     **matériaux** par groupe (sous-total sur chaque ligne, « ? » quand un prix est à confirmer) et le
     **guide** par étape (« avant de commander » et « outillage » en tête, puis les étapes numérotées avec
     leur avancement `cochées/contrôles`, bleu en cours, vert fait).
+  - **Planches** (`core.planches`) : chaque plan du modèle a une **entête en données** (`EntetePlan` :
+    lettre, nom, détail chiffré, lignes de légende ; `entete_facade`, `entete_sol`…) et deux rendus :
+    le fichier SVG la dessine (image autonome pour `abri.md` et `docs/`), la page prend le corps **sans
+    entête** (`sans_entete`) et rend le titre en `h3` et la légende en `p.note` au-dessus du dessin :
+    rien n'est écrit deux fois, la page contrôle la taille du dessin.
   - **Cotes et repères** : toute cote de la page passe par `cote(x, unité)` (`span.cote`, chiffres
     tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par `face(id)`
     (`span.face`, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.

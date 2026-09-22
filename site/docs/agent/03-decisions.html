@@ -387,7 +387,11 @@ l&#39;implantation en première entrée plutôt qu&#39;une section à part, ce q
 plans côte à côte » sans troisième colonne) ; une silhouette de 1,80 m dans la 3D (mesurée par
 <code>tests/abri3d.mjs</code> : 1,80 m, pieds au sol, dehors devant la porte) ; un style unique pour les cotes
 (<code>span.cote</code>) et les repères (<code>span.face</code>) ; la bascule « tout afficher » à droite du titre ; les
-liens « ailleurs » au pied du menu, sans le configurateur.</p>
+liens « ailleurs » au pied du menu, sans le configurateur. Puis : la fiche chantier tombe à six lignes
+(la 3D est le sujet de cette section), l&#39;implantation et le plan de sol sortent dans leur propre section,
+côte à côte au-dessus du tableau des murs, et les titres des plans <strong>sortent du dessin</strong> : l&#39;entête d&#39;un
+plan est une donnée (<code>EntetePlan</code>), le fichier SVG la dessine, la page la rend en texte au-dessus d&#39;un
+dessin sans entête. Avant, le titre dans l&#39;image doublait celui de la liste et gonflait l&#39;image.</p>
 </main>
 </body>
 </html>

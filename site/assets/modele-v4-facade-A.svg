@@ -33,6 +33,6 @@
 <text x="82.0" y="114.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="bold">237.5</text>
 <text x="348.0" y="114.0" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="bold">237.5</text>
 <text x="82.0" y="154.1" text-anchor="end" fill="#888" font-size="10" font-weight="normal">215</text>
-<text x="215.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face A · avant · vue de l'extérieur</text>
-<text x="215.0" y="44.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">2 panneaux de 215 · hauteurs finies aux deux bouts</text>
+<text x="215.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face A · avant</text>
+<text x="215.0" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">vue de l'extérieur · 2 panneaux de 215 · hauteurs finies aux deux bouts</text>
 </svg>

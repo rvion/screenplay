@@ -1491,12 +1491,18 @@ function variante_svg(v, P, scale, sobre = false) {
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
   return svg;
 }
-function plan_dalle_svg(g, avecBandes = false, v = null, m = null) {
+function entete_implantation(v, d) {
+  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, lignes: [
+    "murs pleins, int\xE9rieur en pointill\xE9 fin, toit (d\xE9bords) en pointill\xE9 brun, goutti\xE8re et descente en bleu",
+    "orange = distance aux bords de la dalle \xB7 vert/orange = passage derri\xE8re, jusqu'aux murs de propri\xE9t\xE9 (cm)"
+  ] };
+}
+function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete = false) {
   const d = g.dalle;
   const zu = !m && (avecBandes || v) ? d.zone_utile : null;
   const [ox, oy] = d.decalage_cm;
   const q = d.polygone.map(([x, y]) => [x + ox, y + oy]);
-  const n = q.length, scale = 1.25, pad = 110, top = 90;
+  const n = q.length, scale = 1.25, pad = 110, top = sans_entete ? 0 : 90;
   const xs = q.map((v2) => v2[0]), ys = q.map((v2) => v2[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
   const pw = v && v.porte ? v.porte.largeur_cm * scale - 60 : 0;
@@ -1625,9 +1631,7 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null) {
   }
   const somme = d.angles_deg.reduce((s, x) => s + x, 0);
   if (m && v) {
-    svg += text(W / 2, 26, `Implantation sur la dalle \xB7 abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, "middle", "#222", 15, "bold");
-    svg += text(W / 2, 46, `murs pleins, int\xE9rieur en pointill\xE9 fin, toit (d\xE9bords) en pointill\xE9 brun, goutti\xE8re et descente en bleu`, "middle", "#2b5d8a", 12);
-    svg += text(W / 2, 64, `orange = distance aux bords de la dalle \xB7 vert/orange = passage derri\xE8re, jusqu'aux murs de propri\xE9t\xE9 (cm)`, "middle", "#666", 11);
+    if (!sans_entete) svg += dessine_entete(W, entete_implantation(v, d));
   } else if (v) {
     svg += text(W / 2, 26, `Option ${v.id} \xB7 ${v.titre}`, "middle", "#222", 15, "bold");
     svg += text(W / 2, 46, `murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2 \xB7 ${v.polygone.length} c\xF4t\xE9s`, "middle", "#2b5d8a", 13, "bold");
@@ -1850,7 +1854,15 @@ function buildCore(p) {
     for (const f of modele.faces) svg[`modele-facade-${f.cle}`] = modele_facade_svg(modele, f);
   }
   for (const f of g.faces) svg[`facade-${f.cle}`] = facade_svg(p, g, f, openings);
-  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg };
+  const planches = {};
+  if (modele && g.dalle) {
+    planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
+    planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
+    planches.toit = { ...entete_toit(modele), svg: modele_toit_svg(v13, modele, true) };
+    planches.rehausse = { ...entete_rehausse(modele), svg: modele_rehausse_svg(modele, true) };
+    for (const f of modele.faces) planches[`facade-${f.cle}`] = { ...entete_facade(f), svg: modele_facade_svg(modele, f, true) };
+  }
+  return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg, planches };
 }
 var LETTRE = { avant: "A", droite: "D", fond: "B", gauche: "G" };
 var lettre = (nom) => LETTRE[nom.split(" ")[0]] || "?";
@@ -2043,15 +2055,28 @@ function cote_svg(pa, pb, label, off, col = "#2b5d8a", size = 12, recul = 8) {
   return s + `<text x="${f1(m[0])}" y="${f1(m[1])}" text-anchor="middle" dominant-baseline="middle" fill="${col}" font-size="${size}" font-weight="bold" transform="rotate(${f1(rot)} ${f1(m[0])} ${f1(m[1])})">${label}</text>
 `;
 }
+var titre_plan = (e) => `${e.lettre ? `Face ${e.lettre} \xB7 ` : ""}${e.nom}${e.detail ? ` \xB7 ${e.detail}` : ""}`;
+function dessine_entete(W, e) {
+  let svg = text(W / 2, 26, titre_plan(e), "middle", "#222", 15, "bold");
+  e.lignes.forEach((l, i) => {
+    svg += text(W / 2, 46 + 18 * i, l, "middle", i === 0 ? "#888" : "#666", 11);
+  });
+  return svg;
+}
 function cadre_plan(pts, scale, pad, top) {
   const xs = pts.map((z) => z[0]), ys = pts.map((z) => z[1]);
   const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
   const W = (maxx - minx) * scale + 2 * pad, H = (maxy - miny) * scale + 2 * pad + top;
   return { W, H, P: (z) => [pad + (z[0] - minx) * scale, top + pad + (maxy - z[1]) * scale] };
 }
-function modele_sol_svg(p, v, m) {
+function entete_sol(p, v) {
+  const lignes = [`murs ${fz2(+p.panneau.epaisseur_mm / 10)} cm \xB7 porte ${fz2(v.porte.largeur_cm)} ouvrant dehors \xB7 fen\xEAtres en fa\xE7ade (bleu)${v.sol_libre_m2 != null ? ` \xB7 sol libre hors bureaux ${v.sol_libre_m2} m\xB2` : ""}`];
+  if (v.lit_pliant && v.lit_pliant.tient) lignes.push(`violet pointill\xE9 = lit d\xE9pli\xE9${v.lit_pliant.replie ? " \xB7 violet plein = repli\xE9 contre le mur \xB7 carr\xE9s = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " \xB7 on range les si\xE8ges pour le d\xE9plier" : ""}`);
+  return { nom: "Plan de sol", detail: `murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2`, lignes };
+}
+function modele_sol_svg(p, v, m, sans_entete = false) {
   const q = v.polygone, n = q.length, scale = 1.6;
-  const { W, H, P } = cadre_plan(q, scale, 120, 50);
+  const { W, H, P } = cadre_plan(q, scale, 120, sans_entete ? 0 : 50);
   let svg = svgHeader(rnd2(W), rnd2(H));
   svg += poly(q.map(P), "#8fa3b8", "#2b5d8a", 1.5);
   svg += poly(m.interieur.map(P), "#fbfbf8", "#2b5d8a", 1.2);
@@ -2130,15 +2155,17 @@ function modele_sol_svg(p, v, m) {
     svg += `<text x="${f1(mpt[0])}" y="${f1(mpt[1])}" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(${f1(rot)} ${f1(mpt[0])} ${f1(mpt[1])})">int. ${fz2(rnd2(L, 1))}</text>
 `;
   });
-  svg += text(W / 2, 26, `Plan de sol \xB7 murs ${v.aire_m2} m\xB2 \xB7 int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `murs ${fz2(+p.panneau.epaisseur_mm / 10)} cm \xB7 porte ${fz2(v.porte.largeur_cm)} ouvrant dehors \xB7 fen\xEAtres en fa\xE7ade (bleu)${v.sol_libre_m2 != null ? ` \xB7 sol libre hors bureaux ${v.sol_libre_m2} m\xB2` : ""}`, "middle", "#888", 11);
-  if (v.lit_pliant && v.lit_pliant.tient) svg += text(W / 2, 60, `violet pointill\xE9 = lit d\xE9pli\xE9${v.lit_pliant.replie ? " \xB7 violet plein = repli\xE9 contre le mur \xB7 carr\xE9s = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " \xB7 on range les si\xE8ges pour le d\xE9plier" : ""}`, "middle", "#6a3d9a", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_sol(p, v));
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
-function modele_toit_svg(v, m) {
+function entete_toit(m) {
+  const T = m.toit;
+  return { lettre: "T", nom: "Toiture", detail: `${T.panneaux.length} panneaux \xB7 ${T.aire_m2} m\xB2 couverts`, lignes: [`panneaux dans le sens de la pente (longueur = rampant) \xB7 murs en pointill\xE9 \xB7 ${m.sens === "droite" ? "\xE9gout c\xF4t\xE9 jardin (droite), haut contre le mur gauche" : "d\xE9bords avant et fond"}`] };
+}
+function modele_toit_svg(v, m, sans_entete = false) {
   const T = m.toit, scale = 1.6;
-  const { W, H, P } = cadre_plan(T.contour, scale, 110, 50);
+  const { W, H, P } = cadre_plan(T.contour, scale, 110, sans_entete ? 0 : 50);
   let svg = svgHeader(rnd2(W), rnd2(H));
   for (const pn of T.panneaux) {
     svg += poly(pn.polygone.map(P), "#f3f0e8", "#7a6f5a", 1.5);
@@ -2188,18 +2215,21 @@ function modele_toit_svg(v, m) {
   q.forEach((z, i) => {
     svg += cote_svg(P(z), P(q[(i + 1) % n]), fz2(rnd2(Math.hypot(q[(i + 1) % n][0] - z[0], q[(i + 1) % n][1] - z[1]), 1)), 26, "#7a6f5a", 11);
   });
-  svg += text(W / 2, 26, `Toiture \xB7 ${T.panneaux.length} panneaux \xB7 ${T.aire_m2} m\xB2 couverts`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `panneaux dans le sens de la pente (longueur = rampant) \xB7 murs en pointill\xE9 \xB7 ${m.sens === "droite" ? "\xE9gout c\xF4t\xE9 jardin (droite), haut contre le mur gauche" : "d\xE9bords avant et fond"}`, "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_toit(m));
   svg += text(W / 2, H - 12, "AVANT (jardin)", "middle", "#666", 12);
   return svg + "</svg>\n";
 }
 var fr1 = (x) => String(x).replace(".", ",");
-function modele_rehausse_svg(m) {
-  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = 50, gap = 60;
-  const W = stock * sx + 2 * pad, H = 70 + R.barres.length * (section * sy + gap) + 30;
+function entete_rehausse(m) {
+  const R = m.rehausse;
+  return { lettre: "R", nom: "Rehausse bois", detail: `${R.pieces.length} pi\xE8ces dans ${R.nb_madriers} madrier${R.nb_madriers > 1 ? "s" : ""}`, lignes: ["hauteur de chaque pi\xE8ce : de son d\xE9but \xE0 sa fin, dans le sens de la face (vue de l'ext\xE9rieur, de gauche \xE0 droite)"] };
+}
+function modele_rehausse_svg(m, sans_entete = false) {
+  const R = m.rehausse, section = +R.section_mm[1] / 10, stock = R.longueur_stock_cm, sx = 1.9, sy = 3.2, pad = 50, gap = 60, ent = sans_entete ? 20 : 70;
+  const W = stock * sx + 2 * pad, H = ent + R.barres.length * (section * sy + gap) + 30;
   let svg = svgHeader(rnd2(W), rnd2(H));
   R.barres.forEach((b, k) => {
-    const top = 70 + k * (section * sy + gap), X = (x) => pad + x * sx, Y = (h) => top + (section - h) * sy;
+    const top = ent + k * (section * sy + gap), X = (x) => pad + x * sx, Y = (h) => top + (section - h) * sy;
     svg += text(pad, top - 10, `madrier ${k + 1} \xB7 ${R.section_mm[0]} \xD7 ${R.section_mm[1]} \xB7 ${fz2(stock)} cm \xB7 chute ${fz2(b.chute_cm)} cm`, "start", "#5a4f3a", 12, "bold");
     svg += poly([[X(0), Y(0)], [X(stock), Y(0)], [X(stock), Y(section)], [X(0), Y(section)]], "#f3ece0", "#b8a888", 1, "4 3");
     for (const t of b.troncons) t.pieces.forEach((pc, j) => {
@@ -2209,12 +2239,14 @@ function modele_rehausse_svg(m) {
       svg += text(cx, cy + 4, `${pc.id} \xB7 face ${pc.face} \xB7 ${fz2(pc.L)} \xB7 ${fz2(pc.h0)} \u2192 ${fz2(pc.h1)}`, "middle", "#5a3a1a", 11, "bold");
     });
   });
-  svg += text(W / 2, 26, `Rehausse bois \xB7 ${R.pieces.length} pi\xE8ces dans ${R.nb_madriers} madrier${R.nb_madriers > 1 ? "s" : ""}`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, "hauteur de chaque pi\xE8ce : de son d\xE9but \xE0 sa fin, dans le sens de la face (vue de l'ext\xE9rieur, de gauche \xE0 droite)", "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_rehausse(m));
   return svg + "</svg>\n";
 }
-function modele_facade_svg(m, f) {
-  const scale = 1.25, pad = 60, top = 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
+function entete_facade(f) {
+  return { lettre: f.cle, nom: f.nom, lignes: [`vue de l'ext\xE9rieur \xB7 ${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz2(f.hauteur_mur_cm)} \xB7 hauteurs finies aux deux bouts`] };
+}
+function modele_facade_svg(m, f, sans_entete = false) {
+  const scale = 1.25, pad = 60, top = sans_entete ? 0 : 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
   const W = L * scale + 2 * pad + 60, H = Math.max(h0, h1) * scale + 2 * pad + top + 30;
   const P = (x, h) => [pad + 30 + x * scale, H - pad - 30 - h * scale];
   let svg = svgHeader(rnd2(W), rnd2(H));
@@ -2254,8 +2286,7 @@ function modele_facade_svg(m, f) {
   svg += text(P(0, h0)[0] - 8, P(0, h0)[1] + 4, `${fz2(h0)}`, "end", "#2b5d8a", 12, "bold");
   svg += text(P(L, h1)[0] + 8, P(L, h1)[1] + 4, `${fz2(h1)}`, "start", "#2b5d8a", 12, "bold");
   svg += text(P(0, Hm)[0] - 8, P(0, Hm)[1] + 16, `${fz2(Hm)}`, "end", "#888", 10);
-  svg += text(W / 2, 26, `Face ${f.cle} \xB7 ${f.nom} \xB7 vue de l'ext\xE9rieur`, "middle", "#222", 15, "bold");
-  svg += text(W / 2, 44, `${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz2(Hm)} \xB7 hauteurs finies aux deux bouts`, "middle", "#888", 11);
+  if (!sans_entete) svg += dessine_entete(W, entete_facade(f));
   return svg + "</svg>\n";
 }
 var version_principale = (p) => {
@@ -2488,28 +2519,32 @@ function rend_abri(a) {
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
     m.faces.map((f, i) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)} ${cote(pn.largeur_cm, "")}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")])
   );
+  const PL = core.planches || {};
+  const planche = (cle, extra = "") => {
+    const q = PL[cle], f = m.faces.find((x) => `facade-${x.cle}` === cle);
+    return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} \xB7 ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">\xB7 ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" \xB7 ")}</p><div class="planbox" id="plan-${cle}">${q.svg}</div>` : "";
+  };
+  html("planche-implantation", planche("implantation") + `<ul id="implantation-points"></ul>`);
+  html("planche-sol", planche("sol"));
   liste("implantation-points", [
     `${cote(gauche)} du bord gauche (mur de propri\xE9t\xE9), ${cote(avant)} du bord avant, ${cote(droite_libre)} de dalle \xE0 droite : le chemin vers la porte et l'arri\xE8re.`,
     `Passage derri\xE8re, le long du grand pan : ${cote(passage.cm)} au plus \xE9troit.`,
     v.arriere ? `${cote(v.arriere.aire_m2, "m\xB2")} de dalle cach\xE9s derri\xE8re l'abri (hachures vertes), jusqu'\xE0 ${cote(v.arriere.profondeur_max_cm)} de profondeur : les outils de jardin.` : ""
   ].filter(Boolean));
-  const plans = [["modele-implantation", "implantation"], ["modele-sol", "sol"], ["modele-toit", "toit"], ["modele-rehausse", "rehausse"]];
-  for (const [nom, id] of plans) html(`plan-${id}`, core.svg[nom] || "");
   const details_plans = el("plans-details"), liste_plans = el("plans-liste"), mode_plans = el("plans-mode");
   if (details_plans && liste_plans && mode_plans) {
-    for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
-    details_plans.insertAdjacentHTML("beforeend", m.faces.map((f, i) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} \xB7 ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
-    const fixes = [["toit", "Toiture", "T"], ["rehausse", "Rehausse", "R"]];
+    const cles = [...m.faces.map((f) => `facade-${f.cle}`), "toit", "rehausse"];
+    html("plans-details", cles.map((k) => `<article data-cle="${k}">${planche(k, k.startsWith("facade-") ? v.porte && m.faces[v.porte.cote].cle === k.slice(7) ? " (porte)" : k === "facade-A" ? " (jardin)" : "" : "")}</article>`).join(""));
     maitre_detail({
       liste: liste_plans,
       mode: mode_plans,
       panneaux: details_plans,
       memoire: `abri-v${a.version}-plans`,
       ancre: el("plans-liste") || void 0,
-      entrees: () => [
-        ...m.faces.map((f) => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} \xB7 ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) })),
-        ...fixes.map(([k, t, lettre2]) => ({ cle: k, titre: t, num: lettre2, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) }))
-      ]
+      entrees: () => cles.map((k) => {
+        const f = m.faces.find((x) => `facade-${x.cle}` === k);
+        return { cle: k, titre: f ? `Face ${f.cle} \xB7 ${nom_face(f)}` : PL[k].nom, num: PL[k].lettre, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) };
+      })
     });
   }
   table(

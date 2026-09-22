@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=12ad0836" />
+  <link rel="stylesheet" href="abri.css?v=79a0e86b" />
   <script type="importmap">
   {
     "imports": {
@@ -36,7 +36,8 @@
     <h2>Sommaire</h2>
     <nav class="sections" id="sommaire">
       <a href="#fiche-chantier">Fiche chantier</a>
-      <a href="#plans">Plans</a>
+      <a href="#implantation">Implantation, sol</a>
+      <a href="#plans">Élévations</a>
       <a href="#debit">Débit</a>
       <a href="#materiaux-section">Matériaux</a>
       <a href="#montage">Montage</a>
@@ -69,20 +70,21 @@
       </div>
     </section>
 
-    <section id="plans">
-      <h2>Plans et élévations <span class="mode" id="plans-mode"></span></h2>
+    <section id="implantation">
+      <h2>Implantation et plan de sol</h2>
       <div class="deux plans-haut">
-        <figure><h3>Implantation sur la dalle</h3><div class="planbox" id="plan-implantation"></div><ul id="implantation-points"></ul></figure>
-        <figure><h3>Plan de sol</h3><div class="planbox" id="plan-sol"></div></figure>
+        <figure id="planche-implantation"></figure>
+        <figure id="planche-sol"></figure>
       </div>
       <div class="table-wrap"><table id="murs"></table></div>
       <p class="note">Cotes en cm. Le repère d'un panneau (A1, T1…) est le même partout.</p>
+    </section>
+
+    <section id="plans">
+      <h2>Élévations, toiture, rehausse <span class="mode" id="plans-mode"></span></h2>
       <div class="maitre">
         <div class="cote-liste"><ol class="liste" id="plans-liste"></ol></div>
-        <div class="details" id="plans-details">
-          <article data-cle="toit"><h3>Face <span class="face">T</span> · toiture</h3><div class="planbox" id="plan-toit"></div></article>
-          <article data-cle="rehausse"><h3>Face <span class="face">R</span> · rehausse, débit des madriers</h3><div class="planbox" id="plan-rehausse"></div></article>
-        </div>
+        <div class="details" id="plans-details"></div>
       </div>
     </section>
 
@@ -129,7 +131,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=12ad0836"></script>
-  <script type="module" src="abri.js?v=12ad0836"></script>
+  <script src="params.js?v=79a0e86b"></script>
+  <script type="module" src="abri.js?v=79a0e86b"></script>
 </body>
 </html>

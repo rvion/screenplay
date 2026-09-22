@@ -34,20 +34,24 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
   ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
-  ok(ancres.length === 7 && ancres.every((h) => $(h)), "menu : les 7 sections de la page, toutes existantes");
+  ok(ancres.length === 8 && ancres.every((h) => $(h)), "menu : les 8 sections de la page, toutes existantes");
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
   ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 22), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
 ok($$("#fiche tr").length === 6 && $("#fiche").textContent.length < 330 && /TTC/.test($("#fiche").textContent), "fiche chantier courte : 6 lignes, " + $("#fiche").textContent.length + " caractères");
-ok($$("#plans #murs tbody tr").length === m.faces.length && $("#plans .plans-haut").nextElementSibling.contains($("#murs")), "tableau des murs : une ligne par face, sous les deux plans de tête");
-ok($$("#plans .plans-haut figure").length === 2 && $("#plans .plans-haut #plan-implantation svg") && $("#plans .plans-haut #plan-sol svg"), "plans : implantation et plan de sol côte à côte en tête");
+ok($$("#implantation #murs tbody tr").length === m.faces.length && $("#implantation .plans-haut").nextElementSibling.contains($("#murs")), "tableau des murs : une ligne par face, sous les deux plans de tête");
+ok($$("#implantation .plans-haut figure").length === 2 && $("#implantation #plan-implantation svg") && $("#implantation #plan-sol svg") && $("#plans").previousElementSibling === $("#implantation"), "implantation et plan de sol côte à côte, dans leur section, au-dessus des élévations");
+// les titres des plans sont du texte de la page, pas du dessin : le SVG de la page n'a plus d'entete, le fichier SVG la garde
+ok(!/Face G · gauche/.test($("#plan-facade-G svg").innerHTML) && /Face G · gauche/.test(a.core.svg["modele-facade-G"]) && $("#plans-details article[data-cle='facade-G'] h3").textContent.replace(/\s+/g, " ").trim() === "Face G · gauche" && /vue de l'extérieur · 3 panneaux de 215/.test($("#plans-details article[data-cle='facade-G'] p.note").textContent), "planches : titre et légende en texte au-dessus du dessin, absents du dessin de la page, présents dans le fichier SVG");
+ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg") && $("#plan-" + k).previousElementSibling.tagName === "P" && /Plan de sol|Implantation|Toiture|Rehausse/.test($("#plan-" + k).parentElement.querySelector("h3").textContent)), "planches : implantation, sol, toiture, rehausse ont leur titre en h3 et leur légende en p.note");
+ok(+(a.core.planches["facade-G"].svg.match(/viewBox="0 0 [\d.]+ ([\d.]+)"/)[1]) < +(a.core.svg["modele-facade-G"].match(/viewBox="0 0 [\d.]+ ([\d.]+)"/)[1]) - 40, "planches : le dessin sans entête est plus court que le fichier SVG");
 ok($$("#implantation-points li").length === 3 && /10 cm/.test($("#implantation-points").textContent), "implantation : 10 cm à gauche et devant, passage, rangement");
 ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg")), "4 plans SVG injectés");
 ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.length && /Face C/.test($("#plans-details").textContent), "une élévation par mur, pan C compris");
 // plans : liste a gauche (implantation en tete, puis les plans et chaque face), un plan a la fois a droite
 {
   const visibles = () => $$("#plans-details article.detail").filter((x) => !x.hidden);
-  ok($$("#plans-liste li").length === m.faces.length + 2 && $$("#plans-liste .t")[0].textContent === "Face A · façade" && $$("#plans-liste .t").slice(-2).map((x) => x.textContent).join() === "Toiture,Rehausse" && $$("#plans-liste .num-etape").map((x) => x.textContent).join("") === m.faces.map((f) => f.cle).join("") + "TR" && visibles().length === 1 && visibles()[0].dataset.cle === "facade-A", "plans : une lettre par mur puis T (toiture) et R (rehausse), la face A ouverte en premier, seule");
+  ok($$("#plans-liste li").length === m.faces.length + 2 && $$("#plans-liste .t")[0].textContent === "Face A · façade" && $$("#plans-liste .t").slice(-2).map((x) => x.textContent).join() === "Toiture,Rehausse bois" && $$("#plans-liste .num-etape").map((x) => x.textContent).join("") === m.faces.map((f) => f.cle).join("") + "TR" && visibles().length === 1 && visibles()[0].dataset.cle === "facade-A", "plans : une lettre par mur puis T (toiture) et R (rehausse), la face A ouverte en premier, seule");
   $$("#plans-liste button")[m.faces.length].click();
   ok(visibles().length === 1 && visibles()[0].dataset.cle === "toit" && visibles()[0].querySelector("svg"), "plans : un clic ouvre la toiture");
   ok($("#plans h2 #plans-mode input") && $("#materiaux-section h2 #materiaux-mode input") && $("#montage h2 #etapes-mode input"), "la bascule « tout afficher » est dans le titre de chaque section à liste");

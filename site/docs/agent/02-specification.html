@@ -203,13 +203,18 @@ inconnu retombe sur la retenue. Sur petit écran la colonne passe en haut.</li>
 gauche, l&#39;entrée choisie seule à droite, boutons précédente / suivante au pied de chaque
 entrée, et une bascule <strong>« tout afficher »</strong> (décochée par défaut) qui déroule tout. L&#39;entrée
 choisie et la bascule sont gardées dans le navigateur, par version. L&#39;impression montre toujours
-tout. La bascule est à droite du titre de la section. La section <strong>Plans</strong> s&#39;ouvre sur
-l&#39;implantation sur la dalle et le plan de sol <strong>côte à côte</strong>, puis le tableau des murs, puis la liste
-(une élévation par mur, toiture, rehausse : chaque plan prend toute la colonne, borné à la hauteur de
-l&#39;écran ; « tout afficher » les range sur deux colonnes), les
+tout. La bascule est à droite du titre de la section. La section <strong>Implantation et plan de sol</strong>
+montre ces deux plans <strong>côte à côte</strong> puis le tableau des murs ; la section <strong>Élévations, toiture,
+rehausse</strong> est la liste (une élévation par mur, T toiture, R rehausse : chaque plan prend toute la
+colonne, borné à la hauteur de l&#39;écran ; « tout afficher » les range sur deux colonnes), les
 <strong>matériaux</strong> par groupe (sous-total sur chaque ligne, « ? » quand un prix est à confirmer) et le
 <strong>guide</strong> par étape (« avant de commander » et « outillage » en tête, puis les étapes numérotées avec
 leur avancement <code>cochées/contrôles</code>, bleu en cours, vert fait).</li>
+<li><strong>Planches</strong> (<code>core.planches</code>) : chaque plan du modèle a une <strong>entête en données</strong> (<code>EntetePlan</code> :
+lettre, nom, détail chiffré, lignes de légende ; <code>entete_facade</code>, <code>entete_sol</code>…) et deux rendus :
+le fichier SVG la dessine (image autonome pour <code>abri.md</code> et <code>docs/</code>), la page prend le corps <strong>sans
+entête</strong> (<code>sans_entete</code>) et rend le titre en <code>h3</code> et la légende en <code>p.note</code> au-dessus du dessin :
+rien n&#39;est écrit deux fois, la page contrôle la taille du dessin.</li>
 <li><strong>Cotes et repères</strong> : toute cote de la page passe par <code>cote(x, unité)</code> (<code>span.cote</code>, chiffres
 tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par <code>face(id)</code>
 (<code>span.face</code>, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.</li>
