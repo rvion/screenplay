@@ -81,10 +81,9 @@ p.intro { margin: 0 0 .7rem; font-size: .92rem; line-height: 1.55; }
 .cote .u { color: var(--muted); font-weight: 400; font-size: .74em; margin-left: .1em; }
 .cote .d { font-size: .82em; }
 /* dans une cellule : entiers alignes sur le dernier chiffre, decimales et unite dans leur colonne */
-td > .cote:only-child, td > .cote:first-child { display: inline-grid; grid-template-columns: minmax(2.4em, auto) 1.1em 1.4em; align-items: baseline; }
+td > .cote:only-child, td > .cote:first-child { display: inline-grid; grid-template-columns: minmax(2.4em, auto) auto auto; align-items: baseline; }
 td > .cote:only-child .n, td > .cote:first-child .n { text-align: right; }
-td > .cote:only-child .d, td > .cote:first-child .d { text-align: left; }
-td > .cote:only-child .u, td > .cote:first-child .u { grid-column: 3; margin-left: 0; }
+td > .cote:only-child .u, td > .cote:first-child .u { grid-column: 3; }
 .face { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78em; font-weight: 700; line-height: 1.5; color: var(--ink); background: var(--creux); border: 1px solid var(--line); border-radius: 3px; padding: 0 .35em; vertical-align: .05em; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }

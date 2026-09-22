@@ -2532,7 +2532,7 @@ function rend_abri(a) {
   const grillage_gauche = (a.pp.dalle_cm && a.pp.dalle_cm.grillages || []).includes("gauche");
   html("intro", `Bureau de jardin \xE0 ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, pos\xE9 sur la dalle existante \xE0 ${cote(gauche)} ${grillage_gauche ? "du grillage" : "du mur"} de la limite, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau en L le long des murs ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   const paires = [
-    ["Murs", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" \xB7 ")],
+    ["Murs", m.faces.map((f) => `${face(f.cle)}&nbsp;${cote(f.longueur_cm)}`).join(", ")],
     ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}<br>finies ${cote(Math.max(...m.hauteurs_coins_cm))} \u2192 ${cote(Math.min(...m.hauteurs_coins_cm))}`],
     ["Toit", `pente ${cote(m.pente.pourcent, "%")} \xB7 port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}<br>goutti\xE8re ${G.troncons.map((t) => face(t.face)).join(" ")}`],
     ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}<br>${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
@@ -2543,7 +2543,7 @@ function rend_abri(a) {
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
-    m.faces.map((f, i) => [`${face(f.cle)}&nbsp;${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)}&nbsp;${cote(pn.largeur_cm)}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")]),
+    m.faces.map((f, i) => [`${face(f.cle)}&nbsp;${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)}&nbsp;${cote(pn.largeur_cm)}`).join(", "), cote(m.angles_deg[i], "\xB0")]),
     [3, 4]
   );
   const PL = core.planches || {};
