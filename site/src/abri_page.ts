@@ -1,6 +1,6 @@
 // Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
-import { buildCore, params_v2, version_principale, versions_abri, textes_variante, ou_descente, type Params } from "./compute";
+import { buildCore, params_v2, version_principale, versions_abri, textes_variante, type Params } from "./compute";
 import { maitre_detail, type Entree } from "./maitre_detail";
 
 const fr = (x: number) => String(x).replace(".", ",");
@@ -93,19 +93,14 @@ export function rend_abri(a: Abri) {
   if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
 
   // fiche chantier : ce qu'on cherche sur place, sur un ecran
+  // fiche courte : les chiffres qu'on cherche sur place ; le detail est dans les sections
   const paires: [string, string][] = [
-    ["Murs (extérieur)", m.faces.map((f: any) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" · ")],
-    ["Angles", m.angles_deg.map((g: number) => cote(g, "°")).join(" · ")],
-    ["Hauteurs finies des coins", m.hauteurs_coins_cm.map((h: number) => cote(h)).join(" · ")],
-    ["Hauteur des panneaux de mur", cote(m.hauteur_mur_cm)],
-    ["Toit", `vers ${m.sens === "droite" ? "la droite (jardin)" : "le fond"} · pente ${cote(m.pente.pourcent, "%")} · portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " (panne à mi-profondeur)" : ""}`],
-    ["Implantation", `${cote(gauche)} du bord gauche · ${cote(avant)} du bord avant · ${cote(droite_libre)} de dalle à droite`],
-    ["Passage derrière", `${cote(passage.cm)} au plus étroit`],
-    ["Surfaces", `${cote(v.aire_m2, "m²")} de murs (${sans_formalite ? `au seuil de ${fz(seuil)} m², sans formalité` : "déclaration préalable"}) · ${cote(v.aire_interieure_m2, "m²")} intérieur · ${cote(v.sol_libre_m2, "m²")} de sol libre`],
-    ["Panneaux", `${m.panneaux_mur_a_commander} de mur (${cote(`${fz(mod)} × ${fz(m.hauteur_mur_cm)}`)}) · ${m.toit.panneaux.length} de toit · ${m.rehausse.nb_madriers} madrier(s) ${cote(m.rehausse.section_mm.join(" × "), "mm")}`],
-    ["Ouvertures", `porte ${po.vitree === false ? "pleine" : "vitrée"} ${cote(`${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)}`)} face ${face(m.faces[po.cote].cle)} · ${v.fenetres.map((f: any) => `${f.ouvrant ? "OB" : "fixe"} ${cote(`${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}`)}, allège ${cote(f.allege_cm)}`).join(" · ")}`],
-    ["Gouttière", `${cote(G.longueur_cm)} sur ${G.troncons.map((t: any) => face(t.face)).join(" + ")} · descente ${ou_descente(m)}`],
-    ["Matériaux", `${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)})`],
+    ["Murs", m.faces.map((f: any) => `${face(f.cle)} ${cote(f.longueur_cm, "")}`).join(" · ") + " cm"],
+    ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)} · finies ${cote(Math.max(...m.hauteurs_coins_cm))} → ${cote(Math.min(...m.hauteurs_coins_cm))}`],
+    ["Toit", `vers ${m.sens === "droite" ? "la droite" : "le fond"} · ${cote(m.pente.pourcent, "%")} · portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""} · gouttière ${G.troncons.map((t: any) => face(t.face)).join(" ")}`],
+    ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? "" : " (déclaration préalable)"} · ${cote(v.aire_interieure_m2, "m²")} intérieur`],
+    ["Passage derrière", cote(passage.cm)],
+    ["Matériaux", `${eur(B.materiaux_eur)} TTC`],
   ];
   html("fiche", paires.map(([k, val]) => `<tr><th>${k}</th><td>${val}</td></tr>`).join(""));
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
@@ -123,12 +118,12 @@ export function rend_abri(a: Abri) {
   if (details_plans && liste_plans && mode_plans) {
     for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
     details_plans.insertAdjacentHTML("beforeend", m.faces.map((f: any, i: number) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} · ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
-    const fixes: [string, string][] = [["implantation", "Implantation sur la dalle"], ["sol", "Plan de sol"], ["toit", "Toiture"], ["rehausse", "Rehausse"]];
+    const fixes: [string, string][] = [["toit", "Toiture"], ["rehausse", "Rehausse"]];
     maitre_detail({
-      liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `abri-v${a.version}-plans`, ancre: el("plans") || undefined,
+      liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `abri-v${a.version}-plans`, ancre: el("plans-liste") || undefined,
       entrees: () => [
-        ...fixes.map(([k, t]): Entree => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement })),
         ...m.faces.map((f: any): Entree => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} · ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) as HTMLElement })),
+        ...fixes.map(([k, t]): Entree => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement })),
       ],
     });
   }

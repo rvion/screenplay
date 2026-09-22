@@ -38,21 +38,22 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
   ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 22), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
-ok($$("#fiche tr").length === 12 && /Hauteurs finies des coins/.test($("#fiche").textContent) && /TTC/.test($("#fiche").textContent), "fiche chantier : 12 lignes, des murs aux matériaux");
-ok($$("#murs tbody tr").length === m.faces.length, "tableau des murs : une ligne par face");
+ok($$("#fiche tr").length === 6 && $("#fiche").textContent.length < 330 && /TTC/.test($("#fiche").textContent), "fiche chantier courte : 6 lignes, " + $("#fiche").textContent.length + " caractères");
+ok($$("#plans #murs tbody tr").length === m.faces.length && $("#plans .plans-haut").nextElementSibling.contains($("#murs")), "tableau des murs : une ligne par face, sous les deux plans de tête");
+ok($$("#plans .plans-haut figure").length === 2 && $("#plans .plans-haut #plan-implantation svg") && $("#plans .plans-haut #plan-sol svg"), "plans : implantation et plan de sol côte à côte en tête");
 ok($$("#implantation-points li").length === 3 && /10 cm/.test($("#implantation-points").textContent), "implantation : 10 cm à gauche et devant, passage, rangement");
 ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg")), "4 plans SVG injectés");
 ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.length && /Face C/.test($("#plans-details").textContent), "une élévation par mur, pan C compris");
 // plans : liste a gauche (implantation en tete, puis les plans et chaque face), un plan a la fois a droite
 {
   const visibles = () => $$("#plans-details article.detail").filter((x) => !x.hidden);
-  ok($$("#plans-liste li").length === 4 + m.faces.length && $$("#plans-liste .t")[0].textContent === "Implantation sur la dalle" && visibles().length === 1 && visibles()[0].dataset.cle === "implantation", "plans : " + (4 + m.faces.length) + " entrées, l'implantation ouverte en premier, seule");
-  $$("#plans-liste button")[5].click();
-  ok(visibles().length === 1 && visibles()[0].dataset.cle === "facade-" + m.faces[1].cle && visibles()[0].querySelector("svg"), "plans : un clic ouvre l'élévation du mur " + m.faces[1].cle);
+  ok($$("#plans-liste li").length === m.faces.length + 2 && $$("#plans-liste .t")[0].textContent === "Face A · façade" && $$("#plans-liste .t").slice(-2).map((x) => x.textContent).join() === "Toiture,Rehausse" && visibles().length === 1 && visibles()[0].dataset.cle === "facade-A", "plans : une entrée par mur puis toiture et rehausse, la face A ouverte en premier, seule");
+  $$("#plans-liste button")[m.faces.length].click();
+  ok(visibles().length === 1 && visibles()[0].dataset.cle === "toit" && visibles()[0].querySelector("svg"), "plans : un clic ouvre la toiture");
   ok($("#plans h2 #plans-mode input") && $("#materiaux-section h2 #materiaux-mode input") && $("#montage h2 #etapes-mode input"), "la bascule « tout afficher » est dans le titre de chaque section à liste");
 }
 // cotes et reperes : un style unique
-ok($$("#fiche .cote").length >= 20 && $$("#fiche .face").length >= 6 && $$("#murs .face").length === m.faces.length + m.faces.reduce((n, f) => n + f.panneaux.length, 0) && $$("#debit-murs .face, #debit-toit .face, #debit-rehausse .face").length >= 12, "cotes (.cote) et repères (.face) balisés dans la fiche, les murs et le débit");
+ok($$("#fiche .cote").length >= 10 && $$("#fiche .face").length >= 6 && $$("#murs .face").length === m.faces.length + m.faces.reduce((n, f) => n + f.panneaux.length, 0) && $$("#debit-murs .face, #debit-toit .face, #debit-rehausse .face").length >= 12, "cotes (.cote) et repères (.face) balisés dans la fiche, les murs et le débit");
 ok($$("main .cote").every((x) => /^[\d,]+( ?×? ?[\d,]+)*(°| (cm|m|mm|m²|%))?$/.test(x.textContent.trim())), "chaque .cote est un nombre (ou a × b) suivi de son unité, le degré collé");
 ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux.length, 0) && $$("#debit-toit tbody tr").length === m.toit.panneaux.length && $$("#debit-rehausse tbody tr").length === m.rehausse.pieces.length, "débit : murs, toit, rehausse");
 // materiaux : que des achats, quantite x prix = montant, total = somme hors options, rien de forfaitaire

@@ -2475,18 +2475,12 @@ function rend_abri(a) {
   const doc = el("lien-document");
   if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
   const paires = [
-    ["Murs (ext\xE9rieur)", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" \xB7 ")],
-    ["Angles", m.angles_deg.map((g) => cote(g, "\xB0")).join(" \xB7 ")],
-    ["Hauteurs finies des coins", m.hauteurs_coins_cm.map((h) => cote(h)).join(" \xB7 ")],
-    ["Hauteur des panneaux de mur", cote(m.hauteur_mur_cm)],
-    ["Toit", `vers ${m.sens === "droite" ? "la droite (jardin)" : "le fond"} \xB7 pente ${cote(m.pente.pourcent, "%")} \xB7 port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " (panne \xE0 mi-profondeur)" : ""}`],
-    ["Implantation", `${cote(gauche)} du bord gauche \xB7 ${cote(avant)} du bord avant \xB7 ${cote(droite_libre)} de dalle \xE0 droite`],
-    ["Passage derri\xE8re", `${cote(passage.cm)} au plus \xE9troit`],
-    ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs (${sans_formalite ? `au seuil de ${fz3(seuil)} m\xB2, sans formalit\xE9` : "d\xE9claration pr\xE9alable"}) \xB7 ${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur \xB7 ${cote(v.sol_libre_m2, "m\xB2")} de sol libre`],
-    ["Panneaux", `${m.panneaux_mur_a_commander} de mur (${cote(`${fz3(mod)} \xD7 ${fz3(m.hauteur_mur_cm)}`)}) \xB7 ${m.toit.panneaux.length} de toit \xB7 ${m.rehausse.nb_madriers} madrier(s) ${cote(m.rehausse.section_mm.join(" \xD7 "), "mm")}`],
-    ["Ouvertures", `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} ${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} face ${face(m.faces[po.cote].cle)} \xB7 ${v.fenetres.map((f) => `${f.ouvrant ? "OB" : "fixe"} ${cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`)}, all\xE8ge ${cote(f.allege_cm)}`).join(" \xB7 ")}`],
-    ["Goutti\xE8re", `${cote(G.longueur_cm)} sur ${G.troncons.map((t) => face(t.face)).join(" + ")} \xB7 descente ${ou_descente(m)}`],
-    ["Mat\xE9riaux", `${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)})`]
+    ["Murs", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm, "")}`).join(" \xB7 ") + " cm"],
+    ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)} \xB7 finies ${cote(Math.max(...m.hauteurs_coins_cm))} \u2192 ${cote(Math.min(...m.hauteurs_coins_cm))}`],
+    ["Toit", `vers ${m.sens === "droite" ? "la droite" : "le fond"} \xB7 ${cote(m.pente.pourcent, "%")} \xB7 port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""} \xB7 goutti\xE8re ${G.troncons.map((t) => face(t.face)).join(" ")}`],
+    ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs${sans_formalite ? "" : " (d\xE9claration pr\xE9alable)"} \xB7 ${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`],
+    ["Passage derri\xE8re", cote(passage.cm)],
+    ["Mat\xE9riaux", `${eur(B.materiaux_eur)} TTC`]
   ];
   html("fiche", paires.map(([k, val]) => `<tr><th>${k}</th><td>${val}</td></tr>`).join(""));
   table(
@@ -2505,16 +2499,16 @@ function rend_abri(a) {
   if (details_plans && liste_plans && mode_plans) {
     for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
     details_plans.insertAdjacentHTML("beforeend", m.faces.map((f, i) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} \xB7 ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
-    const fixes = [["implantation", "Implantation sur la dalle"], ["sol", "Plan de sol"], ["toit", "Toiture"], ["rehausse", "Rehausse"]];
+    const fixes = [["toit", "Toiture"], ["rehausse", "Rehausse"]];
     maitre_detail({
       liste: liste_plans,
       mode: mode_plans,
       panneaux: details_plans,
       memoire: `abri-v${a.version}-plans`,
-      ancre: el("plans") || void 0,
+      ancre: el("plans-liste") || void 0,
       entrees: () => [
-        ...fixes.map(([k, t]) => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) })),
-        ...m.faces.map((f) => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} \xB7 ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) }))
+        ...m.faces.map((f) => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} \xB7 ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) })),
+        ...fixes.map(([k, t]) => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) }))
       ]
     });
   }

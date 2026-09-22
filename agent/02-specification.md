@@ -128,10 +128,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
     serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
-    Sections : **fiche chantier** (12 lignes : murs, angles, hauteurs, toit, implantation, passage,
-    surfaces, panneaux, ouvertures, gouttière, matériaux) à côté du **modèle 3D**, implantation, plans
-    et élévations, débit des panneaux, **matériaux à acheter**, **guide de montage**, ouvertures et
-    aménagement, pourquoi cette forme. Tout est calculé dans
+    Sections : **fiche chantier** (6 lignes courtes : murs, hauteurs, toit, surfaces, passage,
+    matériaux ; le détail vit dans les sections) à côté du **modèle 3D**, plans et élévations (avec le
+    tableau des murs), débit des panneaux, **matériaux à acheter**, **guide de montage**, ouvertures et
+    mobilier, pourquoi cette forme. Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
     aucune cote dans le HTML, et la page marche en `file://`.
   - **Menu de gauche** (196 px) : le sommaire des sections, la section sous le tiers haut de l'écran
@@ -145,9 +145,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     gauche, l'entrée choisie seule à droite, boutons précédente / suivante au pied de chaque
     entrée, et une bascule **« tout afficher »** (décochée par défaut) qui déroule tout. L'entrée
     choisie et la bascule sont gardées dans le navigateur, par version. L'impression montre toujours
-    tout. La bascule est à droite du titre de la section. Les **plans** l'utilisent (implantation sur la
-    dalle en tête, plan de sol, toiture, rehausse, puis une élévation par mur : chaque plan prend toute la
-    colonne, borné à la hauteur de l'écran ; « tout afficher » les range sur deux colonnes), les
+    tout. La bascule est à droite du titre de la section. La section **Plans** s'ouvre sur
+    l'implantation sur la dalle et le plan de sol **côte à côte**, puis le tableau des murs, puis la liste
+    (une élévation par mur, toiture, rehausse : chaque plan prend toute la colonne, borné à la hauteur de
+    l'écran ; « tout afficher » les range sur deux colonnes), les
     **matériaux** par groupe (sous-total sur chaque ligne, « ? » quand un prix est à confirmer) et le
     **guide** par étape (« avant de commander » et « outillage » en tête, puis les étapes numérotées avec
     leur avancement `cochées/contrôles`, bleu en cours, vert fait).

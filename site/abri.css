@@ -47,7 +47,12 @@ p.total { font-size: .96rem; border-top: 2px solid var(--ink); padding-top: .5re
 ul, ol { margin: .3rem 0; padding-left: 1.2rem; }
 li { margin: .15rem 0; }
 
-.deux { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.deux { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.fiche-vue { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.plans-haut { margin-bottom: .6rem; }
+.plans-haut figure { margin: 0; min-width: 0; }
+.plans-haut h3 { margin: 0 0 .35rem; }
+.plans-haut ul { font-size: .84rem; }
 .trois { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
 .table-wrap { overflow-x: auto; margin: .3rem 0 .5rem; }
 table { width: 100%; border-collapse: collapse; font-size: .85rem; }
@@ -66,7 +71,7 @@ table.fiche td { font-variant-numeric: tabular-nums; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }
 
-#viewer { width: 100%; height: 380px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
+#viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
 .viewer-toggles { display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: .8rem; color: var(--muted); margin: .3rem 0 0; }
 .viewer-toggles label { cursor: pointer; }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
