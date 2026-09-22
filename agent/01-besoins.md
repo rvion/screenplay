@@ -3,6 +3,10 @@
 Source : brief vocal + réponses aux questions de cadrage (2026-06), **révisés le 2026-09-06**
 (simplification : rectangle, rehausse, porte seule, 60 mm autoportant).
 
+> **Depuis le 2026-09-22** : l'abri est le bureau à cinq murs de `params.json` (cotes : `04-geometrie.md`).
+> Les besoins B1 (rectangle), B3 (emprise 200 × 240) et les hypothèses H1 à H7 décrivent l'étude
+> initiale du rectangle, retirée du code (D41) ; ils restent ici comme trace de ce qui a été demandé.
+
 ## Objectif (formulé le 2026-09-06)
 **Simple, abordable, robuste, agréable à utiliser tous les jours.** Pas « le moins cher » : un
 bureau qu'on aime, pas un abri.

@@ -35,11 +35,11 @@ ok(racine.html.includes(`href="${DEPOT}/blob/main/params.json"`), "fichier non p
 ok(racine.html.includes('href="#option-1"') && racine.html.includes('href="https://example.org/a?x=1&amp;y=2"'), "ancres et liens externes intacts");
 ok(racine.html.includes('<h2 id="option-1">') && racine.html.includes('<h2 id="option-1-1">'), "titres ancres, doublon numerote");
 ok(racine.html.includes('<div class="doc-table"><table>'), "tableau rendu, defilable");
-ok(racine.html.includes('name="robots" content="noindex"') && racine.html.includes('href="../style.css"') && racine.html.includes('href="index.html"'), "page cachee des moteurs, styles du site, retour a l'index");
+ok(racine.html.includes('name="robots" content="noindex"') && racine.html.includes('href="../docs.css"') && racine.html.includes('href="index.html"'), "page cachee des moteurs, styles du site, retour a l'index");
 
 // ---- page d'un sous-dossier
 const sous = page_html({ chemin: "agent/04-geometrie.md", md: "# Géométrie\n\n[retour](../abri.md) ![x](../site/assets/plan-toit.svg) [voisin](05-pipeline.md)\n" }, publies, DEPOT);
-ok(sous.html.includes('href="../abri.html"') && sous.html.includes('src="../../assets/plan-toit.svg"') && sous.html.includes('href="../../style.css"'), "sous-dossier : chemins remontes d'un cran de plus");
+ok(sous.html.includes('href="../abri.html"') && sous.html.includes('src="../../assets/plan-toit.svg"') && sous.html.includes('href="../../docs.css"'), "sous-dossier : chemins remontes d'un cran de plus");
 ok(sous.html.includes(`href="${DEPOT}/blob/main/agent/05-pipeline.md"`), "voisin non publie -> le depot");
 
 // ---- index : toute nouvelle version y apparait, dans l'ordre naturel

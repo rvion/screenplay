@@ -1,12 +1,10 @@
-// Tests "golden snapshot" : le coeur TS (buildCore) doit produire exactement la
-// sortie figee dans tests/snapshots/*.json (donnees + 30 SVG). Remplace l'ancien
-// oracle Python. Regenerer apres un changement VOULU :  UPDATE=1 node tests/snapshot.mjs
+// Tests "golden snapshot" : buildCore(params.json) doit produire exactement la sortie figee dans
+// tests/snapshots/abri.json (formes de la dalle, modele, scene 3D, planches, plans SVG).
+// Regenerer apres un changement VOULU :  npm run snapshot:update, puis relire le diff.
 import * as esbuild from "esbuild";
 import { execFileSync } from "node:child_process";
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { makeCases } from "./cases.mjs";
 
 const ROOT = process.cwd();
 await esbuild.build({
@@ -15,33 +13,27 @@ await esbuild.build({
   outfile: "scripts/build.mjs", logLevel: "warning",
 });
 
-const base = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/etude-v1.json"), "utf8"));
-const cases = makeCases(base);
 const SNAP = join(ROOT, "tests/snapshots");
 mkdirSync(SNAP, { recursive: true });
-const TMP = join(tmpdir(), "shed-snap");
-mkdirSync(TMP, { recursive: true });
 const UPDATE = process.env.UPDATE === "1";
 
 let fails = 0;
-for (const c of cases) {
-  const pf = join(TMP, `p_${c.name}.json`);
-  writeFileSync(pf, JSON.stringify(c.params));
-  const core = JSON.parse(execFileSync("node", ["scripts/build.mjs", "--json", pf]).toString());
-  const got = JSON.stringify(core, null, 1);
-  const snapFile = join(SNAP, c.name + ".json");
+const core = JSON.parse(execFileSync("node", ["scripts/build.mjs", "--json", join(ROOT, "params.json")], { maxBuffer: 64 << 20 }).toString());
+const got = JSON.stringify(core, null, 1);
+const snapFile = join(SNAP, "abri.json"), n = Object.keys(core.svg).length;
 
-  if (UPDATE) { writeFileSync(snapFile, got + "\n"); console.log("↻ snapshot écrit :", c.name); continue; }
-  if (!existsSync(snapFile)) { console.log("✗ snapshot manquant :", c.name, "(lancer UPDATE=1)"); fails++; continue; }
+if (UPDATE) { writeFileSync(snapFile, got + "\n"); console.log("↻ snapshot écrit : abri"); process.exit(0); }
+if (!existsSync(snapFile)) { console.log("✗ snapshot manquant : abri (npm run snapshot:update)"); process.exit(1); }
 
-  const want = readFileSync(snapFile, "utf8").replace(/\n$/, "");
-  if (want === got) { console.log(`✓ ${c.name} : conforme (data + 30 SVG)`); continue; }
+const want = readFileSync(snapFile, "utf8").replace(/\n$/, "");
+if (want === got) console.log(`✓ abri : conforme (données + ${n} SVG)`);
+else {
   fails++;
   let i = 0; while (i < want.length && i < got.length && want[i] === got[i]) i++;
-  console.log(`✗ ${c.name} : 1re diff @${i}`);
+  console.log(`✗ abri : 1re diff @${i}`);
   console.log(`   GOLD …${JSON.stringify(want.slice(Math.max(0, i - 40), i + 40))}`);
   console.log(`   GOT  …${JSON.stringify(got.slice(Math.max(0, i - 40), i + 40))}`);
 }
 
-console.log(fails ? `\n${fails} écart(s). (UPDATE=1 pour régénérer si le changement est voulu.)` : "\nSnapshots conformes ✓");
+console.log(fails ? `\n${fails} écart(s). (npm run snapshot:update si le changement est voulu.)` : "\nSnapshot conforme ✓");
 process.exit(fails ? 1 : 0);

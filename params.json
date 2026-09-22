@@ -1,5 +1,5 @@
 {
-  "_comment": "Source unique de verite du projet d'abri de jardin. Toutes les cotes sont en centimetres sauf indication contraire. Le site recalcule tout en direct (TypeScript) ; pour regenerer les artefacts versionnes : npm run build && npm run emit.",
+  "_comment": "Source unique de verite du bureau de jardin. Toutes les cotes sont en centimetres sauf indication contraire. La page recalcule tout depuis ce fichier ; pour regenerer les artefacts versionnes : npm run build && npm run emit.",
   "projet": {
     "nom": "Abri de jardin - panneaux sandwich",
     "description": "Petit abri/bureau de jardin rectangulaire (4 faces) en panneaux sandwich 60 mm autoportants, toit mono-pente, porte vitree + fenetre, sur dalle beton existante.",
@@ -50,11 +50,6 @@
       ]
     }
   },
-  "emprise_cm": {
-    "_comment": "Rectangle : A = largeur (face avant), G = profondeur (face gauche). Faces A (avant), D (droite), B (arriere), G (gauche). 200 x 240 = 4,8 m2 : on peut en faire le tour, on reste sous le seuil des 5 m2 (murs), et l'abri tient entierement sur la dalle (262 de large, 223 a droite, pointe arriere).",
-    "avant_A": 200,
-    "gauche_G": 240
-  },
   "dalle_cm": {
     "_comment": "Dalle REELLE deja coulee, relevee au metre : pentagone a pointe arriere. 5 longueurs : avant, droite, gauche, puis les deux pans arriere qui se rejoignent en pointe (arriere_gauche part du haut du cote gauche, arriere_droite arrive en haut du cote droit). La pointe est calculee par triangulation (~73 ; 398), angles avant supposes droits. Mesure de controle : 260 de large a hauteur du coin droit. murs_mitoyens = cotes longes par le mur de propriete (infranchissables) : gauche et les deux pans arriere ; l'avant et la droite donnent sur le jardin. mur_hauteur_cm / mur_epaisseur_cm : HYPOTHESES pour le dessin 3D, a mesurer. decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle : l'abri LONGE le mur gauche (2 cm), 2 cm devant, pour garder une bande de passage le long du pan de 258 jusqu'a l'arriere de l'abri. passage_souhaite_cm = largeur de bande visee : le site en deduit la profondeur maximale de l'abri. Tout est reglable sur le site (groupe Dalle).",
     "avant": 262,
@@ -88,10 +83,6 @@
       "arriere_droite": 45,
       "arriere_gauche": 12,
       "gauche": 10
-    },
-    "decalage_cm": {
-      "x": 2,
-      "y": 2
     }
   },
   "disposition_trapeze": {
@@ -140,7 +131,6 @@
       "pres_de": "droite",
       "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)"
     },
-    "rehausse_prix_ml_eur": 10,
     "sieges": [
       {
         "type": "fauteuil de bureau",
@@ -228,95 +218,29 @@
   },
   "murs": {
     "hauteur_cm": 215,
-    "_comment": "Hauteur des panneaux muraux (rectangles, coupes droites) = hauteur arriere. L'avant = hauteur_cm + toit.pente_chute_cm grace a la rehausse."
-  },
-  "toit": {
-    "pente_chute_cm": 22.5,
-    "draine_vers": "arriere_B",
-    "debord_cm": {
-      "avant": 10,
-      "arriere": 10,
-      "gauche": 0,
-      "droite": 0
-    },
-    "gouttiere_largeur_cm": 10,
-    "_comment": "Debords lateraux a 0 : le toit fait exactement A de large = 2 panneaux de 100, la rive est fermee par une bavette de rive (standard). pente_chute = hauteur de la rehausse a l'avant = denivele avant -> arriere. 25 cm sur 2,46 m = ~10% (~5,8 deg), dans la plage admise par la plupart des panneaux de toiture (verifier le mini du fabricant). La rehausse est en BOIS (voir rehausse) : chute = hauteur de la section du madrier (225 mm)."
+    "_comment": "Hauteur des panneaux muraux (coupes droites) = hauteur du point bas ; la rehausse bois donne la pente du toit."
   },
   "rehausse": {
-    "materiau": "bois",
     "section_mm": [
       75,
       225
     ],
     "longueur_stock_cm": 450,
-    "prix_ml_eur": 10,
-    "_comment": "les madriers classe 4 se vendent en 4 m ou 4,5 m, pas en 4,8 m"
+    "_comment": "Madrier classe 4 de la rehausse (section par defaut si disposition_trapeze.rehausse_section_mm manque). Les madriers classe 4 se vendent en 4 m ou 4,5 m."
   },
   "porte": {
-    "face": "A",
     "largeur_cm": 100,
     "hauteur_cm": 215,
     "position": "droite",
-    "marge_bord_cm": 0,
-    "ouverture": "vers l'exterieur",
-    "description": "bloc-porte vitre aluminium double vitrage, poignee + serrure (dormant compris) 100 x 215 : remplit tout le module A2, aucun panneau a decouper",
-    "_comment": "Largeur = largeur utile d'un panneau et hauteur = hauteur des murs : le bloc-porte REMPLACE un panneau entier (A2), pas de bande de 5 cm a decouper. position = gauche|centre|droite (+ marge_bord_cm) ou distance en cm."
+    "_comment": "Porte des formes 1 a 12 de etudes/variantes.md (cote avant) ; hauteur par defaut de la porte de l'abri quand disposition_trapeze n'en donne pas."
   },
-  "fenetres": [
-    {
-      "id": "fenetre-droite",
-      "face": "D",
-      "largeur_cm": 80,
-      "hauteur_cm": 110,
-      "allege_cm": 95,
-      "position": 110,
-      "ouvrant": true,
-      "description": "fenetre oscillo-battante double vitrage, face droite, dans le module D2 (ventilation traversante avec la porte)"
-    },
-    {
-      "id": "fenetre-gauche",
-      "face": "G",
-      "largeur_cm": 80,
-      "hauteur_cm": 110,
-      "allege_cm": 95,
-      "position": 110,
-      "ouvrant": false,
-      "description": "fenetre fixe double vitrage, face gauche, dans le module G2 (la face G se compte depuis l'arriere : 110-190 = 50-130 depuis l'avant)"
-    }
-  ],
-  "_fenetres_comment": "Liste (vide = aucune). Chaque fenetre : face A|D|B|G, largeur, hauteur, allege (bas de fenetre / sol), position (gauche|centre|droite ou distance en cm). Conseil : la garder dans un seul panneau (ne pas chevaucher un joint).",
   "amenagement": {
-    "_comment": "Confort au quotidien (bureau). actif = compte au budget et s'affiche sur le site. L'electricite arrive deja par le sol : pas de tableau, juste multiprise + eclairage.",
     "plancher": {
       "actif": true,
       "epaisseur_cm": 6,
       "prix_m2_eur": 45,
       "description": "plancher isole : lambourdes + 40 mm d'isolant + OSB + sol vinyle/parquet"
-    },
-    "electricite": {
-      "actif": true,
-      "forfait_eur": 80,
-      "description": "cable existant par le sol : multiprise parafoudre + plafonnier LED + chemins de cable"
-    },
-    "chauffage": {
-      "actif": true,
-      "forfait_eur": 120,
-      "description": "radiateur panneau 750 W avec thermostat"
-    },
-    "store": {
-      "actif": true,
-      "forfait_eur": 60,
-      "description": "store sur la porte vitree (soleil / ecran)"
-    },
-    "finition_interieure": {
-      "actif": true,
-      "forfait_eur": 120,
-      "description": "couvre-joints d'angle interieurs, tapis, rideau (acoustique)"
     }
-  },
-  "divers": {
-    "facteur_chute_pct": 10,
-    "_comment": "Marge de perte/chute appliquee aux quantites de panneaux pour la commande."
   },
   "prix_materiaux_eur_ttc": {
     "_comment": "Prix des MATERIAUX, TTC, pour un particulier, en France, releves en septembre 2026. Ni main-d'oeuvre ni forfait ; la livraison est a part et hors total. Chaque article : pu (prix unitaire), unite, source (page ou le prix a ete lu), note, incertain (une seule source, ou prix deduit). Un article sans source, ou incertain, est marque 'prix a confirmer' sur le site et dans abri.md. Les quantites sont calculees par site/src/chantier.ts.",
@@ -568,21 +492,5 @@
       "unite": "forfait",
       "note": "service, affiche a part, jamais dans le total des materiaux. Aucun tarif public : sur devis, selon la quantite et la distance."
     }
-  },
-  "prix_indicatifs_eur": {
-    "_comment": "Prix INDICATIFS HT, fourniture seule, medians du marche 2026 (panneaux 60 mm stock 27-40 EUR/m2 mur, 25-40 toit ; porte alu vitree 700-1300 ; fenetre PVC fixe 150-300, oscillo-battante 250-450 ; surcout panneaux mur a fixation cachee ~5 EUR/m2). A confirmer par devis. Modifiables : le widget budget du site se recalcule.",
-    "panneau_mur_m2": 35,
-    "panneau_toit_m2": 35,
-    "porte_vitree": 900,
-    "porte_pleine": 450,
-    "fenetre_fixe": 200,
-    "fenetre_ouvrante": 320,
-    "fixation_cachee_m2": 5,
-    "profils_ml": 12,
-    "visserie_etancheite_forfait": 160,
-    "gouttiere_descente_forfait": 130,
-    "ventilation_forfait": 150,
-    "livraison_forfait": 150,
-    "incertitude_pct": 15
   }
 }

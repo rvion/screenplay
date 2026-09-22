@@ -1,6 +1,6 @@
-// CLI Node : oracle de parite + (futur) generation des artefacts statiques.
+// CLI Node : generation des artefacts statiques.
 //   node scripts/build.mjs --json [params.json]   -> imprime buildCore en JSON
-//   node scripts/build.mjs --emit [params.json]   -> ecrit site/assets/*.svg, params.js, derived.json
+//   node scripts/build.mjs --emit [params.json]   -> ecrit site/assets/*.svg, params.js, abri.md, etudes/variantes.md, site/docs/
 // Bundle via : npm run build:cli  (esbuild -> scripts/build.mjs)
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -20,21 +20,13 @@ function loadParams(path: string) {
 function emit(p: any) {
   const core = buildCore(p);
   mkdirSync(join(SITE, "assets"), { recursive: true });
-  mkdirSync(join(SITE, "data"), { recursive: true });
   for (const [name, content] of Object.entries(core.svg)) {
     writeFileSync(join(SITE, "assets", name + ".svg"), content as string);
   }
   // un plan que le calcul ne produit plus ne survit pas (les sous-dossiers, eux, sont des archives)
   for (const f of readdirSync(join(SITE, "assets"))) if (f.endsWith(".svg") && !(f.slice(0, -4) in core.svg)) rmSync(join(SITE, "assets", f));
-  const derived = {
-    projet: p.projet,
-    geometrie: core.geometrie, debit: core.debit, achats: core.achats, budget: core.budget,
-    ouvertures: core.ouvertures, panneau: p.panneau, model3d: core.model3d,
-    svg: Object.keys(core.svg).map((n) => n + ".svg"),
-  };
-  writeFileSync(join(SITE, "data", "derived.json"), JSON.stringify(derived, null, 2));
   writeFileSync(join(SITE, "params.js"),
-    "// Genere par scripts/build.mjs - parametres par defaut pour l'app.\nwindow.SHED_PARAMS = " +
+    "// Genere par scripts/build.mjs : les parametres de l'abri.\nwindow.SHED_PARAMS = " +
     JSON.stringify(p, null, 2) + ";\n");
   // pages markdown generees : liens ecrits depuis la racine, rendus relatifs a leur dossier.
   // etudes/ garde aussi les etudes archivees (figees, suivies par git) : on n'y reecrit que variantes.md
@@ -63,17 +55,16 @@ function emitDocs(p: any, generes: string[]) {
   }
 }
 
-// Cache-bust : reecrit ?v=<hash> sur style.css / app.js / params.js dans index.html.
+// Cache-bust : reecrit ?v=<hash> sur abri.css / abri.js / params.js dans index.html.
 function stamp() {
-  // index.html = l'abri retenu (abri.js) ; configurateur.html = l'etude initiale du rectangle (app.js)
-  for (const [page, script, feuille] of [["index.html", "abri.js", "abri.css"], ["configurateur.html", "app.js", "style.css"]]) {
+  for (const [page, script, feuille] of [["index.html", "abri.js", "abri.css"]]) {
     const hash = createHash("sha256");
     for (const a of [feuille, script, "params.js"]) {
       try { hash.update(readFileSync(join(SITE, a))); } catch { /* bundle absent avant build */ }
     }
     const v = hash.digest("hex").slice(0, 8);
     const chemin = join(SITE, page);
-    const html = readFileSync(chemin, "utf8").replace(/(href|src)="(style\.css|abri\.css|app\.js|abri\.js|params\.js)(?:\?v=[^"]*)?"/g, `$1="$2?v=${v}"`);
+    const html = readFileSync(chemin, "utf8").replace(/(href|src)="(abri\.css|abri\.js|params\.js)(?:\?v=[^"]*)?"/g, `$1="$2?v=${v}"`);
     writeFileSync(chemin, html);
   }
 }

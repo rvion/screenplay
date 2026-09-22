@@ -5,180 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Géométrie (détail mathématique)</title>
-<link rel="stylesheet" href="../../style.css">
 <link rel="stylesheet" href="../../docs.css">
 </head>
 <body class="doc">
 <nav class="doc-bar"><a href="../index.html">Tous les documents</a><a href="../../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/agent/04-geometrie.md">Source : agent/04-geometrie.md</a></nav>
 <main class="doc-main">
 <h1 id="géométrie-détail-mathématique">Géométrie (détail mathématique)</h1>
-<h2 id="entrées">Entrées</h2>
-<div class="doc-table"><table>
-<thead>
-<tr>
-<th>Paramètre</th>
-<th>Symbole</th>
-<th>Valeur (cm)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>emprise_cm.avant_A</code> (largeur)</td>
-<td>A</td>
-<td>200</td>
-</tr>
-<tr>
-<td><code>emprise_cm.gauche_G</code> (profondeur)</td>
-<td>G</td>
-<td>240</td>
-</tr>
-<tr>
-<td><code>murs.hauteur_cm</code> (panneaux de mur = arrière)</td>
-<td>H</td>
-<td>215</td>
-</tr>
-<tr>
-<td><code>toit.pente_chute_cm</code> (rehausse avant = chute = section du madrier)</td>
-<td>c</td>
-<td>22,5</td>
-</tr>
-</tbody></table></div>
-<h2 id="sommets-plan-origine--coin-avant-gauche">Sommets (plan, origine = coin avant-gauche)</h2>
-<pre><code>FL = (0, 0)        coin avant-gauche
-FR = (A, 0)   = (200,   0)   coin avant-droit
-BR = (A, G)   = (200, 240)   coin arrière-droit
-BL = (0, G)   = (0,   240)   coin arrière-gauche
-</code></pre>
-<p>Rectangle antihoraire : <code>FL → FR → BR → BL</code>. Faces : A = FL→FR (200), D = FR→BR (240),
-B = BR→BL (200), G = BL→FL (240). Périmètre = 2(A+G) = <strong>880 cm</strong>. Aire = A·G = <strong>4,80 m²</strong>.
-Projection toit compris (10 cm devant/derrière, 0 sur les côtés) : 200 × 260 = <strong>5,20 m²</strong> — calculée
-pour information : les débords de toiture n&#39;entrent pas dans l&#39;emprise au sol (R*420-1, D29)
-(<code>emprise_debords_m2</code>).</p>
-<h2 id="dalle-réelle-dalle_cm-et-partie-hors-dalle">Dalle réelle (<code>dalle_cm</code>) et partie hors dalle</h2>
+<p>Repère : celui de la dalle, origine au coin <strong>avant-gauche</strong> de la dalle, <code>x</code> vers la droite, <code>y</code>
+vers l&#39;arrière, cotes en cm. Les chiffres ci-dessous sont ceux de <code>params.json</code> ; ils sont figés
+par le snapshot golden (<code>tests/snapshots/abri.json</code>), qui fait foi en cas d&#39;écart.</p>
+<h2 id="dalle-réelle-dalle_cm">Dalle réelle (<code>dalle_cm</code>)</h2>
 <p>La dalle est un <strong>pentagone à pointe arrière</strong>, décrit par les <strong>5 longueurs relevées au mètre</strong> :
 <code>avant</code>, <code>droite</code>, <code>gauche</code>, <code>arriere_gauche</code> (petit pan, du haut du côté gauche à la pointe),
 <code>arriere_droite</code> (grand pan, de la pointe au haut du côté droit). Hypothèse : les deux angles
-avant sont droits. Dans le repère de la dalle :</p>
+avant sont droits.</p>
 <pre><code>(0,0) → (avant,0) → R = (avant, droite) → P (pointe) → L = (0, gauche)
 </code></pre>
 <p>La pointe <code>P</code> se trouve par <strong>triangulation</strong> depuis <code>L</code> et <code>R</code> : avec <code>d = |LR|</code>,
 <code>a = (ag² − ad² + d²) / 2d</code>, <code>h = √(ag² − a²)</code>, <code>P = L + a·u + h·n</code> (<code>u</code> = unitaire <code>L→R</code>,
 <code>n</code> = normale côté arrière). Si les longueurs ne ferment pas le triangle (<code>ag + ad &lt; d</code> ou
 <code>|ag − ad| &gt; d</code>), <code>a</code> est borné à <code>[0, d]</code> et <code>h = 0</code> : la dalle devient un quadrilatère, jamais
-une erreur. L&#39;abri est posé avec son coin avant-gauche en <code>decalage_cm = (ox, oy)</code>.</p>
-<p><strong>Hors dalle</strong> = aire de l&#39;emprise − aire de (emprise ∩ dalle), par découpage de polygone
-(Sutherland–Hodgman), valable pour tout débord (arrière, côtés, avant). Pour le dessin, chaque
-côté de la dalle donne la partie de l&#39;emprise située au-delà (<code>hors_dalle_polygones</code>).
-<code>marges_cm</code> : gauche, avant, droite, et derrière chacun des deux coins arrière de l&#39;abri
-(distance jusqu&#39;au bord de dalle, négative = hors dalle).</p>
+une erreur.</p>
 <p><strong>Relevé du 2026-09-19</strong> : avant <strong>262</strong>, droite <strong>223</strong>, gauche <strong>324</strong>, petit pan <strong>104</strong>,
 grand pan <strong>258</strong> ⇒ pointe <code>P ≈ (72,7 ; 398,3)</code>. Mesure de contrôle : <strong>260</strong> de large à hauteur
 du coin droit (2 cm de moins que devant : côtés quasi parallèles, négligé).
 Angles intérieurs (<code>dalle.angles_deg</code>, plan <code>plan-dalle.svg</code>) : <strong>90 / 90 / 132,8 / 91,6 / 135,6</strong>
-(avant-gauche, avant-droit, haut droit, pointe, haut gauche ; somme 540°). Aire <strong>8,51 m²</strong>.
-<strong>Bandes libres et zone utile</strong> (<code>bandes_libres_cm</code>, <code>dalle.zone_utile</code>) : chaque côté est
-décalé vers l&#39;intérieur de sa bande, la zone utile est l&#39;intersection des demi-plans (découpage
-de la dalle par chaque droite décalée). Défaut : gauche 12, grand pan 45, petit pan 12 (le 45
-y était une erreur : le fond gauche est un cul-de-sac, seul compte le passage derrière l&#39;abri),
-droite 5, avant 5 ⇒ zone utile pentagonale 245 / 161,3 / 282,1 / 54,4 / 314,1, <strong>6,59 m²</strong>
-(bandes 1,92 m²).
-<code>(ox, oy) = (2, 2)</code> ⇒ l&#39;abri <strong>longe le mur gauche</strong> (2 cm), 2 cm devant ; <strong>rien hors dalle</strong>.
-Calé à droite (<code>ox = 62</code>), le coin arrière-droit traverserait le mur du fond de ~19 cm.</p>
-<h3 id="murs-de-propriété-et-passage-arrière">Murs de propriété et passage arrière</h3>
+(avant-gauche, avant-droit, haut droit, pointe, haut gauche ; somme 540°). Aire <strong>8,51 m²</strong>.</p>
+<p><strong>Bandes libres et zone utile</strong> (<code>bandes_libres_cm</code>, <code>dalle.zone_utile</code>) : chaque côté est
+décalé vers l&#39;intérieur de sa bande, la zone utile est l&#39;intersection des demi-plans. Bandes :
+avant 10, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile <strong>6,53 m²</strong>. Elle sert aux
+13 formes de <code>etudes/variantes.md</code> ; l&#39;abri, lui, impose ses cotes.</p>
+<h3 id="murs-de-propriété">Murs de propriété</h3>
 <p><code>murs_mitoyens = [gauche, arriere_gauche, arriere_droite]</code> : ces côtés de la dalle <strong>sont</strong> la limite
-de propriété, infranchissables ; <code>grillages = [gauche, arriere_gauche]</code> : un grillage, pas un mur
-(seul le grand pan de 258 est un mur). L&#39;avant et la droite donnent sur le jardin. Pour chaque mur,
-<code>abri_cm</code> / <code>toit_cm</code> = distance (perpendiculaire à la droite du mur) du coin le plus proche de
-l&#39;abri / du toit (débords + <code>toit.gouttiere_largeur_cm</code> à l&#39;arrière) ; négatif = ça traverse.</p>
-<p><strong>Passage arrière</strong> (<code>dalle.passage</code>) : on atteint l&#39;arrière de l&#39;abri par la droite, en longeant
-le grand pan (258). La pince est au coin arrière-droit de l&#39;abri <code>(ox+A, oy+G)</code>. Le grand pan a
-pour pente <code>175,3 / 189,3</code> ; au droit de <code>x = 202</code> il passe à <code>y = 278,6</code>, soit 36,6 cm derrière
-le coin, × <code>189,3/258</code> ⇒ <strong>26,8 cm</strong> pour 200 × 240 : <em>impraticable</em> (&lt; 35 ; 35–50 = de profil ;
-≥ 50 = praticable). <code>profondeur_max_cm</code> = plus grand <code>G</code> qui garde <code>passage_souhaite_cm</code> (50 par
-défaut) à largeur <code>A</code> donnée, par dichotomie : <strong>208</strong> pour A = 200. Repères : 200 × 215 ⇒ 45 cm ;
-200 × 200 ⇒ 56 cm (et 4 faces en panneaux entiers). Derrière l&#39;abri, côté gauche, il reste
-324 − 242 = 82 cm jusqu&#39;au haut du côté gauche, puis la pointe.</p>
-<h2 id="hauteurs-et-rehausse">Hauteurs et rehausse</h2>
-<ul>
-<li><code>h(y) = H + c·(1 − y/G) = 215 + 22,5·(1 − y/240)</code> : avant <strong>237,5</strong>, arrière <strong>215</strong>.</li>
-<li>Pente = <code>c / G = 22,5/240 ≈ 9,4 %</code> soit <strong>5,4°</strong> (&gt; 5° usuel) ; rampant ≈ <strong>241,1 cm</strong>.</li>
-<li><strong>Murs</strong> : 4 faces, hauteur H = 215 partout (rectangles).</li>
-<li><strong>Rehausse bois</strong> (madrier 75 × 225 classe 4) posée sur le chant des murs :</li>
-</ul>
+de propriété, infranchissables. <code>grillages = [gauche, arriere_gauche]</code> : un grillage (1 m) ;
+<code>palissades = [arriere_droite]</code> : une palissade en bois. L&#39;avant et la droite donnent sur le jardin.
+Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la forme et chaque mur du fond
+(<code>v.passages</code>, extrémités du mur comprises), visée : <code>passage_souhaite_cm</code>.</p>
+<h2 id="l39abri--option-13-à-cotes-imposées-modele_trapeze">L&#39;abri : option 13 à cotes imposées (<code>modele_trapeze</code>)</h2>
+<p><code>disposition_trapeze.cotes_cm</code> impose façade 200, droite 175, gauche 275 et un mur du fond de 100
+d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Contour :
+<code>(10,10) → (210,10) → (210,185) → (110,285) → (10,285)</code> : 10 cm de dalle à gauche et devant.</p>
 <div class="doc-table"><table>
 <thead>
 <tr>
-<th>Face</th>
-<th>pièce</th>
-<th>dimensions</th>
-<th>hauteur finie</th>
+<th>face</th>
+<th>longueur</th>
+<th>hauteur finie (début → fin)</th>
+<th>panneaux</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>A (avant)</td>
-<td>R1 madrier droit</td>
-<td>200 × 22,5</td>
+<td>A façade</td>
+<td>200</td>
 <td>237,5 → 237,5</td>
+<td>100 + 100</td>
 </tr>
 <tr>
-<td>D (droite)</td>
-<td>R3 coin (triangle rectangle)</td>
-<td>base 240, hauteur 22,5</td>
-<td>237,5 → 215</td>
+<td>D droite</td>
+<td>175</td>
+<td>237,5 → 223,2</td>
+<td>75 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
 </tr>
 <tr>
-<td>B (arrière)</td>
-<td>aucune</td>
-<td>—</td>
+<td>C pan à 45°</td>
+<td>141,4</td>
+<td>223,2 → 215</td>
+<td>100 + 41,4</td>
+</tr>
+<tr>
+<td>B fond</td>
+<td>100</td>
 <td>215 → 215</td>
+<td>100</td>
 </tr>
 <tr>
-<td>G (gauche)</td>
-<td>R2 coin (triangle rectangle)</td>
-<td>base 240, hauteur 22,5</td>
+<td>G gauche</td>
+<td>275</td>
 <td>215 → 237,5</td>
+<td>100 + 100 + 75</td>
 </tr>
 </tbody></table></div>
-<p>R2 et R3 sortent d&#39;<strong>un madrier de 240 coupé en diagonale</strong> (R3 tourné de 180°) ; R1 est un
-madrier droit de 200. Total 4,4 ml ⇒ <strong>1 madrier de stock 4,8 m</strong> (chute 40 cm). Ils font
-lisse haute : le toit se visse dedans.
-Murs : A et B = 2 modules, D et G = 3 ; le module A2 est pris par le bloc-porte 100 × 215 ⇒
-<strong>9 panneaux de 215</strong> à commander.</p>
-<h2 id="toiture">Toiture</h2>
 <ul>
-<li>Rectangle débordant : largeur <code>A + 0 + 0 = 200</code>, profondeur <code>G + dav + darr = 260</code>.</li>
-<li>Panneaux dans le sens de la pente : <code>200/100 = 2</code> panneaux entiers, longueur
-<code>260·√(1+(c/G)²) ≈ 261,1 cm</code>. Rives latérales affleurantes (bavette de rive).</li>
-<li>Intérieur (parois 6 cm) : <code>(A−12)(G−12)</code> = 188 × 228 = <strong>4,29 m²</strong> (<code>aire_interieure_m2</code>) ;
-avec plancher 6 cm : 2,09 m sous plafond à l&#39;arrière, 2,31 m à l&#39;avant.</li>
-<li>Portée libre ≈ 2,6 m (à vérifier contre le tableau du fabricant pour 60 mm).</li>
+<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>5,00 m²</strong> (au seuil), intérieur 4,48 m², sol libre
+hors bureaux 2,26 m². Passage derrière : 57,8 cm au grand pan, 40,3 cm au petit pan. Espace
+caché derrière l&#39;abri 1,74 m². <strong>10 panneaux de mur</strong> de 100 × 215 à commander.</li>
+<li><strong>Toit plan vers le fond</strong> (<code>toit.sens = &quot;arriere&quot;</code>) : <code>h(y) = H + c·(1 − (y − y0)/D)</code>, <code>H</code> = 215,
+<code>c</code> = 22,5, <code>D</code> = profondeur 275 ⇒ pente <strong>8,2 %</strong> (4,68°), portée 2,75 m (panne intermédiaire
+prévue, <code>toit.panne_intermediaire</code>). Débords 5 devant et derrière, 0 sur les côtés : <strong>2 panneaux
+de toit</strong> 100 × 286, dont un coupé en biais ; 5,22 m² couverts.</li>
+<li><strong>Rehausse</strong> (madrier 75 × 225) : R1 façade 22,5 → 22,5, R2 droite 22,5 → 8,2, R3 pan 8,2 → 0,
+R4 gauche 0 → 22,5 ; rien sur le fond. <strong>2 madriers</strong> de 450.</li>
+<li><strong>Gouttière</strong> derrière l&#39;abri, 240,6 cm en deux tronçons (C 138,5 + B 102,1) : les nervures du
+toit mènent l&#39;eau aux bouts arrière des panneaux. Descente au bout droit (<code>toit.descente</code>), à
+l&#39;entrée du passage.</li>
+<li><strong>Porte</strong> pleine 80 × 205 sur D, de 82,5 à 162,5 depuis la façade, chambranle 5 : le cadre tient
+dans le module entier du fond. <strong>Fenêtres</strong> 80 × 80, allège 110, en façade : ouvrante de 10 à 90,
+fixe de 110 à 190.</li>
+<li><strong>Mobilier</strong> : bureau en L (gauche et façade), fauteuil et tabouret, lit pliant 70 × 190 posé au sol
+libre le long du mur de la porte, pied sous le bureau de façade ; seconde position en biais au fond
+(<code>lit_pliant_2</code>).</li>
 </ul>
-<h2 id="vérification">Vérification</h2>
-<p>Le site affiche aire, périmètre, pente, rampant, débit et le triangle hors dalle (recalculés en
-direct par <code>compute.ts</code>) ; ces valeurs doivent correspondre au tableau ci-dessus. Les snapshots
-golden (<code>npm run test:raw</code>) figent cette sortie.</p>
-<h2 id="abri-retenu--trapèze-de-l39option-13-modele_trapeze-d27">Abri retenu : trapèze de l&#39;option 13 (<code>modele_trapeze</code>, D27)</h2>
-<p>Repère de la dalle. Côtés dans l&#39;ordre du contour : <strong>A</strong> façade 218, <strong>D</strong> droite 178,8, <strong>B</strong> fond
-en biais 256,6, <strong>G</strong> gauche 314,1 ; angles 90 / 90 / 121,8 / 58,2.</p>
-<ul>
-<li><strong>Toit plan</strong>, pente de l&#39;avant vers le point le plus au fond : <code>h(y) = H + c·(1 − (y − y0)/D)</code>,
-<code>D</code> = profondeur au point le plus au fond (314,1), <code>c = disposition_trapeze.toit.chute_cm</code> (30)
-⇒ 9,6 %, <strong>5,46°</strong>. Hauteurs finies : façade 245, coin arrière droit 227,9, coin arrière gauche 215.</li>
-<li><strong>Murs</strong> : panneaux de 215 posés depuis le début de chaque face (sens du contour, vue de
-l&#39;extérieur de gauche à droite) : A 100+100+18, D 100+78,8, B 100+100+56,6, G 100+100+100+14,1.</li>
-<li><strong>Rehausse</strong> (madrier 75 × 300) : R1 façade 30 → 30, R2 droite 30 → 12,9, R3 fond 12,9 → 0,
-R4 gauche 0 → 30. R3 et R4 partagent une coupe en biais : <strong>2 madriers</strong> de 480.</li>
-<li><strong>Toit</strong> : contour = murs + débords (avant 10, fond 10, côtés 0) ; panneaux dans le sens de la
-pente : T1 100 × 337,4, T2 100 × 275,1, T3 18 × 212,7 (longueurs = rampant) ; 5,85 m² couverts.
-Gouttière le long du fond (256,6), descente au coin arrière gauche (point bas).</li>
-<li><strong>Sièges et lit</strong> : fauteuil 70 × 70 contre le bureau gauche, tabouret 30 × 30 contre le bureau de
-façade. Lit <strong>70 × 190</strong> (taille standard une place, réglée le 2026-09-22 ; 75 avant) <strong>rabattable contre le mur du fond</strong> (couchette), replié sur 10 cm, 2 fixations
-intérieures ; déplié, son pied passe sous le bureau gauche et il va jusque devant la porte (aucun
-dégagement demandé : elle ouvre dehors). Avec 20 cm devant la porte, il ne tiendrait plus contre le fond.</li>
-<li><strong>Fenêtre</strong> : une seule, fixe, 100 × 110, allège 95, de 100 à 200 depuis le coin gauche : elle prend
-tout le module A2 (allège de 95 et linteau de 10 restent du panneau).</li>
-<li><strong>Porte</strong> : ouverture 65 × 205 sur D, de 100,5 à 165,5 ; chambranle 5 ; cadre à 5 cm de la face
-intérieure du mur du fond et 5 cm sous le haut du mur.</li>
-</ul>
+<p>Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans <code>etudes/</code>
+et restent couvertes par les tests via <code>tests/fixtures/etude-v{1,2,3}.json</code>.</p>
 </main>
 </body>
 </html>

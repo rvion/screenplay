@@ -74,7 +74,6 @@ function gabarit(titre: string, racine_site: string, racine_docs: string, barre:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${echappe(titre)}</title>
-<link rel="stylesheet" href="${racine_site}style.css">
 <link rel="stylesheet" href="${racine_site}docs.css">
 </head>
 <body class="doc">

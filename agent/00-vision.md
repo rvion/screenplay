@@ -16,7 +16,7 @@ cahier de montage et points de vigilance — le tout **paramétrique** et publi�
    et modèle 3D (et `npm run emit` regénère les artefacts versionnés). La dalle existe déjà mais
    la géométrie reste pilotée par paramètres pour itérer.
 4. **Zéro dépendance lourde au runtime.** Logique en **TypeScript** bundlée par esbuild (un seul
-   `site/app.js`, pas de framework) ; rendu 3D via Three.js (CDN).
+   `site/abri.js`, pas de framework) ; rendu 3D via Three.js (CDN).
    Doit fonctionner hors-ligne (`file://`) et sur GitHub Pages.
 5. **Lisible par un humain non-pro du bâtiment.** Le livrable explique aussi *à quoi faire
    attention* (pente, portée du toit, condensation, débord de dalle, porte extérieure).

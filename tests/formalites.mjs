@@ -34,9 +34,8 @@ ok(/R\*420-1/.test(formalites(P(), 4, 5, 3).reference), "la reference legale voy
 
 // l'abri reel : emprise = murs, et le toit ne l'aggrave pas
 const core = buildCore(base), F = core.modele.formalites, v = core.variantes.find((x) => x.id === 13);
-ok(F.emprise_au_sol_m2 === v.aire_m2, "abri retenu : emprise au sol = emprise des murs");
+ok(F.emprise_au_sol_m2 === v.aire_m2, "abri : emprise au sol = emprise des murs");
 ok(F.emprise_debords_inclus_m2 > F.emprise_au_sol_m2, "le chiffre debords inclus reste calcule, mais ne sert pas au seuil");
-ok(core.geometrie.formalites.emprise_au_sol_m2 === core.geometrie.aire_m2, "ancien modele rectangle : meme regle");
 
 if (fails) { console.log(`\n${fails} echec(s)`); process.exit(1); }
 console.log("\nFormalites OK ✓");

@@ -36,7 +36,7 @@ ok(slab_apex([0, 0], [5, 0], 1, 9) === null, "pans incompatibles (|ag - ad| > d)
 // zone utile : chaque cote de la zone est a sa bande du cote de dalle correspondant
 {
   const gd = geometry(base).dalle, z = gd.zone_utile;
-  const L = gd.polygone.map(([x, y]) => [x + gd.decalage_cm[0], y + gd.decalage_cm[1]]);
+  const L = gd.polygone;
   const dline = (p, a, b) => Math.abs((b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])) / dist(a, b);
   ok(z.polygone.length === 5, "zone utile : 5 cotes");
   ok(z.bandes_cm.every((w, i) => near(dline(z.polygone[i], L[i], L[(i + 1) % 5]), w, 0.1) && near(dline(z.polygone[(i + 1) % 5], L[i], L[(i + 1) % 5]), w, 0.1)), "zone utile : chaque cote a sa bande du bord de dalle");
@@ -101,8 +101,8 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   // narrowest gap a person squeezes through, i.e. the true distance between the shed outline and the
   // wall segment. Measuring from shed corners only misses the wall END facing the middle of a shed wall
   const brut = (v, cote) => {
-    const w = g.dalle.murs.find((m) => m.cote === cote), [ox, oy] = g.dalle.decalage_cm;
-    const a = [w.de[0] + ox, w.de[1] + oy], b = [w.a[0] + ox, w.a[1] + oy], P = v.polygone, N = 400;
+    const w = g.dalle.murs.find((m) => m.cote === cote);
+    const a = w.de, b = w.a, P = v.polygone, N = 400;
     let m = Infinity;
     for (let i = 0; i < P.length; i++) for (let k = 0; k <= N; k++) {
       const p = P[i], q = P[(i + 1) % P.length], s = [p[0] + (q[0] - p[0]) * k / N, p[1] + (q[1] - p[1]) * k / N];
@@ -117,8 +117,8 @@ const pas12 = (v) => v.passages.find((q) => q.cote === "arriere_droite").cm;
   // person walks between the shed and the wall, so its far end must sit on the wall, never on the
   // wall's line extended past its end (option 1 drew a 91.8 segment leaving the slab)
   const surMur = (v) => v.passages.every((q) => {
-    const w = g.dalle.murs.find((m) => m.cote === q.cote), [ox, oy] = g.dalle.decalage_cm;
-    const a = [w.de[0] + ox, w.de[1] + oy], b = [w.a[0] + ox, w.a[1] + oy], f = q.segment[1];
+    const w = g.dalle.murs.find((m) => m.cote === q.cote);
+    const a = w.de, b = w.a, f = q.segment[1];
     return near(dist(a, f) + dist(f, b), dist(a, b), 0.3);
   });
   ok(vs.every(surMur), "chaque passage aboutit sur le mur, pas sur son prolongement");
@@ -155,47 +155,14 @@ ok(near(poly_area(clip_convex([[0, 0], [10, 0], [10, 10], [0, 10]], [[5, -1], [2
 
 // releve reel
 const g = geometry(base).dalle;
-const d = base.dalle_cm, [ox, oy] = g.decalage_cm;
-const P = g.polygone.map(([x, y]) => [x + ox, y + oy]);   // retour au repere de la dalle
+const d = base.dalle_cm, P = g.polygone;
 ok(P.length === 5, "dalle = pentagone");
 ok(near(dist(P[3], P[4]), d.arriere_gauche, 0.15), "pan arriere gauche = " + d.arriere_gauche + " (" + dist(P[3], P[4]).toFixed(1) + ")");
 ok(near(dist(P[2], P[3]), d.arriere_droite, 0.15), "pan arriere droit = " + d.arriere_droite + " (" + dist(P[2], P[3]).toFixed(1) + ")");
 ok(near(g.pointe_cm[0], 72.7, 0.2) && near(g.pointe_cm[1], 398.3, 0.2), "pointe ~ (72.7 ; 398.3) : " + g.pointe_cm);
 ok(g.pointe_cm[1] > d.gauche, "la pointe est derriere le haut du cote gauche");
-ok(g.hors_dalle === false && g.hors_dalle_m2 === 0, "abri par defaut entierement sur la dalle");
-ok(g.decalage_cm[0] === 2, "l'abri longe le mur gauche (2 cm)");
-
 // murs de propriete et passage arriere
 ok(g.murs.map((w) => w.cote).join() === "arriere_droite,arriere_gauche,gauche", "3 murs : gauche + les deux pans arriere");
-ok(g.passage.cote === "arriere_droite", "la pince est sur le grand pan (258)");
-// a la main : mur a x=202 -> y = 223 + 60 * 175.3/189.3 = 278.6 ; ecart vertical 36.6 ; x cos = 189.3/258 -> 26.8
-ok(near(g.passage.cm, 26.8, 0.3), "passage = 26.8 cm pour 200 x 240 (" + g.passage.cm + ")");
-ok(g.passage.etat === "impraticable", "26.8 cm : impraticable");
-{
-  const p = clone(base); p.emprise_cm.gauche_G = g.passage.profondeur_max_cm;
-  const h = geometry(p).dalle;
-  ok(h.passage.cm >= base.dalle_cm.passage_souhaite_cm - 0.01 && h.passage.cm < base.dalle_cm.passage_souhaite_cm + 1, "a la profondeur max (" + g.passage.profondeur_max_cm + "), le passage vaut le souhait (" + h.passage.cm + ")");
-}
-{
-  const p = clone(base); p.emprise_cm.gauche_G = 200;
-  ok(geometry(p).dalle.passage.etat === "praticable", "200 x 200 : passage praticable (" + geometry(p).dalle.passage.cm + " cm)");
-}
-ok(g.toit_touche_mur === false && g.degagement_toit_min_cm > 0, "toit + gouttiere ne touchent aucun mur (" + g.degagement_toit_min_cm + " cm)");
-
-// abri cale a droite : le coin arriere-droit sort sous le grand pan
-{
-  const p = clone(base); p.dalle_cm.decalage_cm.x = d.avant - p.emprise_cm.avant_A;
-  const h = geometry(p).dalle;
-  ok(h.hors_dalle && h.hors_dalle_m2 > 0 && h.hors_dalle_polygones.length === 1, "cale a droite : 1 zone hors dalle (" + h.hors_dalle_m2 + " m²)");
-  ok(near(h.marges_cm.arriere_droite, -19, 0.1), "coin arriere-droit 19 cm au-dela du bord (" + h.marges_cm.arriere_droite + ")");
-  ok(h.hors_dalle_contre_mur === true && h.passage.cm < 0, "ce debord traverse un mur : completer la dalle est impossible");
-}
-// abri pousse hors de la dalle par l'avant : compte aussi (pas seulement l'arriere)
-{
-  const p = clone(base); p.dalle_cm.decalage_cm.y = -10;
-  const h = geometry(p).dalle;
-  ok(near(h.hors_dalle_m2, 0.2, 1e-9), "10 cm devant la dalle sur 200 de large = 0.2 m² (" + h.hors_dalle_m2 + ")");
-}
 // longueurs qui ne ferment pas : quadrilatere, jamais une erreur
 {
   const p = clone(base); p.dalle_cm.arriere_gauche = 10; p.dalle_cm.arriere_droite = 10;

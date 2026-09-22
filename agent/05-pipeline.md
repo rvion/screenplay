@@ -10,47 +10,46 @@ screenplay/
 ├── etudes/            # l'archive des études (D39, D40)
 │   ├── variantes.md   #   GÉNÉRÉ à chaque emit : les 13 formes d'abri sur la dalle (SVG inclus)
 │   └── abri-v{1,2,3}.md #  FIGÉES le 2026-09-22, plans dans site/assets/etudes/v{1,2,3}/
-├── params.json         # cotes par défaut (source unique des dimensions, en cm)
+├── params.json         # l'abri et la dalle (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
-├── tsconfig.json
+├── tsconfig.json       # alias site/src/* (imports), extensions .ts permises
 ├── agent/              # spec-first : index.md (routeur, chargé par CLAUDE.md) + vision, besoins,
 │                       # spec, décisions, géométrie, pipeline, backlog, handoff
 ├── tests/
-│   ├── snapshot.mjs    # snapshots golden de compute.ts (remplace l'oracle Python)
-│   ├── cases.mjs       # jeux de params partagés
-│   ├── dalle.mjs       # dalle, zone utile, variantes de forme
-│   ├── modele.mjs      # modèle 2D de l'abri retenu (faces, rehausse, toit, plans)
-│   ├── dom.mjs         # smoke-test DOM (jsdom)
-│   └── snapshots/*.json
+│   ├── snapshot.mjs    # snapshot golden de l'abri (snapshots/abri.json)
+│   ├── dalle.mjs       # dalle, zone utile, formes possibles
+│   ├── modele.mjs      # modèle de l'abri et des études (faces, rehausse, toit, plans)
+│   ├── formalites.mjs  # emprise au sol et seuils (garde R*420-1)
+│   ├── docs.mjs        # pages de documents à jour, aucun lien mort
+│   ├── ports.mjs       # ports locaux propres au dépôt
+│   ├── abri3d.mjs      # scène 3D mesurée avec three.js (abri + études)
+│   ├── abri_dom.mjs    # page d'accueil sous jsdom
+│   └── fixtures/       # paramètres fusionnés des études figées (etude-v1..v3.json)
 └── site/               # GitHub Pages (publié tel quel)
-    ├── index.html      # page de l'abri retenu (3D, plans, débit, montage) ; charge abri.js
-    ├── configurateur.html # l'étude initiale : rectangle réglable ; charge app.js
-    ├── style.css
-    ├── src/            # TypeScript : compute (logique pure) + viewer/render/controls/main + cli
-    │                   # abri_page (page d'accueil, DOM seul) + maitre_detail (liste + détail partagée) + viewer_abri
-    ├── app.js          # GÉNÉRÉ (bundle esbuild de src/main.ts, pour configurateur.html)
-    ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts, pour index.html)
-    ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = cotes par défaut)
+    ├── index.html      # page de l'abri (3D, plans, matériaux, montage) ; charge abri.js
+    ├── src/            # TypeScript : compute + chantier (logique pure), abri_page (page, DOM seul),
+    │                   # maitre_detail (liste + détail), viewer_abri (3D), docs + cli (Node)
+    ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts)
+    ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = params.json)
     ├── .nojekyll
-    ├── abri.css        # feuille autonome de la page d'accueil (dense, imprimable ; écrite à la main)
-    ├── docs.css        # styles des pages de documents (écrit à la main)
+    ├── abri.css        # feuille de la page d'accueil (dense, imprimable ; écrite à la main)
+    ├── docs.css        # feuille des pages de documents (écrite à la main, autonome)
     ├── docs/           # GÉNÉRÉ : une page HTML par .md suivi par git + index.html (adresses à partager)
-    ├── assets/*.svg    # GÉNÉRÉS : plan-sol, plan-toit, plan-rehausse, facade-{A,D,B,G}
-    └── data/derived.json # GÉNÉRÉ (référence)
+    └── assets/         # GÉNÉRÉS : plan-dalle*, variante-*, modele-* (.svg) ; etudes/vN/ = plans figés
 ```
 
 ## Régénérer
 ```bash
-npm ci                         # une fois (esbuild, typescript, jsdom)
-npm run build                  # bundle src/main.ts -> site/app.js
-npm run emit                   # cli.ts --emit : params.js + assets/*.svg + derived.json + cache-bust
-npm run test:raw               # snapshots golden + smoke DOM (npm test passe par shipkit ci) (routé par shipkit ; test:raw = brut)
+npm ci                         # une fois (esbuild, typescript, jsdom, three)
+npm run build                  # bundle src/abri_main.ts -> site/abri.js
+npm run emit                   # cli.ts --emit : params.js, assets/*.svg, abri.md, etudes/variantes.md, docs/, cache-bust
+npm run test:raw               # tous les tests (npm test passe par shipkit ci ; test:raw = brut)
 shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré
 ```
 La CI GitHub (`pages.yml`) appelle `npm run test:raw` : shipkit (bun) n'y est pas installé.
-Les fichiers générés (`app.js`, `params.js`, `assets/*.svg`, `data/derived.json`) sont **commités**
+Les fichiers générés (`abri.js`, `params.js`, `assets/*.svg`, `abri.md`, `docs/`) sont **commités**
 pour que le site fonctionne même sans CI. Si un changement de calcul est **voulu** :
-`npm run snapshot:update`.
+`npm run snapshot:update`, puis relire le diff de `tests/snapshots/abri.json`.
 
 ## Prévisualiser le site en local
 ```bash

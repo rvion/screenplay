@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>screenplay — abri de jardin / bureau paramétrique</title>
-<link rel="stylesheet" href="../../style.css">
 <link rel="stylesheet" href="../../docs.css">
 </head>
 <body class="doc">
@@ -17,20 +16,19 @@
 base (<code>disposition_trapeze</code>, <code>dalle_cm</code>, <code>panneau</code>, <code>prix_materiaux_eur_ttc</code>…), ses textes dans le bloc
 <code>abri</code> (<code>titre</code>, <code>dossier</code>). Aucune version, aucune surcouche (D40). C&#39;est lui que montrent <code>abri.md</code>, la
 page d&#39;accueil du site (<code>site/index.html</code>, bundle <code>site/abri.js</code>) et le modèle 3D. Les formes qui l&#39;ont
-précédé sont archivées, figées, sous <code>etudes/</code>. Le rectangle décrit ci-dessous est l&#39;étude initiale,
-toujours réglable sur <code>site/configurateur.html</code> (bundle <code>site/app.js</code>).</p>
+précédé sont archivées, figées, sous <code>etudes/</code> (D40 ; le rectangle de l&#39;étude initiale est retiré, D41).</p>
 </blockquote>
-<p>Conception, plans, débit, budget et modèle 3D d&#39;un petit bureau de jardin (rectangle 200 × 240,
-panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,
-aménagement chiffré) que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
+<p>Conception, plans, débit, matériaux, guide de montage et modèle 3D d&#39;un petit bureau de jardin
+(cinq murs, panneaux sandwich 60 mm autoportants, pente par rehausse bois, porte pleine + 2 fenêtres)
+que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
 abordable, robuste, agréable tous les jours. Projet
 <strong>spec-first</strong> : la conception est écrite <em>avant</em> le code, dans ce dossier <code>agent/</code>.
-Stack : TypeScript pur (<code>site/src/compute.ts</code>) bundlé par esbuild en un seul <code>site/app.js</code>,
-Three.js via CDN, tests Node (snapshots golden + jsdom), publication GitHub Pages.</p>
+Stack : TypeScript pur (<code>site/src/compute.ts</code>, <code>chantier.ts</code>) bundlé par esbuild en un seul
+<code>site/abri.js</code>, Three.js via CDN, tests Node (snapshot golden + jsdom), publication GitHub Pages.</p>
 <h2 id="quick-start">Quick start</h2>
 <pre><code class="language-bash">npm ci                                 # installe esbuild / typescript / jsdom (dev)
-npm run build &amp;&amp; npm run emit          # bundle l&#39;app + régénère params.js, SVG, derived.json
-npm test                               # snapshots golden + smoke DOM, via shipkit (test:raw = brut)
+npm run build &amp;&amp; npm run emit          # bundle la page + régénère params.js, SVG, abri.md, docs
+npm test                               # snapshot golden + tests + jsdom, via shipkit (test:raw = brut)
 npm run typecheck                      # tsc --noEmit, via shipkit (typecheck:raw = brut)
 shipkit ci                             # LA porte : typecheck + test + imports + cycles + règles SK*
 npm run site                           # prévisualise le site → http://localhost:5885 (port propre au dépôt)
@@ -51,10 +49,10 @@ npm run site                           # prévisualise le site → http://localh
 <li><strong><code>site/src/compute.ts</code> est la source unique de la logique</strong> (géométrie, débit, plans SVG,
 budget, modèle 3D). Le site la rejoue en direct ; le CLI Node la réutilise. Reste <strong>pur</strong>
 (aucun <code>import</code> de DOM ni de Three) pour tourner navigateur <strong>et</strong> Node.</li>
-<li>Après toute édition de <code>compute.ts</code> : <code>npm run build</code> (bundle esbuild → <code>site/app.js</code>) puis
-<code>npm run emit</code> (regénère <code>site/params.js</code>, <code>site/assets/*.svg</code>, <code>site/data/derived.json</code> +
-cache-bust). <strong>Committer les fichiers générés.</strong> Lancer <code>npm test</code> (snapshots + smoke DOM).</li>
-<li>Si un changement de calcul est <strong>voulu</strong>, mettre à jour les snapshots : <code>npm run snapshot:update</code>.</li>
+<li>Après toute édition de <code>compute.ts</code> : <code>npm run build</code> (bundle esbuild → <code>site/abri.js</code>) puis
+<code>npm run emit</code> (regénère <code>site/params.js</code>, <code>site/assets/*.svg</code>, <code>abri.md</code>, <code>site/docs/</code> +
+cache-bust). <strong>Committer les fichiers générés.</strong> Lancer <code>npm test</code>.</li>
+<li>Si un changement de calcul est <strong>voulu</strong>, mettre à jour le snapshot : <code>npm run snapshot:update</code>.</li>
 <li>Le site doit fonctionner en <code>file://</code> (données via <code>params.js</code>, pas de <code>fetch</code>) et
 <strong>dégrader proprement</strong> sans WebGL.</li>
 <li>Si tu modifies la géométrie, mets à jour <code>04-geometrie.md</code>.</li>
@@ -91,7 +89,7 @@ partager). Après avoir édité ou ajouté un <code>.md</code> : <code>npm run e
 <td><code>agent/03-decisions.md</code></td>
 </tr>
 <tr>
-<td><code>emprise_cm</code>, <code>dalle_cm</code>, rehausse (triangles + bandeau), toiture</td>
+<td><code>dalle_cm</code>, cotes de l&#39;abri, hauteurs, rehausse, toiture</td>
 <td><code>agent/04-geometrie.md</code></td>
 </tr>
 <tr>

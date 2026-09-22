@@ -1,4 +1,15 @@
 /* pages de documents (site/docs/) : le markdown du depot, rendu lisible et partageable */
+:root {
+  --bg: #fbfbf8;
+  --ink: #1f2933;
+  --muted: #6b7280;
+  --accent: #2b5d8a;
+  --card: #ffffff;
+  --line: #e3e3dc;
+  --radius: 12px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; }
 .doc-bar { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; padding: .7rem 1.5rem; background: #2b5d8a; font-size: .92rem; }
 .doc-bar a { color: #fff; text-decoration: none; opacity: .92; }
 .doc-bar a:hover { text-decoration: underline; opacity: 1; }

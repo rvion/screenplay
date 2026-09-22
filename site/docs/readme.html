@@ -4,162 +4,60 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>🏡 Abri de jardin — panneaux sandwich</title>
-<link rel="stylesheet" href="../style.css">
+<title>🏡 Bureau de jardin en panneaux sandwich</title>
 <link rel="stylesheet" href="../docs.css">
 </head>
 <body class="doc">
 <nav class="doc-bar"><a href="index.html">Tous les documents</a><a href="../index.html">Le site interactif</a><a href="https://github.com/rvion/screenplay/blob/main/README.md">Source : README.md</a></nav>
 <main class="doc-main">
-<h1 id="abri-de-jardin--panneaux-sandwich">🏡 Abri de jardin — panneaux sandwich</h1>
-<p>Conception <strong>paramétrique</strong>, <strong>spec-first</strong> et auto-documentée d&#39;un petit
-<strong>abri / bureau de jardin</strong> (2,00 × 2,40 m, 4,8 m²) <strong>rectangulaire</strong>, murs et toit en
-<strong>panneaux sandwich 60 mm autoportants</strong> (pas d&#39;ossature), sur une <strong>dalle béton déjà coulée</strong>.</p>
-<p>Ce dépôt contient <strong>tout le nécessaire</strong> : plans cotés, débit matière, liste d&#39;achats,
-cahier de montage en 6 étapes et points de vigilance — le tout généré depuis un <strong>fichier de
-paramètres unique</strong> et publié sur un petit <strong>site web</strong>.</p>
+<h1 id="bureau-de-jardin-en-panneaux-sandwich">🏡 Bureau de jardin en panneaux sandwich</h1>
+<p>Conception <strong>paramétrique</strong>, <strong>spec-first</strong> et auto-documentée d&#39;un petit <strong>bureau de jardin</strong> à
+cinq murs, murs et toit en <strong>panneaux sandwich 60 mm autoportants</strong> (pas d&#39;ossature), sur une
+<strong>dalle béton déjà coulée</strong>.</p>
+<p>Ce dépôt contient <strong>tout le nécessaire</strong> : plans cotés, débit des panneaux, matériaux à acheter,
+guide de montage étape par étape et modèle 3D, le tout calculé depuis un <strong>fichier de paramètres
+unique</strong> et publié sur un petit <strong>site web</strong>.</p>
 <blockquote>
 <p>🌐 <strong>Site en ligne</strong> : <strong><a href="https://rvion.github.io/screenplay/">https://rvion.github.io/screenplay/</a></strong>
 · 🧠 <strong>Spécification</strong> : dossier <a href="https://github.com/rvion/screenplay/blob/main/agent"><code>agent/</code></a> · ⚙️ <strong>Paramètres</strong> : <a href="https://github.com/rvion/screenplay/blob/main/params.json"><code>params.json</code></a></p>
 </blockquote>
 <hr>
-<h2 id="l39abri-retenu--le-bureau-à-cinq-murs">L&#39;abri retenu : le bureau à cinq murs</h2>
-<p>Le projet a commencé par un rectangle (décrit plus bas). La dalle réelle, relevée au mètre, se
-termine en pointe et longe le mur de propriété à gauche et au fond : l&#39;abri retenu aujourd&#39;hui
-est un <strong>bureau à cinq murs</strong>, avec un mur du fond d&#39;équerre et un pan à 45° qui longe le mur de
-propriété et garde un passage vers l&#39;arrière. Il reste au seuil des 5 m² de murs (sans
-formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
+<h2 id="l39abri--le-bureau-à-cinq-murs">L&#39;abri : le bureau à cinq murs</h2>
+<p>La dalle réelle, relevée au mètre, se termine en pointe et longe la limite de propriété à gauche
+et au fond. L&#39;abri est un <strong>bureau à cinq murs</strong>, avec un mur du fond d&#39;équerre et un pan à 45° qui
+longe le mur de propriété et garde un passage vers l&#39;arrière. Il reste au seuil des 5 m² de murs
+(sans formalité), sa porte pleine est sur le côté, ses deux fenêtres en façade, et son toit penche
 vers le fond : la gouttière court derrière l&#39;abri, le long du mur du fond et du pan à 45°.</p>
-<p><img src="../assets/modele-implantation.svg" alt="implantation de l&#39;abri retenu sur la dalle"></p>
+<p><img src="../assets/modele-implantation.svg" alt="implantation de l&#39;abri sur la dalle"></p>
 <ul>
-<li><strong>Le document complet</strong> (plans, débit, budget, raisons), généré : <strong><a href="abri.html">abri.md</a></strong></li>
-<li><strong>La page d&#39;accueil du site</strong> montre le même abri : modèle 3D, plans, à commander, montage pas à pas</li>
+<li><strong>Le document complet</strong> (plans, débit, matériaux, guide de montage, raisons), généré : <strong><a href="abri.html">abri.md</a></strong></li>
+<li><strong>La page d&#39;accueil du site</strong> montre le même abri : modèle 3D, plans, matériaux, montage pas à pas</li>
 <li>Les formes qui l&#39;ont précédé, archivées (figées) dans <a href="https://github.com/rvion/screenplay/blob/main/etudes"><code>etudes/</code></a> : <a href="etudes/abri-v1.html">abri-v1.md</a>, <a href="etudes/abri-v2.html">abri-v2.md</a>, <a href="etudes/abri-v3.html">abri-v3.md</a> (le même abri, toit vers le jardin) ;
-toutes les formes envisagées : <a href="etudes/variantes.html">variantes.md</a></li>
+toutes les formes envisagées sur la dalle : <a href="etudes/variantes.html">variantes.md</a></li>
 <li>Toutes ses cotes vivent dans <a href="https://github.com/rvion/screenplay/blob/main/params.json"><code>params.json</code></a> : les changer, puis <code>npm run emit</code></li>
 </ul>
 <p>Aucun chiffre n&#39;est recopié ici : ils vivent dans <code>abri.md</code>, recalculé à chaque <code>npm run emit</code>.</p>
 <hr>
-<h1 id="l39étude-initiale--le-rectangle-paramétrique">L&#39;étude initiale : le rectangle paramétrique</h1>
-<p>Ce qui suit décrit la première étude, toujours en ligne et réglable
-(<a href="https://rvion.github.io/screenplay/configurateur.html">configurateur</a>).</p>
-<h2 id="le-principe-en-une-phrase">Le principe, en une phrase</h2>
-<p>Une boîte rectangulaire dont <strong>tous les panneaux de mur sont des rectangles identiques</strong>
-(coupes droites) ; la pente du toit vient d&#39;une <strong>rehausse en bois</strong> posée dessus : <strong>un madrier
-coupé en diagonale</strong> (deux coins, faces gauche et droite) et <strong>un madrier droit</strong> sur la face
-avant, qui font aussi lisse haute. Une seule coupe en biais dans tout le projet. Un <strong>bloc-porte
-vitré</strong> et <strong>deux fenêtres</strong> (ouvrante à droite, fixe à gauche), chacune dans un seul panneau.
-Objectif : <strong>simple, abordable, robuste, agréable tous les jours</strong>.</p>
-<div class="doc-table"><table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Emprise</strong></td>
-<td><strong>200 × 240 cm</strong> = <strong>4,8 m²</strong> (projection toit compris 5,2 m², qui ne compte pas dans l&#39;emprise au sol) · 4 faces : <strong>A</strong> avant · <strong>D</strong> droite · <strong>B</strong> arrière · <strong>G</strong> gauche · on peut en faire le tour</td>
-</tr>
-<tr>
-<td><strong>Panneaux</strong></td>
-<td>sandwich <strong>60 mm autoportants</strong>, âme PIR, fixation cachée, pose verticale, <strong>9 panneaux de 215 cm</strong> (le module A2 est pris par le bloc-porte)</td>
-</tr>
-<tr>
-<td><strong>Rehausse</strong></td>
-<td><strong>1 madrier 75 × 225</strong> de 4,8 m : 240 coupé en diagonale (2 coins) + 200 droit ; sert de lisse haute</td>
-</tr>
-<tr>
-<td><strong>Toit</strong></td>
-<td><strong>mono-pente vers l&#39;arrière</strong>, rehausse 22,5 cm (<strong>≈ 9,4 %</strong>, 5,4°), <strong>2 panneaux toiture entiers</strong> de ~2,61 m, couleur claire, rives affleurantes</td>
-</tr>
-<tr>
-<td><strong>Porte</strong></td>
-<td><strong>bloc-porte vitré 100 × 215</strong> (dormant compris), face A à droite : remplace le panneau A2, rien à découper</td>
-</tr>
-<tr>
-<td><strong>Fenêtres</strong></td>
-<td><strong>2 × 80 × 110</strong>, allège 95 : ouvrante face D (module D2), fixe face G (module G2)</td>
-</tr>
-<tr>
-<td><strong>Aménagement</strong></td>
-<td>plancher isolé, multiprise + éclairage (câble déjà en place), chauffage, store, finitions : ~570 €</td>
-</tr>
-<tr>
-<td><strong>Budget</strong></td>
-<td>≈ <strong>3 900 € HT</strong> (coque ~3 340 € + aménagement ~570 €), fourchette 3 300 – 4 500 €</td>
-</tr>
-<tr>
-<td><strong>Dalle</strong></td>
-<td>existante, <strong>pentagone à pointe arrière</strong> relevé au mètre : 262 devant, 223 à droite, 324 à gauche, pans arrière 104 et 258 ; le côté gauche et le fond longent le mur de propriété ; l&#39;abri longe le mur gauche et garde une bande de passage vers l&#39;arrière</td>
-</tr>
-<tr>
-<td><strong>Usage</strong></td>
-<td>bureau / pièce à vivre, chauffé toute l&#39;année (ventilation obligatoire)</td>
-</tr>
-</tbody></table></div>
-<hr>
-<h2 id="plans">Plans</h2>
-<div class="doc-table"><table>
-<thead>
-<tr>
-<th>Plan de sol</th>
-<th>Plan de toiture</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="../assets/plan-sol.svg" alt="Plan de sol"></td>
-<td><img src="../assets/plan-toit.svg" alt="Plan de toiture"></td>
-</tr>
-</tbody></table></div>
-<p><img src="../assets/plan-rehausse.svg" alt="Plan de coupe de la rehausse"></p>
-<div class="doc-table"><table>
-<thead>
-<tr>
-<th>Face A — Avant</th>
-<th>Face G — Gauche</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="../assets/facade-A.svg" alt="Face A"></td>
-<td><img src="../assets/facade-G.svg" alt="Face G"></td>
-</tr>
-</tbody></table></div>
-<div class="doc-table"><table>
-<thead>
-<tr>
-<th>Face D — Droite (fenêtre)</th>
-<th>Face B — Arrière</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="../assets/facade-D.svg" alt="Face D"></td>
-<td><img src="../assets/facade-B.svg" alt="Face B"></td>
-</tr>
-</tbody></table></div>
-<p><em>(Le <strong>modèle 3D interactif</strong> est sur le site : dalle réelle, joints de panneaux, porte, toit.)</em></p>
-<hr>
 <h2 id="comment-ça-marche-paramétrique">Comment ça marche (paramétrique)</h2>
-<p>Le site est <strong>interactif</strong> : quelques réglages (emprise, hauteur des murs, rehausse, porte,
-fenêtres, largeur utile) <strong>recalculent tout en direct</strong> — KPIs, débit, <strong>plans SVG cotés</strong>, budget et
-modèle 3D. Pas besoin de rien lancer pour explorer : ouvre simplement le site.</p>
-<p>Pour le développement / régénérer les artefacts versionnés :</p>
-<pre><code class="language-bash">npm ci                              # esbuild + typescript + jsdom (dev)
-$EDITOR params.json                 # éditer les cotes par défaut
-npm run build &amp;&amp; npm run emit       # bundle l&#39;app + regénère params.js, SVG, derived.json
-npm run test:raw                    # snapshots golden + smoke DOM
+<p>Toute la logique vit dans <a href="../src/compute.ts"><code>site/src/compute.ts</code></a> (dalle, formes possibles,
+modèle de l&#39;abri, plans SVG, scène 3D), et la nomenclature et le guide dans
+<a href="../src/chantier.ts"><code>site/src/chantier.ts</code></a>. Les deux sont <strong>purs</strong>, donc partagés entre le
+navigateur, le CLI Node et les tests. Les cotes vivent dans <a href="https://github.com/rvion/screenplay/blob/main/params.json"><code>params.json</code></a>. <strong>Aucune
+cote n&#39;est écrite à la main ailleurs.</strong> La 3D utilise Three.js via CDN.</p>
+<pre><code class="language-bash">npm ci                              # esbuild + typescript + jsdom + three (dev)
+$EDITOR params.json                 # éditer les cotes
+npm run build &amp;&amp; npm run emit       # bundle la page + regénère params.js, plans SVG, abri.md, docs
+npm run test:raw                    # modèle, dalle, formalités, documents, scène 3D, page
 npm run site                        # prévisualiser sur http://localhost:5885 (ou ouvrir site/index.html)
 </code></pre>
-<p>Toute la logique vit dans <a href="../src/compute.ts"><code>site/src/compute.ts</code></a> (géométrie, débit,
-plans SVG, budget, 3D) — <strong>pur</strong>, donc partagé entre le navigateur, le CLI Node et les tests.
-Les cotes par défaut vivent dans <a href="https://github.com/rvion/screenplay/blob/main/params.json"><code>params.json</code></a>. <strong>Aucune cote n&#39;est écrite à
-la main ailleurs.</strong> La 3D utilise Three.js via CDN.</p>
 <hr>
 <h2 id="structure-du-dépôt">Structure du dépôt</h2>
-<pre><code>params.json          ← cotes par défaut (source unique des dimensions, en cm)
-site/src/            ← app TypeScript : compute (logique) + viewer/render/controls/main
-site/                ← site GitHub Pages (index.html + app.js bundlé + params.js + plans)
-tests/               ← snapshots golden (compute) + smoke DOM (jsdom)
+<pre><code>params.json          ← l&#39;abri et la dalle (source unique des dimensions, en cm)
+abri.md              ← le document complet de l&#39;abri (généré)
+etudes/              ← formes étudiées (variantes.md généré) et études archivées (figées)
+site/src/            ← TypeScript : compute + chantier (logique pure), abri_page + viewer_abri (page)
+site/                ← site GitHub Pages (index.html + abri.js bundlé + params.js + plans + docs/)
+tests/               ← tests Node (modèle, dalle, 3D, page sous jsdom) + fixtures des études
 agent/               ← spécification spec-first (voir CLAUDE.md → agent/index.md)
 .github/workflows/   ← build TS + tests + déploiement automatique de Pages
 </code></pre>
@@ -171,22 +69,17 @@ agent/               ← spécification spec-first (voir CLAUDE.md → agent/ind
 <hr>
 <h2 id="points-de-vigilance-résumé">⚠️ Points de vigilance (résumé)</h2>
 <ul>
-<li><strong>Dalle</strong> : relevée au mètre (5 longueurs) ; la dalle et la position de
-l&#39;abri se règlent sur le site, qui affiche en direct toute partie de l&#39;emprise hors dalle.</li>
-<li><strong>Seuil des 5 m²</strong> : emprise au sol = emprise des <strong>murs</strong> (4,8 m²). D&#39;après l&#39;article R*420-1 du
-Code de l&#39;urbanisme, les débords de toiture sont <strong>exclus</strong> de l&#39;emprise au sol tant qu&#39;ils ne sont
-pas soutenus par des poteaux, piliers ou encorbellements. Jusqu&#39;à 5 m² d&#39;emprise au sol <em>et</em> de
+<li><strong>Seuil des 5 m²</strong> : emprise au sol = emprise des <strong>murs</strong>. D&#39;après l&#39;article R*420-1 du Code de
+l&#39;urbanisme, les débords de toiture sont <strong>exclus</strong> de l&#39;emprise au sol tant qu&#39;ils ne sont pas
+soutenus par des poteaux, piliers ou encorbellements. Jusqu&#39;à 5 m² d&#39;emprise au sol <em>et</em> de
 surface de plancher : aucune formalité ; de 5 à 20 m² : déclaration préalable. Réserves : secteur
 protégé ou abords d&#39;un monument historique (déclaration préalable quand même), et le PLU.</li>
-<li><strong>Portée du toit</strong> ≈ 2,6 m en 60 mm sans panne : vérifier le tableau de portées du fabricant
-(neige/vent), sinon ajouter une panne.</li>
-<li><strong>Pente du toit</strong> : 22,5 cm ≈ <strong>9,4 %</strong> (5,4°). Vérifier la pente mini du fabricant.</li>
-<li><strong>Chaleur d&#39;été</strong> : toit clair, fenêtre ouvrante face à la porte, store sur le vitrage exposé.</li>
+<li><strong>Portée et pente du toit</strong> : vérifier le tableau de portées et la pente mini du fabricant pour
+du 60 mm ; <code>abri.md</code> donne la portée et la pente calculées, et la panne à mi-profondeur.</li>
 <li><strong>Condensation</strong> (usage chauffé) : parements acier = pare-vapeur ⇒ risque aux ponts
 thermiques (dont le joint mur/rehausse). <strong>Ventilation indispensable</strong>.</li>
-<li><strong>Porte et fenêtre</strong> : double vitrage performant (le vitrage déperd 4 à 5 fois plus que le
-panneau), fenêtre dans un seul panneau, débattement et arrêt de porte, étanchéité du seuil ;
-gouttière arrière + descente loin de la dalle.</li>
+<li><strong>Accès derrière l&#39;abri</strong> : les murs contre la limite ne sont plus accessibles une fois montés ;
+le guide de montage dit lesquels monter à plat.</li>
 </ul>
 <hr>
 <h2 id="publier-le-site-github-pages">Publier le site (GitHub Pages)</h2>

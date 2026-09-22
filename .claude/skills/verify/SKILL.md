@@ -7,16 +7,16 @@ description: Prove a change in THIS project actually works — drive the real fl
 
 ## The rules (house-wide)
 - Failing repro test BEFORE the fix. Green checks ≠ verification.
-- Logic → fast headless tests: `npm test` (snapshots golden of `compute.ts` + jsdom smoke).
-  A WANTED calculation change updates the snapshots on purpose: `npm run snapshot:update`,
-  then read the diff of `tests/snapshots/*.json` — an unexplained delta is a bug, not noise.
+- Logic → fast headless tests: `npm test` (golden snapshot of the shed + model, 3D and jsdom tests).
+  A WANTED calculation change updates the snapshot on purpose: `npm run snapshot:update`,
+  then read the diff of `tests/snapshots/abri.json`: an unexplained delta is a bug, not noise.
 - Look & feel → NEVER screenshot-self-verify; the repo owner playtests it.
 - Verify as the end user would: drive the real flow, observe the real signal.
 
 ## This project
 - Full gate: `npm run typecheck && npm run build && npm run emit && npm test`. After any
   `site/src/compute.ts` edit, `build` + `emit` are mandatory and the regenerated files
-  (`site/app.js`, `site/params.js`, `site/assets/*.svg`, `site/data/derived.json`) are committed —
+  (`site/abri.js`, `site/params.js`, `site/assets/*.svg`, `abri.md`, `site/docs/`) are committed:
   `git status` clean after emit = nothing drifted.
 - Local preview: `npm run site` (check first:
   `curl -s localhost:5885 >/dev/null && echo up`) → http://localhost:5885, documents under
@@ -36,4 +36,4 @@ still visible). Screenshots are for LOOKS, never for "does it fit".
 ## Gotchas discovered in this repo
 <!-- append as found — this list is the reason this file exists -->
 - `compute.ts` must stay pure (no DOM / Three import): it runs in Node for `npm run emit` and
-  the snapshot tests. An accidental import breaks emit silently only at CLI time.
+  the snapshot test. An accidental import breaks emit silently only at CLI time.

@@ -475,3 +475,19 @@ octet pour octet avant et après la fusion. *Garde :* `tests/abri_dom.mjs` refus
 `abri-v4-…` pour ne pas perdre les cases déjà cochées. *Écarté :* supprimer les études (elles gardent
 leurs comparaisons, et l'archive était demandée) ; les régénérer depuis les fixtures (des données de
 test ne pilotent pas des documents publiés). *Remplace* D33 (pointeur `abri_principal`) et D35 (menu).
+
+## D41 — L'étude du rectangle quitte le dépôt
+Demande de Rémi (2026-09-22) : retirer le poids mort. Le rectangle 200 × 240 (D16 à D24) vivait encore
+en parallèle de l'abri : `configurateur.html` et son bundle `app.js`, quatre modules (`main`,
+`controls`, `render`, `viewer`), `style.css`, la moitié de `compute.ts` (débit, achats, budget, scène
+3D, plan de sol, toiture, rehausse et élévations du rectangle), `site/data/derived.json`, ses
+snapshots, ses tests DOM et ses blocs de `params.json` (`emprise_cm`, `fenetres`, `toit`, `divers`,
+`prix_indicatifs_eur`, les postes d'aménagement autres que le plancher). Tout est retiré.
+*Ce qui reste et pourquoi :* `geometry(p)` ne rend plus que la dalle, dans son propre repère (plus de
+`decalage_cm` : le rectangle en était le seul usager) ; `porte`, `murs`, `rehausse` gardent les valeurs
+que lisent encore les formes 1 à 12 et le modèle ; `docs.css` reprend la base de `style.css` pour les
+pages de documents. *Vérification :* sur la sortie complète de l'abri, seuls `plan-dalle.svg` et
+`plan-dalle-bandes.svg` changent (ils dessinaient le rectangle en fantôme) ; modèle, formes, scène 3D,
+planches et les 22 autres plans sont identiques. *Garde remplacée :* les snapshots du rectangle
+cèdent la place à un snapshot golden de l'abri (`tests/snapshots/abri.json`), vu rouge sur une chute
+changée de 22,5 à 23 cm. *Remplace* D16 à D24 pour le code ; ces décisions restent comme historique.

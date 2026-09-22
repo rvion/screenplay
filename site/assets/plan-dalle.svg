@@ -1,8 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548 738" font-family="system-ui,sans-serif" font-size="13">
 <rect width="548" height="738" fill="#fbfbf8"/>
 <polygon points="110.0,627.9 437.5,627.9 437.5,349.1 200.9,130.0 110.0,222.9" fill="#e9e5da" stroke="#6f675a" stroke-width="2"/>
-<polygon points="112.5,625.4 362.5,625.4 362.5,325.4 112.5,325.4" fill="none" stroke="#9bb5cf" stroke-width="1" stroke-dasharray="5 4"/>
-<text x="237.5" y="475.4" text-anchor="middle" fill="#9bb5cf" font-size="11" font-weight="normal">abri 200 × 240</text>
 <line x1="110.0" y1="635.9" x2="110.0" y2="662.9" stroke="#999" stroke-width="0.8"/>
 <line x1="437.5" y1="635.9" x2="437.5" y2="662.9" stroke="#999" stroke-width="0.8"/>
 <line x1="110.0" y1="657.9" x2="437.5" y2="657.9" stroke="#2b5d8a" stroke-width="1.2"/>

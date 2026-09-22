@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Journal des décisions (ADR léger)</title>
-<link rel="stylesheet" href="../../style.css">
 <link rel="stylesheet" href="../../docs.css">
 </head>
 <body class="doc">
@@ -443,6 +442,21 @@ octet pour octet avant et après la fusion. <em>Garde :</em> <code>tests/abri_do
 <code>abri-v4-…</code> pour ne pas perdre les cases déjà cochées. <em>Écarté :</em> supprimer les études (elles gardent
 leurs comparaisons, et l&#39;archive était demandée) ; les régénérer depuis les fixtures (des données de
 test ne pilotent pas des documents publiés). <em>Remplace</em> D33 (pointeur <code>abri_principal</code>) et D35 (menu).</p>
+<h2 id="d41--l39étude-du-rectangle-quitte-le-dépôt">D41 — L&#39;étude du rectangle quitte le dépôt</h2>
+<p>Demande de Rémi (2026-09-22) : retirer le poids mort. Le rectangle 200 × 240 (D16 à D24) vivait encore
+en parallèle de l&#39;abri : <code>configurateur.html</code> et son bundle <code>app.js</code>, quatre modules (<code>main</code>,
+<code>controls</code>, <code>render</code>, <code>viewer</code>), <code>style.css</code>, la moitié de <code>compute.ts</code> (débit, achats, budget, scène
+3D, plan de sol, toiture, rehausse et élévations du rectangle), <code>site/data/derived.json</code>, ses
+snapshots, ses tests DOM et ses blocs de <code>params.json</code> (<code>emprise_cm</code>, <code>fenetres</code>, <code>toit</code>, <code>divers</code>,
+<code>prix_indicatifs_eur</code>, les postes d&#39;aménagement autres que le plancher). Tout est retiré.
+<em>Ce qui reste et pourquoi :</em> <code>geometry(p)</code> ne rend plus que la dalle, dans son propre repère (plus de
+<code>decalage_cm</code> : le rectangle en était le seul usager) ; <code>porte</code>, <code>murs</code>, <code>rehausse</code> gardent les valeurs
+que lisent encore les formes 1 à 12 et le modèle ; <code>docs.css</code> reprend la base de <code>style.css</code> pour les
+pages de documents. <em>Vérification :</em> sur la sortie complète de l&#39;abri, seuls <code>plan-dalle.svg</code> et
+<code>plan-dalle-bandes.svg</code> changent (ils dessinaient le rectangle en fantôme) ; modèle, formes, scène 3D,
+planches et les 22 autres plans sont identiques. <em>Garde remplacée :</em> les snapshots du rectangle
+cèdent la place à un snapshot golden de l&#39;abri (<code>tests/snapshots/abri.json</code>), vu rouge sur une chute
+changée de 22,5 à 23 cm. <em>Remplace</em> D16 à D24 pour le code ; ces décisions restent comme historique.</p>
 </main>
 </body>
 </html>
