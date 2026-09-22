@@ -2194,6 +2194,16 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       }
     });
   }
+  function voile(gr, oui, opacite = 0.28) {
+    if (!gr) return;
+    gr.traverse((o) => {
+      if (!o.isMesh || o.material.map) return;
+      o.material.transparent = oui;
+      o.material.opacity = oui ? opacite : 1;
+      o.material.depthWrite = !oui;
+      o.castShadow = !oui;
+    });
+  }
   var DEDANS = { position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0], fov: 42 };
   var VUES = {
     jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
@@ -2202,11 +2212,12 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
-    debout: { titre: "Debout dedans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 0, personne: 2, etiquettes: 0 } },
+    debout: { titre: "Debout dedans, abri voil\xE9", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 2, murs: 3, porte: 3, mobilier: 0, personne: 2, etiquettes: 0 } },
     couche: { titre: "Couch\xE9, les pieds vers les \xE9crans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);
+    vue.montrer("toit_voile", e.toit === 2);
     vue.montrer("etiquettes", e.etiquettes > 0);
     vue.montrer("lit3", true);
     vue.montrer("bureaux3", true);
@@ -2220,7 +2231,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("sieges_ranges2", false);
     vue.montrer("personne_couchee3", e.personne === 2 && e.mobilier === 2);
     vue.montrer("porte", e.porte === 1);
-    vue.montrer("porte_fermee", e.porte === 2);
+    vue.montrer("porte_fermee", e.porte >= 2);
+    vue.montrer("porte_voile", e.porte === 3);
     vue.montrer("personne", e.personne === 1);
     vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0);
     vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1);
@@ -2229,6 +2241,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("cloture", e.cloture > 0);
     vue.montrer("murs", e.murs > 0);
     vue.montrer("murs_coupes", e.murs === 2);
+    vue.montrer("murs_voile", e.murs === 3);
   }
   var LITS_MURAUX_MAX = 6;
   var TAILLE_PERSONNE = 1.85;
@@ -2821,6 +2834,18 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       if (nom === "murs_coupes") {
         const c = groupes.coupe;
         if (c) c.value = oui ? 1 : 100;
+        return;
+      }
+      if (nom === "toit_voile") {
+        voile(groupes.toit, oui);
+        return;
+      }
+      if (nom === "murs_voile") {
+        voile(groupes.murs, oui);
+        return;
+      }
+      if (nom === "porte_voile") {
+        voile(groupes.porte_fermee, oui);
         return;
       }
       if (groupes[nom]) groupes[nom].visible = oui;
