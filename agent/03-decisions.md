@@ -559,7 +559,7 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l'entrée v4. *Remplace* le
 mécanisme de D46 (la variante v3 reste).
 
-## D49 — Branche d'essai : lit 80 x 190 à demeure en façade, sous le seuil (non décidé)
+## D49 — Lit 80 x 190 à demeure en façade, sous le seuil
 Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27". Les deux veulent un mur
 long, et aucun mur libre ne prenait un lit de 190 : la façade faisait 188 dedans. Cette branche cherche
 la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écrans couché, rien de
@@ -586,5 +586,6 @@ l'usage (rien, au bureau, couché) et l'allège des fenêtres passe à 115 pour 
 plateau qui passe au-dessus du pied du lit n'est pas coupé), `sieges_decalage_cm`, et la règle de rangement
 qui garde le dossier d'un fauteuil hors du plateau. *Gardes :* `tests/abri3d.mjs` mesure, pour chaque lit à
 demeure, la baie de porte qui reste (55 cm minimum), refuse toute pièce DANS le lit (un plateau au-dessus
-est permis) et toute pièce de siège qui traverse un plateau. *État :* branche
-`test-bed-front-head-right`, aucun déploiement (`pages.yml` n'écoute que `main`). **Rien n'est décidé.**
+est permis) et toute pièce de siège qui traverse un plateau. *État :* essayé sur la
+branche `test-bed-front-head-right`, **retenu par Rémi le 2026-09-22** : fusionné dans `main` et publié.
+La liste des changements est dans `changelog.md`.
