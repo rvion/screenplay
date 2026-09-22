@@ -28,6 +28,15 @@ ok(faux.emprise_au_sol_m2 === 5.8 && faux.formalite === "declaration prealable",
 ok(formalites(P(), 5, 5.6, 4.4).formalite === "aucune", "5 m² pile : encore dispense (seuil inclusif)");
 ok(formalites(P(), 5.01, 5.6, 4.4).formalite === "declaration prealable", "5,01 m² : declaration prealable");
 ok(formalites(P(), 21, 25, 19).formalite === "permis de construire", "21 m² d'emprise : permis de construire");
+// why we think it is actually a bug, and not just meaning spec should change: R*420-1 has no rounding, so a wall footprint of 5,0001 m² is over 5 m², and the page must not tell the owner "aucune formalité"
+{
+  const juste = { ...base, disposition_trapeze: { ...base.disposition_trapeze, cotes_cm: { avant: 210, droite: 180, gauche: 250, fond: 138.6 } } };
+  const f = buildCore(juste).modele.formalites;
+  ok(f.formalite === "declaration prealable", `murs 210 × 250, pan de 100 : 5,0001 m², au-dessus du seuil, declaration prealable (${f.emprise_au_sol_m2} m², ${f.formalite})`);
+  // controle : 1 cm de moins sur la gauche et la droite, 4,99 m², reste dispense
+  const sous = { ...base, disposition_trapeze: { ...base.disposition_trapeze, cotes_cm: { avant: 210, droite: 179, gauche: 249, fond: 138.6 } } };
+  ok(buildCore(sous).modele.formalites.formalite === "aucune", "murs 210 × 249 : sous le seuil, aucune formalite");
+}
 ok(formalites(P(), 4.5, 5, 5.4).formalite === "declaration prealable", "murs sous le seuil mais 5,4 m² de plancher : DP (les deux comptent)");
 ok(formalites(P(), 4, 5, 3).libelle === "aucune formalité" && formalites(P(), 6, 7, 5).libelle === "déclaration préalable", "libelle accentue pour l'affichage, cle simple pour le code");
 ok(/R\*420-1/.test(formalites(P(), 4, 5, 3).reference), "la reference legale voyage avec le calcul");

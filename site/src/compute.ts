@@ -1098,7 +1098,8 @@ export function modele_trapeze(p: Params, v: any) {
     },
     interieur: inset_ordre(q, +p.panneau.epaisseur_mm / 10).map(([a, b]) => [rnd(a, 1), rnd(b, 1)]),
     panneaux_mur_a_commander: panneaux_mur,
-    formalites: formalites(p, v.aire_m2, rnd(poly_area(contour) / 1e4, 2), v.aire_interieure_m2),
+    // aires exactes : le seuil ne s'arrondit pas, formalites() n'arrondit que l'affichage
+    formalites: formalites(p, poly_area(v.polygone) / 1e4, poly_area(contour) / 1e4, v.aire_interieure_m2),
     angles_deg: v.angles_deg,
   };
 }
