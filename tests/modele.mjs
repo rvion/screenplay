@@ -209,17 +209,17 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
   // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
-  ok(v4.cotes_interieures_cm[0] === 198 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([210, 178, 99, 140, 248]) && v4.aire_interieure_m2 === 4.45 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.96, 0.005) && m4.faces[2].panneaux.length === 1, "abri : facade 210 (198 dedans, un lit de 190 tient), fond 140 pour que le pan a 45 deg fasse 99 cm, soit UN panneau sans bande, emprise 4,96 m2 donc aucune formalite");
+  ok(v4.cotes_interieures_cm[0] === 193 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([205, 180, 99, 135, 250]) && v4.aire_interieure_m2 === 4.37 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.88, 0.005) && m4.faces[2].panneaux.length === 1, "abri : facade 205 (193 dedans, un lit de 190 tient), fond 135 pour que le pan a 45 deg fasse 99 cm, soit UN panneau sans bande, emprise 4,88 m2 donc aucune formalite");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22,5 sur 248 de profondeur : facade 237,5 ; au haut du mur droit (178) 215 + 22,5 x 70 / 248 = 221,4 ; fond 215
+  // a la main, chute 22,5 sur 250 de profondeur : facade 237,5 ; au haut du mur droit (180) 215 + 22,5 x 70 / 250 = 221,3 ; fond 215
   ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
-  ok(near(L.D.hauteur_fin_cm, 221.4, 0.06) && near(L.C.hauteur_debut_cm, 221.4, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,4, pan 221,4 -> 215, fond a 215");
-  ok(near(m4.pente.pourcent, 9.1, 0.06) && near(m4.portee_cm, 248), "v4 : pente 22,5 / 248 = 9,1 %, portee 2,48 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  ok(near(L.D.hauteur_fin_cm, 221.3, 0.06) && near(L.C.hauteur_debut_cm, 221.3, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,3, pan 221,3 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 9, 0.06) && near(m4.portee_cm, 250), "v4 : pente 22,5 / 250 = 9 %, portee 2,5 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);
   ok(m4.toit.gouttiere.descente[0] === Math.max(...bouts.map((z) => z[0])), "v4 : descente au bout droit de la gouttiere (" + m4.toit.gouttiere.descente + ")");
-  ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 10) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 10), deux coupes en biais");
+  ok(m4.toit.panneaux.length === 3 && m4.toit.panneaux.filter((t) => near(t.largeur_cm, 100)).length === 2 && near(m4.toit.panneaux[2].largeur_cm, 5) && m4.toit.panneaux.filter((t) => t.biais).length === 2, "v4 : 3 panneaux de toit (100, 100, bande de 5), deux coupes en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const page4 = abri_md(p4, c4);
   ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme") && page4.includes("**Q1**"), "abri.md : tous les {champs} remplaces, points forts, questions et idees en fin de page");

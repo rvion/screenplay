@@ -565,22 +565,25 @@ long, et aucun mur libre ne prenait un lit de 190 : la façade faisait 188 dedan
 la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écrans couché, rien de
 lumineux au-dessus des écrans) **sans formalité**.
 
-Retenu : **façade 210, droite 178, fond 140, gauche 248**, pan à 45° conservé (A − B = G − D) et long de
-**99 cm**, donc un seul panneau sans bande à rapporter, emprise **4,96 m²**, donc **aucune formalité**. Le déclic est la largeur du lit : un **80 × 190** au lieu d'un
-90 s'arrête avant la baie de la porte, qui reste dégagée sur **77 de ses 80 cm**, et la porte, ramenée à **75**, est
-entièrement dégagée (les tailles de stock étant 80 et 90, elle passe sur mesure : prix à confirmer). Le lit est calé à droite, **tête contre le mur de la porte** : couché, les pieds
-vont vers le bureau gauche et ses écrans. Le bureau gauche passe à **80 de profondeur sur 236 cm** (trois
-écrans = 190) et son plateau (72 cm) court **au-dessus du pied du lit** (55 cm) sans être coupé
-(`bureaux_entiers`). Passage derrière 50,4 et 66,8 cm. Matériaux 2 898 €.
+Retenu : **façade 205, droite 180, fond 135, gauche 250**, pan à 45° conservé (A − B = G − D) et long de
+**99 cm**, donc un seul panneau sans bande, emprise **4,88 m²**, donc **aucune formalité**. Le déclic est
+la largeur du lit : un **80 × 190** au lieu d'un 90 s'arrête avant la baie de la porte. Le mur droit de
+180 recule la porte : la baie est **entièrement dégagée**, même avec une porte de 80 de stock. Le lit est
+calé à droite, **tête contre le mur de la porte** : couché, les pieds vont vers le bureau gauche et ses
+écrans. Le bureau gauche fait **80 de profondeur sur 238 cm** (trois écrans = 190) et son plateau (72 cm)
+court **au-dessus du pied du lit** (55 cm) sans être coupé (`bureaux_entiers`) ; une tablette de 30 court
+sur le mur du fond. Passage derrière 52,3 et 64,8 cm. Matériaux 2 853 €.
 
-*Ce que ça coûte :* intérieur 4,45 m² au lieu de 4,48 et sol libre 1,97 m², puisque le lit ne se replie
-plus ; un troisième panneau de toit (bande de 10) ; pente 9,1 % et portée 2,48 m (deux effets
-favorables). *Ce qui a été retiré ici :* le lit v4 sur le mur gauche, incompatible avec un bureau gauche
-de 80 (le lit couvrait tout le plateau, les sièges n'avaient plus où se ranger).
+*Ce que ça coûte :* intérieur 4,37 m² au lieu de 4,48 et sol libre 1,72 m², puisque le lit ne se replie
+plus et que la tablette prend 0,2 m² ; un troisième panneau de toit (bande de 5). *Le point de vigilance :*
+la façade fait 193 dedans pour un lit de 190, soit **3 cm de jeu** : c'est la cote du matelas, un cadre du
+commerce mesure 195 à 200. Rémi a dit avoir un petit cadre ; sinon la façade repasse à 208 ou 210 (jeu de
+6 à 8 cm) pour 4,96 m². *Ce qui a été retiré ici :* le lit v4 sur le mur gauche, incompatible avec un
+bureau gauche de 80.
 
-*Mécanismes ajoutés :* `position: "fin"` (lit calé à l'autre bout de son mur) et `bureaux_entiers` (un
-plateau qui passe au-dessus du pied du lit n'est pas coupé). *Le plan de sol* dessine cette disposition : le lit plein avec son oreiller, le plateau du bureau par-dessus
-son pied, les sièges rangés. *Gardes :* `tests/abri3d.mjs` mesure, pour
-chaque lit à demeure, la baie de porte qui reste (55 cm minimum) et refuse toute pièce DANS le lit, un
-plateau au-dessus étant permis. *État :* branche `test-bed-front-head-right`, aucun déploiement
-(`pages.yml` n'écoute que `main`). **Rien n'est décidé.**
+*Mécanismes ajoutés :* `position: "fin"` (lit calé à l'autre bout de son mur), `bureaux_entiers` (un
+plateau qui passe au-dessus du pied du lit n'est pas coupé), `sieges_decalage_cm`, et la règle de rangement
+qui garde le dossier d'un fauteuil hors du plateau. *Gardes :* `tests/abri3d.mjs` mesure, pour chaque lit à
+demeure, la baie de porte qui reste (55 cm minimum), refuse toute pièce DANS le lit (un plateau au-dessus
+est permis) et toute pièce de siège qui traverse un plateau. *État :* branche
+`test-bed-front-head-right`, aucun déploiement (`pages.yml` n'écoute que `main`). **Rien n'est décidé.**
