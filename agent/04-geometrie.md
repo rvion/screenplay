@@ -67,8 +67,10 @@ d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout d
   et de 110 à 190.
 - **Mobilier** : bureau en L (gauche et façade), fauteuil et tabouret, lit pliant 70 × 190 posé au sol
   libre le long du mur de la porte, pied sous le bureau de façade ; seconde position en biais au fond
-  (`lit_pliant_2`) ; troisième position (`lit_facade`) : plus de bureau de façade, lit 70 × 180 le long
-  du mur avant (188 dedans : un 190 n'y tient pas), le bureau gauche arrêté au lit en bureau d'angle.
+  (`lit_pliant_2`) ; lits à demeure (`lits_muraux`) : v3, lit 70 × 180 le long du mur avant (188 dedans : un 190 n'y
+  tient pas), plus de bureau de façade, le bureau gauche arrêté au lit en bureau d'angle ; v4, lit 90 × 190
+  contre le mur gauche (263 dedans), tête au fond, bureau en L devant : façade 188 × 50 plus un retour de
+  60 × 73 jusqu'au pied du lit, fauteuil rangé sous la façade à droite du lit, tabouret dans le coin du L.
 
 Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans `etudes/`
 et restent couvertes par les tests via `tests/fixtures/etude-v{1,2,3}.json`.

@@ -545,3 +545,16 @@ C'est un état de plus du bouton mobilier et une vignette, en 3D seulement : les
 bureau en L. *Garde :* `tests/abri3d.mjs` mesure le lit (180 × 70, dans le coin), le bureau qui part du
 bord du lit, et vérifie que ni le bureau ni les sièges rangés ne touchent le lit (vue rouge sans
 `lit_facade`). *Écarté :* élargir la façade à 202 (plus de 5 m² de murs, donc une déclaration préalable).
+
+## D47 — Lit v4 : un 190 à demeure sur le mur gauche, bureau en L devant
+Le lit v3 (180) est trop court pour dormir souvent (Rémi mesure 1,73 m : il faut 188 à 193). Seul le mur
+gauche (263 dedans) prend un 190 sans pliage. Demande de Rémi (2026-09-22) : le lit sur le mur gauche, et un
+bureau en L devant, jusqu'au pied du lit. Retenu : lit **90 × 190** (une place standard, du commerce), tête
+dans le coin du fond (il passe à 1,5 cm du pan à 45°), bureau de façade entier (188 × 50) et retour de
+60 × 73 sur le mur gauche. *Mécanisme :* le cas particulier `lit_facade` (D46) devient une liste,
+`lits_muraux` ; chaque entrée donne son mur, son lit, le côté de la tête et les bureaux qui restent.
+`compute.ts` réduit chaque bureau au plus grand morceau hors du lit et range les sièges sous les bureaux,
+hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit de plus = une entrée dans
+`params.json`, un point au bouton et une vignette. *Garde :* `tests/abri3d.mjs` mesure chaque lit (caché au
+départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l'entrée v4. *Remplace* le
+mécanisme de D46 (la variante v3 reste).

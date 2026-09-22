@@ -179,12 +179,30 @@
     "panneaux_depuis_la_fin": [
       "droite"
     ],
-    "lit_facade": {
-      "longueur_cm": 180,
-      "contre": "avant",
-      "bureau": "gauche",
-      "_comment": "troisieme position : plus de bureau de facade, le lit (70 x 180 : la facade fait 188 dedans) le long du mur avant, cale contre le mur gauche ; le bureau gauche s'arrete au lit et devient un bureau d'angle au fond ; les sieges sont ranges sous lui"
-    }
+    "lits_muraux": [
+      {
+        "nom": "v3",
+        "contre": "avant",
+        "largeur_cm": 70,
+        "longueur_cm": 180,
+        "tete": "gauche",
+        "bureaux": [
+          "gauche"
+        ]
+      },
+      {
+        "nom": "v4",
+        "contre": "gauche",
+        "largeur_cm": 90,
+        "longueur_cm": 190,
+        "tete": "fond",
+        "bureaux": [
+          "avant",
+          "gauche"
+        ]
+      }
+    ],
+    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (le coin du mur precedent : gauche = coin du fond) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, chacun reduit au plus grand morceau hors du lit ; les sieges sont ranges sous eux, hors du lit. v3 : lit 70 x 180 en facade (188 dedans), bureau d'angle au fond. v4 : lit 90 x 190 sur le mur gauche, tete au fond, bureau en L devant (facade + retour jusqu'au pied du lit)"
   },
   "formes_etudiees": [
     {

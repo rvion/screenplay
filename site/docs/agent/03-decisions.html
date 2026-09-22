@@ -506,6 +506,18 @@ C&#39;est un état de plus du bouton mobilier et une vignette, en 3D seulement :
 bureau en L. <em>Garde :</em> <code>tests/abri3d.mjs</code> mesure le lit (180 × 70, dans le coin), le bureau qui part du
 bord du lit, et vérifie que ni le bureau ni les sièges rangés ne touchent le lit (vue rouge sans
 <code>lit_facade</code>). <em>Écarté :</em> élargir la façade à 202 (plus de 5 m² de murs, donc une déclaration préalable).</p>
+<h2 id="d47--lit-v4--un-190-à-demeure-sur-le-mur-gauche-bureau-en-l-devant">D47 — Lit v4 : un 190 à demeure sur le mur gauche, bureau en L devant</h2>
+<p>Le lit v3 (180) est trop court pour dormir souvent (Rémi mesure 1,73 m : il faut 188 à 193). Seul le mur
+gauche (263 dedans) prend un 190 sans pliage. Demande de Rémi (2026-09-22) : le lit sur le mur gauche, et un
+bureau en L devant, jusqu&#39;au pied du lit. Retenu : lit <strong>90 × 190</strong> (une place standard, du commerce), tête
+dans le coin du fond (il passe à 1,5 cm du pan à 45°), bureau de façade entier (188 × 50) et retour de
+60 × 73 sur le mur gauche. <em>Mécanisme :</em> le cas particulier <code>lit_facade</code> (D46) devient une liste,
+<code>lits_muraux</code> ; chaque entrée donne son mur, son lit, le côté de la tête et les bureaux qui restent.
+<code>compute.ts</code> réduit chaque bureau au plus grand morceau hors du lit et range les sièges sous les bureaux,
+hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit de plus = une entrée dans
+<code>params.json</code>, un point au bouton et une vignette. <em>Garde :</em> <code>tests/abri3d.mjs</code> mesure chaque lit (caché au
+départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l&#39;entrée v4. <em>Remplace</em> le
+mécanisme de D46 (la variante v3 reste).</p>
 </main>
 </body>
 </html>
