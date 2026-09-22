@@ -98,7 +98,14 @@ ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "des
 const bureaux = groupes.mobilier.children.filter((o) => o.isMesh);
 ok(bureaux.length === v.bureaux.length && bureaux.every((o) => near(boite(o).max.y, (d.sol.epaisseur_cm + 75) / 100, 1e-6) && boite(o).min.x >= tout.min.x && boite(o).max.x <= tout.max.x), bureaux.length + " bureaux, plateau a 75 cm du plancher, dans les murs");
 // dalle et murs de propriete
-ok(d.murs_propriete.length === 3 && racine.children.filter((o) => o.isMesh && near(boite(o).max.y, d.murs_propriete[0].hauteur_cm / 100, 1e-6) && near(boite(o).min.y, -0.14, 1e-6)).length === 3, "dalle et 3 murs de propriété de " + d.murs_propriete[0].hauteur_cm + " cm");
+{
+  const h = d.murs_propriete[0].hauteur_cm / 100, murs_p = d.murs_propriete.filter((w) => w.type === "mur"), grillages = d.murs_propriete.filter((w) => w.type === "grillage");
+  const volumes = racine.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry" && near(boite(o).max.y, h, 1e-6) && near(boite(o).min.y, -0.14, 1e-6));
+  const treillis = racine.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry" && o.material.transparent && near(boite(o).max.y, h, 1e-6) && near(boite(o).min.y, 0, 1e-6));
+  const poteaux = racine.children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry" && near(boite(o).max.y, h, 1e-3) && near(boite(o).min.y, -0.14, 1e-3));
+  ok(d.murs_propriete.length === 3 && murs_p.length === 1 && murs_p[0].cote === "arriere_droite" && grillages.map((w) => w.cote).sort().join() === "arriere_gauche,gauche", "limites : un mur (grand pan de 258) et deux grillages (gauche, petit pan de 104)");
+  ok(volumes.length === murs_p.length && treillis.length === grillages.length && poteaux.length >= 2 * grillages.length + 1, `3D : ${volumes.length} mur plein de ${d.murs_propriete[0].hauteur_cm} cm, ${treillis.length} treillis translucides, ${poteaux.length} poteaux`);
+}
 
 }
 

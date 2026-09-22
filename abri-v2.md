@@ -63,7 +63,7 @@
 - La gouttière a **deux tronçons et un angle** (fond en biais, puis mur droit) : pièce d'angle à prévoir à la commande, le budget ne compte qu'un forfait.
 - Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.
 - Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.
-- Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 10 cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).
+- Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à 10 cm du grillage de la limite, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).
 - **Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.
 - Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.
 - À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm.
@@ -299,7 +299,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.
 - Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2 m ici ; et la **pente minimale** (11,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 116,6° et 63,4° **pliés sur mesure**, en même temps que les panneaux.
-- Vérifier au PLU la règle d'implantation près de la limite (l'abri est à 10 cm du mur de propriété).
+- Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
 
 ### Outillage
@@ -358,7 +358,7 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 
 ### Étape 4 · Monter le mur gauche à plat, puis le lever
 
-À 10 cm du mur de propriété aucune visseuse ne passe : ce mur se fait au sol.
+À 10 cm du grillage de la limite aucune visseuse ne passe : ce mur se fait au sol.
 
 **Outils :** visseuse, serre-joints, 2 personnes, étais
 
@@ -485,7 +485,7 @@ L'air qui entre apporte l'humidité qui condense sur l'acier.
 **Outils :** pistolet à mastic, mousse
 
 1. Cordon de mastic au pied des murs, dedans et dehors.
-2. Fermer le vide de 10 cm contre le mur de propriété : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.
+2. Fermer le vide de 10 cm contre le grillage de la limite : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.
 3. Mousse puis mastic à chaque traversée (câble, entrée d'air).
 
 **À contrôler avant de continuer :**

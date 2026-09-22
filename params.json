@@ -19,6 +19,8 @@
     "arriere_gauche": 104,
     "arriere_droite": 258,
     "murs_mitoyens": ["gauche", "arriere_gauche", "arriere_droite"],
+    "grillages": ["gauche", "arriere_gauche"],
+    "_grillages_comment": "Parmi murs_mitoyens, les cotes fermes par un grillage metallique et non par un mur : le cote gauche et le petit pan de 104. Seul le grand pan de 258 est un mur. Meme limite infranchissable ; dessin different (pointille vert sur les plans, poteaux et treillis en 3D).",
     "mur_hauteur_cm": 180,
     "mur_epaisseur_cm": 15,
     "passage_souhaite_cm": 50,
@@ -99,7 +101,7 @@
       "La gouttière a **deux tronçons et un angle** (fond en biais, puis mur droit) : pièce d'angle à prévoir à la commande, le budget ne compte qu'un forfait.",
       "Lit rabattable et bureaux **sur pieds ou équerres au sol** : les parements acier de 0,5 mm ne reprennent pas une charge suspendue. Les fixations murales ne tiennent le lit que replié.",
       "Arrêter le **bureau gauche vers 220 cm** et mettre un meuble haut dans le coin aigu du fond : aucun siège n'atteint le bout du plateau.",
-      "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à {gauche_cm} cm du mur de propriété, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
+      "Monter le **mur gauche à plat puis le lever** (3 panneaux + rehausse, environ 80 kg) : à {gauche_cm} cm du grillage de la limite, aucune visseuse ne passe. Fermer ce vide par une bavette devant et un grillage au fond (feuilles, nids).",
       "**Store sur les fenêtres de façade** plutôt que sur la porte : ce sont elles qui font face aux écrans. À dimensionner selon l'orientation réelle.",
       "Porte **ferrée côté fond** : ouverte, elle s'efface vers l'arrière quand on arrive du jardin. Deux ou trois dalles de jardin en guise de seuil, la dalle s'arrêtant au ras du mur droit.",
       "À exactement 5,00 m², une mairie pointilleuse peut discuter : raccourcir le mur gauche à 298 donne 4,98 m² pour une recoupe de 2 cm."
@@ -139,7 +141,7 @@
       "Le mur gauche se monte à plat puis se lève (voir les conseils de la version 2) : on ne visse rien dans le vide de {gauche_cm} cm. Le fermer devant par une bavette et au fond par un grillage.",
       "Le modèle dessine la gouttière sur les deux bords d'égout, mais pas sa pièce d'angle à 135° ni la pente à lui donner vers la descente : à prévoir à la commande.",
       "Le pan à 45° reçoit une pièce de rehausse en biais dont la hauteur varie le long du mur : c'est une coupe de plus dans le madrier, pas une difficulté.",
-      "Même sans formalité, vérifier au PLU la règle d'implantation par rapport à la limite (à {gauche_cm} cm du mur de propriété, l'abri n'est ni en limite ni à 3 m)."
+      "Même sans formalité, vérifier au PLU la règle d'implantation par rapport à la limite (à {gauche_cm} cm de la limite, l'abri n'est ni en limite ni à 3 m)."
     ]
   },
   "abri_v4": {

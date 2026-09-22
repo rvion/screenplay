@@ -419,4 +419,9 @@ liens « ailleurs » au pied du menu, sans le configurateur. Puis : la fiche cha
 côte à côte au-dessus du tableau des murs, et les titres des plans **sortent du dessin** : l'entête d'un
 plan est une donnée (`EntetePlan`), le fichier SVG la dessine, la page la rend en texte au-dessus d'un
 dessin sans entête. Avant, le titre dans l'image doublait celui de la liste et gonflait l'image.
+Puis (correction de terrain) : le côté gauche et le petit pan de 104 sont un **grillage**, pas un mur ;
+seul le grand pan de 258 est un mur. `dalle_cm.grillages` porte la distinction, même limite
+infranchissable, dessin différent (pointillé vert, treillis en 3D), et les textes qui parlaient du
+« mur de propriété » à gauche disent « grillage de la limite ». La fiche devient un **Résumé** (deux
+phrases calculées et six cartes), les étiquettes 3D passent sur plaque blanche, le menu à 164 px.
 

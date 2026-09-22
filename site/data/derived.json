@@ -204,6 +204,7 @@
       "murs": [
         {
           "cote": "arriere_droite",
+          "type": "mur",
           "de": [
             260,
             221
@@ -217,6 +218,7 @@
         },
         {
           "cote": "arriere_gauche",
+          "type": "grillage",
           "de": [
             70.7,
             396.3
@@ -230,6 +232,7 @@
         },
         {
           "cote": "gauche",
+          "type": "grillage",
           "de": [
             -2,
             322

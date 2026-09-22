@@ -103,6 +103,7 @@ function nomenclature_abri(p, v, m) {
 }
 function guide_montage(p, v, m) {
   const d = p.disposition_trapeze || {}, t = d.toit || {}, mod = +p.panneau.largeur_utile_cm, ep = +p.panneau.epaisseur_mm / 10;
+  const limite = (p.dalle_cm && p.dalle_cm.grillages || []).includes("gauche") ? "grillage de la limite" : "mur de propri\xE9t\xE9";
   const F = Object.fromEntries(m.faces.map((f) => [f.cle, f])), n = m.faces.length, po = v.porte, fen = v.fenetres || [];
   const gauche = Math.min(...v.polygone.map((z) => z[0])), avant = Math.min(...v.polygone.map((z) => z[1]));
   const perim = m.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100, G = m.toit.gouttiere;
@@ -119,7 +120,7 @@ function guide_montage(p, v, m) {
     "Fen\xEAtres : 80 \xD7 80 n'est pas une taille de stock (sur mesure, 4 \xE0 5 semaines). En stock il existe du 80 de large \xD7 75 ou 105 de haut. Porte : le bloc de service plein 205 \xD7 80 avec dormant est un article de stock.",
     `Faire confirmer la **port\xE9e** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramen\xE9e \xE0 ${fz(m.portee_cm / 200)} m par la panne interm\xE9diaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans p\xE9n\xE9tration ni recouvrement en bout).`,
     `Commander les panneaux de toit **coup\xE9s \xE0 longueur**, et les profils des angles de ${speciaux.join(" et ") || "90\xB0"} **pli\xE9s sur mesure**, en m\xEAme temps que les panneaux.`,
-    `V\xE9rifier au PLU la r\xE8gle d'implantation pr\xE8s de la limite (l'abri est \xE0 ${fz(gauche)} cm du mur de propri\xE9t\xE9).`,
+    `V\xE9rifier au PLU la r\xE8gle d'implantation (l'abri est \xE0 ${fz(gauche)} cm de la limite).`,
     "Pr\xE9voir deux personnes pour lever les murs et poser le toit, et une journ\xE9e sans vent : un panneau de 2 m\xB2 est une voile."
   ];
   const outillage = [
@@ -161,7 +162,7 @@ function guide_montage(p, v, m) {
     },
     {
       titre: `Monter le mur gauche \xE0 plat, puis le lever`,
-      but: `\xC0 ${fz(gauche)} cm du mur de propri\xE9t\xE9 aucune visseuse ne passe : ce mur se fait au sol.`,
+      but: `\xC0 ${fz(gauche)} cm du ${limite} aucune visseuse ne passe : ce mur se fait au sol.`,
       outils: ["visseuse", "serre-joints", "2 personnes", "\xE9tais"],
       faire: [`Assembler ${F.G ? liste(F.G) : ""} \xE0 plat, butyle dans chaque joint, et visser dessus leur pi\xE8ce de rehausse.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm c\xF4t\xE9 fa\xE7ade, la seule extr\xE9mit\xE9 qu'on atteindra ensuite.` : "", "Lever le mur \xE0 deux, l'engager dans le rail, le tenir par deux \xE9tais viss\xE9s dans la rehausse.", "Visser le pied dans le rail depuis l'int\xE9rieur."].filter(Boolean),
       controler: ["Aplomb dans les deux sens avant de l\xE2cher les \xE9tais.", `Vide de ${fz(gauche)} cm r\xE9gulier sur toute la longueur.`]
@@ -236,7 +237,7 @@ function guide_montage(p, v, m) {
       titre: "\xC9tanch\xE9it\xE9 g\xE9n\xE9rale",
       but: "L'air qui entre apporte l'humidit\xE9 qui condense sur l'acier.",
       outils: ["pistolet \xE0 mastic", "mousse"],
-      faire: ["Cordon de mastic au pied des murs, dedans et dehors.", `Fermer le vide de ${fz(gauche)} cm contre le mur de propri\xE9t\xE9 : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'\xE9coulement de l'eau.`, "Mousse puis mastic \xE0 chaque travers\xE9e (c\xE2ble, entr\xE9e d'air)."],
+      faire: ["Cordon de mastic au pied des murs, dedans et dehors.", `Fermer le vide de ${fz(gauche)} cm contre le ${limite} : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'\xE9coulement de l'eau.`, "Mousse puis mastic \xE0 chaque travers\xE9e (c\xE2ble, entr\xE9e d'air)."],
       controler: ["De nuit, une lampe allum\xE9e dedans : aucun jour visible de dehors."]
     },
     ...p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? [{
@@ -481,9 +482,10 @@ function geometry(p) {
     const est_mur = (nom) => mitoyens.includes(nom) || nom === "arriere" && mitoyens.some((k) => k.startsWith("arriere"));
     const deb = p.toit.debord_cm, gout = +p.toit.gouttiere_largeur_cm || 0;
     const toit = [[-deb.gauche, -deb.avant], [A + +deb.droite, -deb.avant], [A + +deb.droite, G + +deb.arriere + gout], [-deb.gauche, G + +deb.arriere + gout]];
+    const grillages = d.grillages || [];
     const murs = noms.map((nom, i) => ({ nom, i })).filter(({ nom }) => est_mur(nom)).map(({ nom, i }) => {
       const a = poly2[i], b = poly2[(i + 1) % poly2.length];
-      return { cote: nom, de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
+      return { cote: nom, type: grillages.includes(nom) ? "grillage" : "mur", de: [rnd2(a[0], 1), rnd2(a[1], 1)], a: [rnd2(b[0], 1), rnd2(b[1], 1)], abri_cm: rnd2(clearance(rect, a, b), 1), toit_cm: rnd2(clearance(toit, a, b), 1) };
     });
     const hors_cm2 = Math.max(0, A * G - poly_area(clip_convex(poly2, rect)));
     const pieces = hors_cm2 > 1 ? outside_pieces(rect, poly2) : [];
@@ -1309,7 +1311,7 @@ function plan_sol_svg(p, g, openings) {
     const ex = -(b[1] - a[1]) / wl * 2.5, ey = (b[0] - a[0]) / wl * 2.5;
     svg += line(a[0] + ex, a[1] + ey, b[0] + ex, b[1] + ey, "#5b4a3a", 5);
   }
-  if (d && d.murs.length) svg += text(W / 2, 60, "trait brun \xE9pais = mur de propri\xE9t\xE9 (infranchissable)", "middle", "#5b4a3a", 10);
+  if (d && d.murs.length) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
   if (d && d.passage && d.passage.cm > 0 && d.passage.cm < 200) {
     const col = d.passage.etat === "praticable" ? "#2a8a4a" : d.passage.etat === "de profil" ? "#c77d0a" : "#c0392b";
     const [a, b] = d.passage.segment.map(P);
@@ -1491,8 +1493,9 @@ function variante_svg(v, P, scale, sobre = false) {
   svg += text(c[0], c[1] + 18, `int\xE9rieur ${v.aire_interieure_m2} m\xB2`, "middle", BLEU, 12);
   return svg;
 }
+var legende_clotures = (d) => (d.murs || []).some((w) => w.type === "grillage") ? "brun = mur, vert pointill\xE9 = grillage" : "brun = mur de propri\xE9t\xE9";
 function entete_implantation(v, d) {
-  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, lignes: ["brun = mur de propri\xE9t\xE9 \xB7 orange = distance aux bords \xB7 vert = passage derri\xE8re \xB7 hachures = rangement cach\xE9"] };
+  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m\xB2 sur ${d.aire_m2} m\xB2 de dalle`, lignes: [`${legende_clotures(d)} \xB7 orange = distance aux bords \xB7 vert = passage derri\xE8re \xB7 hachures = rangement cach\xE9`] };
 }
 function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete = false) {
   const d = g.dalle;
@@ -1507,7 +1510,8 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
   const H = (maxy - miny) * scale + pad + top + 40 + (v && v.porte && v.porte.cote === 0 ? Math.max(0, pw) : 0);
   const P = (v2) => [pad + (v2[0] - minx) * scale, top + 40 + (maxy - v2[1]) * scale];
   const mur = new Set(d.murs.map((w) => w.cote));
-  const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
+  const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a", GRILLAGE = "#5f8a4a";
+  const leg_cloture = legende_clotures(d);
   let svg = svgHeader(rnd2(W), rnd2(H), sans_entete);
   if (zu) svg += `<defs><pattern id="bande" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3e3cf"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e0b98a" stroke-width="2"/></pattern></defs>
 `;
@@ -1524,8 +1528,9 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
     const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
     const ux = (pb[0] - pa[0]) / len, uy = (pb[1] - pa[1]) / len;
     const nx = -uy, ny = ux;
-    const est_mur = mur.has(d.cotes_noms[i]);
-    if (est_mur) svg += line(pa[0] + nx * 4, pa[1] + ny * 4, pb[0] + nx * 4, pb[1] + ny * 4, BRUN, 6);
+    const est_mur = mur.has(d.cotes_noms[i]), cloture = d.murs.find((w) => w.cote === d.cotes_noms[i]);
+    if (est_mur && cloture && cloture.type === "grillage") svg += line(pa[0] + nx * 3, pa[1] + ny * 3, pb[0] + nx * 3, pb[1] + ny * 3, GRILLAGE, 3, "7 4");
+    else if (est_mur) svg += line(pa[0] + nx * 4, pa[1] + ny * 4, pb[0] + nx * 4, pb[1] + ny * 4, BRUN, 6);
     const off = 30;
     const a2 = [pa[0] + nx * off, pa[1] + ny * off], b2 = [pb[0] + nx * off, pb[1] + ny * off];
     svg += line(pa[0] + nx * 8, pa[1] + ny * 8, pa[0] + nx * (off + 5), pa[1] + ny * (off + 5), "#999", 0.8);
@@ -1636,7 +1641,7 @@ function plan_dalle_svg(g, avecBandes = false, v = null, m = null, sans_entete =
   } else svg += text(W / 2, 26, zu ? `Dalle r\xE9elle ${d.aire_m2} m\xB2 \xB7 zone utile ${zu.aire_m2} m\xB2` : `Dalle r\xE9elle \xB7 ${n} c\xF4t\xE9s \xB7 ${d.aire_m2} m\xB2`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus \xB7 cotes relev\xE9es au m\xE8tre \xB7 somme des angles ${f0(somme)}\xB0`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant suppos\xE9s droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, m ? "AVANT (jardin) \xB7 brun = mur de propri\xE9t\xE9" : v ? "AVANT (jardin) \xB7 brun = mur de propri\xE9t\xE9 \xB7 vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)" : "AVANT (jardin) \xB7 trait brun = mur de propri\xE9t\xE9", "middle", "#666", 11);
+  svg += text(W / 2, H - 12, m ? `AVANT (jardin) \xB7 ${leg_cloture}` : v ? `AVANT (jardin) \xB7 ${leg_cloture} \xB7 vert pointill\xE9 = zone utile \xB7 trait color\xE9 = passage (cm)` : `AVANT (jardin) \xB7 ${leg_cloture}`, "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
@@ -2010,7 +2015,7 @@ function modele3d_abri(p, g, v, m) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
-    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: d.mur_epaisseur_cm })) : [],
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f, i) => ({

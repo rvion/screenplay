@@ -276,9 +276,10 @@ export function geometry(p: Params) {
     const est_mur = (nom: string) => mitoyens.includes(nom) || (nom === "arriere" && mitoyens.some((k) => k.startsWith("arriere")));
     const deb = p.toit.debord_cm, gout = +p.toit.gouttiere_largeur_cm || 0;
     const toit = [[-deb.gauche, -deb.avant], [A + +deb.droite, -deb.avant], [A + +deb.droite, G + +deb.arriere + gout], [-deb.gauche, G + +deb.arriere + gout]];
+    const grillages: string[] = d.grillages || [];
     const murs = noms.map((nom, i) => ({ nom, i })).filter(({ nom }) => est_mur(nom)).map(({ nom, i }) => {
       const a = poly[i], b = poly[(i + 1) % poly.length];
-      return { cote: nom, de: [rnd(a[0], 1), rnd(a[1], 1)], a: [rnd(b[0], 1), rnd(b[1], 1)], abri_cm: rnd(clearance(rect, a, b), 1), toit_cm: rnd(clearance(toit, a, b), 1) };
+      return { cote: nom, type: grillages.includes(nom) ? "grillage" : "mur", de: [rnd(a[0], 1), rnd(a[1], 1)], a: [rnd(b[0], 1), rnd(b[1], 1)], abri_cm: rnd(clearance(rect, a, b), 1), toit_cm: rnd(clearance(toit, a, b), 1) };
     });
     const hors_cm2 = Math.max(0, A * G - poly_area(clip_convex(poly, rect)));
     const pieces = hors_cm2 > 1 ? outside_pieces(rect, poly) : [];
@@ -1040,7 +1041,7 @@ export function plan_sol_svg(p: Params, g: any, openings: any[]): string {
     const ex = -(b[1] - a[1]) / wl * 2.5, ey = (b[0] - a[0]) / wl * 2.5;   // vers l'exterieur de la dalle (y SVG inverse)
     svg += line(a[0] + ex, a[1] + ey, b[0] + ex, b[1] + ey, "#5b4a3a", 5);
   }
-  if (d && d.murs.length) svg += text(W / 2, 60, "trait brun épais = mur de propriété (infranchissable)", "middle", "#5b4a3a", 10);
+  if (d && d.murs.length) svg += text(W / 2, 60, `${legende_clotures(d)} (limite infranchissable)`, "middle", "#5b4a3a", 10);
   if (d && d.passage && d.passage.cm > 0 && d.passage.cm < 200) {
     const col = d.passage.etat === "praticable" ? "#2a8a4a" : d.passage.etat === "de profil" ? "#c77d0a" : "#c0392b";
     const [a, b] = d.passage.segment.map(P);
@@ -1209,8 +1210,10 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, sobre = fal
 // sommet, position de la pointe. Les murs de propriete en brun, l'abri en fantome.
 // m (modele de l'abri retenu) : plan d'implantation, sans bandes ni zone, avec toit, gouttiere et
 // distances de l'abri aux bords de la dalle
+// legende des limites de propriete : mur (trait brun) et grillage (pointille vert)
+export const legende_clotures = (d: any) => (d.murs || []).some((w: any) => w.type === "grillage") ? "brun = mur, vert pointillé = grillage" : "brun = mur de propriété";
 export function entete_implantation(v: any, d: any): EntetePlan {
-  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, lignes: ["brun = mur de propriété · orange = distance aux bords · vert = passage derrière · hachures = rangement caché"] };
+  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, lignes: [`${legende_clotures(d)} · orange = distance aux bords · vert = passage derrière · hachures = rangement caché`] };
 }
 export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any = null, sans_entete = false): string {
   const d = g.dalle;
@@ -1225,7 +1228,8 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   const H = (maxy - miny) * scale + pad + top + 40 + (v && v.porte && v.porte.cote === 0 ? Math.max(0, pw) : 0);
   const P = (v: Pt) => [pad + (v[0] - minx) * scale, top + 40 + (maxy - v[1]) * scale];
   const mur = new Set(d.murs.map((w: any) => w.cote));
-  const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a";
+  const BRUN = "#5b4a3a", GRIS = "#6f675a", COTE = "#2b5d8a", ANGLE = "#b0452a", GRILLAGE = "#5f8a4a";
+  const leg_cloture = legende_clotures(d);
   let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   if (zu) svg += `<defs><pattern id="bande" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3e3cf"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e0b98a" stroke-width="2"/></pattern></defs>\n`;
   svg += poly(q.map(P), zu ? "url(#bande)" : "#e9e5da", GRIS, 2);
@@ -1242,8 +1246,9 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
     const len = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
     const ux = (pb[0] - pa[0]) / len, uy = (pb[1] - pa[1]) / len;
     const nx = -uy, ny = ux;                     // exterieur (antihoraire en monde = horaire en SVG)
-    const est_mur = mur.has(d.cotes_noms[i]);
-    if (est_mur) svg += line(pa[0] + nx * 4, pa[1] + ny * 4, pb[0] + nx * 4, pb[1] + ny * 4, BRUN, 6);
+    const est_mur = mur.has(d.cotes_noms[i]), cloture = d.murs.find((w: any) => w.cote === d.cotes_noms[i]);
+    if (est_mur && cloture && cloture.type === "grillage") svg += line(pa[0] + nx * 3, pa[1] + ny * 3, pb[0] + nx * 3, pb[1] + ny * 3, GRILLAGE, 3, "7 4");
+    else if (est_mur) svg += line(pa[0] + nx * 4, pa[1] + ny * 4, pb[0] + nx * 4, pb[1] + ny * 4, BRUN, 6);
     const off = 30;
     const a2 = [pa[0] + nx * off, pa[1] + ny * off], b2 = [pb[0] + nx * off, pb[1] + ny * off];
     svg += line(pa[0] + nx * 8, pa[1] + ny * 8, pa[0] + nx * (off + 5), pa[1] + ny * (off + 5), "#999", 0.8);
@@ -1347,7 +1352,7 @@ export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any
   } else svg += text(W / 2, 26, zu ? `Dalle réelle ${d.aire_m2} m² · zone utile ${zu.aire_m2} m²` : `Dalle réelle · ${n} côtés · ${d.aire_m2} m²`, "middle", "#222", 15, "bold");
   if (!v) svg += text(W / 2, 44, `vue de dessus · cotes relevées au mètre · somme des angles ${f0(somme)}°`, "middle", "#888", 11);
   if (!v) svg += text(W / 2, H - 30, "* angles avant supposés droits", "middle", "#888", 10);
-  svg += text(W / 2, H - 12, m ? "AVANT (jardin) · brun = mur de propriété" : v ? "AVANT (jardin) · brun = mur de propriété · vert pointillé = zone utile · trait coloré = passage (cm)" : "AVANT (jardin) · trait brun = mur de propriété", "middle", "#666", 11);
+  svg += text(W / 2, H - 12, m ? `AVANT (jardin) · ${leg_cloture}` : v ? `AVANT (jardin) · ${leg_cloture} · vert pointillé = zone utile · trait coloré = passage (cm)` : `AVANT (jardin) · ${leg_cloture}`, "middle", "#666", 11);
   svg += "</svg>\n";
   return svg;
 }
@@ -1794,7 +1799,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
   const sec = m.rehausse.section_mm;
   return {
     dalle: d.polygone.map(abs),
-    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: d.mur_epaisseur_cm })) : [],
+    murs_propriete: d.mur_hauteur_cm > 0 ? d.murs.map((w: any) => ({ cote: w.cote, type: w.type, de: abs(w.de), a: abs(w.a), hauteur_cm: d.mur_hauteur_cm, epaisseur_cm: w.type === "grillage" ? 1 : d.mur_epaisseur_cm })) : [],
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f: any, i: number) => ({

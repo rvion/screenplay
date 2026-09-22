@@ -84,8 +84,9 @@ droite 5, avant 5 ⇒ zone utile pentagonale 245 / 161,3 / 282,1 / 54,4 / 314,1,
 <code>(ox, oy) = (2, 2)</code> ⇒ l&#39;abri <strong>longe le mur gauche</strong> (2 cm), 2 cm devant ; <strong>rien hors dalle</strong>.
 Calé à droite (<code>ox = 62</code>), le coin arrière-droit traverserait le mur du fond de ~19 cm.</p>
 <h3 id="murs-de-propriété-et-passage-arrière">Murs de propriété et passage arrière</h3>
-<p><code>murs_mitoyens = [gauche, arriere_gauche, arriere_droite]</code> : ces côtés de la dalle <strong>sont</strong> le mur
-de propriété, infranchissables. L&#39;avant et la droite donnent sur le jardin. Pour chaque mur,
+<p><code>murs_mitoyens = [gauche, arriere_gauche, arriere_droite]</code> : ces côtés de la dalle <strong>sont</strong> la limite
+de propriété, infranchissables ; <code>grillages = [gauche, arriere_gauche]</code> : un grillage, pas un mur
+(seul le grand pan de 258 est un mur). L&#39;avant et la droite donnent sur le jardin. Pour chaque mur,
 <code>abri_cm</code> / <code>toit_cm</code> = distance (perpendiculaire à la droite du mur) du coin le plus proche de
 l&#39;abri / du toit (débords + <code>toit.gouttiere_largeur_cm</code> à l&#39;arrière) ; négatif = ça traverse.</p>
 <p><strong>Passage arrière</strong> (<code>dalle.passage</code>) : on atteint l&#39;arrière de l&#39;abri par la droite, en longeant

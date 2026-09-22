@@ -30,9 +30,12 @@ la dalle). La pointe arrière est trouvée par triangulation. Elle ne pilote pas
 elle sert à calculer la <strong>partie de l&#39;emprise hors dalle</strong> (découpage de polygone, tout débord
 compte), affichée sur le plan de sol, en 3D et en vigilance. Tout est réglable sur le site ;
 des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.</li>
-<li><code>dalle_cm.murs_mitoyens</code> : côtés qui sont le <strong>mur de propriété</strong> (gauche + les deux pans du
-fond). Dessinés en trait brun épais sur le plan et en volume en 3D (<code>mur_hauteur_cm</code>,
-hypothèse à mesurer). <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
+<li><code>dalle_cm.murs_mitoyens</code> : côtés qui sont la <strong>limite de propriété</strong> (gauche + les deux pans du
+fond), infranchissables. <code>dalle_cm.grillages</code> nomme ceux fermés par un <strong>grillage</strong> et non un mur
+(gauche, petit pan de 104) : <code>dalle.murs[].type</code> vaut <code>grillage</code> ou <code>mur</code>. Un mur est un trait brun
+épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
+translucide avec poteaux tous les 2 m et lisse haute (même hauteur <code>mur_hauteur_cm</code>, hypothèse à
+mesurer). La légende (<code>legende_clotures</code>) et les textes du guide suivent. <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
 point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
 garde <code>passage_souhaite_cm</code>. Carte <strong>Passage derrière l&#39;abri</strong> en vigilance. Un débord hors
 dalle contre un mur est signalé comme impossible à combler.</li>
@@ -186,8 +189,8 @@ adresse de cette version (<code>abri-v4.md</code>) devient une page relais ; les
 <code>src/abri_main.ts</code>, feuille <code>site/abri.css</code> autonome). C&#39;est un document de travail pour Rémi et
 pour les personnes qu&#39;il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
 serrés, mise en page d&#39;impression (bouton Imprimer : sans menu ni 3D, une section par page).
-Sections : <strong>fiche chantier</strong> (6 lignes courtes : murs, hauteurs, toit, surfaces, passage,
-matériaux ; le détail vit dans les sections) à côté du <strong>modèle 3D</strong>, plans et élévations (avec le
+Sections : <strong>Résumé</strong> (deux phrases calculées, puis six cartes : murs, hauteurs, toit, surfaces,
+passage, matériaux ; le détail vit dans les sections) à côté du <strong>modèle 3D</strong>, plans et élévations (avec le
 tableau des murs), débit des panneaux, <strong>matériaux à acheter</strong>, <strong>guide de montage</strong>, ouvertures et
 mobilier, pourquoi cette forme. Tout est calculé dans
 le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
@@ -223,8 +226,8 @@ donc aussi en <code>file://</code>).</li>
 <li><strong>Cotes et repères</strong> : toute cote de la page passe par <code>cote(x, unité)</code> (<code>span.cote</code>, chiffres
 tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par <code>face(id)</code>
 (<code>span.face</code>, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.</li>
-<li><strong>Menu</strong> : sommaire en haut, et tout en bas, petits et gris, les liens « ailleurs » (documents,
-dépôt) ; le configurateur du rectangle n&#39;est plus lié depuis la page.</li>
+<li><strong>Menu</strong> (164 px) : sommaire en haut, et tout en bas, petits et gris, les liens « ailleurs »
+(documents, dépôt) ; le configurateur du rectangle n&#39;est plus lié depuis la page.</li>
 <li><strong>Matériaux à acheter</strong> (<code>src/chantier.ts</code>, <code>nomenclature_abri</code>) : une <strong>nomenclature</strong>, pas un
 budget. Que des matériaux, en <strong>TTC</strong>, quantités <strong>calculées</strong> depuis le modèle avec leur règle
 affichée (« comment c&#39;est compté »). <strong>Ni main-d&#39;œuvre, ni forfait, ni livraison</strong> (la livraison
@@ -254,7 +257,8 @@ joints et repères de panneaux, cadre et battant de porte ouvert vers l&#39;ext�
 rehausse bois, <strong>coupes d&#39;onglet</strong> aux bouts des murs et de la rehausse (la face intérieure raccourcie de
 <code>e / tan(angle / 2)</code> : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
 nervuré dans le sens de la pente, gouttière sur chaque bord d&#39;égout, descente,
-bureaux, sièges, lit, et une <strong>silhouette de 1,80 m</strong> devant la porte pour l&#39;échelle (cases à cocher :
+bureaux, sièges, lit, <strong>étiquettes</strong> de panneaux sur plaque blanche à bord sombre en haut de chaque
+panneau (au-dessus des fenêtres), et une <strong>silhouette de 1,80 m</strong> devant la porte pour l&#39;échelle (cases à cocher :
 toit, mobilier, lit déplié, repères, personne ; lit et personne cachés au départ). <code>peuple_abri</code>
 construit la scène <strong>sans renderer</strong>, ce qui permet de la mesurer sous Node.</li>
 <li>Tests : <code>tests/abri3d.mjs</code> construit la scène avec le vrai three.js (devDependency, même version

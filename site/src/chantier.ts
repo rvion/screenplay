@@ -112,6 +112,7 @@ export interface EtapeGuide { titre: string; but: string; outils: string[]; fair
 
 export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillage: string[]; etapes: EtapeGuide[] } {
   const d = p.disposition_trapeze || {}, t = d.toit || {}, mod = +p.panneau.largeur_utile_cm, ep = +p.panneau.epaisseur_mm / 10;
+  const limite = ((p.dalle_cm && p.dalle_cm.grillages) || []).includes("gauche") ? "grillage de la limite" : "mur de propriété";
   const F: Record<string, any> = Object.fromEntries(m.faces.map((f: any) => [f.cle, f])), n = m.faces.length, po = v.porte, fen = v.fenetres || [];
   const gauche = Math.min(...v.polygone.map((z: number[]) => z[0])), avant = Math.min(...v.polygone.map((z: number[]) => z[1]));
   const perim = m.faces.reduce((s: number, f: any) => s + f.longueur_cm, 0) / 100, G = m.toit.gouttiere;
@@ -129,7 +130,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     "Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.",
     `Faire confirmer la **portée** admise du panneau de toit de ${fz(ep)} cm : ${fz(m.portee_cm / 100)} m ici${t.panne_intermediaire ? `, ramenée à ${fz(m.portee_cm / 200)} m par la panne intermédiaire` : ""} ; et la **pente minimale** (${fr(m.pente.pourcent)} % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).`,
     `Commander les panneaux de toit **coupés à longueur**, et les profils des angles de ${speciaux.join(" et ") || "90°"} **pliés sur mesure**, en même temps que les panneaux.`,
-    `Vérifier au PLU la règle d'implantation près de la limite (l'abri est à ${fz(gauche)} cm du mur de propriété).`,
+    `Vérifier au PLU la règle d'implantation (l'abri est à ${fz(gauche)} cm de la limite).`,
     "Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.",
   ];
   const outillage = [
@@ -167,7 +168,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       controler: ["Retirer le film de protection des panneaux au fur et à mesure : après quelques semaines au soleil il ne part plus.", "Ébavurer chaque coupe et passer une retouche de peinture sur la tôle mise à nu."],
     },
     {
-      titre: `Monter le mur gauche à plat, puis le lever`, but: `À ${fz(gauche)} cm du mur de propriété aucune visseuse ne passe : ce mur se fait au sol.`,
+      titre: `Monter le mur gauche à plat, puis le lever`, but: `À ${fz(gauche)} cm du ${limite} aucune visseuse ne passe : ce mur se fait au sol.`,
       outils: ["visseuse", "serre-joints", "2 personnes", "étais"],
       faire: [`Assembler ${F.G ? liste(F.G) : ""} à plat, butyle dans chaque joint, et visser dessus leur pièce de rehausse.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm côté façade, la seule extrémité qu'on atteindra ensuite.` : "", "Lever le mur à deux, l'engager dans le rail, le tenir par deux étais vissés dans la rehausse.", "Visser le pied dans le rail depuis l'intérieur."].filter(Boolean),
       controler: ["Aplomb dans les deux sens avant de lâcher les étais.", `Vide de ${fz(gauche)} cm régulier sur toute la longueur.`],
@@ -233,7 +234,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     {
       titre: "Étanchéité générale", but: "L'air qui entre apporte l'humidité qui condense sur l'acier.",
       outils: ["pistolet à mastic", "mousse"],
-      faire: ["Cordon de mastic au pied des murs, dedans et dehors.", `Fermer le vide de ${fz(gauche)} cm contre le mur de propriété : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.`, "Mousse puis mastic à chaque traversée (câble, entrée d'air)."],
+      faire: ["Cordon de mastic au pied des murs, dedans et dehors.", `Fermer le vide de ${fz(gauche)} cm contre le ${limite} : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.`, "Mousse puis mastic à chaque traversée (câble, entrée d'air)."],
       controler: ["De nuit, une lampe allumée dedans : aucun jour visible de dehors."],
     },
     ...(p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? [{

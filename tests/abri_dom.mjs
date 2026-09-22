@@ -36,9 +36,10 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
   ok(ancres.length === 8 && ancres.every((h) => $(h)), "menu : les 8 sections de la page, toutes existantes");
   ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
-  ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 22), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
+  ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 20), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
-ok($$("#fiche tr").length === 6 && $("#fiche").textContent.length < 330 && /TTC/.test($("#fiche").textContent), "fiche chantier courte : 6 lignes, " + $("#fiche").textContent.length + " caractères");
+ok($("#fiche-chantier h2").textContent === "Résumé" && $$("#fiche .carte").length === 6 && $("#fiche").textContent.length < 340 && /TTC/.test($("#fiche").textContent), "résumé : 6 cartes, " + $("#fiche").textContent.length + " caractères");
+ok(/cinq murs/.test($("#intro").textContent) && /grillage/.test($("#intro").textContent) && $$("#intro .cote").length >= 2 && $$("#intro .face").length >= 3, "résumé : deux phrases d'introduction calculées (murs, grillage, porte, fenêtres, bureaux)");
 ok($$("#implantation #murs tbody tr").length === m.faces.length && $("#implantation .plans-haut").nextElementSibling.contains($("#murs")), "tableau des murs : une ligne par face, sous les deux plans de tête");
 ok($$("#implantation .plans-haut figure").length === 2 && $("#implantation #plan-implantation svg") && $("#implantation #plan-sol svg") && $("#plans").previousElementSibling === $("#implantation"), "implantation et plan de sol côte à côte, dans leur section, au-dessus des élévations");
 // les titres des plans sont du texte de la page, pas du dessin : le SVG de la page n'a plus d'entete, le fichier SVG la garde

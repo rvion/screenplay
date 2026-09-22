@@ -10,17 +10,19 @@ type Pt = number[];
 export interface AbriViewer { rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; }
 export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne";
 
-const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5 };
+const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
 
+// plaque blanche a bord sombre, texte gras : lisible de loin sur un panneau clair comme sur le toit
 function etiquette(txt: string): Vec | null {
   if (typeof document === "undefined") return null;
   const c = document.createElement("canvas");
   c.width = 256; c.height = 128;
   const x = c.getContext("2d");
   if (!x) return null;
-  x.font = "bold 84px system-ui, sans-serif"; x.textAlign = "center"; x.textBaseline = "middle";
-  x.lineWidth = 10; x.strokeStyle = "rgba(255,255,255,.9)"; x.strokeText(txt, 128, 68);
-  x.fillStyle = "#2b3a47"; x.fillText(txt, 128, 68);
+  x.fillStyle = "#1c2530"; x.beginPath(); x.roundRect(4, 4, 248, 120, 22); x.fill();
+  x.fillStyle = "#ffffff"; x.beginPath(); x.roundRect(12, 12, 232, 104, 16); x.fill();
+  x.font = "bold 88px system-ui, sans-serif"; x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillStyle = "#1c2530"; x.fillText(txt, 128, 66);
   const t = new THREE.CanvasTexture(c);
   if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -50,7 +52,23 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // dalle et murs de propriete
   abri.add(ombre(new THREE.Mesh(prisme(data.dalle, plat(-14), plat(0)), mat(COUL.dalle, { roughness: 0.95 }))));
   for (const w of data.murs_propriete) {
-    const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, nx = (w.a[1] - w.de[1]) / l * w.epaisseur_cm, ny = -(w.a[0] - w.de[0]) / l * w.epaisseur_cm;
+    const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, ux = (w.a[0] - w.de[0]) / l, uy = (w.a[1] - w.de[1]) / l;
+    if (w.type === "grillage") {
+      // grillage : treillis translucide, poteaux tous les 2 m, lisse haute
+      const matG = mat(COUL.grillage, { transparent: true, opacity: 0.35, roughness: 0.6, metalness: 0.4 }), matP = mat(COUL.grillage, { metalness: 0.5, roughness: 0.5 });
+      const nx = uy * 1, ny = -ux * 1;
+      abri.add(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(0), plat(w.hauteur_cm)), matG));
+      const nb = Math.max(1, Math.round(l / 200));
+      for (let k = 0; k <= nb; k++) {
+        const t = k / nb, poteau = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, (w.hauteur_cm + 14) / 100, 8), matP);
+        poteau.position.copy(W(w.de[0] + ux * l * t, w.de[1] + uy * l * t, (w.hauteur_cm - 14) / 2)); abri.add(ombre(poteau));
+      }
+      const lisse = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, l / 100, 6), matP);
+      lisse.rotation.z = Math.PI / 2; lisse.rotation.y = Math.atan2(uy, ux);
+      lisse.position.copy(W(w.de[0] + ux * l / 2, w.de[1] + uy * l / 2, w.hauteur_cm)); abri.add(lisse);
+      continue;
+    }
+    const nx = uy * w.epaisseur_cm, ny = -ux * w.epaisseur_cm;
     abri.add(ombre(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(-14), plat(w.hauteur_cm)), mat(COUL.propriete, { roughness: 0.95 }))));
   }
   // plancher
@@ -101,8 +119,9 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
       const tx = etiquette(pn.id);
       if (tx) {
-        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.17), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
-        plaque.position.set((pn.debut_cm + pn.largeur_cm / 2) / 100, Math.min(1.55, f.hauteur_mur_cm / 100 - 0.2), 0.012);
+        // au-dessus des fenetres (haut a 190), sous la tete du mur
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.22), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+        plaque.position.set((pn.debut_cm + pn.largeur_cm / 2) / 100, f.hauteur_mur_cm / 100 - 0.16, 0.012);
         pose(plaque, etiq);
       }
     }

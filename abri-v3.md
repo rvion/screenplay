@@ -59,7 +59,7 @@
 - Le mur gauche se monte à plat puis se lève (voir les conseils de la version 2) : on ne visse rien dans le vide de 10 cm. Le fermer devant par une bavette et au fond par un grillage.
 - Le modèle dessine la gouttière sur les deux bords d'égout, mais pas sa pièce d'angle à 135° ni la pente à lui donner vers la descente : à prévoir à la commande.
 - Le pan à 45° reçoit une pièce de rehausse en biais dont la hauteur varie le long du mur : c'est une coupe de plus dans le madrier, pas une difficulté.
-- Même sans formalité, vérifier au PLU la règle d'implantation par rapport à la limite (à 10 cm du mur de propriété, l'abri n'est ni en limite ni à 3 m).
+- Même sans formalité, vérifier au PLU la règle d'implantation par rapport à la limite (à 10 cm de la limite, l'abri n'est ni en limite ni à 3 m).
 
 ## En bref
 
@@ -298,7 +298,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.
 - Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2 m ici ; et la **pente minimale** (11,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.
-- Vérifier au PLU la règle d'implantation près de la limite (l'abri est à 10 cm du mur de propriété).
+- Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
 
 ### Outillage
@@ -357,7 +357,7 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 
 ### Étape 4 · Monter le mur gauche à plat, puis le lever
 
-À 10 cm du mur de propriété aucune visseuse ne passe : ce mur se fait au sol.
+À 10 cm du grillage de la limite aucune visseuse ne passe : ce mur se fait au sol.
 
 **Outils :** visseuse, serre-joints, 2 personnes, étais
 
@@ -486,7 +486,7 @@ L'air qui entre apporte l'humidité qui condense sur l'acier.
 **Outils :** pistolet à mastic, mousse
 
 1. Cordon de mastic au pied des murs, dedans et dehors.
-2. Fermer le vide de 10 cm contre le mur de propriété : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.
+2. Fermer le vide de 10 cm contre le grillage de la limite : bavette devant, grillage fin au fond (feuilles, rongeurs), sans bloquer l'écoulement de l'eau.
 3. Mousse puis mastic à chaque traversée (câble, entrée d'air).
 
 **À contrôler avant de continuer :**

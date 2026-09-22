@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=307d63d4" />
+  <link rel="stylesheet" href="abri.css?v=be0bd440" />
   <script type="importmap">
   {
     "imports": {
@@ -35,7 +35,7 @@
     </div>
     <h2>Sommaire</h2>
     <nav class="sections" id="sommaire">
-      <a href="#fiche-chantier">Fiche chantier</a>
+      <a href="#fiche-chantier">Résumé</a>
       <a href="#implantation">Implantation, sol</a>
       <a href="#plans">Élévations</a>
       <a href="#debit">Débit</a>
@@ -54,9 +54,12 @@
     <p class="bandeau" id="bandeau" hidden></p>
 
     <section id="fiche-chantier">
-      <h2>Fiche chantier</h2>
+      <h2>Résumé</h2>
       <div class="deux fiche-vue">
-        <table class="fiche" id="fiche"></table>
+        <div>
+          <p class="intro" id="intro"></p>
+          <div class="cartes" id="fiche"></div>
+        </div>
         <div class="vue">
           <div id="viewer"></div>
           <p class="viewer-toggles">
@@ -131,7 +134,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=307d63d4"></script>
-  <script type="module" src="abri.js?v=307d63d4"></script>
+  <script src="params.js?v=be0bd440"></script>
+  <script type="module" src="abri.js?v=be0bd440"></script>
 </body>
 </html>

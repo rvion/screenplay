@@ -56,8 +56,9 @@ droite 5, avant 5 ⇒ zone utile pentagonale 245 / 161,3 / 282,1 / 54,4 / 314,1,
 Calé à droite (`ox = 62`), le coin arrière-droit traverserait le mur du fond de ~19 cm.
 
 ### Murs de propriété et passage arrière
-`murs_mitoyens = [gauche, arriere_gauche, arriere_droite]` : ces côtés de la dalle **sont** le mur
-de propriété, infranchissables. L'avant et la droite donnent sur le jardin. Pour chaque mur,
+`murs_mitoyens = [gauche, arriere_gauche, arriere_droite]` : ces côtés de la dalle **sont** la limite
+de propriété, infranchissables ; `grillages = [gauche, arriere_gauche]` : un grillage, pas un mur
+(seul le grand pan de 258 est un mur). L'avant et la droite donnent sur le jardin. Pour chaque mur,
 `abri_cm` / `toit_cm` = distance (perpendiculaire à la droite du mur) du coin le plus proche de
 l'abri / du toit (débords + `toit.gouttiere_largeur_cm` à l'arrière) ; négatif = ça traverse.
 

@@ -18,7 +18,8 @@ bureau qu'on aime, pas un abri.
   hauteur du coin droit. Pentagone à pointe arrière, profond de ~398 cm à la pointe. **Emprise
   retenue : 200 × 240** (4,8 m²) : on peut **en faire le tour** (contrainte du terrain), on
   reste sous 5 m² de murs. Le côté gauche (324) et les deux pans du fond (104, 258)
-  **longent le mur de propriété** : on ne passe pas derrière. L'abri **longe le mur gauche** pour
+  **longent la limite de propriété** : on ne passe pas derrière. Le côté gauche et le petit pan de 104 sont
+  fermés par un **grillage métallique** ; seul le grand pan de 258 est un **mur** (`dalle_cm.grillages`). L'abri **longe le mur gauche** pour
   garder une **bande de passage le long du pan de 258** vers l'arrière de l'abri (on n'ira presque
   jamais, mais l'endroit doit rester accessible). **Optimiser pour cette dalle** est la priorité ;
   la dalle, la position et le passage visé se règlent sur le site. L'angle coupé pour atteindre

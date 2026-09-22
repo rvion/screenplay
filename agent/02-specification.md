@@ -16,9 +16,12 @@
   elle sert à calculer la **partie de l'emprise hors dalle** (découpage de polygone, tout débord
   compte), affichée sur le plan de sol, en 3D et en vigilance. Tout est réglable sur le site ;
   des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.
-- `dalle_cm.murs_mitoyens` : côtés qui sont le **mur de propriété** (gauche + les deux pans du
-  fond). Dessinés en trait brun épais sur le plan et en volume en 3D (`mur_hauteur_cm`,
-  hypothèse à mesurer). `dalle.passage` = largeur de la bande entre l'abri et le mur du fond au
+- `dalle_cm.murs_mitoyens` : côtés qui sont la **limite de propriété** (gauche + les deux pans du
+  fond), infranchissables. `dalle_cm.grillages` nomme ceux fermés par un **grillage** et non un mur
+  (gauche, petit pan de 104) : `dalle.murs[].type` vaut `grillage` ou `mur`. Un mur est un trait brun
+  épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
+  translucide avec poteaux tous les 2 m et lisse haute (même hauteur `mur_hauteur_cm`, hypothèse à
+  mesurer). La légende (`legende_clotures`) et les textes du guide suivent. `dalle.passage` = largeur de la bande entre l'abri et le mur du fond au
   point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
   garde `passage_souhaite_cm`. Carte **Passage derrière l'abri** en vigilance. Un débord hors
   dalle contre un mur est signalé comme impossible à combler.
@@ -128,8 +131,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     `src/abri_main.ts`, feuille `site/abri.css` autonome). C'est un document de travail pour Rémi et
     pour les personnes qu'il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
     serrés, mise en page d'impression (bouton Imprimer : sans menu ni 3D, une section par page).
-    Sections : **fiche chantier** (6 lignes courtes : murs, hauteurs, toit, surfaces, passage,
-    matériaux ; le détail vit dans les sections) à côté du **modèle 3D**, plans et élévations (avec le
+    Sections : **Résumé** (deux phrases calculées, puis six cartes : murs, hauteurs, toit, surfaces,
+    passage, matériaux ; le détail vit dans les sections) à côté du **modèle 3D**, plans et élévations (avec le
     tableau des murs), débit des panneaux, **matériaux à acheter**, **guide de montage**, ouvertures et
     mobilier, pourquoi cette forme. Tout est calculé dans
     le navigateur depuis `params.js` (`calcule_abri` puis `rend_abri`, `src/abri_page.ts`, DOM seul) :
@@ -165,8 +168,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   - **Cotes et repères** : toute cote de la page passe par `cote(x, unité)` (`span.cote`, chiffres
     tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par `face(id)`
     (`span.face`, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.
-  - **Menu** : sommaire en haut, et tout en bas, petits et gris, les liens « ailleurs » (documents,
-    dépôt) ; le configurateur du rectangle n'est plus lié depuis la page.
+  - **Menu** (164 px) : sommaire en haut, et tout en bas, petits et gris, les liens « ailleurs »
+    (documents, dépôt) ; le configurateur du rectangle n'est plus lié depuis la page.
   - **Matériaux à acheter** (`src/chantier.ts`, `nomenclature_abri`) : une **nomenclature**, pas un
     budget. Que des matériaux, en **TTC**, quantités **calculées** depuis le modèle avec leur règle
     affichée (« comment c'est compté »). **Ni main-d'œuvre, ni forfait, ni livraison** (la livraison
@@ -194,7 +197,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   rehausse bois, **coupes d'onglet** aux bouts des murs et de la rehausse (la face intérieure raccourcie de
   `e / tan(angle / 2)` : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
-  bureaux, sièges, lit, et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
+  bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
+  panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
   toit, mobilier, lit déplié, repères, personne ; lit et personne cachés au départ). `peuple_abri`
   construit la scène **sans renderer**, ce qui permet de la mesurer sous Node.
 - Tests : `tests/abri3d.mjs` construit la scène avec le vrai three.js (devDependency, même version
