@@ -116,6 +116,10 @@ window.SHED_PARAMS = {
       {
         "cote": "avant",
         "profondeur_cm": 50
+      },
+      {
+        "cote": "fond",
+        "profondeur_cm": 30
       }
     ],
     "lit_pliant": {
@@ -188,10 +192,15 @@ window.SHED_PARAMS = {
         "longueur_cm": 190,
         "tete": "droite",
         "bureaux": [
-          "gauche"
+          "gauche",
+          "fond"
         ],
         "position": "fin",
-        "bureaux_entiers": true
+        "bureaux_entiers": true,
+        "sieges_decalage_cm": [
+          0,
+          -20
+        ]
       }
     ],
     "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (position 'fin' = a l'autre bout) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges sont ranges dessous, jamais sur le lit. v3 : lit 80 x 190 le long de la facade (198 dedans), tete a droite contre le mur de la porte, pieds vers le bureau gauche et ses ecrans, le pied du lit sous le plateau de 80"

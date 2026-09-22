@@ -103,13 +103,18 @@ const paroi = groupes.murs.children;
       const ql = l.polygone, qb = { x1: Math.max(...ql.map((z) => z[0])), y1: Math.max(...ql.map((z) => z[1])) };
       const ep_mur = +base.panneau.epaisseur_mm / 10, croise = qb.x1 > Math.max(...px) - ep_mur - 0.5, degage = croise ? Math.max(0, Math.max(...py) - Math.max(Math.min(...py), qb.y1)) : po.largeur_cm;
       ok(degage >= 55, `lit ${l.nom} : ${Math.round(degage)} cm de baie de porte dégagés sur ${po.largeur_cm} (il faut 55 pour entrer)`);
+      // un dossier de fauteuil monte plus haut qu'un plateau : range, il ne doit traverser aucun bureau
+      const plateaux = g("bureaux").children.filter((o) => o.isMesh).map((o) => serre(boite(o)));
+      const traverse = g("sieges_ranges").children.filter((o) => o.isMesh).filter((o) => plateaux.some((b) => b.intersectsBox(serre(boite(o)))));
+      ok(traverse.length === 0, `lit ${l.nom} : aucune pièce de siège rangé ne traverse un plateau de bureau (${traverse.length} en faute)`);
     });
     const plan_box = (q) => { const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
     const si = plan_box(d.sol.polygone), v3 = lm.find((x) => x.nom === "v3"), v4 = lm.find((x) => x.nom === "v4");
     if (v3) {
       const b = plan_box(v3.polygone), bu = v3.bureaux.map(plan_box);
       ok(near(b.x1 - b.x0, 190, 0.2) && near(b.y1 - b.y0, 80, 0.2) && near(b.y0, si.y0, 0.2) && near(b.x1, si.x1, 0.2), "lit v3 : 190 × 80 le long du mur avant, calé à droite contre le mur de la porte");
-      ok(bu.length === 1 && near(bu[0].y0, si.y0, 0.2) && bu[0].y1 > b.y1 + 100 && v3.sous_bureau_cm2 > 3000, "lit v3 : plus de bureau devant, le bureau gauche reste entier et couvre le pied du lit (" + v3.sous_bureau_cm2 + " cm2)");
+      const bg = bu.find((x) => near(x.y0, si.y0, 0.2) && x.y1 > b.y1 + 100);
+      ok(!!bg && v3.sous_bureau_cm2 > 3000, "lit v3 : plus de bureau devant, le bureau gauche reste entier et couvre le pied du lit (" + v3.sous_bureau_cm2 + " cm2)");
       const lit = groupes.lit3, oreiller = lit.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0], bl = boite(lit);
       ok(boite(oreiller).min.x > (bl.min.x + bl.max.x) / 2, "lit v3 : l'oreiller est à droite, côté porte : couché, les pieds vont vers le bureau gauche et ses écrans");
     }

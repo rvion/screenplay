@@ -926,22 +926,30 @@
         const bureaux = (lm.bureaux || []).map((cote2) => {
           const bu = v.bureaux.find((b) => b.cote === cote2);
           if (!bu) return null;
-          if (lm.bureaux_entiers) return { cote: cote2, brut: bu.brut };
+          if (lm.bureaux_entiers) return { cote: cote2, brut: bu.brut, profondeur_cm: bu.profondeur_cm };
           const morceaux = q.flatMap((p0, i) => [true, false].map((g2) => clip_half(bu.brut, p0, q[(i + 1) % 4], g2))).filter((z) => z.length >= 3 && !touche(z));
           const bq = morceaux.sort((x, y) => poly_area(y) - poly_area(x))[0];
-          return bq ? { cote: cote2, brut: bq } : null;
+          return bq ? { cote: cote2, brut: bq, profondeur_cm: bu.profondeur_cm } : null;
         }).filter(Boolean);
         const ranges = [];
         const sieges = (v.sieges || []).filter((st) => st.tient !== false).map((st) => {
           for (const bu of bureaux) {
             const i = v.noms_cotes.indexOf(bu.cote), a2 = r[i], c2 = r[(i + 1) % r.length], l2 = Math.hypot(c2[0] - a2[0], c2[1] - a2[1]), u2x = (c2[0] - a2[0]) / l2, u2y = (c2[1] - a2[1]) / l2, n2x = -u2y, n2y = u2x;
-            const W = +st.largeur_cm, Dp = +st.profondeur_cm, d0 = ep + 4, at2 = (s, d) => [a2[0] + u2x * s + n2x * d, a2[1] + u2y * s + n2y * d];
+            const W = +st.largeur_cm, Dp = +st.profondeur_cm, dossier = !/tabouret/i.test(st.type);
+            const prof_bureau = ep + (+bu.profondeur_cm || 0);
+            const d0 = dossier ? Math.max(ep + 4, prof_bureau + 10 - Dp) : ep + 4;
+            const at2 = (s, d) => [a2[0] + u2x * s + n2x * d, a2[1] + u2y * s + n2y * d];
             for (let s02 = ep + 4; s02 + W <= l2 - ep - 4; s02 += 2) {
               const z = [at2(s02, d0), at2(s02 + W, d0), at2(s02 + W, d0 + Dp), at2(s02, d0 + Dp)];
-              const dessous = poly_area(clip_convex(z, bu.brut)) >= W * Math.min(Dp, 60 - 4) * 0.75;
-              if (z.every(dedans_int) && dessous && !touche(z) && ranges.every((o) => poly_area(clip_convex(z, o)) < 1)) {
-                ranges.push(z);
-                return { type: st.type, contre: bu.cote, polygone: z.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]) };
+              const dessous = poly_area(clip_convex(z, bu.brut)) >= W * Math.min(Dp, (+bu.profondeur_cm || 60) - 4) * 0.6;
+              const autre_bureau = bureaux.some((b2) => b2 !== bu && poly_area(clip_convex(z, b2.brut)) >= 1);
+              if (z.every(dedans_int) && dessous && !touche(z) && !autre_bureau && ranges.every((o) => poly_area(clip_convex(z, o)) < 1)) {
+                const dec = lm.sieges_decalage_cm;
+                const z2 = dec ? z.map(([x, y]) => [x + +dec[0], y + +dec[1]]) : z;
+                const ok2 = dec ? z2.every(dedans_int) && !touche(z2) && !bureaux.some((b2) => b2 !== bu && poly_area(clip_convex(z2, b2.brut)) >= 1) && ranges.every((o) => poly_area(clip_convex(z2, o)) < 1) : true;
+                const zf = ok2 ? z2 : z;
+                ranges.push(zf);
+                return { type: st.type, contre: bu.cote, polygone: zf.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]) };
               }
             }
           }

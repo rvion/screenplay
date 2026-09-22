@@ -614,21 +614,35 @@ export function variantes(p: Params, g: any) {
         const bu = v.bureaux.find((b: any) => b.cote === cote);
         if (!bu) return null;
         // bureaux_entiers : le plateau passe au-dessus du pied du lit, donc on ne le coupe pas
-        if (lm.bureaux_entiers) return { cote, brut: bu.brut };
+        if (lm.bureaux_entiers) return { cote, brut: bu.brut, profondeur_cm: bu.profondeur_cm };
         const morceaux = q.flatMap((p0, i) => [true, false].map((g) => clip_half(bu.brut, p0, q[(i + 1) % 4], g))).filter((z) => z.length >= 3 && !touche(z));
         const bq = morceaux.sort((x, y) => poly_area(y) - poly_area(x))[0];
-        return bq ? { cote, brut: bq } : null;
+        return bq ? { cote, brut: bq, profondeur_cm: bu.profondeur_cm } : null;
       }).filter(Boolean);
       const ranges: Pt[][] = [];
       const sieges = (v.sieges || []).filter((st: any) => st.tient !== false).map((st: any) => {
         for (const bu of bureaux) {
           const i = v.noms_cotes.indexOf(bu.cote), a2 = r[i], c2 = r[(i + 1) % r.length], l2 = Math.hypot(c2[0] - a2[0], c2[1] - a2[1]), u2x = (c2[0] - a2[0]) / l2, u2y = (c2[1] - a2[1]) / l2, n2x = -u2y, n2y = u2x;
-          const W = +st.largeur_cm, Dp = +st.profondeur_cm, d0 = ep + 4, at2 = (s: number, d: number): Pt => [a2[0] + u2x * s + n2x * d, a2[1] + u2y * s + n2y * d];
+          // un siege a dossier (fauteuil) garde son dossier HORS du plateau : seule l'assise passe dessous,
+          // le dossier monte a 89 cm et le plateau est a 72. Un tabouret, lui, rentre entierement
+          const W = +st.largeur_cm, Dp = +st.profondeur_cm, dossier = !/tabouret/i.test(st.type);
+          const prof_bureau = ep + (+bu.profondeur_cm || 0);
+          // le dossier est dessine a 4..8 cm du bord exterieur du siege : il faut 10 cm au-dela du plateau
+          const d0 = dossier ? Math.max(ep + 4, prof_bureau + 10 - Dp) : ep + 4;
+          const at2 = (s: number, d: number): Pt => [a2[0] + u2x * s + n2x * d, a2[1] + u2y * s + n2y * d];
           for (let s0 = ep + 4; s0 + W <= l2 - ep - 4; s0 += 2) {
             const z = [at2(s0, d0), at2(s0 + W, d0), at2(s0 + W, d0 + Dp), at2(s0, d0 + Dp)];
             // sous le bureau : l'assise (sauf 14 cm de dossier) tient dans le morceau garde
-            const dessous = poly_area(clip_convex(z, bu.brut)) >= W * Math.min(Dp, 60 - 4) * 0.75;
-            if (z.every(dedans_int) && dessous && !touche(z) && ranges.every((o) => poly_area(clip_convex(z, o)) < 1)) { ranges.push(z); return { type: st.type, contre: bu.cote, polygone: z.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) }; }
+            const dessous = poly_area(clip_convex(z, bu.brut)) >= W * Math.min(Dp, (+bu.profondeur_cm || 60) - 4) * 0.6;
+            const autre_bureau = bureaux.some((b2: any) => b2 !== bu && poly_area(clip_convex(z, b2.brut)) >= 1);
+            if (z.every(dedans_int) && dessous && !touche(z) && !autre_bureau && ranges.every((o) => poly_area(clip_convex(z, o)) < 1)) {
+              // decalage demande (lm.sieges_decalage_cm) : applique seulement s'il reste dedans et hors du lit
+              const dec = lm.sieges_decalage_cm;
+              const z2: Pt[] = dec ? z.map(([x, y]) => [x + +dec[0], y + +dec[1]] as Pt) : z;
+              const ok2 = dec ? z2.every(dedans_int) && !touche(z2) && !bureaux.some((b2: any) => b2 !== bu && poly_area(clip_convex(z2, b2.brut)) >= 1) && ranges.every((o) => poly_area(clip_convex(z2, o)) < 1) : true;
+              const zf = ok2 ? z2 : z;
+              ranges.push(zf); return { type: st.type, contre: bu.cote, polygone: zf.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
+            }
           }
         }
         return null;

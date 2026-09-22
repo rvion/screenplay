@@ -71,7 +71,7 @@
 | B · fond | 140 cm | 131,5 cm | 215 → 215 cm | 135° |
 | G · gauche | 248 cm | 236 cm | 215 → 237,5 cm | 90° |
 
-Murs 4,96 m² · intérieur 4,45 m² (murs de 6 cm retirés) · sol libre hors bureaux 1,97 m² · hauteur sous plafond 2,32 m devant, 2,09 m au plus bas (plancher isolé déduit).
+Murs 4,96 m² · intérieur 4,45 m² (murs de 6 cm retirés) · sol libre hors bureaux 1,77 m² · hauteur sous plafond 2,32 m devant, 2,09 m au plus bas (plancher isolé déduit).
 
 ## Débit
 
@@ -134,6 +134,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|
 | bureau gauche | 80 × 236 cm | tout le mur gauche |
 | bureau de façade | 50 × 198 cm | tout le mur de façade |
+| bureau fond | 30 × 131,5 cm | tout le mur fond |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
 | tabouret | 30 × 30 cm | devant le bureau de façade |
 | lit pliant (déplié) | 70 × 190 cm | au milieu, pied sous un bureau, sièges rangés |
@@ -458,7 +459,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 1. Deux entrées d'air sur deux murs opposés, une basse et une haute.
 2. Électricité en apparent, sous goulotte, depuis le câble existant : on ne perce pas la tôle extérieure pour un câble.
-3. Bureaux sur pieds ou sur équerres au sol : 80 × 236 cm à gauche, 50 × 198 cm en façade. Les parements de 0,5 mm ne portent pas une charge suspendue.
+3. Bureaux sur pieds ou sur équerres au sol : 80 × 236 cm à gauche, 50 × 198 cm en façade, 30 × 131,5 cm à fond. Les parements de 0,5 mm ne portent pas une charge suspendue.
 
 **À contrôler avant de continuer :**
 
@@ -470,7 +471,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Points forts
 
 - **Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais (99 cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
-- **4,96 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,45 m² à l'intérieur, 1,97 m² de sol libre hors bureaux.
+- **4,96 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,45 m² à l'intérieur, 1,77 m² de sol libre hors bureaux.
 - **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (238.1 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 50 cm.** 2,06 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
