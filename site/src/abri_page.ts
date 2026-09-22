@@ -118,12 +118,12 @@ export function rend_abri(a: Abri) {
   if (details_plans && liste_plans && mode_plans) {
     for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
     details_plans.insertAdjacentHTML("beforeend", m.faces.map((f: any, i: number) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} · ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
-    const fixes: [string, string][] = [["toit", "Toiture"], ["rehausse", "Rehausse"]];
+    const fixes: [string, string, string][] = [["toit", "Toiture", "T"], ["rehausse", "Rehausse", "R"]];
     maitre_detail({
       liste: liste_plans, mode: mode_plans, panneaux: details_plans, memoire: `abri-v${a.version}-plans`, ancre: el("plans-liste") || undefined,
       entrees: () => [
         ...m.faces.map((f: any): Entree => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} · ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) as HTMLElement })),
-        ...fixes.map(([k, t]): Entree => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement })),
+        ...fixes.map(([k, t, lettre]): Entree => ({ cle: k, titre: t, num: lettre, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) as HTMLElement })),
       ],
     });
   }

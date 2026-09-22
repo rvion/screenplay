@@ -47,7 +47,7 @@ ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.leng
 // plans : liste a gauche (implantation en tete, puis les plans et chaque face), un plan a la fois a droite
 {
   const visibles = () => $$("#plans-details article.detail").filter((x) => !x.hidden);
-  ok($$("#plans-liste li").length === m.faces.length + 2 && $$("#plans-liste .t")[0].textContent === "Face A · façade" && $$("#plans-liste .t").slice(-2).map((x) => x.textContent).join() === "Toiture,Rehausse" && visibles().length === 1 && visibles()[0].dataset.cle === "facade-A", "plans : une entrée par mur puis toiture et rehausse, la face A ouverte en premier, seule");
+  ok($$("#plans-liste li").length === m.faces.length + 2 && $$("#plans-liste .t")[0].textContent === "Face A · façade" && $$("#plans-liste .t").slice(-2).map((x) => x.textContent).join() === "Toiture,Rehausse" && $$("#plans-liste .num-etape").map((x) => x.textContent).join("") === m.faces.map((f) => f.cle).join("") + "TR" && visibles().length === 1 && visibles()[0].dataset.cle === "facade-A", "plans : une lettre par mur puis T (toiture) et R (rehausse), la face A ouverte en premier, seule");
   $$("#plans-liste button")[m.faces.length].click();
   ok(visibles().length === 1 && visibles()[0].dataset.cle === "toit" && visibles()[0].querySelector("svg"), "plans : un clic ouvre la toiture");
   ok($("#plans h2 #plans-mode input") && $("#materiaux-section h2 #materiaux-mode input") && $("#montage h2 #etapes-mode input"), "la bascule « tout afficher » est dans le titre de chaque section à liste");
