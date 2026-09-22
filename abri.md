@@ -133,7 +133,6 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|
 | bureau gauche | 70 × 236 cm | tout le mur gauche |
 | fauteuil de bureau | 70 × 70 cm | devant le bureau gauche |
-| tabouret | 30 × 30 cm | devant le bureau gauche |
 
 ## Matériaux à acheter (prix TTC, sans main-d'œuvre, sans livraison)
 
@@ -472,7 +471,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 50 cm.** 2,06 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.
-- **Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond.
+- **Un bureau, un lit.** Le bureau court sur tout le mur gauche (10 cm, trois écrans de 27"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau.
 
 ### Points faibles
 

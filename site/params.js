@@ -18,7 +18,7 @@ window.SHED_PARAMS = {
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
         "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
         "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
-        "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
+        "**Un bureau, un lit.** Le bureau court sur tout le mur gauche ({gauche_cm} cm, trois écrans de 27\"), le lit de 80 × 190 longe la façade, tête côté porte : couché, les pieds vont vers les écrans. Le fauteuil se range sous le plateau."
       ],
       "limites": [
         "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).",
@@ -122,13 +122,6 @@ window.SHED_PARAMS = {
         "profondeur_cm": 70,
         "contre": "gauche",
         "position": "centre"
-      },
-      {
-        "type": "tabouret",
-        "largeur_cm": 30,
-        "profondeur_cm": 30,
-        "contre": "gauche",
-        "position": "fin"
       }
     ],
     "fenetres": [

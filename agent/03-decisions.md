@@ -579,7 +579,7 @@ revêtement) : la hauteur sous plafond tombe à 2,05 m au plus bas, et la 3D le 
 *Autres réglages :* silhouette à **1,85 m** avec sa taille écrite sur le corps, descente d'eau au **coin
 arrière gauche** (le point le plus reculé), bureau gauche à **70** de profondeur, et plus de tablette au
 fond. *Ce qui a été retiré :* les lits pliants v1 et v2, le lit v4 sur le mur gauche, le bureau de façade et la
-tablette du fond. Il ne reste qu'une disposition : un bureau, un lit. Le bouton mobilier ne dit plus que
+tablette du fond. Il ne reste qu'une disposition : un bureau, un fauteuil, un lit (le tabouret aussi est retiré, le lit sert d'assise d'appoint). Le bouton mobilier ne dit plus que
 l'usage (rien, au bureau, couché) et l'allège des fenêtres passe à 115 pour dégager les écrans.
 
 *Mécanismes ajoutés :* `position: "fin"` (lit calé à l'autre bout de son mur), `bureaux_entiers` (un

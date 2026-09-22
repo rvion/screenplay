@@ -32,6 +32,7 @@ export const VUES = {
   // les quatre vues de l'interieur partagent une camera : seuls les etats changent d'une vignette a l'autre
   porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
+  debout: { titre: "Debout dedans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 0, personne: 2, etiquettes: 0 } },
   couche: { titre: "Couché, les pieds vers les écrans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;

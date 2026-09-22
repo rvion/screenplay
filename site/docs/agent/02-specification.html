@@ -222,9 +222,9 @@ personne a trois états (éteinte, dehors, dedans) marqués par trois points sou
 Sur la vue, une <strong>barre de caméra</strong> fine et translucide (angle 15 à 110°, distance, les valeurs en petit
 sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
 et distance en JSON : c&#39;est ainsi que Rémi transmet un point de vue à régler dans <code>VUES</code> ;
-<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>neuf vignettes</strong> (<code>VUES</code> : jardin = vue de
-départ, vue de droite, derrière avec le passage, puis six vues de l&#39;intérieur sans toit qui
-partagent une seule caméra (<code>DEDANS</code>) : côté porte, au bureau, lit v1, lit v2, lit v3, lit v4) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
+<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous les deux colonnes du résumé, <strong>sept vignettes</strong> (<code>VUES</code> : jardin = vue de
+départ, vue de droite, derrière avec le passage, puis quatre vues de l&#39;intérieur sans toit qui
+partagent une seule caméra (<code>DEDANS</code>) : côté porte, au bureau, debout dedans, couché) : des rendus fixes tirés du même contexte WebGL (la scène prend les <strong>états d&#39;options</strong> de la
 vignette le temps du rendu, puis retrouve les siens). Chaque vue fixe porte ses sept états (toit, porte,
 mobilier, lit, repères, personne, clôture) ; un clic règle la caméra <strong>et</strong> les boutons ; la première
 vignette ramène à l&#39;état de départ, comme le bouton reset ; « copier la vue » copie position, cible,
