@@ -26,10 +26,10 @@ const a = calcule_abri(base, version), d = a.core.modele3d, m = a.m, v = a.v;
 ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.murs.length + ")");
 
 const racine = new THREE.Group();
-const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, lit: false, etiquettes: true });
+const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 8), "six points de vue fixes, chacun avec ses huit états d'options");
-ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.lit === 0 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.lit.etats.lit === 1 && VUES.lit.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ (clôture translucide), intérieur sans toit avec murs coupés et la personne dedans, lit déplié");
+ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
+ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.lit.etats.mobilier === 2 && VUES.lit.etats.personne === 2 && VUES.lit.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, lit déplié = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
 ok(groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry").length >= 4 && groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry").length >= 3, "porte : béquille, tige et cylindre de serrure sur chaque face du battant");
@@ -37,7 +37,7 @@ racine.updateMatrixWorld(true);
 let meshes = 0, nan = 0;
 racine.traverse((o) => { if (o.isMesh) { meshes++; const p = o.geometry.attributes.position.array; for (let i = 0; i < p.length; i++) if (!Number.isFinite(p[i])) nan++; } });
 ok(meshes > 40 && nan === 0, meshes + " maillages, aucune coordonnee NaN ou infinie");
-ok(["toit", "mobilier", "lit", "etiquettes", "sieges", "personne", "personne_dedans", "porte", "porte_fermee"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.personne.visible === false && groupes.personne_dedans.visible === false && groupes.porte_fermee.visible === false && groupes.toit.visible === true && groupes.porte.visible === true && groupes.porte.children.length === 1, "groupes masquables : toit, mobilier, lit, personne dehors et dedans, porte fermee (caches au depart), etiquettes, sieges, porte ouverte");
+ok(["toit", "mobilier", "lit", "sieges", "sieges_ranges", "etiquettes", "personne", "personne_dedans", "personne_assise", "personne_couchee", "porte", "porte_fermee"].every((k) => groupes[k]) && groupes.lit.visible === false && groupes.sieges_ranges.visible === false && groupes.personne.visible === false && groupes.personne_dedans.visible === false && groupes.personne_assise.visible === false && groupes.personne_couchee.visible === false && groupes.porte_fermee.visible === false && groupes.toit.visible === true && groupes.sieges.visible === true && groupes.porte.visible === true && groupes.porte.children.length === 1, "groupes masquables : lit, sieges ranges, personne (dehors, dedans, assise, couchee) et porte fermee caches au depart ; toit, sieges, porte ouverte visibles");
 
 // centre du repere : milieu de la dalle en x, et le meme decalage en y que le viewer
 const xs = d.dalle.map((z) => z[0]), ys = d.dalle.map((z) => z[1]);
@@ -48,6 +48,14 @@ const boite = (o) => new THREE.Box3().setFromObject(o, true);
 
 // chaque mur : sa boite englobante doit etre celle du segment [de, a] epaissi vers l'INTERIEUR, de 0 a la hauteur des murs
 const paroi = groupes.murs.children;
+{
+  // sieges ranges : memes sieges pousses sous leur bureau ; personne assise a la place du fauteuil ; couchee sur le lit
+  const fauteuil = v.sieges.find((s) => /fauteuil/.test(s.type)), lit3 = d.mobilier.lit;
+  const b_ass = boite(groupes.personne_assise), b_cou = boite(groupes.personne_couchee), b_rang = boite(groupes.sieges_ranges), b_sieges = boite(groupes.sieges);
+  ok(groupes.sieges_ranges.children.length === groupes.sieges.children.length && b_rang.min.x < b_sieges.min.x - 0.3, "sieges ranges : autant de pieces, poussees vers le bureau gauche");
+  ok(!fauteuil || (b_ass.max.y > 1.1 && b_ass.max.y < 1.5 && near(b_ass.min.y, d.sol.epaisseur_cm / 100, 0.02)), "personne assise : tete entre 1,10 et 1,50 m, pieds sur le plancher");
+  ok(!lit3 || (b_cou.max.y < 1.0 && b_cou.min.y > 0.4 && Math.max(b_cou.max.z - b_cou.min.z, b_cou.max.x - b_cou.min.x) > 1.5), "personne couchee : allongee sur le lit, sous 1 m de haut, longue de plus de 1,5 m");
+}
 ok(groupes.lit.children.length === 4 && groupes.lit.children.some((o) => o.material.color.getHex() === 0xffffff && boite(o).max.y > boite(groupes.lit.children[0]).max.y), "lit : sommier, matelas, drap et oreiller blanc au-dessus");
 const murs = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
 ok(murs.length === d.murs.length, "un volume de mur par face (" + murs.length + ")");

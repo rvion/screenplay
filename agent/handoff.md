@@ -52,6 +52,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Bouton « murs » : pleins, coupés net à 1 m, sans ; presets intérieur et lit en murs coupés
 - [x] Options en colonne de textes posée sur la vue, en bas à gauche, pilule au survol, sans groupe
 - [x] Résumé : dessin sur deux tiers, légende courte (mur, angle, distance bord, palissade, grillage, dalle), taille stable ; puces à icône avec clé en minuscules
+- [x] Preset « Derrière » : porte fermée
+- [x] Mobilier à trois états (rien, fauteuil, lit) ; la personne dedans est debout, assise au bureau ou couchée sur le lit ; sièges rangés sous les bureaux quand le lit est déplié ; plus de bouton lit
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

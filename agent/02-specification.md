@@ -25,8 +25,11 @@
   bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
   les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
   et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
-  bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « intérieur » et « lit » sont en murs coupés. Le **lit** déplié a un sommier, un
-  matelas, un drap et un oreiller à la tête ;
+  bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « au bureau » et « lit
+  déplié » sont en murs coupés. Le bouton **mobilier** a trois états : rien d'utilisé, fauteuil au bureau,
+  lit déplié (sommier, matelas, drap, oreiller ; le fauteuil et le tabouret sont alors **rangés sous les
+  bureaux**). La **personne** dedans suit le mobilier : debout, assise au fauteuil face au bureau, ou couchée
+  sur le lit la tête sur l'oreiller (groupes `personne_dedans`, `personne_assise`, `personne_couchee`) ;
   un grillage un pointillé vert sur le plan, et en 3D un treillis
   à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
   translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur

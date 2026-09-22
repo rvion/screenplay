@@ -2818,7 +2818,7 @@ function surligne_section() {
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-var ETATS_DEFAUT = { toit: 1, murs: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
+var ETATS_DEFAUT = { toit: 1, murs: 1, porte: 1, mobilier: 1, etiquettes: 1, personne: 0, cloture: 0 };
 function cloture_pleine(gr, oui) {
   gr.traverse((o) => {
     if (o.isMesh) {
@@ -2834,18 +2834,21 @@ var VUES = {
   porte: { titre: "C\xF4t\xE9 porte", position: [4.45, 1.75, 2.99], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1, cloture: 1 } },
   arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
-  interieur: { titre: "Int\xE9rieur, murs coup\xE9s", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, personne: 2 } },
-  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, lit: 1, etiquettes: 0 } }
+  interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
+  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, mobilier: 2, personne: 2, etiquettes: 0 } }
 };
 function applique_etats(vue, e) {
   vue.montrer("toit", e.toit > 0);
-  vue.montrer("mobilier", e.mobilier > 0);
-  vue.montrer("lit", e.lit > 0);
   vue.montrer("etiquettes", e.etiquettes > 0);
+  vue.montrer("lit", e.mobilier === 2);
+  vue.montrer("sieges", e.mobilier !== 2);
+  vue.montrer("sieges_ranges", e.mobilier === 2);
   vue.montrer("porte", e.porte === 1);
   vue.montrer("porte_fermee", e.porte === 2);
   vue.montrer("personne", e.personne === 1);
-  vue.montrer("personne_dedans", e.personne === 2);
+  vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0);
+  vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1);
+  vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2);
   vue.montrer("cloture", e.cloture > 0);
   vue.montrer("murs", e.murs > 0);
   vue.montrer("murs_coupes", e.murs === 2);
@@ -2904,7 +2907,7 @@ function dessine_tuile_grillage() {
   return c;
 }
 function peuple_abri(abri, data, visible_demande = {}) {
-  const groupes = {}, visible = { lit: false, personne: false, personne_dedans: false, porte_fermee: false, cloture: false, ...visible_demande };
+  const groupes = {}, visible = { lit: false, sieges_ranges: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte_fermee: false, cloture: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -3222,22 +3225,68 @@ function peuple_abri(abri, data, visible_demande = {}) {
   toit.add(ombre(tuyau));
   const mob = groupe("mobilier"), sol = data.sol.epaisseur_cm;
   for (const b of data.mobilier.bureaux) mob.add(ombre(new THREE.Mesh(prisme(b.polygone, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
-  const sieges = new THREE.Group();
-  mob.add(sieges);
-  groupes.sieges = sieges;
-  for (const st of data.mobilier.sieges) {
-    const tabouret = /tabouret/.test(st.type), haut2 = tabouret ? 45 : 47, matS = mat(COUL.siege), q = st.polygone;
+  const sieges = groupe("sieges"), sieges_ranges = groupe("sieges_ranges");
+  const matPers = mat(COUL.personne, { roughness: 0.9 });
+  const assise = (h_assise) => {
+    const g = new THREE.Group();
+    for (const dz of [-0.09, 0.09]) {
+      const bas = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.055, h_assise, 10), matPers);
+      bas.position.set(0.22, h_assise / 2, dz);
+      g.add(ombre(bas));
+      const cuisse = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 0.13), matPers);
+      cuisse.position.set(0.1, h_assise + 0.06, dz);
+      g.add(ombre(cuisse));
+    }
+    const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.56, 0.42), matPers);
+    tronc.position.set(-0.08, h_assise + 0.12 + 0.28, 0);
+    g.add(ombre(tronc));
+    const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matPers);
+    tete.position.set(-0.06, h_assise + 0.12 + 0.56 + 0.115, 0);
+    g.add(ombre(tete));
+    return g;
+  };
+  const couchee = (h) => {
+    const g = new THREE.Group();
+    for (const dz of [-0.09, 0.09]) {
+      const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.84, 10), matPers);
+      jambe.rotation.z = Math.PI / 2;
+      jambe.position.set(-0.48, h + 0.07, dz);
+      g.add(ombre(jambe));
+    }
+    const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.2, 0.42), matPers);
+    tronc.position.set(0.27, h + 0.1, 0);
+    g.add(ombre(tronc));
+    const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matPers);
+    tete.position.set(0.72, h + 0.16, 0);
+    g.add(ombre(tete));
+    return g;
+  };
+  const p_assise = groupe("personne_assise"), p_couchee = groupe("personne_couchee");
+  const siege = (st, dans, dx = 0, dy = 0) => {
+    const tabouret = /tabouret/.test(st.type), haut2 = tabouret ? 45 : 47, matS = mat(COUL.siege), q = st.polygone.map((z) => [z[0] + dx, z[1] + dy]), sieges2 = dans;
     const xs2 = q.map((z) => z[0]), ys2 = q.map((z) => z[1]), x0 = Math.min(...xs2), x1 = Math.max(...xs2), y0 = Math.min(...ys2), y1 = Math.max(...ys2);
     const marge = tabouret ? 2 : 4, a0 = x0 + marge, a1 = x1 - marge, b0 = y0 + marge, b1 = y1 - marge;
-    sieges.add(ombre(new THREE.Mesh(prisme([[a0, b0], [a1, b0], [a1, b1], [a0, b1]], plat(sol + haut2 - 5), plat(sol + haut2)), matS)));
+    sieges2.add(ombre(new THREE.Mesh(prisme([[a0, b0], [a1, b0], [a1, b1], [a0, b1]], plat(sol + haut2 - 5), plat(sol + haut2)), matS)));
     for (const [px, py] of [[a0 + 3, b0 + 3], [a1 - 3, b0 + 3], [a1 - 3, b1 - 3], [a0 + 3, b1 - 3]]) {
       const pied = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, (haut2 - 5) / 100, 8), matS);
       pied.position.copy(W(px, py, sol + (haut2 - 5) / 2));
-      sieges.add(ombre(pied));
+      sieges2.add(ombre(pied));
     }
     if (!tabouret) {
       const d = st.contre === "gauche" ? [[a1 - 4, b0], [a1, b0], [a1, b1], [a1 - 4, b1]] : st.contre === "droite" ? [[a0, b0], [a0 + 4, b0], [a0 + 4, b1], [a0, b1]] : [[a0, b1 - 4], [a1, b1 - 4], [a1, b1], [a0, b1]];
-      sieges.add(ombre(new THREE.Mesh(prisme(d, plat(sol + haut2), plat(sol + haut2 + 42)), matS)));
+      sieges2.add(ombre(new THREE.Mesh(prisme(d, plat(sol + haut2), plat(sol + haut2 + 42)), matS)));
+    }
+    return { tabouret, haut: haut2, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, largeur: x1 - x0, profondeur: y1 - y0 };
+  };
+  for (const st of data.mobilier.sieges) {
+    const s = siege(st, sieges);
+    const pousse = st.contre === "gauche" ? [-(s.largeur - 15), 0] : st.contre === "droite" ? [s.largeur - 15, 0] : [0, -(s.profondeur - 15)];
+    siege(st, sieges_ranges, pousse[0], pousse[1]);
+    if (!s.tabouret) {
+      const g = assise(s.haut / 100);
+      g.rotation.y = st.contre === "gauche" ? Math.PI : st.contre === "droite" ? 0 : -Math.PI / 2;
+      g.position.copy(W(s.cx, s.cy, sol));
+      p_assise.add(g);
     }
   }
   const lit = groupe("lit");
@@ -3249,8 +3298,11 @@ function peuple_abri(abri, data, visible_demande = {}) {
     lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(15855076, { roughness: 0.95 }))));
     lit.add(ombre(new THREE.Mesh(prisme(drap, plat(sol + 45), plat(sol + 48)), mat(7311295, { roughness: 0.95 }))));
     lit.add(ombre(new THREE.Mesh(prisme(tete, plat(sol + 45), plat(sol + 55)), mat(16777215, { roughness: 1 }))));
+    const g = couchee(0.45);
+    g.rotation.y = long_y ? Math.PI / 2 : 0;
+    g.position.copy(W((x0 + x1) / 2, (y0 + y1) / 2, sol));
+    p_couchee.add(g);
   }
-  sieges.visible = !visible.lit;
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }
@@ -3296,7 +3348,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
+  const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_ranges: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3323,7 +3375,6 @@ function createAbriViewer(container, data0) {
       return;
     }
     if (groupes[nom]) groupes[nom].visible = oui;
-    if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }
   function voir(vue) {
     const v = VUES[vue];
@@ -3406,7 +3457,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
-  const NOMS = ["toit", "murs", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"];
+  const NOMS = ["toit", "murs", "porte", "mobilier", "etiquettes", "personne", "cloture"];
   const bouton = (nom) => document.getElementById("voir-" + nom);
   const montre_bouton = (nom, etat) => {
     const b = bouton(nom);
