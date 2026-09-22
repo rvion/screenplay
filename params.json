@@ -184,6 +184,19 @@
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
+      ],
+      "idees": [
+        "**Deux fenêtres identiques.** Les deux oscillo-battantes, ou les deux fixes avec une grille de ventilation à part : une seule référence, une seule découpe, un seul délai.",
+        "**Fenêtre fixe sans châssis.** Un double vitrage posé sur parcloses bois dans la découpe du panneau, comme dans les tiny houses : moins cher qu'un châssis PVC, aucun délai, et le cadre bois ferme la tranche du panneau.",
+        "**Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
+        "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
+        "**Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.",
+        "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
+        "**Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.",
+        "**Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.",
+        "**Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.",
+        "**Rail de pied simplifié.** Une cornière alu de 40 vissée sur la bande d'arase, dedans et dehors, plutôt qu'un profil en U introuvable au détail : deux longueurs de stock, le même mastic.",
+        "**Électricité sous les bureaux.** Une seule goulotte sous le plateau du bureau gauche et de la façade, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble."
       ]
     },
     "_comment": "Version 4 = version 3 (herite) avec le toit vers le FOND : les nervures des panneaux menent l'eau a l'arriere, la gouttiere court derriere l'abri (mur du fond + pan a 45 degres). descente = bout de la gouttiere ou placer la descente (droite = vers le jardin). Comparee a la version 3 : le tableau isole l'effet du sens du toit.",
