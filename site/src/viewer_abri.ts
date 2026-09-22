@@ -7,9 +7,10 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 type Vec = any;
 type Pt = number[];
 
-export interface AbriViewer { rebuild(data: any): void; montrer(nom: "toit" | "mobilier" | "lit" | "etiquettes", oui: boolean): void; }
+export interface AbriViewer { rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; }
+export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne";
 
-const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9 };
+const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5 };
 
 function etiquette(txt: string): Vec | null {
   if (typeof document === "undefined") return null;
@@ -26,8 +27,8 @@ function etiquette(txt: string): Vec | null {
 }
 
 // construit la scene de l'abri dans `abri` (sans renderer ni DOM : testable sous Node) ; rend les groupes masquables
-export function peuple_abri(abri: Vec, data: any, visible: Record<string, boolean> = {}): Record<string, Vec> {
-  const groupes: Record<string, Vec> = {};
+export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string, boolean> = {}): Record<string, Vec> {
+  const groupes: Record<string, Vec> = {}, visible = { lit: false, personne: false, ...visible_demande };
   const mat = (couleur: number, extra: any = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z: Pt) => z[0]), ys = data.dalle.map((z: Pt) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -128,6 +129,13 @@ export function peuple_abri(abri: Vec, data: any, visible: Record<string, boolea
         battant.position.set(s1 / 100, 0, -0.01);
         battant.rotation.y = angle;
         pose(battant);
+        // silhouette de 1,80 m devant la porte, pour l'echelle (cachee au depart)
+        const qui = groupe("personne"), matP = mat(COUL.personne, { roughness: 0.9 }), corps = new THREE.Group();
+        for (const dx of [-0.09, 0.09]) { const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP); jambe.position.set(dx, 0.42, 0); corps.add(ombre(jambe)); }
+        const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP); tronc.position.y = 0.84 + 0.33; corps.add(ombre(tronc));
+        const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP); tete.position.y = 1.8 - 0.115; corps.add(ombre(tete));
+        corps.position.set((s0 + s1) / 200, 0, 0.45);
+        pose(corps, qui);
       } else {
         const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(0xf4f5f6), c = 4;
         pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
@@ -234,7 +242,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true };
+  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -247,7 +255,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   }
   rebuild(data0);
 
-  function montrer(nom: "toit" | "mobilier" | "lit" | "etiquettes", oui: boolean) {
+  function montrer(nom: Masquable, oui: boolean) {
     visible[nom] = oui;
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;

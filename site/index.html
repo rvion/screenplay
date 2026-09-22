@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=7c9ab111" />
+  <link rel="stylesheet" href="abri.css?v=29147bd9" />
   <script type="importmap">
   {
     "imports": {
@@ -36,7 +36,6 @@
     <h2>Sommaire</h2>
     <nav class="sections" id="sommaire">
       <a href="#fiche-chantier">Fiche chantier</a>
-      <a href="#implantation">Implantation</a>
       <a href="#plans">Plans</a>
       <a href="#debit">Débit</a>
       <a href="#materiaux-section">Matériaux</a>
@@ -44,10 +43,8 @@
       <a href="#ouvertures">Ouvertures, mobilier</a>
       <a href="#pourquoi">Pourquoi cette forme</a>
     </nav>
-    <h2>Ailleurs</h2>
-    <nav class="sections">
+    <nav class="ailleurs">
       <a href="docs/index.html">Tous les documents</a>
-      <a href="configurateur.html">Étude initiale</a>
       <a href="https://github.com/rvion/screenplay">Dépôt</a>
     </nav>
   </aside>
@@ -66,27 +63,25 @@
             <label><input type="checkbox" id="voir-mobilier" checked> mobilier</label>
             <label><input type="checkbox" id="voir-lit"> lit déplié</label>
             <label><input type="checkbox" id="voir-etiquettes" checked> repères</label>
+            <label><input type="checkbox" id="voir-personne"> personne 1,80 m</label>
           </p>
         </div>
       </div>
       <div class="table-wrap"><table id="murs"></table></div>
-      <p class="note">Cotes en cm. Un repère par panneau (A1, D2, T1…), le même en 3D, sur les plans, au débit et dans le guide.</p>
-    </section>
-
-    <section id="implantation">
-      <h2>Implantation sur la dalle</h2>
-      <div class="planbox grand" id="plan-implantation"></div>
-      <ul id="implantation-points"></ul>
+      <p class="note">Cotes en cm. Le repère d'un panneau (A1, T1…) est le même partout.</p>
     </section>
 
     <section id="plans">
-      <h2>Plans et élévations</h2>
-      <div class="plans">
-        <figure class="wide"><div class="planbox" id="plan-sol"></div><figcaption>Plan de sol</figcaption></figure>
-        <figure><div class="planbox" id="plan-toit"></div><figcaption>Toiture</figcaption></figure>
-        <figure><div class="planbox" id="plan-rehausse"></div><figcaption>Rehausse : débit des madriers</figcaption></figure>
+      <h2>Plans et élévations <span class="mode" id="plans-mode"></span></h2>
+      <div class="maitre">
+        <div class="cote-liste"><ol class="liste" id="plans-liste"></ol></div>
+        <div class="details" id="plans-details">
+          <article data-cle="implantation"><h3>Implantation sur la dalle</h3><div class="planbox" id="plan-implantation"></div><ul id="implantation-points"></ul></article>
+          <article data-cle="sol"><h3>Plan de sol</h3><div class="planbox" id="plan-sol"></div></article>
+          <article data-cle="toit"><h3>Toiture</h3><div class="planbox" id="plan-toit"></div></article>
+          <article data-cle="rehausse"><h3>Rehausse : débit des madriers</h3><div class="planbox" id="plan-rehausse"></div></article>
+        </div>
       </div>
-      <div class="plans" id="facades"></div>
     </section>
 
     <section id="debit">
@@ -99,25 +94,24 @@
     </section>
 
     <section id="materiaux-section">
-      <h2>Matériaux à acheter</h2>
+      <h2>Matériaux à acheter <span class="mode" id="materiaux-mode"></span></h2>
       <p class="note">Prix TTC relevés en ligne, quantités calculées. Sans main-d'œuvre ni livraison.</p>
       <div class="maitre">
-        <div class="cote"><p class="mode" id="materiaux-mode"></p><ol class="liste" id="materiaux-liste"></ol></div>
+        <div class="cote-liste"><ol class="liste" id="materiaux-liste"></ol></div>
         <div class="details" id="materiaux"></div>
       </div>
       <p class="total" id="materiaux-total"></p>
     </section>
 
     <section id="montage">
-      <h2>Guide de montage</h2>
+      <h2>Guide de montage <span class="mode" id="etapes-mode"></span></h2>
       <div class="maitre">
-        <div class="cote"><p class="mode" id="etapes-mode"></p><ol class="liste" id="etapes-liste"></ol></div>
+        <div class="cote-liste"><ol class="liste" id="etapes-liste"></ol></div>
         <div class="details" id="etapes">
           <article class="prealable" id="guide-avant-etape"><h3>Avant de commander</h3><ul id="guide-avant"></ul></article>
           <article class="prealable" id="guide-outillage-etape"><h3>Outillage</h3><ul id="guide-outillage"></ul></article>
         </div>
       </div>
-      <p class="note">Les cases cochées restent dans ce navigateur.</p>
     </section>
 
     <section id="ouvertures">
@@ -133,7 +127,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=7c9ab111"></script>
-  <script type="module" src="abri.js?v=7c9ab111"></script>
+  <script src="params.js?v=29147bd9"></script>
+  <script type="module" src="abri.js?v=29147bd9"></script>
 </body>
 </html>

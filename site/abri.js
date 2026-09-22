@@ -609,9 +609,9 @@ function resolve_openings(p, g) {
     description: o.description || ""
   }));
 }
-function panel_replaced_by(openings, face, s0, s1, H) {
+function panel_replaced_by(openings, face2, s0, s1, H) {
   for (const o of openings) {
-    if (o.face !== face || o.allege_cm > 0.5) continue;
+    if (o.face !== face2 || o.allege_cm > 0.5) continue;
     if (o.start_cm <= s0 + 0.5 && o.start_cm + o.largeur_cm >= s1 - 0.5 && o.allege_cm + o.hauteur_cm >= H - 0.5) return o;
   }
   return null;
@@ -966,11 +966,11 @@ function variantes(p, g) {
     const t = Math.max(0, Math.min(1, ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / l2));
     return [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
   };
-  const passages = (r) => fond.map(({ cote, a, b }) => {
+  const passages = (r) => fond.map(({ cote: cote2, a, b }) => {
     let best2 = null;
     const garde = (forme_pt, mur_pt) => {
       const cm = Math.hypot(forme_pt[0] - mur_pt[0], forme_pt[1] - mur_pt[1]);
-      if (!best2 || cm < best2.cm) best2 = { cote, cm, segment: [forme_pt, mur_pt] };
+      if (!best2 || cm < best2.cm) best2 = { cote: cote2, cm, segment: [forme_pt, mur_pt] };
     };
     r.forEach((p2, i) => {
       const q = r[(i + 1) % r.length];
@@ -978,7 +978,7 @@ function variantes(p, g) {
       garde(pied(a, p2, q), a);
       garde(pied(b, p2, q), b);
     });
-    return { cote, cm: rnd2(best2.cm, 1), segment: best2.segment.map((v) => [rnd2(v[0], 1), rnd2(v[1], 1)]) };
+    return { cote: cote2, cm: rnd2(best2.cm, 1), segment: best2.segment.map((v) => [rnd2(v[0], 1), rnd2(v[1], 1)]) };
   });
   const dalle_abs = g.dalle.polygone.map(([x, y]) => [x + ox, y + oy]);
   const derriere_abri = (r) => {
@@ -1133,12 +1133,12 @@ function variantes(p, g) {
     }
     if (m12) out.push(forme(12, "coin coup\xE9 au module", `l'option 1 \xE9largie \xE0 toute la fa\xE7ade : mur du fond ${m12.i} et mur gauche ${m12.j} modules de ${fz2(mod)} sans recoupe, pan coup\xE9 parall\xE8le au grand pan`, m12.q));
   }
-  const place = (v, cote, position, largeur) => {
-    const k = v.noms_cotes.indexOf(cote);
+  const place = (v, cote2, position, largeur) => {
+    const k = v.noms_cotes.indexOf(cote2);
     if (k < 0) return null;
     const L = v.cotes_cm[k], w = Math.min(largeur, L);
     const s0 = typeof position === "number" ? position : position === "gauche" ? 0 : position === "centre" ? (L - w) / 2 : L - w;
-    return { cote: k, nom: cote, debut_cm: rnd2(s0, 1), largeur_cm: w };
+    return { cote: k, nom: cote2, debut_cm: rnd2(s0, 1), largeur_cm: w };
   };
   const disp = p.disposition_trapeze;
   for (const v of out) {
@@ -1754,13 +1754,13 @@ function plan_rehausse_bois_svg(p, g, t) {
   svg += "</svg>\n";
   return svg;
 }
-function facade_svg(p, g, face, openings) {
+function facade_svg(p, g, face2, openings) {
   const pad = 60, scale = 0.6;
-  const L = face.longueur_cm, h1 = face.hauteur_debut_cm, h2 = face.hauteur_fin_cm, Hm = face.hauteur_mur_cm;
+  const L = face2.longueur_cm, h1 = face2.hauteur_debut_cm, h2 = face2.hauteur_fin_cm, Hm = face2.hauteur_mur_cm;
   const cover = +p.panneau.largeur_utile_cm;
   const base_W = L * scale + 2 * pad;
   const H = Math.max(h1, h2) * scale + 2 * pad;
-  const title = `Face ${face.cle} \u2014 ${face.libelle}`;
+  const title = `Face ${face2.cle} \u2014 ${face2.libelle}`;
   const W = Math.max(base_W, tw(title, 15) + 24);
   const P = (x, h) => [pad + x * scale, H - pad - h * scale];
   let svg = svgHeader(rnd2(W), rnd2(H));
@@ -1771,18 +1771,18 @@ function facade_svg(p, g, face, openings) {
   }
   const boisF = p.rehausse && p.rehausse.materiau === "bois";
   const rf = boisF ? "#d9b98a" : "#fdf6e3", rs = boisF ? "#8a5a2b" : "#a07400";
-  if (face.rehausse !== "aucune") {
+  if (face2.rehausse !== "aucune") {
     svg += poly([P(0, Hm), P(L, Hm), P(L, h2), P(0, h1)], rf, rs, 2);
-    if (face.rehausse === "bandeau") {
+    if (face2.rehausse === "bandeau") {
       const mid = P(L / 2, (h1 + Hm) / 2);
       svg += text(mid[0], mid[1] + 4, `R1 \xB7 ${boisF ? "madrier" : "bandeau"} ${f0(L)} \xD7 ${fz2(h1 - Hm)}`, "middle", rs, 10, "bold");
     } else {
       const mid = P(L / 2, (h1 + h2) / 2);
-      svg += text(mid[0], mid[1] - 8, `${face.cle === "G" ? "R2" : "R3"} \xB7 ${boisF ? "coin bois" : "triangle"} ${f0(L)} \xD7 ${fz2(Math.abs(h1 - h2))}`, "middle", rs, 10, "bold");
+      svg += text(mid[0], mid[1] - 8, `${face2.cle === "G" ? "R2" : "R3"} \xB7 ${boisF ? "coin bois" : "triangle"} ${f0(L)} \xD7 ${fz2(Math.abs(h1 - h2))}`, "middle", rs, 10, "bold");
     }
   }
   for (const o of openings) {
-    if (o.face !== face.cle) continue;
+    if (o.face !== face2.cle) continue;
     const ow = o.largeur_cm * scale, oh = o.hauteur_cm * scale;
     const sx = pad + o.start_cm * scale;
     const by = H - pad - o.allege_cm * scale;
@@ -1798,22 +1798,22 @@ function facade_svg(p, g, face, openings) {
       svg += text(sx + ow / 2, by + 12, `all\xE8ge ${itr(o.allege_cm)}`, "middle", "#888", 9);
     }
   }
-  const mine = openings.filter((o) => o.face === face.cle);
+  const mine = openings.filter((o) => o.face === face2.cle);
   for (let i = 0, n = Math.ceil(L / cover); i < n; i++) {
     const x0 = i * cover, x1 = Math.min((i + 1) * cover, L);
-    const rep = panel_replaced_by(mine, face.cle, x0, x1, Hm);
+    const rep = panel_replaced_by(mine, face2.cle, x0, x1, Hm);
     if (rep) {
       const c2 = P((x0 + x1) / 2, Hm * 0.9);
-      svg += text(c2[0], c2[1] + 4, `${face.cle}${i + 1} = bloc-porte`, "middle", "#178", 10, "bold");
+      svg += text(c2[0], c2[1] + 4, `${face2.cle}${i + 1} = bloc-porte`, "middle", "#178", 10, "bold");
       continue;
     }
     const over = mine.filter((o) => o.start_cm < x1 && o.start_cm + o.largeur_cm > x0);
     const topOpen = over.length ? Math.max(...over.map((o) => o.allege_cm + o.hauteur_cm)) : 0;
     const hy = over.length ? Math.min(Hm - 6, topOpen + (Hm - topOpen) / 2) : Hm * 0.86;
     const c = P((x0 + x1) / 2, hy);
-    svg += text(c[0], c[1] + 6, `${face.cle}${i + 1}`, "middle", "#9fb0c2", over.length && Hm - topOpen < 30 ? 11 : 18, "bold");
+    svg += text(c[0], c[1] + 6, `${face2.cle}${i + 1}`, "middle", "#9fb0c2", over.length && Hm - topOpen < 30 ? 11 : 18, "bold");
   }
-  const nPan = Array.from({ length: Math.ceil(L / cover) }, (_, i) => panel_replaced_by(mine, face.cle, i * cover, Math.min((i + 1) * cover, L), Hm) ? 0 : 1).reduce((a, b) => a + b, 0);
+  const nPan = Array.from({ length: Math.ceil(L / cover) }, (_, i) => panel_replaced_by(mine, face2.cle, i * cover, Math.min((i + 1) * cover, L), Hm) ? 0 : 1).reduce((a, b) => a + b, 0);
   svg += text(pad + L * scale / 2, H - pad + 26, `${f0(L)} cm \xB7 ${nPan} panneau${nPan > 1 ? "x" : ""} de ${f0(Hm)}`, "middle", "#222", 13, "bold");
   svg += text(pad - 8, P(0, h1)[1], `${fz2(h1)}`, "end", "#2b5d8a", 12);
   svg += text(pad + L * scale + 8, P(L, h2)[1], `${fz2(h2)}`, "start", "#2b5d8a", 12);
@@ -2279,9 +2279,9 @@ function params_v2(p, cle = "abri_v2") {
 function ou_descente(m) {
   const xs = m.faces.flatMap((f) => [f.de[0], f.a[0]]), ys = m.faces.flatMap((f) => [f.de[1], f.a[1]]);
   const [x, y] = m.toit.gouttiere.descente, mx = (Math.min(...xs) + Math.max(...xs)) / 2, y0 = Math.min(...ys), y1 = Math.max(...ys);
-  const cote = x > mx ? "droit" : "gauche";
-  if (y < y0 + (y1 - y0) * 0.2) return `devant \xE0 ${cote === "droit" ? "droite" : "gauche"}, c\xF4t\xE9 jardin`;
-  return y > y0 + (y1 - y0) * 0.85 ? `au coin arri\xE8re ${cote}` : `\xE0 l'arri\xE8re du mur ${cote}, \xE0 l'entr\xE9e du passage`;
+  const cote2 = x > mx ? "droit" : "gauche";
+  if (y < y0 + (y1 - y0) * 0.2) return `devant \xE0 ${cote2 === "droit" ? "droite" : "gauche"}, c\xF4t\xE9 jardin`;
+  return y > y0 + (y1 - y0) * 0.85 ? `au coin arri\xE8re ${cote2}` : `\xE0 l'arri\xE8re du mur ${cote2}, \xE0 l'entr\xE9e du passage`;
 }
 function injecteur(v, m, base) {
   const fr3 = (x) => String(x).replace(".", ",");
@@ -2395,6 +2395,8 @@ var fr2 = (x) => String(x).replace(".", ",");
 var fz3 = (x) => fr2(Math.round(x * 10) / 10);
 var eur = (x) => `${Math.round(x).toLocaleString("fr-FR").replace(/ | /g, " ")} \u20AC`;
 var echappe = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+var cote = (x, u = "cm") => `<span class="cote">${typeof x === "number" ? fr2(x) : x}${u ? `<span class="u">${u === "\xB0" ? "" : " "}${u}</span>` : ""}</span>`;
+var face = (id) => `<span class="face">${id}</span>`;
 function md_en_ligne(s) {
   return echappe(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, href) => `<a href="${/^[a-z]+:/i.test(href) ? href : "docs/" + href.replace(/\.md(#.*)?$/i, ".html$1").toLowerCase()}">${t}</a>`).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
 }
@@ -2473,44 +2475,60 @@ function rend_abri(a) {
   const doc = el("lien-document");
   if (doc) doc.setAttribute("href", retenue ? "docs/abri.html" : `docs/abri-v${a.version}.html`);
   const paires = [
-    ["Murs (ext\xE9rieur)", m.faces.map((f) => `${f.cle} ${fr2(f.longueur_cm)}`).join(" \xB7 ") + " cm"],
-    ["Angles", m.angles_deg.map((g) => fr2(g) + "\xB0").join(" \xB7 ")],
-    ["Hauteurs finies des coins", m.hauteurs_coins_cm.map((h) => fr2(h)).join(" \xB7 ") + " cm"],
-    ["Hauteur des panneaux de mur", `${fz3(m.hauteur_mur_cm)} cm`],
-    ["Toit", `vers ${m.sens === "droite" ? "la droite (jardin)" : "le fond"} \xB7 pente ${fr2(m.pente.pourcent)} % \xB7 port\xE9e ${fr2(Math.round(m.portee_cm) / 100)} m${a.pp.disposition_trapeze.toit.panne_intermediaire ? " (panne \xE0 mi-profondeur)" : ""}`],
-    ["Implantation", `${fz3(gauche)} cm du bord gauche \xB7 ${fz3(avant)} cm du bord avant \xB7 ${fz3(droite_libre)} cm de dalle \xE0 droite`],
-    ["Passage derri\xE8re", `${fr2(passage.cm)} cm au plus \xE9troit`],
-    ["Surfaces", `${fr2(v.aire_m2)} m\xB2 de murs (${sans_formalite ? `au seuil de ${fz3(seuil)} m\xB2, sans formalit\xE9` : "d\xE9claration pr\xE9alable"}) \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int\xE9rieur \xB7 ${fr2(v.sol_libre_m2)} m\xB2 de sol libre`],
-    ["Panneaux", `${m.panneaux_mur_a_commander} de mur (${fz3(mod)} \xD7 ${fz3(m.hauteur_mur_cm)}) \xB7 ${m.toit.panneaux.length} de toit \xB7 ${m.rehausse.nb_madriers} madrier(s) ${m.rehausse.section_mm.join(" \xD7 ")}`],
-    ["Ouvertures", `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} ${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)} face ${m.faces[po.cote].cle} \xB7 ${v.fenetres.map((f) => `${f.ouvrant ? "OB" : "fixe"} ${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}, all\xE8ge ${fz3(f.allege_cm)}`).join(" \xB7 ")}`],
-    ["Goutti\xE8re", `${fr2(G.longueur_cm)} cm sur ${G.troncons.map((t) => t.face).join(" + ")} \xB7 descente ${ou_descente(m)}`],
-    ["Mat\xE9riaux", `${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}), sans main-d'\u0153uvre ni livraison`]
+    ["Murs (ext\xE9rieur)", m.faces.map((f) => `${face(f.cle)} ${cote(f.longueur_cm)}`).join(" \xB7 ")],
+    ["Angles", m.angles_deg.map((g) => cote(g, "\xB0")).join(" \xB7 ")],
+    ["Hauteurs finies des coins", m.hauteurs_coins_cm.map((h) => cote(h)).join(" \xB7 ")],
+    ["Hauteur des panneaux de mur", cote(m.hauteur_mur_cm)],
+    ["Toit", `vers ${m.sens === "droite" ? "la droite (jardin)" : "le fond"} \xB7 pente ${cote(m.pente.pourcent, "%")} \xB7 port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " (panne \xE0 mi-profondeur)" : ""}`],
+    ["Implantation", `${cote(gauche)} du bord gauche \xB7 ${cote(avant)} du bord avant \xB7 ${cote(droite_libre)} de dalle \xE0 droite`],
+    ["Passage derri\xE8re", `${cote(passage.cm)} au plus \xE9troit`],
+    ["Surfaces", `${cote(v.aire_m2, "m\xB2")} de murs (${sans_formalite ? `au seuil de ${fz3(seuil)} m\xB2, sans formalit\xE9` : "d\xE9claration pr\xE9alable"}) \xB7 ${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur \xB7 ${cote(v.sol_libre_m2, "m\xB2")} de sol libre`],
+    ["Panneaux", `${m.panneaux_mur_a_commander} de mur (${cote(`${fz3(mod)} \xD7 ${fz3(m.hauteur_mur_cm)}`)}) \xB7 ${m.toit.panneaux.length} de toit \xB7 ${m.rehausse.nb_madriers} madrier(s) ${cote(m.rehausse.section_mm.join(" \xD7 "), "mm")}`],
+    ["Ouvertures", `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} ${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} face ${face(m.faces[po.cote].cle)} \xB7 ${v.fenetres.map((f) => `${f.ouvrant ? "OB" : "fixe"} ${cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`)}, all\xE8ge ${cote(f.allege_cm)}`).join(" \xB7 ")}`],
+    ["Goutti\xE8re", `${cote(G.longueur_cm)} sur ${G.troncons.map((t) => face(t.face)).join(" + ")} \xB7 descente ${ou_descente(m)}`],
+    ["Mat\xE9riaux", `${eur(B.materiaux_eur)} TTC (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)})`]
   ];
   html("fiche", paires.map(([k, val]) => `<tr><th>${k}</th><td>${val}</td></tr>`).join(""));
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
-    m.faces.map((f, i) => [`<b>${f.cle}</b> ${nom_face(f)}`, `${fr2(f.longueur_cm)}`, `${fr2(v.cotes_interieures_cm[i])}`, `${fr2(f.hauteur_debut_cm)} \u2192 ${fr2(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${pn.id} ${fz3(pn.largeur_cm)}`).join(" \xB7 "), `${fr2(m.angles_deg[i])}\xB0`])
+    m.faces.map((f, i) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)} ${cote(pn.largeur_cm, "")}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")])
   );
   liste("implantation-points", [
-    `Abri \xE0 <b>${fz3(gauche)} cm</b> du bord gauche (mur de propri\xE9t\xE9) et <b>${fz3(avant)} cm</b> du bord avant ; <b>${fz3(droite_libre)} cm</b> de dalle \xE0 droite, le chemin vers la porte et l'arri\xE8re.`,
-    `Passage derri\xE8re, le long du grand pan : <b>${fr2(passage.cm)} cm</b> au plus \xE9troit.`,
-    v.arriere ? `<b>${fr2(v.arriere.aire_m2)} m\xB2</b> de dalle cach\xE9s derri\xE8re l'abri (hachures vertes), jusqu'\xE0 ${fz3(v.arriere.profondeur_max_cm)} cm de profondeur : le rangement des outils de jardin.` : ""
+    `${cote(gauche)} du bord gauche (mur de propri\xE9t\xE9), ${cote(avant)} du bord avant, ${cote(droite_libre)} de dalle \xE0 droite : le chemin vers la porte et l'arri\xE8re.`,
+    `Passage derri\xE8re, le long du grand pan : ${cote(passage.cm)} au plus \xE9troit.`,
+    v.arriere ? `${cote(v.arriere.aire_m2, "m\xB2")} de dalle cach\xE9s derri\xE8re l'abri (hachures vertes), jusqu'\xE0 ${cote(v.arriere.profondeur_max_cm)} de profondeur : les outils de jardin.` : ""
   ].filter(Boolean));
   const plans = [["modele-implantation", "implantation"], ["modele-sol", "sol"], ["modele-toit", "toit"], ["modele-rehausse", "rehausse"]];
   for (const [nom, id] of plans) html(`plan-${id}`, core.svg[nom] || "");
-  html("facades", m.faces.map((f, i) => `<figure><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div><figcaption>Face ${f.cle} \xB7 ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</figcaption></figure>`).join(""));
+  const details_plans = el("plans-details"), liste_plans = el("plans-liste"), mode_plans = el("plans-mode");
+  if (details_plans && liste_plans && mode_plans) {
+    for (const vieux of details_plans.querySelectorAll("article[data-cle^='facade-']")) vieux.remove();
+    details_plans.insertAdjacentHTML("beforeend", m.faces.map((f, i) => `<article data-cle="facade-${f.cle}"><h3>Face ${face(f.cle)} \xB7 ${nom_face(f)}${v.porte && v.porte.cote === i ? " (porte)" : f.cle === "A" ? " (jardin)" : ""}</h3><div class="planbox">${core.svg[`modele-facade-${f.cle}`] || ""}</div></article>`).join(""));
+    const fixes = [["implantation", "Implantation sur la dalle"], ["sol", "Plan de sol"], ["toit", "Toiture"], ["rehausse", "Rehausse"]];
+    maitre_detail({
+      liste: liste_plans,
+      mode: mode_plans,
+      panneaux: details_plans,
+      memoire: `abri-v${a.version}-plans`,
+      ancre: el("plans") || void 0,
+      entrees: () => [
+        ...fixes.map(([k, t]) => ({ cle: k, titre: t, panneau: details_plans.querySelector(`article[data-cle="${k}"]`) })),
+        ...m.faces.map((f) => ({ cle: `facade-${f.cle}`, titre: `Face ${f.cle} \xB7 ${nom_face(f)}`, num: f.cle, panneau: details_plans.querySelector(`article[data-cle="facade-${f.cle}"]`) }))
+      ]
+    });
+  }
   table(
     "debit-murs",
     ["pi\xE8ce", "largeur", "provenance", "d\xE9coupe"],
-    m.faces.flatMap((f) => f.panneaux.map((pn) => [`<b>${pn.id}</b>`, `${fr2(pn.largeur_cm)} cm`, pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"]))
+    m.faces.flatMap((f) => f.panneaux.map((pn) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"]))
   );
   table(
     "debit-toit",
     ["pi\xE8ce", "largeur", "longueur", "coupe"],
-    m.toit.panneaux.map((t) => [`<b>${t.id}</b>`, `${fr2(t.largeur_cm)} cm`, `${fr2(t.longueur_cm)} cm`, `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`])
+    m.toit.panneaux.map((t) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`])
   );
-  table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [`<b>${r.id}</b>`, r.face, `${fr2(r.L)} cm`, `${fr2(r.h0)} \u2192 ${fr2(r.h1)} cm`]));
+  table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} \u2192 ${cote(r.h1)}`]));
   html("materiaux", B.groupes.map((gr) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>r\xE8gle \xB7 source</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
   const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
   if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
@@ -2527,13 +2545,13 @@ function rend_abri(a) {
   html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
   rend_guide(m.guide, a.version);
   table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
-    [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)} cm (cadre ${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)})`, `face ${m.faces[po.cote].cle}, de ${fr2(po.debut_cm)} \xE0 ${fr2(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} cm depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
-    ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, `${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)} cm`, `face A, de ${fr2(f.debut_cm)} \xE0 ${fr2(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} cm depuis le coin gauche`, `all\xE8ge ${fz3(f.allege_cm)} cm, dans un seul panneau`])
+    [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm, "")} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
+    ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm, "")} \xE0 ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `all\xE8ge ${cote(f.allege_cm)}, dans un seul panneau`])
   ]);
   table("amenagement", ["\xE9l\xE9ment", "taille", "place"], [
-    ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, `${fz3(b.profondeur_cm)} \xD7 ${fr2(b.longueur_cm)} cm`, `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
-    ...(v.sieges || []).map((st) => [st.type, `${fz3(st.largeur_cm)} \xD7 ${fz3(st.profondeur_cm)} cm`, `devant le bureau ${st.contre === "avant" ? "de fa\xE7ade" : st.contre}`]),
-    ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, `${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)} cm`, v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
+    ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, cote(`${fz3(b.profondeur_cm)} \xD7 ${fr2(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
+    ...(v.sieges || []).map((st) => [st.type, cote(`${fz3(st.largeur_cm)} \xD7 ${fz3(st.profondeur_cm)}`), `devant le bureau ${st.contre === "avant" ? "de fa\xE7ade" : st.contre}`]),
+    ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
   ]);
   const T = a.textes;
   const bloc = (titre, items, ordonne = false) => items.length ? `<h3>${titre}</h3><${ordonne ? "ol" : "ul"}>${items.map((s) => `<li>${md_en_ligne(s)}</li>`).join("")}</${ordonne ? "ol" : "ul"}>` : "";
@@ -2603,7 +2621,7 @@ function surligne_section() {
 // site/src/viewer_abri.ts
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873 };
+var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413 };
 function etiquette(txt) {
   if (typeof document === "undefined") return null;
   const c = document.createElement("canvas");
@@ -2623,8 +2641,8 @@ function etiquette(txt) {
   if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
-function peuple_abri(abri, data, visible = {}) {
-  const groupes = {};
+function peuple_abri(abri, data, visible_demande = {}) {
+  const groupes = {}, visible = { lit: false, personne: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2744,6 +2762,20 @@ function peuple_abri(abri, data, visible = {}) {
         battant.position.set(s1 / 100, 0, -0.01);
         battant.rotation.y = angle;
         pose(battant);
+        const qui = groupe("personne"), matP = mat(COUL.personne, { roughness: 0.9 }), corps = new THREE.Group();
+        for (const dx of [-0.09, 0.09]) {
+          const jambe = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.84, 10), matP);
+          jambe.position.set(dx, 0.42, 0);
+          corps.add(ombre(jambe));
+        }
+        const tronc = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.66, 0.22), matP);
+        tronc.position.y = 0.84 + 0.33;
+        corps.add(ombre(tronc));
+        const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matP);
+        tete.position.y = 1.8 - 0.115;
+        corps.add(ombre(tete));
+        corps.position.set((s0 + s1) / 200, 0, 0.45);
+        pose(corps, qui);
       } else {
         const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(16053750), c = 4;
         pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
@@ -2856,7 +2888,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true };
+  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -2907,7 +2939,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes"]) {
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"]) {
     const c = document.getElementById("voir-" + nom);
     if (c) c.addEventListener("change", () => vue && vue.montrer(nom, c.checked));
   }

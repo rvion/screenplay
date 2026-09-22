@@ -408,4 +408,11 @@ temps virtuel, l'écouteur oui) ; l'entrée choisie, la bascule et les cases coc
 « version 4 · panneaux sandwich 6 cm · toit vers le fond », libellés du sommaire à un ou deux mots,
 notes et total des matériaux raccourcis. *Écarté :* une liste de versions à une seule entrée (un
 choix sans choix) ; deux composants proches (un par section).
+*Suite du même jour :* les plans passent aussi en liste + détail (ils étaient trop petits côte à côte,
+et trop grands en pleine largeur : un seul plan à la fois, borné à la hauteur de l'écran, et
+l'implantation en première entrée plutôt qu'une section à part, ce qui répond à « implantation et
+plans côte à côte » sans troisième colonne) ; une silhouette de 1,80 m dans la 3D (mesurée par
+`tests/abri3d.mjs` : 1,80 m, pieds au sol, dehors devant la porte) ; un style unique pour les cotes
+(`span.cote`) et les repères (`span.face`) ; la bascule « tout afficher » à droite du titre ; les
+liens « ailleurs » au pied du menu, sans le configurateur.
 

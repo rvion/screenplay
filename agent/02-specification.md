@@ -145,9 +145,17 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     gauche, l'entrée choisie seule à droite, boutons précédente / suivante au pied de chaque
     entrée, et une bascule **« tout afficher »** (décochée par défaut) qui déroule tout. L'entrée
     choisie et la bascule sont gardées dans le navigateur, par version. L'impression montre toujours
-    tout. Les **matériaux** l'utilisent par groupe (sous-total sur chaque ligne, « ? » quand un prix
-    est à confirmer) et le **guide** par étape (« avant de commander » et « outillage » en tête, puis
-    les étapes numérotées avec leur avancement `cochées/contrôles`, bleu en cours, vert fait).
+    tout. La bascule est à droite du titre de la section. Les **plans** l'utilisent (implantation sur la
+    dalle en tête, plan de sol, toiture, rehausse, puis une élévation par mur : chaque plan prend toute la
+    colonne, borné à la hauteur de l'écran ; « tout afficher » les range sur deux colonnes), les
+    **matériaux** par groupe (sous-total sur chaque ligne, « ? » quand un prix est à confirmer) et le
+    **guide** par étape (« avant de commander » et « outillage » en tête, puis les étapes numérotées avec
+    leur avancement `cochées/contrôles`, bleu en cours, vert fait).
+  - **Cotes et repères** : toute cote de la page passe par `cote(x, unité)` (`span.cote`, chiffres
+    tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par `face(id)`
+    (`span.face`, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.
+  - **Menu** : sommaire en haut, et tout en bas, petits et gris, les liens « ailleurs » (documents,
+    dépôt) ; le configurateur du rectangle n'est plus lié depuis la page.
   - **Matériaux à acheter** (`src/chantier.ts`, `nomenclature_abri`) : une **nomenclature**, pas un
     budget. Que des matériaux, en **TTC**, quantités **calculées** depuis le modèle avec leur règle
     affichée (« comment c'est compté »). **Ni main-d'œuvre, ni forfait, ni livraison** (la livraison
@@ -175,7 +183,8 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   rehausse bois, **coupes d'onglet** aux bouts des murs et de la rehausse (la face intérieure raccourcie de
   `e / tan(angle / 2)` : sans elles un mur à bouts droits traverse son voisin à un angle aigu), toit
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
-  bureaux, sièges, lit (cases à cocher : toit, mobilier, lit déplié, repères). `peuple_abri`
+  bureaux, sièges, lit, et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
+  toit, mobilier, lit déplié, repères, personne ; lit et personne cachés au départ). `peuple_abri`
   construit la scène **sans renderer**, ce qui permet de la mesurer sous Node.
 - Tests : `tests/abri3d.mjs` construit la scène avec le vrai three.js (devDependency, même version
   que le CDN) et vérifie, **pour chaque version**, les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers

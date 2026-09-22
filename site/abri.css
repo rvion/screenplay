@@ -16,7 +16,10 @@ header.barre p { margin: 0; color: var(--muted); font-size: .82rem; }
 .actions a:hover, .actions button:hover { border-color: var(--accent); color: var(--accent); }
 
 .mise-en-page { display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 0 1.1rem; max-width: 1340px; margin: 0 auto; align-items: start; }
-aside.menu { position: sticky; top: 3.1rem; max-height: calc(100vh - 3.1rem); overflow-y: auto; padding: .9rem 0 1rem 1.1rem; }
+aside.menu { position: sticky; top: 3.1rem; height: calc(100vh - 3.1rem); overflow-y: auto; padding: .9rem 0 1.5rem 1.1rem; display: flex; flex-direction: column; }
+nav.ailleurs { margin-top: auto; padding: 1rem 0 0 .45rem; display: grid; gap: .1rem; }
+nav.ailleurs a { font-size: .76rem; color: var(--muted); text-decoration: none; }
+nav.ailleurs a:hover { color: var(--accent); }
 aside.menu h2 { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin: 1rem 0 .35rem .45rem; }
 aside.menu > h2:first-child, aside.menu > div:first-child h2 { margin-top: 0; }
 ul.versions { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
@@ -57,6 +60,9 @@ td.regle { color: var(--muted); font-size: .78rem; }
 a.source { font-size: .72rem; white-space: nowrap; }
 table.fiche th { width: 11.5em; font-weight: 600; color: var(--muted); font-size: .78rem; white-space: nowrap; }
 table.fiche td { font-variant-numeric: tabular-nums; }
+.cote { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); font-weight: 500; }
+.cote .u { color: var(--muted); font-weight: 400; font-size: .92em; }
+.face { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78em; font-weight: 700; line-height: 1.5; color: var(--ink); background: var(--creux); border: 1px solid var(--line); border-radius: 3px; padding: 0 .35em; vertical-align: .05em; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }
 
@@ -65,18 +71,18 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .viewer-toggles label { cursor: pointer; }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
 
-.plans { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-bottom: .8rem; }
-.plans figure { margin: 0; min-width: 0; }
-.plans figure.wide { grid-column: 1 / -1; }
 figcaption { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
-.planbox svg { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
-.planbox.grand svg { max-width: 760px; margin: 0 auto; }
+.planbox svg { display: block; width: 100%; height: auto; max-height: 78vh; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.planbox svg { max-width: 900px; margin: 0 auto; }
+#plans-details.tout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#plans-details.tout article[data-cle="implantation"], #plans-details.tout article[data-cle="sol"] { grid-column: 1 / -1; }
+#plans-details h3 { margin-bottom: .45rem; }
 
 /* maitre / detail : liste a gauche, l'entree choisie a droite (guide de montage, materiaux) */
 .maitre { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 1rem; align-items: start; }
-.maitre .cote { position: sticky; top: 3.6rem; }
-p.mode { margin: 0 0 .35rem; font-size: .78rem; color: var(--muted); padding-left: .5rem; }
-p.mode label { cursor: pointer; }
+.maitre .cote-liste { position: sticky; top: 3.6rem; }
+h2 .mode { float: right; font-weight: 400; font-size: .78rem; color: var(--muted); }
+h2 .mode label { cursor: pointer; }
 ol.liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 ol.liste li { margin: 0; }
 ol.liste button { display: flex; align-items: center; gap: .45rem; width: 100%; text-align: left; padding: .3rem .5rem; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--ink); cursor: pointer; font-size: .84rem; line-height: 1.3; }
@@ -108,18 +114,21 @@ p.suivante button:hover { border-color: var(--accent); }
 
 @media (max-width: 980px) {
   .mise-en-page { grid-template-columns: minmax(0, 1fr); }
-  aside.menu { position: static; max-height: none; padding: .8rem 1rem 0; }
+  aside.menu { position: static; height: auto; padding: .8rem 1rem 0; }
+  nav.ailleurs { padding-top: .4rem; display: flex; gap: 1rem; }
+  #plans-details.tout { grid-template-columns: minmax(0, 1fr); }
   ul.versions { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre { grid-template-columns: minmax(0, 1fr); }
-  .maitre .cote { position: static; }
+  .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 }
 @media print {
   body { background: #fff; font-size: 11px; }
+  .planbox svg { max-height: none; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
-  .actions, aside.menu, .vue, p.bandeau, .maitre .cote, p.suivante { display: none; }
+  .actions, aside.menu, .vue, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante { display: none; }
   .mise-en-page { display: block; max-width: none; }
   main { padding: 0; }
   section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; break-inside: auto; }

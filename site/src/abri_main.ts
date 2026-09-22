@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent entièrement valables.</p>';
     console.error(e);
   }
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes"] as const) {
+  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne"] as const) {
     const c = document.getElementById("voir-" + nom) as HTMLInputElement | null;
     if (c) c.addEventListener("change", () => vue && vue.montrer(nom, c.checked));
   }

@@ -34,14 +34,26 @@ ok(!/class="hero"|class="badge/.test(html) && !/[\u{1F300}-\u{1FAFF}]/u.test(htm
   ok($$("a[href^='?v=']").every((x) => x.closest("[hidden]")), "aucun lien visible vers une autre version");
   ok($("#bandeau").hidden === true && $("#lien-document").getAttribute("href") === "docs/abri.html", "version retenue : pas de bandeau, lien vers docs/abri.html");
   const ancres = $$("aside.menu nav.sections a").map((x) => x.getAttribute("href")).filter((h) => h.startsWith("#"));
-  ok(ancres.length === 8 && ancres.every((h) => $(h)), "menu : les 8 sections de la page, toutes existantes");
+  ok(ancres.length === 7 && ancres.every((h) => $(h)), "menu : les 7 sections de la page, toutes existantes");
+  ok($$("aside.menu nav.ailleurs a").length === 2 && !html.includes('href="configurateur.html"') && $("aside.menu").lastElementChild.className === "ailleurs", "menu : « ailleurs » en bas, deux liens, plus d'étude initiale");
   ok($$("aside.menu nav.sections a").every((x) => x.textContent.length <= 22), "menu : libellés courts (" + Math.max(...$$("aside.menu nav.sections a").map((x) => x.textContent.length)) + " caractères au plus)");
 }
-ok($$("#fiche tr").length === 12 && /Hauteurs finies des coins/.test($("#fiche").textContent) && /sans main-d'œuvre/.test($("#fiche").textContent), "fiche chantier : 12 lignes, des murs aux matériaux");
+ok($$("#fiche tr").length === 12 && /Hauteurs finies des coins/.test($("#fiche").textContent) && /TTC/.test($("#fiche").textContent), "fiche chantier : 12 lignes, des murs aux matériaux");
 ok($$("#murs tbody tr").length === m.faces.length, "tableau des murs : une ligne par face");
 ok($$("#implantation-points li").length === 3 && /10 cm/.test($("#implantation-points").textContent), "implantation : 10 cm à gauche et devant, passage, rangement");
 ok(["implantation", "sol", "toit", "rehausse"].every((k) => $("#plan-" + k + " svg")), "4 plans SVG injectés");
-ok($$("#facades figure svg").length === m.faces.length && /Face C/.test($("#facades").textContent), "une élévation par mur, pan C compris");
+ok($$("#plans-details article[data-cle^='facade-'] svg").length === m.faces.length && /Face C/.test($("#plans-details").textContent), "une élévation par mur, pan C compris");
+// plans : liste a gauche (implantation en tete, puis les plans et chaque face), un plan a la fois a droite
+{
+  const visibles = () => $$("#plans-details article.detail").filter((x) => !x.hidden);
+  ok($$("#plans-liste li").length === 4 + m.faces.length && $$("#plans-liste .t")[0].textContent === "Implantation sur la dalle" && visibles().length === 1 && visibles()[0].dataset.cle === "implantation", "plans : " + (4 + m.faces.length) + " entrées, l'implantation ouverte en premier, seule");
+  $$("#plans-liste button")[5].click();
+  ok(visibles().length === 1 && visibles()[0].dataset.cle === "facade-" + m.faces[1].cle && visibles()[0].querySelector("svg"), "plans : un clic ouvre l'élévation du mur " + m.faces[1].cle);
+  ok($("#plans h2 #plans-mode input") && $("#materiaux-section h2 #materiaux-mode input") && $("#montage h2 #etapes-mode input"), "la bascule « tout afficher » est dans le titre de chaque section à liste");
+}
+// cotes et reperes : un style unique
+ok($$("#fiche .cote").length >= 20 && $$("#fiche .face").length >= 6 && $$("#murs .face").length === m.faces.length + m.faces.reduce((n, f) => n + f.panneaux.length, 0) && $$("#debit-murs .face, #debit-toit .face, #debit-rehausse .face").length >= 12, "cotes (.cote) et repères (.face) balisés dans la fiche, les murs et le débit");
+ok($$("main .cote").every((x) => /^[\d,]+( ?×? ?[\d,]+)*(°| (cm|m|mm|m²|%))?$/.test(x.textContent.trim())), "chaque .cote est un nombre (ou a × b) suivi de son unité, le degré collé");
 ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux.length, 0) && $$("#debit-toit tbody tr").length === m.toit.panneaux.length && $$("#debit-rehausse tbody tr").length === m.rehausse.pieces.length, "débit : murs, toit, rehausse");
 // materiaux : que des achats, quantite x prix = montant, total = somme hors options, rien de forfaitaire
 {
@@ -93,15 +105,15 @@ ok(liens.every((h) => /^[a-z]+:/.test(h) || existsSync(join(ROOT, "site", h.spli
 ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a href="docs/abri-v2.html">c</a> &lt;x&gt;', "markdown en ligne : gras, code, lien vers docs/, HTML échappé");
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
-ok(["docs/abri.html", "docs/index.html", "configurateur.html"].every((h) => html.includes(`href="${h}"`) && existsSync(join(ROOT, "site", h))), "liens : document complet, index des documents, étude initiale");
-ok(["voir-toit", "voir-mobilier", "voir-lit", "voir-etiquettes"].every((id) => $("#" + id)), "cases à cocher de la 3D présentes");
+ok(["docs/abri.html", "docs/index.html"].every((h) => html.includes(`href="${h}"`) && existsSync(join(ROOT, "site", h))), "liens : document complet, index des documents");
+ok(["voir-toit", "voir-mobilier", "voir-lit", "voir-etiquettes", "voir-personne"].every((id) => $("#" + id)) && !$("#voir-personne").checked, "cases à cocher de la 3D présentes, personne de 1,80 m décochée au départ");
 
 // chaque autre version prete se rend sans valeur manquante, avec son bandeau et son document
 for (const n of versions_pretes(params).filter((k) => k !== a.principale)) {
   const b = run(params, n);
   ok(b.version === n && $("#bandeau").hidden === false && new RegExp("version " + n).test($("#bandeau").textContent) && $("#bandeau a").getAttribute("href") === "?v=" + a.principale, `?v=${n} : bandeau « version ${n}, une étude », retour à la version retenue`);
   ok($("#lien-document").getAttribute("href") === `docs/abri-v${n}.html` && existsSync(join(ROOT, "site/docs", `abri-v${n}.html`)), `?v=${n} : lien vers docs/abri-v${n}.html, qui existe`);
-  ok($$("#murs tbody tr").length === b.m.faces.length && $$("#facades figure svg").length === b.m.faces.length && new RegExp(b.m.faces.length === 5 ? "cinq" : "quatre").test($("#titre").textContent), `?v=${n} : ${b.m.faces.length} murs, autant d'élévations, titre accordé`);
+  ok($$("#murs tbody tr").length === b.m.faces.length && $$("#plans-details article[data-cle^='facade-'] svg").length === b.m.faces.length && new RegExp(b.m.faces.length === 5 ? "cinq" : "quatre").test($("#titre").textContent), `?v=${n} : ${b.m.faces.length} murs, autant d'élévations, titre accordé`);
   ok(!/undefined|NaN|\[object/.test($("main").textContent) && $$("#etapes article.etape").length >= 12 && $("#pourquoi").hidden === (n === 1), `?v=${n} : aucune valeur manquante, montage complet${n === 1 ? ", pas de section « pourquoi » (forme de base)" : ""}`);
 }
 ok(run(params, 99).version === a.principale, "?v=99 (version inconnue) : retombe sur la version retenue");
