@@ -149,7 +149,9 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     la dalle, la longueur et la lettre de chaque mur et l'angle de chaque coin à l'intérieur du contour, les
     marges gauche, devant, droite et le passage derrière avec leur chiffre hors de la dalle, la limite en
     trait, avec une courte légende à côté ; le détail vit dans les sections) à
-    côté du **modèle 3D** ; **Implantation sur la
+    côté du **modèle 3D**, qui remplit la hauteur de la colonne ; trois mises en page : large (texte et dessin
+    à gauche, 3D à droite), moyenne de 640 à 980 px (texte à gauche, dessin à droite, 3D en dessous sur toute
+    la largeur), téléphone (tout empilé, dessin réduit avec sa légende à droite) ; **Implantation sur la
     dalle** et **Plan de sol** (deux boîtes côte à côte) ; **Murs** (le tableau) ; élévations, toiture,
     rehausse ; débit des panneaux ; **matériaux à acheter** ; **guide de montage** ; **Ouvertures** et
     **Mobilier** (l'une sous l'autre) ; **Pourquoi cette forme** (le bloc `dossier` de la version retenue :
