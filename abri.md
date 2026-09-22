@@ -9,7 +9,7 @@
 - **Dalle existante** : 8,51 m², côtés 262 / 223 / 258 / 104 / 324 cm, murs de propriété à gauche et au fond.
 - **4,44 m² intérieur** (4,95 m² de murs), 54,9 cm de passage derrière.
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 208, droite 180, fond en biais 100, fond 136,6, gauche 250 cm.
-- **Toit** mono-pente vers le fond, 5,14° : 237,5 cm devant, 215 cm au plus bas.
+- **Toit** mono-pente vers le fond, 5,03° : 237 cm devant, 215 cm au plus bas.
 - **Porte pleine** 70 × 200 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
 - **Matériaux** : 2 865 € TTC (2 435 € à 3 295 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
@@ -17,7 +17,7 @@
 
 ## À trancher
 
-- **Toit** : vers l'arrière, chute 22,5 cm (5,14°) = choix par défaut. Madrier 75 × 225 classe 4 : section courante, à vérifier en classe 4.
+- **Toit** : vers l'arrière, chute 22 cm (5,03°) = choix par défaut. Madrier 70 × 220 classe 4 : section courante, à vérifier en classe 4.
 - **Formalités** : emprise au sol **4,95 m²** (les débords de toit, simples et en l'air, n'entrent pas dans l'emprise au sol : Code de l'urbanisme R*420-1), surface de plancher 4,44 m² ⇒ **aucune formalité** (seuils 5 puis 20 m²).
 - **Portée du toit** (~2,5 m au plus long) en 6 cm sans panne : à confirmer dans le tableau du fabricant.
 - **Angles non droits** (134,4°, 135,6°) : profils d'angle pliés sur mesure.
@@ -64,13 +64,13 @@
 
 | face | longueur ext. | longueur int. | hauteur finie (début → fin) | angle au début |
 |---|---|---|---|---|
-| A · avant | 208 cm | 196 cm | 237,5 → 237,5 cm | 90° |
-| D · droite | 180 cm | 171,5 cm | 237,5 → 221,3 cm | 90° |
-| C · fond en biais | 100 cm | 95 cm | 221,3 → 215 cm | 134,4° |
+| A · avant | 208 cm | 196 cm | 237 → 237 cm | 90° |
+| D · droite | 180 cm | 171,5 cm | 237 → 221,2 cm | 90° |
+| C · fond en biais | 100 cm | 95 cm | 221,2 → 215 cm | 134,4° |
 | B · fond | 136,6 cm | 128,1 cm | 215 → 215 cm | 135,6° |
-| G · gauche | 250 cm | 238 cm | 215 → 237,5 cm | 90° |
+| G · gauche | 250 cm | 238 cm | 215 → 237 cm | 90° |
 
-Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,77 m² · hauteur sous plafond 2,28 m devant, 2,05 m au plus bas (plancher isolé déduit).
+Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors bureaux 2,77 m² · hauteur sous plafond 2,27 m devant, 2,05 m au plus bas (plancher isolé déduit).
 
 ## Débit
 
@@ -96,22 +96,22 @@ Murs 4,95 m² · intérieur 4,44 m² (murs de 6 cm retirés) · sol libre hors b
 
 | pièce | largeur | longueur à commander | coupe |
 |---|---|---|---|
-| T1 | 100 cm | 261,1 cm | entier, coupes droites |
-| T2 | 100 cm | 261,1 cm | bout arrière en biais |
-| T3 | 8 cm | 200,7 cm | refendu en largeur, bout arrière en biais |
+| T1 | 100 cm | 261 cm | entier, coupes droites |
+| T2 | 100 cm | 261 cm | bout arrière en biais |
+| T3 | 8 cm | 200,6 cm | refendu en largeur, bout arrière en biais |
 
 Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surface couverte 5,17 m².
 
-### Rehausse bois (madrier 75 × 225, stock 450 cm)
+### Rehausse bois (madrier 70 × 220, stock 450 cm)
 
 | pièce | face | longueur | hauteur début → fin |
 |---|---|---|---|
-| R1 | A | 208 cm | 22,5 → 22,5 cm |
-| R2 | D | 180 cm | 22,5 → 6,3 cm |
-| R3 | C | 100 cm | 6,3 → 0 cm |
-| R4 | G | 250 cm | 0 → 22,5 cm |
+| R1 | A | 208 cm | 22 → 22 cm |
+| R2 | D | 180 cm | 22 → 6,2 cm |
+| R3 | C | 100 cm | 6,2 → 0 cm |
+| R4 | G | 250 cm | 0 → 22 cm |
 
-**2 madriers** : n°1 = R4 + R2 puis R3 (chute 100 cm) ; n°2 = R1 (chute 242 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
+**2 madriers** : n°1 = R4 + R3 puis R2 (chute 20 cm) ; n°2 = R1 (chute 242 cm). Deux pièces sur un même tronçon = une seule coupe en biais.
 
 ### Gouttière et profils
 
@@ -141,21 +141,21 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 19,35 m² | 44 € | 851 € | 9 panneaux entiers à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
-| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 7,23 m² | 45 € | 325 € | 3 panneaux coupés à longueur : T1 261,1 cm, T2 261,1 cm, T3 200,7 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
+| Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 7,23 m² | 45 € | 325 € | 3 panneaux coupés à longueur : T1 261 cm, T2 261 cm, T3 200,6 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
 
 ### Bois · 132 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Madrier 75 × 225 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
+| Madrier 70 × 220 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
 
 ### Profils et bavettes · 474 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Profil de départ en U (rail de pied) *(prix à confirmer)* | 8,05 ml | 12 € | 97 € | périmètre des murs moins le cadre de la porte. 4,86 EUR HT la longueur de 0,5 m ([source](https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs)) |
-| Profils d'angle à 90°, extérieur + intérieur | 13,8 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
-| Profils d'angle pliés sur mesure (134,4°, 135,6°), extérieur + intérieur *(prix à confirmer)* | 8,73 ml | 15 € | 131 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
+| Profils d'angle à 90°, extérieur + intérieur | 13,78 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
+| Profils d'angle pliés sur mesure (134,4°, 135,6°), extérieur + intérieur *(prix à confirmer)* | 8,72 ml | 15 € | 131 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
 | Bandes de rive de toit | 4,52 ml | 14 € | 63 € | bords du toit parallèles à la pente. 12,90 EUR/m en longueurs de 2,1 m ([source](https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html)) |
 | Bavette de tête (bord haut du toit) | 2,08 ml | 14 € | 29 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
 | Closoirs mousse sous les nervures *(prix à confirmer)* | 4,44 ml | 4 € | 16 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
@@ -232,9 +232,9 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 
 - Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.
 - **Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.
-- Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
+- Rehausse : le madrier 70 × 220 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
 - Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
-- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,5 m ici ; et la **pente minimale** (9 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
+- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,5 m ici ; et la **pente minimale** (8,8 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 134,4° et 135,6° **pliés sur mesure**, en même temps que les panneaux.
 - Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
@@ -286,7 +286,7 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 1. Bandes de mur : A3 8 cm, D1 80 cm, B2 36,6 cm, G3 50 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
 2. Fenêtres : 80 × 75 cm, bas à 115 cm ; 80 × 75 cm, bas à 115 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
 3. Toit : T2, T3 à couper en biais d'après le plan de toiture.
-4. Rehausse : R1 (mur A, 208 cm, 22,5 → 22,5 cm), R2 (mur D, 180 cm, 22,5 → 6,3 cm), R3 (mur C, 100 cm, 6,3 → 0 cm), R4 (mur G, 250 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
+4. Rehausse : R1 (mur A, 208 cm, 22 → 22 cm), R2 (mur D, 180 cm, 22 → 6,2 cm), R3 (mur C, 100 cm, 6,2 → 0 cm), R4 (mur G, 250 cm, 0 → 22 cm), tirées de 2 madrier(s) selon le plan de débit.
 
 **À contrôler avant de continuer :**
 
@@ -353,7 +353,7 @@ Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les mu
 
 **À contrôler avant de continuer :**
 
-- [ ] Hauteurs finies des coins : 237,5 · 237,5 · 221,3 · 215 · 215 cm (dans l'ordre des coins, à partir du coin avant gauche).
+- [ ] Hauteurs finies des coins : 237 · 237 · 221,2 · 215 · 215 cm (dans l'ordre des coins, à partir du coin avant gauche).
 - [ ] Dessus de la rehausse dans un même plan : poser une règle d'un mur à l'autre.
 
 ### Étape 8 · Couvrir
@@ -362,7 +362,7 @@ Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que pa
 
 **Outils :** visseuse, 2 personnes, échelle
 
-1. Poser T1 (100 × 261,1 cm), T2 (100 × 261,1 cm), T3 (8 × 200,7 cm), en commençant du côté opposé aux vents dominants.
+1. Poser T1 (100 × 261 cm), T2 (100 × 261 cm), T3 (8 × 200,6 cm), en commençant du côté opposé aux vents dominants.
 2. Closoirs mousse sous les nervures, en haut et en bas, avant de visser.
 3. Visser dans la rehausse par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
 4. Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.
@@ -443,7 +443,7 @@ La dalle est froide : le plancher fait le confort des pieds.
 
 **À contrôler avant de continuer :**
 
-- [ ] Hauteur sous plafond après plancher : 2,28 m au plus haut, 2,05 m au plus bas.
+- [ ] Hauteur sous plafond après plancher : 2,27 m au plus haut, 2,05 m au plus bas.
 
 ### Étape 14 · Ventilation, électricité, aménagement
 
@@ -466,7 +466,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 - **Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais (100 cm, un panneau entier) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
 - **4,95 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,77 m² de sol libre hors bureaux.
-- **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
+- **Façade de niveau à 237 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 54 cm.** 2,13 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.
@@ -475,7 +475,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Points faibles
 
 - **Portée du toit 2,5 m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).
-- **Pente 9 %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.
+- **Pente 8,8 %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.
 - **La descente est au coin arrière gauche.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.
 - **Aucun débord au-dessus de la porte.** Prévoir une petite marquise.
 - **Deux profils d'angle proches de 135°** à faire plier sur mesure, en même temps que les panneaux.
@@ -483,11 +483,10 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 ### Questions
 
-- **Q1** La pente de 9 % est-elle admise par le fabricant des panneaux de toit, pour 2,5 m de portée en 60 mm ?
+- **Q1** La pente de 8,8 % est-elle admise par le fabricant des panneaux de toit, pour 2,5 m de portée en 60 mm ?
 - **Q2** Le panneau de toit de 60 mm porte-t-il 2,5 m seul, ou faut-il une panne en travers à mi-profondeur ?
-- **Q3** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
-- **Q4** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
-- **Q5** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
+- **Q3** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
+- **Q4** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
 
 ### Idées à explorer
 

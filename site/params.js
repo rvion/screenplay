@@ -31,7 +31,6 @@ window.SHED_PARAMS = {
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
         "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
-        "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
       ],
@@ -98,7 +97,7 @@ window.SHED_PARAMS = {
     "porte_marge_cm": 10,
     "toit": {
       "sens": "arriere",
-      "chute_cm": 22.5,
+      "chute_cm": 22,
       "debord_cm": {
         "avant": 5,
         "arriere": 5,
@@ -110,8 +109,8 @@ window.SHED_PARAMS = {
       "panne_intermediaire": false
     },
     "rehausse_section_mm": [
-      75,
-      225
+      70,
+      220
     ],
     "bureaux": [
       {

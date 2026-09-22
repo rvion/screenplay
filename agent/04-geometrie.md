@@ -52,11 +52,11 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 208 | 237,5 → 237,5 | 100 + 100 + 8 |
-| D droite | 180 | 237,5 → 221,3 | 80 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan en biais | 100 | 221,3 → 215 | 100 (un panneau entier, aucune coupe) |
+| A façade | 208 | 237 → 237 | 100 + 100 + 8 |
+| D droite | 180 | 237 → 221,2 | 80 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan en biais | 100 | 221,2 → 215 | 100 (un panneau entier, aucune coupe) |
 | B fond | 136,6 | 215 → 215 | 100 + 36,6 |
-| G gauche | 250 | 215 → 237,5 | 100 + 100 + 50 |
+| G gauche | 250 | 215 → 237 | 100 + 100 + 50 |
 
 - Angles **90 / 90 / 134,4 / 135,6 / 90** (profils d'angle pliés sur mesure de toute façon). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
   à l'aire exacte, jamais arrondie : `tests/formalites.mjs`). Intérieur 4,44 m², sol libre hors
@@ -65,14 +65,14 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 - **Pourquoi 208 et pas 210** : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
   5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).
 - **Le plancher isolé prend 10 cm** (60 mm de PIR entre lambourdes, OSB 22, revêtement 5) :
-  la hauteur sous plafond tombe à **2,05 m au plus bas et 2,28 m en façade**, et c'est cette hauteur
+  la hauteur sous plafond tombe à **2,05 m au plus bas et 2,27 m en façade**, et c'est cette hauteur
   que montre le modèle 3D.
 - **La façade de 196 dedans porte le lit** : 190 de long, donc 6 cm de jeu pour le cadre.
 - **Le mur droit de 180 dégage la porte** : la baie est **entièrement libre**, même avec une porte
   de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
-- **Toit plan vers le fond** : `H` = 215, `c` = 22,5, `D` = 250 ⇒ pente **9 %** (5,14°), portée 2,50 m.
+- **Toit plan vers le fond** : `H` = 215, `c` = 22, `D` = 250 ⇒ pente **8,8 %** (5,03°), portée 2,50 m.
   **3 panneaux de toit** (100 × 261, 100 × 261 en biais, bande de 8 × 201 en biais).
-- **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
+- **Rehausse** (madrier **70 × 220 classe 4**, la section vendue en stock ; chute 22) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
 - **Porte** : bloc de service **extérieur** PVC plein, **70 × 200 hors tout**, dormant compris (pas de cadre

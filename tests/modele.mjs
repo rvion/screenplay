@@ -233,10 +233,10 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
   ok(v4.cotes_interieures_cm[0] === 196 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([208, 180, 100, 136.6, 250]) && v4.aire_interieure_m2 === 4.44 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 134.4, 135.6, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.95, 0.006) && m4.faces[2].panneaux.length === 1 && m4.faces[2].panneaux[0].largeur_cm === 100, "abri : facade 208 (196 dedans, un lit de 190 tient), droite 180, gauche 250, pan de 100 (UN panneau entier, 44,4 deg), fond 136,6 pour le fermer, emprise 4,95 m2 donc aucune formalite");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22,5 sur 250 de profondeur : facade 237,5 ; au haut du mur droit (180) 215 + 22,5 x 70 / 250 = 221,3 ; fond 215
-  ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
-  ok(near(L.D.hauteur_fin_cm, 221.3, 0.06) && near(L.C.hauteur_debut_cm, 221.3, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,3, pan 221,3 -> 215, fond a 215");
-  ok(near(m4.pente.pourcent, 9, 0.06) && near(m4.portee_cm, 250), "v4 : pente 22,5 / 250 = 9 %, portee 2,50 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  // a la main, chute 22 (madrier 70 x 220, classe 4 en stock) sur 250 : facade 237 ; au haut du mur droit (180) 215 + 22 x 70 / 250 = 221,2 ; fond 215
+  ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22 && L.A.hauteur_fin_cm === H + 22 && JSON.stringify(m4.rehausse.section_mm) === "[70,220]", "v4 : madrier 70 x 220, facade de niveau a " + (H + 22));
+  ok(near(L.D.hauteur_fin_cm, 221.2, 0.06) && near(L.C.hauteur_debut_cm, 221.2, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237 -> 221,2, pan 221,2 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 8.8, 0.06) && near(m4.portee_cm, 250), "v4 : pente 22 / 250 = 8,8 %, portee 2,50 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);

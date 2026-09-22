@@ -8,8 +8,6 @@ vit dans `03-decisions.md`, l'historique dans git.
       « à confirmer » les panneaux (les vendeurs les moins chers imposent 100 m² ou un paquet
       entier : demander deux devis « petite quantité, coupé à longueur » et un négoce local), les
       profils pliés à 135°. C'est la moitié du total.
-- [ ] **Rehausse** : le 75 × 225 n'existe en stock qu'en classe 2. Prendre du 70 × 220 classe 4 (la
-      chute passe de 22,5 à 22 cm) ou protéger un classe 2 par la bavette (larmier) ?
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
       lisibilité des repères de panneaux, ordre des sections. Vérifié par mesure et dans un
       navigateur, pas encore par l'œil de Rémi.
@@ -19,7 +17,7 @@ vit dans `03-decisions.md`, l'historique dans git.
       que le fabricant n'a pas dit si le 60 mm porte 2,75 m seul. Si oui, rien à faire ; sinon la dessiner.
 - [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
       fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
-- [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237,5 en façade).
+- [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237 en façade).
 - [ ] **Porte de service 70 × 200** : relever le prix du 70 en magasin (199 € noté, celui du 80) et prendre une serrure multipoint.
 - [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).
 - [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
