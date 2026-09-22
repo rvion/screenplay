@@ -69,7 +69,7 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   pose("Étanchéité", "bande_comprimee_ml", "Bande comprimée au pourtour des ouvertures", ouv_perim, "tour de la porte et des fenêtres");
   pose("Étanchéité", "mousse_pu_u", "Mousse polyuréthane expansive, bombes", 2, "calfeutrement des ouvertures et des angles");
   // --- ouvertures
-  if (po) pose("Ouvertures", po.vitree === false ? "porte_pleine_u" : "porte_vitree_u", `Porte de service ${po.vitree === false ? "pleine isolée" : "vitrée"} ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm, avec dormant`, 1, "une porte");
+  if (po) pose("Ouvertures", po.vitree === false ? "porte_pleine_u" : "porte_vitree_u", `Bloc-porte ${po.vitree === false ? "plein" : "vitré"} ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm, avec dormant`, 1, "une porte");
   pose("Ouvertures", "fenetre_fixe_u", `Fenêtre fixe PVC double vitrage ${fen[0] ? `${fz(fen[0].largeur_cm)} × ${fz(fen[0].hauteur_cm)}` : ""} cm`, fen.filter((f: any) => !f.ouvrant).length, "fenêtres fixes");
   pose("Ouvertures", "fenetre_ob_u", `Fenêtre oscillo-battante PVC double vitrage ${fen[0] ? `${fz(fen[0].largeur_cm)} × ${fz(fen[0].hauteur_cm)}` : ""} cm`, fen.filter((f: any) => f.ouvrant).length, "fenêtres ouvrantes");
   // --- eaux pluviales

@@ -10,8 +10,8 @@
 - **4,45 m² intérieur** (4,96 m² de murs), 50,4 cm de passage derrière.
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 210, droite 178, fond en biais 99, fond 140, gauche 248 cm.
 - **Toit** mono-pente vers le fond, 5,18° : 237,5 cm devant, 215 cm au plus bas.
-- **Porte pleine** 75 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Matériaux** : 2 898 € TTC (2 463 € à 3 333 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
+- **Porte pleine** 73 × 204 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
+- **Matériaux** : 2 859 € TTC (2 430 € à 3 288 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
 - **Formalités** : emprise au sol 4,96 m², surface de plancher 4,45 m² ⇒ aucune formalité.
 
@@ -83,7 +83,7 @@ Murs 4,96 m² · intérieur 4,45 m² (murs de 6 cm retirés) · sol libre hors b
 | A2 | 100 cm | panneau entier | fenêtre 80 × 75 |
 | A3 | 10 cm | chute d'un autre panneau | – |
 | D1 | 78 cm | panneau recoupé | – |
-| D2 | 100 cm | panneau entier | porte 85 × 210 |
+| D2 | 100 cm | panneau entier | porte 83 × 209 |
 | C1 | 99 cm | panneau recoupé | – |
 | B1 | 100 cm | panneau entier | – |
 | B2 | 40 cm | chute d'un autre panneau | – |
@@ -124,7 +124,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 
 | ouverture | taille | où | détail |
 |---|---|---|---|
-| porte pleine | 75 × 205 (cadre 85 × 210) | face D, de 90,5 à 165,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
+| porte pleine | 73 × 204 (cadre 83 × 209) | face D, de 92,5 à 165,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
 | fenêtre oscillo-battante | 80 × 75 | face A, de 10 à 90 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
 | fenêtre oscillo-battante | 80 × 75 | face A, de 110 à 190 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
 
@@ -153,13 +153,13 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Madrier 75 × 225 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
-| Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 4,95 ml | 5 € | 25 € | deux montants + une traverse haute. pas de prix releve |
+| Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 4,91 ml | 5 € | 25 € | deux montants + une traverse haute. pas de prix releve |
 
 ### Profils et bavettes · 472 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Profil de départ en U (rail de pied) *(prix à confirmer)* | 7,9 ml | 12 € | 95 € | périmètre des murs moins le cadre de la porte. 4,86 EUR HT la longueur de 0,5 m ([source](https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs)) |
+| Profil de départ en U (rail de pied) *(prix à confirmer)* | 7,92 ml | 12 € | 95 € | périmètre des murs moins le cadre de la porte. 4,86 EUR HT la longueur de 0,5 m ([source](https://www.panelsell.fr/accessoires-pour-panneaux-sandwichs)) |
 | Profils d'angle à 90°, extérieur + intérieur | 13,8 ml | 10 € | 138 € | 3 angles droits, hauteur finie de chaque coin, deux faces. 7,92 EUR HT le metre, tole 0,75 mm ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
 | Profils d'angle pliés sur mesure (135°), extérieur + intérieur *(prix à confirmer)* | 8,73 ml | 15 € | 131 € | 2 angles non droits, deux faces. aucun prix public pour un pliage a 135 degres : estimation d'apres le profil standard, a faire chiffrer ([source](https://www.panelsell.fr/profiles-plies-pour-panneaux-sandwichs-sur-mesure/profile-d-angle-exterieur)) |
 | Bandes de rive de toit | 4,48 ml | 14 € | 63 € | bords du toit parallèles à la pente. 12,90 EUR/m en longueurs de 2,1 m ([source](https://www.yousteel.fr/pliages-accessoires/180-bande-de-rive-universelle-2100m.html)) |
@@ -182,14 +182,14 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Bande d'arase sous le rail de pied | 8,75 ml | 1 € | 5 € | périmètre des murs. rouleau de 30 m x 30 cm : 16,90 EUR ([source](https://www.bricodepot.fr/catalogue/bande-darase-long-30-m-larg-30-cm-500-microns/prod59812/)) |
 | Bande butyle (joints de panneaux, tête de mur sous la rehausse) | 26,61 ml | 2 € | 40 € | 6 joints de mur × 2,2 m + périmètre + recouvrements de toit. rouleau de 13 m : 19,66 EUR ([source](https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/)) |
 | Mastic polyuréthane ou MS polymère, cartouches | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures. MS polymere de 6,50 a 13 EUR ; Sikaflex 11FC environ 11,50 EUR ([source](https://www.maxoutil.com/mastic-ms-polymere-parabond-600-dl-chemicals-cartouche-de-290-ml-40001000.html)) |
-| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,05 ml | 7 € | 77 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
+| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,01 ml | 7 € | 77 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
 | Mousse polyuréthane expansive, bombes | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles. 750 ml : de 7,90 a 9,90 EUR ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/isolation-et-cloison/etancheite/mousse-expansive)) |
 
-### Ouvertures · 437 €
+### Ouvertures · 398 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Porte de service pleine isolée 75 × 205 cm, avec dormant *(prix à confirmer)* | 1 u | 199 € | 199 € | une porte. bloc-porte de service PVC plein avec dormant, serrure 5 points, Ud 1,6. Le 205 x 80 de stock coute 199 EUR ; en 75 de large il passe sur mesure (delai et prix a confirmer chez un menuisier, compter 300 a 450 EUR) ([source](https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/)) |
+| Bloc-porte plein 73 × 204 cm, avec dormant | 1 u | 160 € | 160 € | une porte. bloc-porte fin de chantier Artens Lia 204 x 73, reversible, bati reglable 50 a 100 mm, serrure a cle, poignee a part. Reservation 79,3 x 207,6 : le cadre bois de 83 x 209 la contient. ATTENTION c'est une porte INTERIEURE (ame alveolaire, pas d'isolation ni d'etancheite) : la proteger par un debord de toit et un seuil, ou lui preferer un bloc-porte de service exterieur (205 x 80 PVC, 199 EUR) ([source](https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html)) |
 | Fenêtre oscillo-battante PVC double vitrage 80 × 75 cm | 2 u | 119 € | 238 € | fenêtres ouvrantes. taille de stock 80 x 75 (2 vantaux, Uw 1,2), sans delai ; hors tout 85 x 78 ; poignee vendue a part ([source](https://www.bricodepot.fr/catalogue/fenetre-pvc-blanc-oscillo-battante-2-vantaux-h75-x-l80-cm/prod75983/)) |
 
 ### Eaux pluviales · 88 €
@@ -228,7 +228,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
 
-**Total des matériaux : 2 898 € TTC** (fourchette 2 463 € à 3 333 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 2 859 € TTC** (fourchette 2 430 € à 3 288 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -275,7 +275,7 @@ Le rail tient le pied des panneaux et les isole de l'eau de la dalle.
 
 1. Dérouler la bande d'arase sur le tracé (8,75 m), poser le profil en U dessus, **nu extérieur du rail sur le trait**.
 2. Cheviller tous les 50 cm, et à 10 cm de chaque angle.
-3. Interrompre le rail sur la largeur du cadre de la porte (85 cm, face D).
+3. Interrompre le rail sur la largeur du cadre de la porte (83 cm, face D).
 4. Cordon de mastic continu entre le rail et la dalle, côté extérieur.
 
 **À contrôler avant de continuer :**
@@ -399,8 +399,8 @@ Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles.
 
 **Outils :** visseuse, niveau, cales
 
-1. Monter le cadre bois de 85 × 210 cm dans le vide du mur D, vissé dans la dalle en pied et dans la rehausse en tête.
-2. Poser la porte pleine de 75 × 205 cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.
+1. Monter le cadre bois de 83 × 209 cm dans le vide du mur D, vissé dans la dalle en pied et dans la rehausse en tête.
+2. Poser la porte pleine de 73 × 204 cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.
 3. Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic.
 
 **À contrôler avant de continuer :**
@@ -490,10 +490,11 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Questions
 
 - **Q1** La pente de 9,1 % est-elle admise par le fabricant des panneaux de toit, pour 2,5 m de portée en 60 mm ?
-- **Q2** Le panneau de toit de 60 mm porte-t-il 2,5 m seul, ou faut-il une panne en travers à mi-profondeur ?
-- **Q3** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
-- **Q4** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
-- **Q5** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
+- **Q2** Porte : le bloc intérieur de 73 (160 €) tient-il dehors sous le débord, ou faut-il un bloc de service extérieur de 80 (199 €) ?
+- **Q3** Le panneau de toit de 60 mm porte-t-il 2,5 m seul, ou faut-il une panne en travers à mi-profondeur ?
+- **Q4** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
+- **Q5** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
+- **Q6** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
 
 ### Idées à explorer
 

@@ -29,6 +29,7 @@
       ],
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
+        "Porte : le bloc intérieur de 73 (160 €) tient-il dehors sous le débord, ou faut-il un bloc de service extérieur de 80 (199 €) ?",
         "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
@@ -87,7 +88,7 @@
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
-    "porte_largeur_cm": 75,
+    "porte_largeur_cm": 73,
     "porte_chambranle_cm": 5,
     "porte_marge_cm": 5,
     "toit": {
@@ -202,7 +203,8 @@
         ]
       }
     ],
-    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (position 'fin' = a l'autre bout) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges sont ranges dessous, jamais sur le lit. v3 : lit 80 x 190 le long de la facade (198 dedans), tete a droite contre le mur de la porte, pieds vers le bureau gauche et ses ecrans, le pied du lit sous le plateau de 80"
+    "_comment_lits_muraux": "lits poses a demeure contre le mur `contre`, cales au debut de ce mur (position 'fin' = a l'autre bout) ; tete = cote de l'oreiller (gauche | droite | fond) ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges sont ranges dessous, jamais sur le lit. v3 : lit 80 x 190 le long de la facade (198 dedans), tete a droite contre le mur de la porte, pieds vers le bureau gauche et ses ecrans, le pied du lit sous le plateau de 80",
+    "porte_hauteur_cm": 204
   },
   "formes_etudiees": [
     {
@@ -408,11 +410,10 @@
       "note": "750 ml : de 7,90 a 9,90 EUR"
     },
     "porte_pleine_u": {
-      "pu": 199,
+      "pu": 160,
       "unite": "u",
-      "source": "https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/",
-      "note": "bloc-porte de service PVC plein avec dormant, serrure 5 points, Ud 1,6. Le 205 x 80 de stock coute 199 EUR ; en 75 de large il passe sur mesure (delai et prix a confirmer chez un menuisier, compter 300 a 450 EUR)",
-      "incertain": true
+      "source": "https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html",
+      "note": "bloc-porte fin de chantier Artens Lia 204 x 73, reversible, bati reglable 50 a 100 mm, serrure a cle, poignee a part. Reservation 79,3 x 207,6 : le cadre bois de 83 x 209 la contient. ATTENTION c'est une porte INTERIEURE (ame alveolaire, pas d'isolation ni d'etancheite) : la proteger par un debord de toit et un seuil, ou lui preferer un bloc-porte de service exterieur (205 x 80 PVC, 199 EUR)"
     },
     "porte_vitree_u": {
       "pu": 900,

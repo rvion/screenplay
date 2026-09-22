@@ -7,23 +7,23 @@
 <text x="250.0" y="160.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">D2</text>
 <polygon points="90.0,138.1 312.5,138.1 312.5,130.1 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
 <text x="201.2" y="128.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R2 · rehausse 22.5 → 6.4</text>
-<rect x="196.9" y="144.4" width="106.2" height="262.5" fill="#b98a55" stroke="#7a5530" stroke-width="1.2"/>
-<line x1="307.1" y1="144.4" x2="293.1" y2="144.4" stroke="#aaa" stroke-width="0.7"/>
+<rect x="199.4" y="145.6" width="103.8" height="261.2" fill="#b98a55" stroke="#7a5530" stroke-width="1.2"/>
+<line x1="307.1" y1="145.6" x2="293.1" y2="145.6" stroke="#aaa" stroke-width="0.7"/>
 <line x1="307.1" y1="138.1" x2="293.1" y2="138.1" stroke="#aaa" stroke-width="0.7"/>
-<line x1="289.1" y1="144.4" x2="289.1" y2="138.1" stroke="#7a5530" stroke-width="1"/>
-<line x1="292.1" y1="147.4" x2="286.1" y2="141.4" stroke="#7a5530" stroke-width="1"/>
+<line x1="289.1" y1="145.6" x2="289.1" y2="138.1" stroke="#7a5530" stroke-width="1"/>
+<line x1="292.1" y1="148.6" x2="286.1" y2="142.6" stroke="#7a5530" stroke-width="1"/>
 <line x1="292.1" y1="141.1" x2="286.1" y2="135.1" stroke="#7a5530" stroke-width="1"/>
-<text x="297.1" y="141.2" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="9" font-weight="bold" transform="rotate(-90.0 297.1 141.2)">5</text>
-<rect x="203.1" y="150.6" width="93.8" height="256.2" fill="#c9cfd4" stroke="#c0392b" stroke-width="2"/>
-<text x="250.0" y="274.8" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">porte pleine</text>
-<text x="250.0" y="290.8" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="normal">75 × 205</text>
-<line x1="203.1" y1="410.9" x2="203.1" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
+<text x="297.1" y="141.9" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="9" font-weight="bold" transform="rotate(-90.0 297.1 141.9)">6</text>
+<rect x="205.6" y="151.9" width="91.2" height="255.0" fill="#c9cfd4" stroke="#c0392b" stroke-width="2"/>
+<text x="251.2" y="275.4" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">porte pleine</text>
+<text x="251.2" y="291.4" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="normal">73 × 204</text>
+<line x1="205.6" y1="410.9" x2="205.6" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="296.9" y1="410.9" x2="296.9" y2="430.9" stroke="#aaa" stroke-width="0.7"/>
-<line x1="203.1" y1="426.9" x2="296.9" y2="426.9" stroke="#c0392b" stroke-width="1"/>
-<line x1="200.1" y1="429.9" x2="206.1" y2="423.9" stroke="#c0392b" stroke-width="1"/>
+<line x1="205.6" y1="426.9" x2="296.9" y2="426.9" stroke="#c0392b" stroke-width="1"/>
+<line x1="202.6" y1="429.9" x2="208.6" y2="423.9" stroke="#c0392b" stroke-width="1"/>
 <line x1="293.9" y1="429.9" x2="299.9" y2="423.9" stroke="#c0392b" stroke-width="1"/>
-<text x="250.0" y="434.9" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="10" font-weight="bold" transform="rotate(0.0 250.0 434.9)">75</text>
-<text x="250.0" y="168.1" text-anchor="middle" fill="#7a5530" font-size="10" font-weight="bold">cadre 85 × 210</text>
+<text x="251.2" y="434.9" text-anchor="middle" dominant-baseline="middle" fill="#c0392b" font-size="10" font-weight="bold" transform="rotate(0.0 251.2 434.9)">73</text>
+<text x="251.2" y="169.4" text-anchor="middle" fill="#7a5530" font-size="10" font-weight="bold">cadre 83 × 209</text>
 <line x1="90.0" y1="410.9" x2="90.0" y2="454.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="312.5" y1="410.9" x2="312.5" y2="454.9" stroke="#aaa" stroke-width="0.7"/>
 <line x1="90.0" y1="450.9" x2="312.5" y2="450.9" stroke="#2b5d8a" stroke-width="1"/>

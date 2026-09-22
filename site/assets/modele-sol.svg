@@ -53,29 +53,29 @@
 <line x1="117.0" y1="627.8" x2="123.0" y2="621.8" stroke="#2b5d8a" stroke-width="1"/>
 <line x1="453.0" y1="627.8" x2="459.0" y2="621.8" stroke="#2b5d8a" stroke-width="1"/>
 <text x="288.0" y="632.8" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 288.0 632.8)">A · 210</text>
-<polygon points="456.0,430.0 456.0,422.0 446.4,422.0 446.4,430.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
+<polygon points="456.0,426.8 456.0,418.8 446.4,418.8 446.4,426.8" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
 <polygon points="456.0,302.0 456.0,294.0 446.4,294.0 446.4,302.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
-<polygon points="456.0,422.0 456.0,302.0 446.4,302.0 446.4,422.0" fill="#fbfbf8" stroke="#c0392b" stroke-width="1.5"/>
-<line x1="456.0" y1="302.0" x2="576.0" y2="302.0" stroke="#c0392b" stroke-width="2"/>
-<polyline points="456.0,422.0 467.8,421.4 479.4,419.7 490.8,416.8 501.9,412.9 512.6,407.8 522.7,401.8 532.1,394.8 540.9,386.9 548.8,378.1 555.8,368.7 561.8,358.6 566.9,347.9 570.8,336.8 573.7,325.4 575.4,313.8 576.0,302.0" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="456.0,418.8 456.0,302.0 446.4,302.0 446.4,418.8" fill="#fbfbf8" stroke="#c0392b" stroke-width="1.5"/>
+<line x1="456.0" y1="302.0" x2="572.8" y2="302.0" stroke="#c0392b" stroke-width="2"/>
+<polyline points="456.0,418.8 467.4,418.2 478.8,416.6 489.9,413.8 500.7,409.9 511.1,405.0 520.9,399.1 530.1,392.3 538.6,384.6 546.3,376.1 553.1,366.9 559.0,357.1 563.9,346.7 567.8,335.9 570.6,324.8 572.2,313.4 572.8,302.0" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
 <line x1="460.0" y1="566.8" x2="488.0" y2="566.8" stroke="#aaa" stroke-width="0.7"/>
-<line x1="460.0" y1="430.0" x2="488.0" y2="430.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="484.0" y1="566.8" x2="484.0" y2="430.0" stroke="#666" stroke-width="1"/>
+<line x1="460.0" y1="426.8" x2="488.0" y2="426.8" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="566.8" x2="484.0" y2="426.8" stroke="#666" stroke-width="1"/>
 <line x1="487.0" y1="569.8" x2="481.0" y2="563.8" stroke="#666" stroke-width="1"/>
-<line x1="487.0" y1="433.0" x2="481.0" y2="427.0" stroke="#666" stroke-width="1"/>
-<text x="492.0" y="498.4" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 498.4)">85.5</text>
-<line x1="460.0" y1="430.0" x2="488.0" y2="430.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="460.0" y1="422.0" x2="488.0" y2="422.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="484.0" y1="430.0" x2="484.0" y2="422.0" stroke="#666" stroke-width="1"/>
-<line x1="487.0" y1="433.0" x2="481.0" y2="427.0" stroke="#666" stroke-width="1"/>
-<line x1="487.0" y1="425.0" x2="481.0" y2="419.0" stroke="#666" stroke-width="1"/>
-<text x="504.0" y="426.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 504.0 426.0)">5</text>
-<line x1="460.0" y1="422.0" x2="488.0" y2="422.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="487.0" y1="429.8" x2="481.0" y2="423.8" stroke="#666" stroke-width="1"/>
+<text x="492.0" y="496.8" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 496.8)">87.5</text>
+<line x1="460.0" y1="426.8" x2="488.0" y2="426.8" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="418.8" x2="488.0" y2="418.8" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="426.8" x2="484.0" y2="418.8" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="429.8" x2="481.0" y2="423.8" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="421.8" x2="481.0" y2="415.8" stroke="#666" stroke-width="1"/>
+<text x="504.0" y="422.8" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 504.0 422.8)">5</text>
+<line x1="460.0" y1="418.8" x2="488.0" y2="418.8" stroke="#aaa" stroke-width="0.7"/>
 <line x1="460.0" y1="302.0" x2="488.0" y2="302.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="484.0" y1="422.0" x2="484.0" y2="302.0" stroke="#666" stroke-width="1"/>
-<line x1="487.0" y1="425.0" x2="481.0" y2="419.0" stroke="#666" stroke-width="1"/>
+<line x1="484.0" y1="418.8" x2="484.0" y2="302.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="421.8" x2="481.0" y2="415.8" stroke="#666" stroke-width="1"/>
 <line x1="487.0" y1="305.0" x2="481.0" y2="299.0" stroke="#666" stroke-width="1"/>
-<text x="492.0" y="362.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 362.0)">75</text>
+<text x="492.0" y="360.4" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 360.4)">73</text>
 <line x1="460.0" y1="302.0" x2="488.0" y2="302.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="460.0" y1="294.0" x2="488.0" y2="294.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="484.0" y1="302.0" x2="484.0" y2="294.0" stroke="#666" stroke-width="1"/>
@@ -118,6 +118,6 @@
 <text x="161.2" y="191.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(0.0 161.2 191.6)">int. 131.5</text>
 <text x="141.6" y="292.9" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(90.0 141.6 292.9)">int. 236</text>
 <text x="288.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · murs 4.96 m² · intérieur 4.45 m²</text>
-<text x="288.0" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 75 ouvrant dehors · fenêtres en bleu · sol libre 1.77 m² · violet = lit à demeure</text>
+<text x="288.0" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 73 ouvrant dehors · fenêtres en bleu · sol libre 1.77 m² · violet = lit à demeure</text>
 <text x="288.0" y="674.8" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (jardin)</text>
 </svg>

@@ -107,7 +107,7 @@
     pose("\xC9tanch\xE9it\xE9", "mastic_cartouche", "Mastic polyur\xE9thane ou MS polym\xE8re, cartouches", haut((perim * 2 + ouv_perim) / 8), "une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures");
     pose("\xC9tanch\xE9it\xE9", "bande_comprimee_ml", "Bande comprim\xE9e au pourtour des ouvertures", ouv_perim, "tour de la porte et des fen\xEAtres");
     pose("\xC9tanch\xE9it\xE9", "mousse_pu_u", "Mousse polyur\xE9thane expansive, bombes", 2, "calfeutrement des ouvertures et des angles");
-    if (po) pose("Ouvertures", po.vitree === false ? "porte_pleine_u" : "porte_vitree_u", `Porte de service ${po.vitree === false ? "pleine isol\xE9e" : "vitr\xE9e"} ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm, avec dormant`, 1, "une porte");
+    if (po) pose("Ouvertures", po.vitree === false ? "porte_pleine_u" : "porte_vitree_u", `Bloc-porte ${po.vitree === false ? "plein" : "vitr\xE9"} ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm, avec dormant`, 1, "une porte");
     pose("Ouvertures", "fenetre_fixe_u", `Fen\xEAtre fixe PVC double vitrage ${fen[0] ? `${fz(fen[0].largeur_cm)} \xD7 ${fz(fen[0].hauteur_cm)}` : ""} cm`, fen.filter((f) => !f.ouvrant).length, "fen\xEAtres fixes");
     pose("Ouvertures", "fenetre_ob_u", `Fen\xEAtre oscillo-battante PVC double vitrage ${fen[0] ? `${fz(fen[0].largeur_cm)} \xD7 ${fz(fen[0].hauteur_cm)}` : ""} cm`, fen.filter((f) => f.ouvrant).length, "fen\xEAtres ouvrantes");
     pose("Eaux pluviales", "gouttiere_ml", "Goutti\xE8re demi-ronde", G.longueur_cm / 100, `${G.troncons.length} tron\xE7on(s) : ${G.troncons.map((x) => `${x.face} ${fz(x.longueur_cm)} cm`).join(" + ")}`);

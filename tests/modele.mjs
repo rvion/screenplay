@@ -138,7 +138,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(v2.fenetres.length === 2 && v2.fenetres.every((f) => f.tient !== false), "v2 : deux fenetres qui tiennent en facade");
   // porte pleine : ni vitrage dans le dos des ecrans, ni vue depuis l'etage des voisins
   ok(v2.porte.vitree === false && v.porte.vitree === true, "v2 : porte pleine (la v1 garde sa porte vitree)");
-  ok(m2.budget.lignes.some((l) => /^Porte de service pleine/.test(l.poste) && l.pu_eur === base.prix_materiaux_eur_ttc.porte_pleine_u.pu) && !m2.budget.lignes.some((l) => /vitrée/.test(l.poste)), "v2 : budget = porte pleine, plus de porte vitree");
+  ok(m2.budget.lignes.some((l) => /^Bloc-porte plein/.test(l.poste) && l.pu_eur === base.prix_materiaux_eur_ttc.porte_pleine_u.pu) && !m2.budget.lignes.some((l) => /vitrée/.test(l.poste)), "v2 : budget = porte pleine, plus de porte vitree");
   ok(c2.svg["modele-facade-D"].includes("porte pleine") && !core.svg["modele-facade-D"].includes("porte pleine"), "v2 : facade D dessine une porte pleine");
   // espace cache derriere l'abri. A la main, dalle au-dela de la droite (10,301)-(210,201), x <= 210 :
   // sommets (0,306) (210,201) (210,271.2) (72.7,398.3) (0,324) -> 1,90 m2 ; pointe a 115 cm du mur du fond
