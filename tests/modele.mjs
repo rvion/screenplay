@@ -191,12 +191,17 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
 }
 
-// fenetres 80 x 80, allege 110, depuis l'etude v2
+// fenetres 80 x 80, allege 110, dans les etudes v2 et v3
 {
-  for (const [cle, p] of [["etude v2", fixture(2)], ["etude v3", fixture(3)], ["abri actuel", actuel]]) {
+  for (const [cle, p] of [["etude v2", fixture(2)], ["etude v3", fixture(3)]]) {
     const f = buildCore(p).variantes.find((x) => x.id === 13).fenetres;
     ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 80 && w.allege_cm === 110 && w.tient !== false) && f[0].ouvrant && !f[1].ouvrant, cle + " : deux fenetres 80 x 80, allege 110 (haut a 190), l'ouvrante a gauche");
   }
+}
+// l'abri : deux fenetres de stock identiques, 80 x 75 oscillo-battantes, allege 110
+{
+  const f = buildCore(actuel).variantes.find((x) => x.id === 13).fenetres;
+  ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 110 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 110");
 }
 
 // abri actuel : l'etude v3 avec le toit vers le fond, gouttiere derriere (nervures dans le sens de la pente)

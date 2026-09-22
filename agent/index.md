@@ -11,8 +11,8 @@ Conception, plans, débit, matériaux, guide de montage et modèle 3D d'un petit
 que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
 abordable, robuste, agréable tous les jours. Projet
 **spec-first** : la conception est écrite *avant* le code, dans ce dossier `agent/`.
-Stack : TypeScript pur (`site/src/compute.ts`, `chantier.ts`) bundlé par esbuild en un seul
-`site/abri.js`, Three.js via CDN, tests Node (snapshot golden + jsdom), publication GitHub Pages.
+Stack : TypeScript pur (`site/src/compute.ts`, `chantier.ts`) bundlé par esbuild en scripts
+classiques (`site/abri.js`, et `site/three.js` pour Three.js, D43), tests Node (snapshot golden + jsdom), publication GitHub Pages.
 
 ## Quick start
 ```bash

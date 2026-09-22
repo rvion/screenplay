@@ -506,3 +506,23 @@ ses plans du matin sous `site/assets/etudes/variantes/` ; le calcul ne dessine p
 *Garde :* `tests/abri_dom.mjs` exige les quatre cartes dans cet ordre, et un carré à 4 m² de murs (vue
 rouge sur les chiffres de 2 m²). *Leçon :* un chiffre d'étude qui bouge avec les paramètres de l'abri
 n'est pas une étude : ce qui est archivé se fige.
+
+## D43 — La page en scripts classiques, Three.js livré dans le site
+La règle d'or 5 promettait `file://`, mais Chrome refuse un script module chargé depuis `file://`, et
+l'importmap du CDN exige des modules : la page restait vide hors serveur. Désormais
+`scripts/bundle-site.mjs` produit deux scripts classiques : `site/three.js` (Three.js et les deux addons
+de la vue, posés sur `window.ABRI_THREE`) et `site/abri.js` (la page, qui lit Three.js sur cet objet). Plus
+de CDN : la page marche aussi hors ligne. *Pourquoi deux fichiers :* `three.js` (660 Ko) ne change
+qu'avec la version de Three.js, donc les commits de `abri.js` restent petits. Une liste unique
+(`THREE_MODULES`) nomme les modules permis ; un import absent fait échouer le build. *Vérification :*
+la page ouverte en `file://` dans Chrome headless se remplit et dessine la 3D. *Garde :*
+`tests/abri_dom.mjs` exige des scripts classiques, sans module ni importmap, dans l'ordre params,
+three, abri (vue rouge sur l'ancienne page). *Remplace* D3 pour le mode de chargement.
+
+## D44 — Fenêtres de stock : deux oscillo-battantes 80 × 75
+Choix de Rémi (2026-09-22) : du stock, pas du sur-mesure. Les deux fenêtres de façade deviennent la même
+fenêtre PVC oscillo-battante 80 × 75 de Brico Dépôt (119 €, sans délai), au lieu d'une ouvrante et d'une
+fixe en 80 × 80 sur mesure (4 à 5 semaines). *Effet :* une seule référence, une seule découpe, deux
+fenêtres qui aèrent. L'allège reste à 110 cm. La question de dossier et l'idée « deux fenêtres
+identiques » sortent de la page : elles sont tranchées. Découper les panneaux aux cotes hors tout de
+l'article reçu (85 × 78 annoncées).

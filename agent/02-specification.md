@@ -179,7 +179,7 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   angle, distance **et** les états. `peuple_abri`
   construit la scène **sans renderer**, ce qui permet de la mesurer sous Node.
 - Tests : `tests/abri3d.mjs` construit la scène avec le vrai three.js (devDependency, même version
-  que le CDN) et vérifie, **pour l'abri et chaque étude archivée** (fixtures), les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers
+  que `site/three.js`) et vérifie, **pour l'abri et chaque étude archivée** (fixtures), les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers
   l'intérieur, emprise, sens de la pente, rehausse, gouttière, descente, battant vers l'extérieur,
   bureaux) ; `tests/abri_dom.mjs` remplit `index.html` sous jsdom et vérifie chaque section.
 

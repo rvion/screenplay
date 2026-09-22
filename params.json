@@ -14,7 +14,7 @@
         "**Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais ({pan_cm} cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.",
         "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
         "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
-        "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres 80 × 80 : écrans sur le bureau gauche, lumière de côté.",
+        "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
         "**Passage derrière de {passage_cm} cm.** {arriere_m2} m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.",
         "**Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.",
         "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
@@ -30,14 +30,11 @@
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
         "Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?",
-        "Fenêtres : 80 × 80 sur mesure (4 à 5 semaines), ou 80 × 75 de stock ?",
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
       ],
       "idees": [
-        "**Deux fenêtres identiques.** Les deux oscillo-battantes, ou les deux fixes avec une grille de ventilation à part : une seule référence, une seule découpe, un seul délai.",
-        "**Fenêtre fixe sans châssis.** Un double vitrage posé sur parcloses bois dans la découpe du panneau, comme dans les tiny houses : moins cher qu'un châssis PVC, aucun délai, et le cadre bois ferme la tranche du panneau.",
         "**Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
         "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
         "**Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.",
@@ -151,7 +148,7 @@
       {
         "cote": "avant",
         "largeur_cm": 80,
-        "hauteur_cm": 80,
+        "hauteur_cm": 75,
         "allege_cm": 110,
         "position": 10,
         "ouvrant": true
@@ -159,10 +156,10 @@
       {
         "cote": "avant",
         "largeur_cm": 80,
-        "hauteur_cm": 80,
+        "hauteur_cm": 75,
         "allege_cm": 110,
         "position": 110,
-        "ouvrant": false
+        "ouvrant": true
       }
     ],
     "cotes_cm": {
@@ -405,10 +402,10 @@
       "incertain": true
     },
     "fenetre_ob_u": {
-      "pu": 155,
+      "pu": 119,
       "unite": "u",
-      "source": "https://www.fenetre24.com/fenetre-pvc-80x80-cm.php",
-      "note": "80 x 80 sur mesure a partir de 155 EUR, port en plus. En stock : 80 de large x 75 de haut (2 vantaux) 119 EUR, x 105 de haut 129 EUR (Brico Depot)."
+      "source": "https://www.bricodepot.fr/catalogue/fenetre-pvc-blanc-oscillo-battante-2-vantaux-h75-x-l80-cm/prod75983/",
+      "note": "taille de stock 80 x 75 (2 vantaux, Uw 1,2), sans delai ; hors tout 85 x 78 ; poignee vendue a part"
     },
     "gouttiere_ml": {
       "pu": 4.7,

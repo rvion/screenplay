@@ -5,6 +5,7 @@ import * as esbuild from "esbuild";
 import { readFileSync, mkdirSync, existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
+import vm from "node:vm";
 
 const ROOT = process.cwd();
 const html = readFileSync(join(ROOT, "site/index.html"), "utf8");
@@ -116,8 +117,8 @@ ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte p
 ok($$("#debit-murs td .cote .n").length >= 10 && $$("#debit-murs td .cote").some((c) => c.querySelector(".d")) && $$("#debit-murs td .cote .d").every((d) => /^,\d+$/.test(d.textContent)), "cotes des tableaux : partie entière et décimales séparées (alignement sur le dernier chiffre entier)");
 ok($$("#pourquoi-corps li").length >= 8 && !/\{\w+\}/.test($("#pourquoi-corps").textContent), "pourquoi : textes de l'abri, tous les {champs} remplacés");
 ok($$("#pourquoi-corps .pourquoi-bloc").length === 2 && $$("#pourquoi-corps li b").length >= 10 && $$("#pourquoi-corps li .suite").length >= 10 && $$("#pourquoi-corps h3 .marque").length === 2 && !/version 3|au lieu de/.test($("#pourquoi-corps").textContent), "pourquoi : points forts et points faibles ; textes autonomes (aucune comparaison avec une autre version)");
-ok($("#questions h2").textContent === "Questions et idées" && $("#pourquoi").nextElementSibling === $("#questions") && $$("#questions-corps .pourquoi-bloc").length === 2 && $$("#questions-corps ol.questions").every((o) => o.closest(".pourquoi-bloc")) && $$("#questions-corps .pourquoi-bloc:first-child .question").map((q) => q.textContent).join() === "Q1,Q2,Q3,Q4,Q5,Q6" && $$("#questions-corps .pourquoi-bloc:first-child li").every((li) => /\?$/.test(li.textContent.trim())) && /8,2 %/.test($("#questions-corps").textContent), "questions : leur section sous « pourquoi », un bloc de questions Q1..Q6 en liste simple, chacune finit par « ? »");
-ok($$("#questions-corps .pourquoi-bloc:last-child .question").length >= 10 && $$("#questions-corps .pourquoi-bloc:last-child .question")[0].textContent === "I1" && $$("#questions-corps .pourquoi-bloc:last-child li b").length >= 10 && /porte 2,8 m sans panne/.test($("#questions-corps .pourquoi-bloc:last-child").textContent) && !/columns: 2/.test(readFileSync(join(ROOT, "site/abri.css"), "utf8").split("ol.questions")[1].split("}")[0]), "idées : un second bloc I1.., accroche en gras, chiffres injectés, liste simple sans colonnes de texte");
+ok($("#questions h2").textContent === "Questions et idées" && $("#pourquoi").nextElementSibling === $("#questions") && $$("#questions-corps .pourquoi-bloc").length === 2 && $$("#questions-corps ol.questions").every((o) => o.closest(".pourquoi-bloc")) && $$("#questions-corps .pourquoi-bloc:first-child .question").map((q) => q.textContent).join() === "Q1,Q2,Q3,Q4,Q5" && $$("#questions-corps .pourquoi-bloc:first-child li").every((li) => /\?$/.test(li.textContent.trim())) && /8,2 %/.test($("#questions-corps").textContent), "questions : leur section sous « pourquoi », un bloc de questions Q1..Q5 en liste simple, chacune finit par « ? »");
+ok($$("#questions-corps .pourquoi-bloc:last-child .question").length >= 9 && $$("#questions-corps .pourquoi-bloc:last-child .question")[0].textContent === "I1" && $$("#questions-corps .pourquoi-bloc:last-child li b").length >= 9 && /porte 2,8 m sans panne/.test($("#questions-corps .pourquoi-bloc:last-child").textContent) && !/columns: 2/.test(readFileSync(join(ROOT, "site/abri.css"), "utf8").split("ol.questions")[1].split("}")[0]), "idées : un second bloc I1.., accroche en gras, chiffres injectés, liste simple sans colonnes de texte");
 // les etudes sont figees : leurs chiffres ne bougent pas quand les parametres de l'abri changent (le carre restait 2 x 2)
 ok(params.formes_etudiees.filter((f) => f.type === "archive").every((f) => f.svg && f.svg.startsWith("<svg")) && $$("#alternatives-corps article .note")[1].textContent.startsWith("4 murs · 4 m² de murs · 3,53 m² int."), "formes étudiées : plans figés dans params.js, le carré garde 2 × 2 (4 m² de murs)");
 ok($$("#alternatives-liste li").length === 4 && $$("#alternatives-liste li .icone svg").length === 4 && $$("#alternatives-liste .t").map((b) => b.textContent).join("|") === "Everbox 2 × 2 m|Carré 2 × 2 m|Rectangle 200 × 240|Trapèze" && $$("#alternatives-corps article.detail").filter((x) => !x.hidden).length === 1 && $$("#alternatives-corps article a").every((x) => existsSync(join(ROOT, "site", x.getAttribute("href").split("#")[0]))) && $$("#alternatives-corps article .planbox svg").length === 4, "formes étudiées : liste (icône de la forme + titre) et plan complet à droite ; Everbox, carré, rectangle, trapèze ; liens existants");
@@ -128,6 +129,14 @@ ok(liens.every((h) => /^[a-z]+:/.test(h) || existsSync(join(ROOT, "site", h.spli
 ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a href="docs/abri-v2.html">c</a> &lt;x&gt;', "markdown en ligne : gras, code, lien vers docs/, HTML échappé");
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
+// file:// : chrome refuse un script module charge depuis file://, donc que des scripts classiques
+{
+  const scripts = [...html.matchAll(/<script\b([^>]*)>/g)].map((m) => m[1]);
+  const srcs = scripts.map((a) => (a.match(/src="([^"?]+)/) || [])[1]).filter(Boolean);
+  const classique = (f) => { try { new vm.Script(readFileSync(join(ROOT, "site", f), "utf8")); return true; } catch { return false; } };
+  ok(scripts.every((a) => !/type="(module|importmap)"/.test(a)) && srcs.join(",") === "params.js,three.js,abri.js" && srcs.every(classique) && readFileSync(join(ROOT, "site/three.js"), "utf8").includes("ABRI_THREE"),
+    "file:// : scripts classiques dans l'ordre params.js, three.js, abri.js, aucun module ni importmap (" + srcs.join(", ") + ")");
+}
 ok(html.includes('href="docs/index.html"') && !html.includes('href="docs/abri.html"') && existsSync(join(ROOT, "site/docs/index.html")), "liens : l'index des documents dans le menu, plus de lien vers la page markdown en haut a droite");
 // document complet (?doc=1) : le meme rendu, tout deroule sans menu ni listes, c'est aussi ce que l'impression montre
 {

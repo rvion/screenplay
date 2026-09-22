@@ -5,11 +5,12 @@ import * as esbuild from "esbuild";
 import { readFileSync, mkdirSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
+import vm from "node:vm";
 
 const ROOT = process.cwd();
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri3d.mjs");
-// three vient ici de node_modules (meme version que le CDN du site) ; le bundle du site le garde externe
+// three vient ici de node_modules, comme site/three.js ; le bundle abri.js le lit sur window.ABRI_THREE
 await esbuild.build({ stdin: { contents: 'export * as THREE from "three"; export { peuple_abri, VUES } from "./site/src/viewer_abri"; export { calcule_abri } from "./site/src/abri_page";', resolveDir: ROOT, loader: "ts" }, bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
 const { THREE, peuple_abri, VUES, calcule_abri } = await import(pathToFileURL(out).href);
 
@@ -17,8 +18,11 @@ let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
 const near = (a, b, eps) => Math.abs(a - b) <= eps;
 const base = JSON.parse(readFileSync(join(ROOT, "params.json"), "utf8"));
-const site = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")), html = readFileSync(join(ROOT, "site/index.html"), "utf8");
-ok(html.includes(`three@${site.devDependencies.three.replace(/^[^0-9]*/, "")}/`), "meme version de three dans le test et sur le site (" + site.devDependencies.three + ")");
+{
+  // site/three.js est ce que la page charge : meme three que celui qui mesure la scene ici
+  const fenetre = {}; vm.runInNewContext(readFileSync(join(ROOT, "site/three.js"), "utf8"), { window: fenetre, self: fenetre });
+  ok(fenetre.ABRI_THREE?.three?.REVISION === THREE.REVISION, "meme version de three dans le test et sur le site (r" + fenetre.ABRI_THREE?.three?.REVISION + ")");
+}
 
 // l'abri actuel, puis les etudes figees (angles aigus, toit vers la droite) : la scene tient pour toute forme
 const fixture = (n) => JSON.parse(readFileSync(join(ROOT, `tests/fixtures/etude-v${n}.json`), "utf8"));

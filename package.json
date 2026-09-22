@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Bureau de jardin parametrique : plans, materiaux, guide de montage et modele 3D calcules depuis params.json (TypeScript, site statique).",
   "scripts": {
-    "build": "esbuild site/src/abri_main.ts --bundle --format=esm --outfile=site/abri.js --external:three --external:three/* --target=es2020 --legal-comments=none",
-    "watch": "esbuild site/src/abri_main.ts --bundle --format=esm --outfile=site/abri.js --external:three --external:three/* --target=es2020 --watch",
+    "build": "node scripts/bundle-site.mjs",
+    "watch": "node scripts/bundle-site.mjs --watch",
     "typecheck": "shipkit ci --only typecheck",
     "typecheck:raw": "tsc --noEmit",
     "build:cli": "esbuild site/src/cli.ts --bundle --format=esm --platform=node --outfile=scripts/build.mjs",

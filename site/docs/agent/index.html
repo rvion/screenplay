@@ -23,8 +23,8 @@ précédé sont archivées, figées, sous <code>etudes/</code> (D40 ; le rectang
 que Rémi construit lui-même sur une dalle déjà coulée. Objectif : simple,
 abordable, robuste, agréable tous les jours. Projet
 <strong>spec-first</strong> : la conception est écrite <em>avant</em> le code, dans ce dossier <code>agent/</code>.
-Stack : TypeScript pur (<code>site/src/compute.ts</code>, <code>chantier.ts</code>) bundlé par esbuild en un seul
-<code>site/abri.js</code>, Three.js via CDN, tests Node (snapshot golden + jsdom), publication GitHub Pages.</p>
+Stack : TypeScript pur (<code>site/src/compute.ts</code>, <code>chantier.ts</code>) bundlé par esbuild en scripts
+classiques (<code>site/abri.js</code>, et <code>site/three.js</code> pour Three.js, D43), tests Node (snapshot golden + jsdom), publication GitHub Pages.</p>
 <h2 id="quick-start">Quick start</h2>
 <pre><code class="language-bash">npm ci                                 # installe esbuild / typescript / jsdom (dev)
 npm run build &amp;&amp; npm run emit          # bundle la page + régénère params.js, SVG, abri.md, docs

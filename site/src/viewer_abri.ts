@@ -1,6 +1,6 @@
 // Scene Three.js de l'abri retenu : N murs sur un contour quelconque (convexe), toit plan dans un
 // sens ou l'autre. Tout vient de core.modele3d (cm, repere de la dalle) ; rien n'est cote ici.
-// THREE est externe (importmap CDN), comme pour viewer.ts.
+// THREE vient de site/three.js (window.ABRI_THREE, scripts/bundle-site.mjs).
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";

@@ -11,7 +11,7 @@
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 175, fond en biais 141,4, fond 100, gauche 275 cm.
 - **Toit** mono-pente vers le fond, 4,68° : 237,5 cm devant, 215 cm au plus bas.
 - **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Matériaux** : 3 027 € TTC (2 573 € à 3 481 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
+- **Matériaux** : 2 944 € TTC (2 502 € à 3 386 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,48 m² ⇒ aucune formalité.
 
@@ -79,8 +79,8 @@ Murs 5 m² · intérieur 4,48 m² (murs de 6 cm retirés) · sol libre hors bure
 
 | pièce | largeur | provenance | découpe |
 |---|---|---|---|
-| A1 | 100 cm | panneau entier | fenêtre 80 × 80 |
-| A2 | 100 cm | panneau entier | fenêtre 80 × 80 |
+| A1 | 100 cm | panneau entier | fenêtre 80 × 75 |
+| A2 | 100 cm | panneau entier | fenêtre 80 × 75 |
 | D1 | 75 cm | panneau recoupé | – |
 | D2 | 100 cm | panneau entier | porte 90 × 210 |
 | C1 | 100 cm | panneau entier | – |
@@ -123,8 +123,8 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | ouverture | taille | où | détail |
 |---|---|---|---|
 | porte pleine | 80 × 205 (cadre 90 × 210) | face D, de 82,5 à 162,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 5 cm du mur du fond (face intérieure) et sous le haut du mur |
-| fenêtre oscillo-battante | 80 × 80 | face A, de 10 à 90 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
-| fenêtre fixe | 80 × 80 | face A, de 110 à 190 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 10 à 90 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
+| fenêtre oscillo-battante | 80 × 75 | face A, de 110 à 190 cm depuis le coin gauche | allège 110 cm, au-dessus du bureau, dans un seul panneau |
 
 ## Aménagement
 
@@ -173,23 +173,22 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Vis autoperceuses de panneaux de mur (pied et tête) | 0,66 cent | 90 € | 59 € | 10 panneaux × 2 extrémités × 3 vis, +10 %. vis 6,3 x 100 + rondelle + cache de couleur ([source](https://www.tolesmoinscheres.com/produit/100-fixations-pour-panneau-sandwich-de-bardage)) |
 | Chevilles ou goujons pour fixer le rail dans la dalle | 20 u | 1 € | 11 € | une tous les 50 cm. goujons 8 x 80 : 55,90 EUR la boite de 100 ([source](https://www.toutbrico.com/goujons-d-ancrage/7242-boite-100-goujons-d-ancrage-8-x-80mm-zingue-batifix-3700013413404.html)) |
 
-### Étanchéité · 172 €
+### Étanchéité · 171 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Bande d'arase sous le rail de pied | 8,91 ml | 1 € | 5 € | périmètre des murs. rouleau de 30 m x 30 cm : 16,90 EUR ([source](https://www.bricodepot.fr/catalogue/bande-darase-long-30-m-larg-30-cm-500-microns/prod59812/)) |
 | Bande butyle (joints de panneaux, tête de mur sous la rehausse) | 22,41 ml | 2 € | 34 € | 5 joints de mur × 2,2 m + périmètre + recouvrements de toit. rouleau de 13 m : 19,66 EUR ([source](https://tolganor.fr/produit/joint-butyl-pour-etancheite-rouleau-de-13-ml-etanco/)) |
 | Mastic polyuréthane ou MS polymère, cartouches | 4 cartouche | 9 € | 36 € | une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures. MS polymere de 6,50 a 13 EUR ; Sikaflex 11FC environ 11,50 EUR ([source](https://www.maxoutil.com/mastic-ms-polymere-parabond-600-dl-chemicals-cartouche-de-290-ml-40001000.html)) |
-| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,3 ml | 7 € | 79 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
+| Bande comprimée au pourtour des ouvertures *(prix à confirmer)* | 11,1 ml | 7 € | 78 € | tour de la porte et des fenêtres. rouleau de 5 m : 44 EUR en negoce, moins cher ailleurs ([source](https://www.pointp.fr/p/couverture/bande-mousse-impregnee-bitume-20x30-rouleau-de-5m-A3242825)) |
 | Mousse polyuréthane expansive, bombes | 2 bombe | 9 € | 18 € | calfeutrement des ouvertures et des angles. 750 ml : de 7,90 a 9,90 EUR ([source](https://www.bricodepot.fr/produits/materiau-et-gros-oeuvre/isolation-et-cloison/etancheite/mousse-expansive)) |
 
-### Ouvertures · 519 €
+### Ouvertures · 437 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Porte de service pleine isolée 80 × 205 cm, avec dormant | 1 u | 199 € | 199 € | une porte. bloc-porte de service PVC plein 205 x 80 avec dormant, serrure 5 points, Ud 1,6. Les tailles standard sont 205 ou 215 x 80 ou 90 ; 100 de large n'existe pas en standard. ([source](https://www.bricodepot.fr/catalogue/bloc-porte-de-service-en-pvc-poussant-droit-h-205-x-l-80-cm/prod54514/)) |
-| Fenêtre fixe PVC double vitrage 80 × 80 cm *(prix à confirmer)* | 1 u | 165 € | 165 € | fenêtres fixes. 80 x 80 n'est pas une taille de stock : chassis fixe sur mesure, 4 a 5 semaines ([source](https://www.brico-fenetre.com/fr_FR/p/chassis-fixe-simple-pvc-gamme-confort)) |
-| Fenêtre oscillo-battante PVC double vitrage 80 × 80 cm | 1 u | 155 € | 155 € | fenêtres ouvrantes. 80 x 80 sur mesure a partir de 155 EUR, port en plus. En stock : 80 de large x 75 de haut (2 vantaux) 119 EUR, x 105 de haut 129 EUR (Brico Depot). ([source](https://www.fenetre24.com/fenetre-pvc-80x80-cm.php)) |
+| Fenêtre oscillo-battante PVC double vitrage 80 × 75 cm | 2 u | 119 € | 238 € | fenêtres ouvrantes. taille de stock 80 x 75 (2 vantaux, Uw 1,2), sans delai ; hors tout 85 x 78 ; poignee vendue a part ([source](https://www.bricodepot.fr/catalogue/fenetre-pvc-blanc-oscillo-battante-2-vantaux-h75-x-l80-cm/prod75983/)) |
 
 ### Eaux pluviales · 88 €
 
@@ -227,7 +226,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
 
-**Total des matériaux : 3 027 € TTC** (fourchette 2 573 € à 3 481 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 2 944 € TTC** (fourchette 2 502 € à 3 386 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -238,7 +237,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - Faire confirmer par le fournisseur la **largeur utile** des panneaux (100 cm ici, la largeur de tous les panneaux de 60 mm relevés) : tout le calepinage en dépend.
 - **Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.
 - Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
-- Fenêtres : 80 × 80 n'est pas une taille de stock (sur mesure, 4 à 5 semaines). En stock il existe du 80 de large × 75 ou 105 de haut. Porte : le bloc de service plein 205 × 80 avec dormant est un article de stock.
+- Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
 - Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici, ramenée à 1,4 m par la panne intermédiaire ; et la **pente minimale** (8,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.
 - Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
@@ -289,7 +288,7 @@ Un panneau se coupe bien sur tréteaux, mal une fois debout.
 **Outils :** scie circulaire lame métal, rail de guidage, scie sauteuse
 
 1. Bandes de mur : D1 75 cm, C2 41,4 cm, G3 75 cm. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.
-2. Fenêtres : 80 × 80 cm, bas à 110 cm ; 80 × 80 cm, bas à 110 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
+2. Fenêtres : 80 × 75 cm, bas à 110 cm ; 80 × 75 cm, bas à 110 cm, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.
 3. Toit : T2 à couper en biais d'après le plan de toiture.
 4. Rehausse : R1 (mur A, 200 cm, 22,5 → 22,5 cm), R2 (mur D, 175 cm, 22,5 → 8,2 cm), R3 (mur C, 141,4 cm, 8,2 → 0 cm), R4 (mur G, 275 cm, 0 → 22,5 cm), tirées de 2 madrier(s) selon le plan de débit.
 
@@ -426,7 +425,7 @@ Une fenêtre se fixe dans la tôle des deux faces, jamais dans la mousse.
 
 **Outils :** visseuse, niveau, cales
 
-1. 2 fenêtre(s) en façade : oscillo-battante de 10 à 90 cm ; fixe de 110 à 190 cm.
+1. 2 fenêtre(s) en façade : oscillo-battante de 10 à 90 cm ; oscillo-battante de 110 à 190 cm.
 2. Habiller la tranche de la découpe d'un profil en U ou d'un tasseau, caler la fenêtre, visser par le dormant.
 3. Bande comprimée au pourtour, mastic dehors, bavette d'appui sous la fenêtre.
 
@@ -485,7 +484,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 - **Cinq murs, aucun angle aigu.** Deux angles de 135° identiques, un seul mur en biais (141,4 cm) : profils d'angle standard pliés, pas de recoupe de panneau dans les angles.
 - **5 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,48 m² à l'intérieur, 2,26 m² de sol libre hors bureaux.
 - **Façade de niveau à 237,5 cm, toit vers le fond.** La gouttière (240.6 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
-- **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres 80 × 80 : écrans sur le bureau gauche, lumière de côté.
+- **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 57 cm.** 1,74 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Peu de coupes.** Deux panneaux de toit entiers, une seule bande recoupée par mur long, les trois autres murs en panneaux entiers.
 - **Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond.
@@ -503,22 +502,19 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 - **Q1** La pente de 8,2 % est-elle admise par le fabricant des panneaux de toit, pour 2,8 m de portée en 60 mm ?
 - **Q2** Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?
-- **Q3** Fenêtres : 80 × 80 sur mesure (4 à 5 semaines), ou 80 × 75 de stock ?
-- **Q4** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
-- **Q5** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
-- **Q6** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
+- **Q3** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
+- **Q4** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
+- **Q5** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?
 
 ### Idées à explorer
 
-- **I1** **Deux fenêtres identiques.** Les deux oscillo-battantes, ou les deux fixes avec une grille de ventilation à part : une seule référence, une seule découpe, un seul délai.
-- **I2** **Fenêtre fixe sans châssis.** Un double vitrage posé sur parcloses bois dans la découpe du panneau, comme dans les tiny houses : moins cher qu'un châssis PVC, aucun délai, et le cadre bois ferme la tranche du panneau.
-- **I3** **Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.
-- **I4** **Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.
-- **I5** **Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.
-- **I6** **Toit en 80 ou 100 mm.** Un panneau plus épais porte 2,8 m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.
-- **I7** **Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.
-- **I8** **Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.
-- **I9** **Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.
-- **I10** **Rail de pied simplifié.** Une cornière alu de 40 vissée sur la bande d'arase, dedans et dehors, plutôt qu'un profil en U introuvable au détail : deux longueurs de stock, le même mastic.
-- **I11** **Électricité sous les bureaux.** Une seule goulotte sous le plateau du bureau gauche et de la façade, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble.
+- **I1** **Fixation visible derrière.** Le mur du fond et le pan à 45° ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.
+- **I2** **Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.
+- **I3** **Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.
+- **I4** **Toit en 80 ou 100 mm.** Un panneau plus épais porte 2,8 m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.
+- **I5** **Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.
+- **I6** **Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.
+- **I7** **Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.
+- **I8** **Rail de pied simplifié.** Une cornière alu de 40 vissée sur la bande d'arase, dedans et dehors, plutôt qu'un profil en U introuvable au détail : deux longueurs de stock, le même mastic.
+- **I9** **Électricité sous les bureaux.** Une seule goulotte sous le plateau du bureau gauche et de la façade, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble.
 

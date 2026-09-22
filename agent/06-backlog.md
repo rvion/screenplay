@@ -7,9 +7,7 @@ vit dans `03-decisions.md`, l'historique dans git.
 - [ ] **Devis de panneaux** (D36) : prix relevés en ligne le 2026-09-22, avec leur source. Restent
       « à confirmer » les panneaux (les vendeurs les moins chers imposent 100 m² ou un paquet
       entier : demander deux devis « petite quantité, coupé à longueur » et un négoce local), les
-      profils pliés à 135°, les fenêtres 80 × 80 (hors stock). C'est la moitié du total.
-- [ ] **Fenêtres : 80 × 80 sur mesure, ou 80 × 75 de stock ?** Le 80 de large × 75 de haut existe en
-      stock à 119 €, sans délai ; le 80 × 80 se fait sur mesure (environ 155 €, 4 à 5 semaines).
+      profils pliés à 135°. C'est la moitié du total.
 - [ ] **Rehausse** : le 75 × 225 n'existe en stock qu'en classe 2. Prendre du 70 × 220 classe 4 (la
       chute passe de 22,5 à 22 cm) ou protéger un classe 2 par la bavette (larmier) ?
 - [ ] **Juger l'aspect de la page d'accueil et du modèle 3D** (D33) : couleurs, angle de vue,
@@ -33,10 +31,6 @@ vit dans `03-decisions.md`, l'historique dans git.
 ## Défauts connus
 - [ ] `abri.md` écrit « portée … sans panne : à confirmer » même quand `toit.panne_intermediaire`
       est vrai : la phrase doit citer la portée ramenée par la panne.
-- [ ] **`file://`** : Chrome bloque le module `abri.js` chargé depuis `file://` (CORS sur les
-      scripts de type module) ; la page ne se remplit que servie en http (`npm run site`, Pages).
-      La règle d'or 5 ne tient donc pas dans Chrome : passer le bundle en script classique, ou
-      retirer la promesse.
 
 ## Améliorations possibles (non bloquantes)
 - [ ] Élévations : cotes des joints de panneaux et de la porte plus détaillées.

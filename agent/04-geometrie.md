@@ -63,8 +63,8 @@ d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout d
   toit mènent l'eau aux bouts arrière des panneaux. Descente au bout droit (`toit.descente`), à
   l'entrée du passage.
 - **Porte** pleine 80 × 205 sur D, de 82,5 à 162,5 depuis la façade, chambranle 5 : le cadre tient
-  dans le module entier du fond. **Fenêtres** 80 × 80, allège 110, en façade : ouvrante de 10 à 90,
-  fixe de 110 à 190.
+  dans le module entier du fond. **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 110, en façade : de 10 à 90
+  et de 110 à 190.
 - **Mobilier** : bureau en L (gauche et façade), fauteuil et tabouret, lit pliant 70 × 190 posé au sol
   libre le long du mur de la porte, pied sous le bureau de façade ; seconde position en biais au fond
   (`lit_pliant_2`).

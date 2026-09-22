@@ -224,7 +224,7 @@ vignette ramène à l&#39;état de départ, comme le bouton reset ; « copier la
 angle, distance <strong>et</strong> les états. <code>peuple_abri</code>
 construit la scène <strong>sans renderer</strong>, ce qui permet de la mesurer sous Node.</li>
 <li>Tests : <code>tests/abri3d.mjs</code> construit la scène avec le vrai three.js (devDependency, même version
-que le CDN) et vérifie, <strong>pour l&#39;abri et chaque étude archivée</strong> (fixtures), les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers
+que <code>site/three.js</code>) et vérifie, <strong>pour l&#39;abri et chaque étude archivée</strong> (fixtures), les boîtes englobantes précises (aucun mur ne traverse son voisin, chaque mur sur son tracé et épaissi vers
 l&#39;intérieur, emprise, sens de la pente, rehausse, gouttière, descente, battant vers l&#39;extérieur,
 bureaux) ; <code>tests/abri_dom.mjs</code> remplit <code>index.html</code> sous jsdom et vérifie chaque section.</li>
 </ul>

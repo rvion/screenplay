@@ -29,7 +29,8 @@ screenplay/
     ├── index.html      # page de l'abri (3D, plans, matériaux, montage) ; charge abri.js
     ├── src/            # TypeScript : compute + chantier (logique pure), abri_page (page, DOM seul),
     │                   # maitre_detail (liste + détail), viewer_abri (3D), docs + cli (Node)
-    ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts)
+    ├── abri.js         # GÉNÉRÉ (bundle esbuild de src/abri_main.ts, script classique)
+    ├── three.js        # GÉNÉRÉ (Three.js + addons, window.ABRI_THREE ; ne bouge qu'avec la version)
     ├── params.js       # GÉNÉRÉ (window.SHED_PARAMS = params.json)
     ├── .nojekyll
     ├── abri.css        # feuille de la page d'accueil (dense, imprimable ; écrite à la main)
@@ -41,7 +42,7 @@ screenplay/
 ## Régénérer
 ```bash
 npm ci                         # une fois (esbuild, typescript, jsdom, three)
-npm run build                  # bundle src/abri_main.ts -> site/abri.js
+npm run build                  # scripts/bundle-site.mjs -> site/three.js + site/abri.js
 npm run emit                   # cli.ts --emit : params.js (plans figés des formes inclus), assets/*.svg, abri.md, docs/, cache-bust
 npm run test:raw               # tous les tests (npm test passe par shipkit ci ; test:raw = brut)
 shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré

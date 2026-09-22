@@ -26,8 +26,8 @@ n&#39;est saisi à la main ailleurs : plans, tableaux et modèle 3D sont <strong
 <li><strong>Paramétrique.</strong> Changer une mesure ⇒ le site recalcule <strong>en direct</strong> plans, débit, budget
 et modèle 3D (et <code>npm run emit</code> regénère les artefacts versionnés). La dalle existe déjà mais
 la géométrie reste pilotée par paramètres pour itérer.</li>
-<li><strong>Zéro dépendance lourde au runtime.</strong> Logique en <strong>TypeScript</strong> bundlée par esbuild (un seul
-<code>site/abri.js</code>, pas de framework) ; rendu 3D via Three.js (CDN).
+<li><strong>Zéro dépendance lourde au runtime.</strong> Logique en <strong>TypeScript</strong> bundlée par esbuild (<code>site/abri.js</code>,
+pas de framework) ; rendu 3D via Three.js, livré dans <code>site/three.js</code> (D43).
 Doit fonctionner hors-ligne (<code>file://</code>) et sur GitHub Pages.</li>
 <li><strong>Lisible par un humain non-pro du bâtiment.</strong> Le livrable explique aussi <em>à quoi faire
 attention</em> (pente, portée du toit, condensation, débord de dalle, porte extérieure).</li>
