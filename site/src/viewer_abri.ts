@@ -488,6 +488,11 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const L = Math.hypot(mt[0] - mp[0], mt[1] - mp[1]) || 1, ux = (mt[0] - mp[0]) / L, uy = (mt[1] - mp[1]) / L, nx = -uy, ny = ux, lw = pied.l;
     const rect = (s0: number, s1: number, marge: number): Pt[] => [[mp[0] + ux * s0 + nx * (-lw / 2 + marge), mp[1] + uy * s0 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (-lw / 2 + marge), mp[1] + uy * s1 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (lw / 2 - marge), mp[1] + uy * s1 + ny * (lw / 2 - marge)], [mp[0] + ux * s0 + nx * (lw / 2 - marge), mp[1] + uy * s0 + ny * (lw / 2 - marge)]];
     dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(0x5a4a3c, { roughness: 0.9 }))));
+    // quatre pieds sous le sommier, a 6 cm des coins
+    for (const [px, py] of rect(6, L - 6, 6)) {
+      const pied_lit = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.25, 0.06), mat(0x4a3b2f, { roughness: 0.9 }));
+      pied_lit.position.copy(W(px, py, sol + 12.5)); dans.add(ombre(pied_lit));
+    }
     dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(0xf1ede4, { roughness: 0.95 }))));
     // couchage : le drap et l'oreiller, seulement quand on est couche
     couchage.add(ombre(new THREE.Mesh(prisme(rect(-1, L * 0.66, -1), plat(sol + 45), plat(sol + 48)), mat(0x6f8fbf, { roughness: 0.95 }))));

@@ -160,6 +160,13 @@ const paroi = groupes.murs.children;
 const lit_pose = groupes.lit3 || groupes.lit, couchage = groupes.couchage3 || lit_pose;
 const pieces_lit = [...lit_pose.children, ...(couchage === lit_pose ? [] : couchage.children)];
 ok(pieces_lit.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").length === 4 && pieces_lit.some((o) => o.material.color && o.material.color.getHex() === 0xe3dff0 && boite(o).max.y > boite(lit_pose.children[0]).max.y), "lit : sommier, matelas, drap et oreiller lavande au-dessus (couchage a part)");
+{
+  // pieds : quatre sous le sommier, du plancher au dessous du sommier, dans l'emprise du lit
+  const sommier = boite(lit_pose.children.find((o) => o.isMesh && o.geometry.type === "BufferGeometry")), bl = boite(lit_pose);
+  const pieds = lit_pose.children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry");
+  const sol_m = d.sol.epaisseur_cm / 100;
+  ok(pieds.length === 4 && pieds.every((o) => { const b = boite(o); return near(b.min.y, sol_m, 0.005) && near(b.max.y, sommier.min.y, 0.005) && b.min.x >= bl.min.x - 1e-6 && b.max.x <= bl.max.x + 1e-6 && b.min.z >= bl.min.z - 1e-6 && b.max.z <= bl.max.z + 1e-6; }), `lit : quatre pieds du plancher au sommier, sous le lit (${pieds.length})`);
+}
 const murs = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
 ok(murs.length === d.murs.length, "un volume de mur par face (" + murs.length + ")");
 const centre_abri = v.polygone.reduce((s, z) => [s[0] + z[0] / v.polygone.length, s[1] + z[1] / v.polygone.length], [0, 0]);
