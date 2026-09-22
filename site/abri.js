@@ -2404,7 +2404,7 @@ function maitre_detail(o) {
   });
   o.mode.innerHTML = `<label><input type="checkbox" data-tout${etat.tout ? " checked" : ""}> tout afficher</label>`;
   const rend_liste = () => {
-    o.liste.innerHTML = o.entrees().map((e) => `<li class="${[e.etat || "", e.cle === etat.cle ? "ici" : ""].filter(Boolean).join(" ")}"><button type="button" data-aller="${e.cle}">${e.num ? `<span class="num-etape">${e.num}</span>` : ""}<span class="t">${e.titre}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ""}</button></li>`).join("");
+    o.liste.innerHTML = o.entrees().map((e) => `<li class="${[e.etat || "", e.cle === etat.cle ? "ici" : ""].filter(Boolean).join(" ")}"><button type="button" data-aller="${e.cle}">${e.num ? `<span class="num-etape">${e.num}</span>` : ""}${e.icone ? `<span class="icone">${e.icone}</span>` : ""}<span class="t">${e.titre}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ""}</button></li>`).join("");
   };
   const applique = () => {
     for (const e of o.entrees()) e.panneau.hidden = !etat.tout && e.cle !== etat.cle;
@@ -2663,7 +2663,16 @@ function rend_abri(a) {
   if (section) section.hidden = !T;
   const D = T && T.dossier;
   html("pourquoi-corps", D ? bloc("\u2705", "Points forts", D.atouts) + bloc("\u26A0\uFE0F", "Points faibles", D.limites) + questions(D.questions) : T ? bloc("\u2705", "Ce que cette forme apporte", T.atouts) + bloc("\u26A0\uFE0F", "Ce qu'elle co\xFBte", T.pertes) + bloc("\u{1F4A1}", "Pourquoi ces choix", T.notes) + bloc("\u{1F527}", "Conseils hors plans", T.hors_modele) : "");
-  html("alternatives-corps", formes_etudiees(a.p).map((x) => `<${x.href ? `a href="${x.href}"` : "div"} class="alt${x.commerce ? " commerce" : ""}"><div class="alt-plan">${x.svg}</div><b>${echappe(x.nom)}</b><small>${echappe(x.chiffres)}</small></${x.href ? "a" : "div"}>`).join(""));
+  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
+  if (liste_formes && mode_formes && corps_formes) maitre_detail({
+    liste: liste_formes,
+    mode: mode_formes,
+    panneaux: corps_formes,
+    memoire: `abri-v${a.version}-formes`,
+    ancre: el("alternatives-liste") || void 0,
+    entrees: () => formes.map((x, i) => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) }))
+  });
 }
 function rend_guide(Gd, version) {
   const cle_cases = `abri-v${version}-cases`;

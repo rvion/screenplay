@@ -92,27 +92,31 @@ h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-varia
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }
 
 .vue { position: relative; }
-.vue-barre { position: absolute; top: .4rem; left: .4rem; right: .4rem; display: flex; gap: .55rem; align-items: center; padding: .1rem .4rem; border-radius: 6px; background: rgba(255, 255, 255, .38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, .55); font-size: .66rem; color: rgba(28, 37, 48, .8); }
-.vue-barre label { display: flex; align-items: center; gap: .25rem; white-space: nowrap; color: rgba(28, 37, 48, .7); }
+.vue-barre { position: absolute; top: .4rem; left: .4rem; right: .4rem; display: flex; gap: .4rem; align-items: center; font-size: .66rem; color: rgba(28, 37, 48, .8); pointer-events: none; }
+.vue-barre > * { pointer-events: auto; }
+/* chaque commande dans sa pilule de verre ; le texte de la camera reste nu et tamise */
+.pilule { display: flex; align-items: center; gap: .3rem; padding: .18rem .45rem; border-radius: 6px; background: rgba(255, 255, 255, .42); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, .6); }
+.vue-barre label { white-space: nowrap; color: rgba(28, 37, 48, .75); cursor: default; }
+.vue-barre label svg { flex: none; }
+.vue-barre input[type=range] { -webkit-appearance: none; appearance: none; width: 54px; height: 12px; margin: 0; background: transparent; cursor: pointer; }
+.vue-barre input[type=range]::-webkit-slider-runnable-track { height: 2px; border-radius: 1px; background: rgba(28, 37, 48, .3); }
+.vue-barre input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; margin-top: -3.5px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
+.vue-barre input[type=range]::-moz-range-track { height: 2px; border-radius: 1px; background: rgba(28, 37, 48, .3); }
+.vue-barre input[type=range]::-moz-range-thumb { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
+.cam-etat { flex: 1; min-width: 0; font-size: .58rem; letter-spacing: -.01em; color: rgba(28, 37, 48, .45); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 0 6px rgba(255, 255, 255, .8); }
+.cam-etat i { font-style: normal; margin-right: .4rem; opacity: .75; }
+.cam-etat .pos { color: #1f5a8c; }
+.cam-etat .cible { color: #8a4b1f; }
+.cam-etat .fov { color: #2a7d46; }
+.cam-etat .dist { color: #6b4fa0; }
+.vue-barre button { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; padding: 0; border: 1px solid rgba(255, 255, 255, .6); border-radius: 6px; background: rgba(255, 255, 255, .42); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: rgba(28, 37, 48, .75); cursor: pointer; }
+.vue-barre button:hover { border-color: var(--accent); color: var(--accent); }
+.vue-barre button.copie { background: var(--ok); color: #fff; border-color: var(--ok); }
 /* infobulle instantanee */
 .tip { position: relative; }
 .tip::after { content: attr(data-tip); position: absolute; top: calc(100% + 4px); left: 0; z-index: 3; padding: .15rem .4rem; border-radius: 4px; background: rgba(28, 37, 48, .92); color: #fff; font-size: .62rem; white-space: nowrap; pointer-events: none; opacity: 0; transition: none; }
 .tip:hover::after { opacity: 1; }
 button.tip::after { left: auto; right: 0; }
-.vue-barre input[type=range] { -webkit-appearance: none; appearance: none; width: 48px; height: 12px; margin: 0; background: transparent; cursor: pointer; }
-.vue-barre input[type=range]::-webkit-slider-runnable-track { height: 2px; border-radius: 1px; background: rgba(28, 37, 48, .28); }
-.vue-barre input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; margin-top: -3.5px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
-.vue-barre input[type=range]::-moz-range-track { height: 2px; border-radius: 1px; background: rgba(28, 37, 48, .28); }
-.vue-barre input[type=range]::-moz-range-thumb { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .95); border: 1px solid rgba(28, 37, 48, .45); }
-.cam-etat { flex: 1; min-width: 0; font-size: .58rem; letter-spacing: -.01em; color: rgba(28, 37, 48, .55); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cam-etat i { font-style: normal; margin-right: .4rem; }
-.cam-etat .pos { color: #1f5a8c; }
-.cam-etat .cible { color: #8a4b1f; }
-.cam-etat .fov { color: #2a7d46; }
-.cam-etat .dist { color: #6b4fa0; }
-.vue-barre button { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; border: 1px solid rgba(28, 37, 48, .22); border-radius: 5px; background: rgba(255, 255, 255, .45); color: rgba(28, 37, 48, .75); cursor: pointer; }
-.vue-barre button:hover { border-color: var(--accent); color: var(--accent); }
-.vue-barre button.copie { background: var(--ok); color: #fff; border-color: var(--ok); }
 #viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
 .bascules { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0 0; }
 .bascules button { position: relative; display: grid; justify-items: center; gap: .1rem; width: 50px; height: 44px; padding: .3rem 0 .2rem; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); color: var(--muted); cursor: pointer; }
@@ -184,15 +188,10 @@ p.suivante button:hover { border-color: var(--accent); }
 .pourquoi-bloc.questions ol { list-style: none; padding-left: 0; columns: 2; column-gap: 1.2rem; }
 .pourquoi-bloc.questions li { break-inside: avoid; margin: .3rem 0; }
 .question { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72em; font-weight: 700; color: #fff; background: var(--alerte); border-radius: 3px; padding: 0 .35em; vertical-align: .1em; margin-right: .2em; }
-/* formes etudiees : vignettes des autres versions */
-.alternatives { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem; }
-.alt { display: block; text-decoration: none; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: .5rem .6rem; background: var(--carte); }
-.alt:hover { border-color: var(--accent); }
-.alt .alt-plan { height: 150px; display: flex; align-items: center; margin-bottom: .35rem; }
-.alt .alt-plan svg { width: auto; height: 150px; max-width: 100%; border: 0; }
-.alt.commerce .alt-plan { justify-content: center; }
-.alt span { color: var(--muted); font-size: .84rem; }
-.alt small { display: block; color: var(--muted); font-size: .74rem; margin-top: .15rem; line-height: 1.35; }
+/* formes etudiees : icone de la forme dans la liste */
+ol.liste.formes .icone { flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
+ol.liste.formes .icone svg { width: auto; height: 34px; max-width: 34px; }
+ol.liste.formes button { padding: .2rem .5rem; }
 
 @media (max-width: 980px) {
   .mise-en-page { grid-template-columns: minmax(0, 1fr); }

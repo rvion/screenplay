@@ -222,7 +222,12 @@ export function rend_abri(a: Abri) {
     : T ? bloc("✅", "Ce que cette forme apporte", T.atouts) + bloc("⚠️", "Ce qu'elle coûte", T.pertes) + bloc("💡", "Pourquoi ces choix", T.notes) + bloc("🔧", "Conseils hors plans", T.hors_modele) : "");
 
   // formes etudiees : une carte par forme de params.formes_etudiees
-  html("alternatives-corps", formes_etudiees(a.p).map((x) => `<${x.href ? `a href="${x.href}"` : "div"} class="alt${x.commerce ? " commerce" : ""}"><div class="alt-plan">${x.svg}</div><b>${echappe(x.nom)}</b><small>${echappe(x.chiffres)}</small></${x.href ? "a" : "div"}>`).join(""));
+  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` · <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
+  if (liste_formes && mode_formes && corps_formes) maitre_detail({
+    liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `abri-v${a.version}-formes`, ancre: el("alternatives-liste") || undefined,
+    entrees: () => formes.map((x, i): Entree => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) as HTMLElement })),
+  });
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).

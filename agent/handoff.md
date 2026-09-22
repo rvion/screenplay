@@ -32,6 +32,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Formes étudiées : Everbox 2 × 2 (commerce), carré 2 × 2, rectangle 200 × 240, trapèze
 - [x] « Pourquoi cette forme » autonome : points forts, points faibles, questions Q1..Q6 (bloc `dossier` de abri_v4)
 - [x] Matériaux : règle et source sous le nom de l'article, quatre colonnes ; panneau qui débordait
+- [x] Formes étudiées en liste + détail (icône de la forme à gauche, plan à droite)
+- [x] Barre caméra : reset en tête, icônes verticales, une pilule de verre par curseur, texte nu et tamisé
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

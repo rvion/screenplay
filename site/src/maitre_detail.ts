@@ -2,7 +2,7 @@
 // une entree visible a la fois par defaut ; une bascule montre tout (l'impression montre toujours tout).
 // l'entree choisie et la bascule sont gardees dans le navigateur sous `memoire`.
 
-export interface Entree { cle: string; titre: string; num?: string; badge?: string; etat?: string; panneau: HTMLElement }
+export interface Entree { cle: string; titre: string; num?: string; icone?: string; badge?: string; etat?: string; panneau: HTMLElement }
 export interface MaitreDetail { montrer(cle: string, defiler?: boolean): void; rafraichir(): void }
 
 interface Options {
@@ -31,7 +31,7 @@ export function maitre_detail(o: Options): MaitreDetail {
   o.mode.innerHTML = `<label><input type="checkbox" data-tout${etat.tout ? " checked" : ""}> tout afficher</label>`;
 
   const rend_liste = () => {
-    o.liste.innerHTML = o.entrees().map((e) => `<li class="${[e.etat || "", e.cle === etat.cle ? "ici" : ""].filter(Boolean).join(" ")}"><button type="button" data-aller="${e.cle}">${e.num ? `<span class="num-etape">${e.num}</span>` : ""}<span class="t">${e.titre}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ""}</button></li>`).join("");
+    o.liste.innerHTML = o.entrees().map((e) => `<li class="${[e.etat || "", e.cle === etat.cle ? "ici" : ""].filter(Boolean).join(" ")}"><button type="button" data-aller="${e.cle}">${e.num ? `<span class="num-etape">${e.num}</span>` : ""}${e.icone ? `<span class="icone">${e.icone}</span>` : ""}<span class="t">${e.titre}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ""}</button></li>`).join("");
   };
   const applique = () => {
     for (const e of o.entrees()) e.panneau.hidden = !etat.tout && e.cle !== etat.cle;
