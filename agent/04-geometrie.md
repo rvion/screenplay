@@ -45,9 +45,9 @@ non 45°, et le fond est ce qui reste (B = A − 71,4). La façade ne change rie
 `(10,5) → (218,5) → (218,185) → (146,6 ; 255) → (10,255)` : 10 cm de dalle à
 gauche, **5 devant**, 44 à droite.
 
-**Gaine électrique** (`dalle_cm.gaine_electrique`) : trou de 4 cm, 110 depuis la gauche, de 12 à 16
+**Gaine électrique** (`dalle_cm.gaine_electrique`) : trou de 4 cm, 85 depuis la gauche, de 12 à 16
 depuis l'avant. Façade à 5 cm du bord et panneau de 6 : face intérieure à 11, donc le câble sort
-**dans l'abri**, 1 cm derrière le mur de façade, entre les deux fenêtres. À 10 cm devant, il tombait sous
+**dans l'abri**, 1 cm derrière le mur de façade, sous le bord du bureau gauche, entre le mur et le lit. À 10 cm devant, il tombait sous
 le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 10 à 5.
 
 | face | longueur | hauteur finie (début → fin) | panneaux |

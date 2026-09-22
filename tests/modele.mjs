@@ -204,11 +204,11 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
-// gaine electrique : le trou dans la dalle (110 depuis la gauche, de 12 a 16 depuis l'avant, 4 cm) se voit sur l'implantation ;
+// gaine electrique : le trou dans la dalle (85 depuis la gauche, de 12 a 16 depuis l'avant, 4 cm) se voit sur l'implantation ;
 // facade a 5 cm du bord de la dalle, panneau de 6 : face interieure a 11, donc la gaine sort dans l'abri
 {
   const ca = buildCore(actuel), ga = ca.geometry ? ca.geometry.dalle.gaine : null, svg = ca.svg["modele-implantation"];
-  ok(JSON.stringify(ca.modele3d.gaine) === JSON.stringify({ x_cm: 110, y_cm: 14, diametre_cm: 4 }), "gaine : 110 depuis la gauche, centre a 14 depuis l'avant (12 a 16), 4 cm, dans la scene 3D");
+  ok(JSON.stringify(ca.modele3d.gaine) === JSON.stringify({ x_cm: 85, y_cm: 14, diametre_cm: 4 }), "gaine : 85 depuis la gauche, centre a 14 depuis l'avant (12 a 16), 4 cm, dans la scene 3D");
   const va = ca.variantes.find((x) => x.id === 13), ya = Math.min(...va.polygone.map((z) => z[1]));
   ok(ya === 5 && /class="gaine"/.test(svg) && svg.includes("gaine électrique Ø4") && svg.includes("dans l'abri") && !svg.includes("sous le mur"), "gaine : facade a 5 cm du bord, la gaine sort dans l'abri (" + ya + ")");
   // controle : la meme gaine a 8 cm du bord tombe sous le mur A

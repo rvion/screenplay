@@ -76,7 +76,7 @@ const boite = (o) => new THREE.Box3().setFromObject(o, true);
 if (nom === "abri actuel") {
   // gaine : un tube de 4 cm debout sur la dalle, a sa place
   const bg = groupes.gaine ? boite(groupes.gaine) : new THREE.Box3(), attendu = [((d.gaine || {}).x_cm - (Math.min(...d.dalle.map((z) => z[0])) + Math.max(...d.dalle.map((z) => z[0]))) / 2) / 100];
-  ok(!!groupes.gaine && near(bg.max.x - bg.min.x, 0.04, 0.002) && near(bg.min.y, 0, 0.001) && bg.max.y > 0.1 && near((bg.min.x + bg.max.x) / 2, attendu[0], 0.005), "gaine : tube de 4 cm debout sur la dalle, a 110 cm du bord gauche");
+  ok(!!groupes.gaine && near(bg.max.x - bg.min.x, 0.04, 0.002) && near(bg.min.y, 0, 0.001) && bg.max.y > 0.1 && near((bg.min.x + bg.max.x) / 2, attendu[0], 0.005), "gaine : tube de 4 cm debout sur la dalle, a sa place depuis le bord gauche");
 }
 
 // chaque mur : sa boite englobante doit etre celle du segment [de, a] epaissi vers l'INTERIEUR, de 0 a la hauteur des murs

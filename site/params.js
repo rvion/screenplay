@@ -71,7 +71,7 @@ window.SHED_PARAMS = {
     "palissade_epaisseur_cm": 4,
     "_gaine_comment": "Trou de la gaine electrique dans la dalle, centre mesure depuis le bord gauche (x) et le bord avant (y) de la dalle (trou de 12 a 16 depuis l'avant) ; le cable arrive par la.",
     "gaine_electrique": {
-      "x_cm": 110,
+      "x_cm": 85,
       "y_cm": 14,
       "diametre_cm": 4
     },
