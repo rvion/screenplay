@@ -17,6 +17,6 @@
 - Gouttière au bon endroit : descente au coin arrière gauche
 - Sol modélisé d'après plan (10 cm : PIR 60, OSB 22, revêtement)
 - Homme de 185 cm, taille écrite sur le torse
-- Nouveaux presets : debout dedans, côté porte, regarder depuis le lit, couché
+- Nouveaux presets : debout dedans, côté porte, dedans côté porte ouvert, couché
 - Nouveaux réglages de transparence : toit, murs et porte fermée voilés
 - Clôture : troisième état, palissade absente
