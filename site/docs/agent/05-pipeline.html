@@ -18,7 +18,7 @@
 ├── README.md           # cahier lisible sur GitHub (public)
 ├── abri.md            # GÉNÉRÉ : l&#39;abri, tel que params.json le décrit
 ├── etudes/            # l&#39;archive des études (D39, D40)
-│   ├── variantes.md   #   GÉNÉRÉ à chaque emit : les 13 formes d&#39;abri sur la dalle (SVG inclus)
+│   ├── variantes.md   #   FIGÉE le 2026-09-22 : les 13 formes d&#39;abri sur la dalle, plans dans site/assets/etudes/variantes/
 │   └── abri-v{1,2,3}.md #  FIGÉES le 2026-09-22, plans dans site/assets/etudes/v{1,2,3}/
 ├── params.json         # l&#39;abri et la dalle (source unique des dimensions, en cm)
 ├── package.json        # scripts npm (build / emit / test / typecheck)
@@ -45,12 +45,12 @@
     ├── abri.css        # feuille de la page d&#39;accueil (dense, imprimable ; écrite à la main)
     ├── docs.css        # feuille des pages de documents (écrite à la main, autonome)
     ├── docs/           # GÉNÉRÉ : une page HTML par .md suivi par git + index.html (adresses à partager)
-    └── assets/         # GÉNÉRÉS : plan-dalle*, variante-*, modele-* (.svg) ; etudes/vN/ = plans figés
+    └── assets/         # GÉNÉRÉS : plan-dalle, modele-* (.svg) ; etudes/ = plans figés (vN/, variantes/, formes/)
 </code></pre>
 <h2 id="régénérer">Régénérer</h2>
 <pre><code class="language-bash">npm ci                         # une fois (esbuild, typescript, jsdom, three)
 npm run build                  # bundle src/abri_main.ts -&gt; site/abri.js
-npm run emit                   # cli.ts --emit : params.js, assets/*.svg, abri.md, etudes/variantes.md, docs/, cache-bust
+npm run emit                   # cli.ts --emit : params.js (plans figés des formes inclus), assets/*.svg, abri.md, docs/, cache-bust
 npm run test:raw               # tous les tests (npm test passe par shipkit ci ; test:raw = brut)
 shipkit ci                     # la porte complète : tâches + règles SK* (repo.config.ts) ; STATUS.md ignoré
 </code></pre>

@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md, abri_md, DOSSIER_ETUDES } from "site/src/compute.ts";
+import { buildCore, abri_md } from "site/src/compute.ts";
 import { construit_docs, est_publie, relativise } from "site/src/docs.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -25,16 +25,15 @@ function emit(p: any) {
   }
   // un plan que le calcul ne produit plus ne survit pas (les sous-dossiers, eux, sont des archives)
   for (const f of readdirSync(join(SITE, "assets"))) if (f.endsWith(".svg") && !(f.slice(0, -4) in core.svg)) rmSync(join(SITE, "assets", f));
+  // les plans figes des formes archivees voyagent dans params.js : la page ne lit aucun fichier
+  const page = { ...p, formes_etudiees: (p.formes_etudiees || []).map((f: any) => (f.type === "archive" && f.plan ? { ...f, svg: readFileSync(join(SITE, f.plan), "utf8") } : f)) };
   writeFileSync(join(SITE, "params.js"),
     "// Genere par scripts/build.mjs : les parametres de l'abri.\nwindow.SHED_PARAMS = " +
-    JSON.stringify(p, null, 2) + ";\n");
+    JSON.stringify(page, null, 2) + ";\n");
   // pages markdown generees : liens ecrits depuis la racine, rendus relatifs a leur dossier.
-  // etudes/ garde aussi les etudes archivees (figees, suivies par git) : on n'y reecrit que variantes.md
   const ecrit_md = (chemin: string, md: string) => { mkdirSync(dirname(join(ROOT, chemin)), { recursive: true }); writeFileSync(join(ROOT, chemin), relativise(md, chemin)); };
-  const VARIANTES = `${DOSSIER_ETUDES}/variantes.md`;
-  ecrit_md(VARIANTES, variantes_md(p, core));
   ecrit_md("abri.md", abri_md(p, core));
-  const generes = [VARIANTES, "abri.md"];
+  const generes = ["abri.md"];
   emitDocs(p, generes);
   stamp();
   return core;

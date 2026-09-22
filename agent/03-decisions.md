@@ -491,3 +491,18 @@ pages de documents. *Vérification :* sur la sortie complète de l'abri, seuls `
 planches et les 22 autres plans sont identiques. *Garde remplacée :* les snapshots du rectangle
 cèdent la place à un snapshot golden de l'abri (`tests/snapshots/abri.json`), vu rouge sur une chute
 changée de 22,5 à 23 cm. *Remplace* D16 à D24 pour le code ; ces décisions restent comme historique.
+
+## D42 — Les formes étudiées restent quatre, et l'étude des formes est figée
+Correction de Rémi (2026-09-22) : la section « Formes étudiées » devait garder **Everbox, Carré,
+Rectangle, Trapèze** ; D40 et D41 avaient retiré le rectangle et le trapèze avec leur code, et le carré
+était devenu un rectangle de 2 m². *Cause :* la fusion de D40 a aussi changé les bandes libres de la
+dalle (avant 10, gauche 10, venues des surcouches de la v2 et de la v3) ; l'étude des 13 formes se
+recalculait sur ces bandes, et l'option 1 est passée de 200 × 200 à 100 × 200. `etudes/variantes.md`
+avait changé de même sans que personne le demande. *Maintenant :* ces cartes sont des **archives**
+(`type: "archive"`) : un plan figé sous `site/assets/etudes/formes/`, recopié dans `params.js` par
+`npm run emit` (la page ne lit aucun fichier), leurs chiffres du 2026-09-22 et leur document. Les trois
+dessins sont identiques octet pour octet à ceux du matin. `etudes/variantes.md` est lui aussi figé, avec
+ses plans du matin sous `site/assets/etudes/variantes/` ; le calcul ne dessine plus les 13 formes.
+*Garde :* `tests/abri_dom.mjs` exige les quatre cartes dans cet ordre, et un carré à 4 m² de murs (vue
+rouge sur les chiffres de 2 m²). *Leçon :* un chiffre d'étude qui bouge avec les paramètres de l'abri
+n'est pas une étude : ce qui est archivé se fige.

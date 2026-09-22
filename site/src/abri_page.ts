@@ -36,17 +36,15 @@ export function calcule_abri(p: Params): Abri {
 }
 
 // formes etudiees (params.formes_etudiees) : une carte par forme, avec son dessin sans entete, ses chiffres et son document
-export function formes_etudiees(p: Params, base: any) {
+export function formes_etudiees(p: Params) {
   return ((p.formes_etudiees || []) as any[]).map((f) => {
     if (f.type === "commerce") {
       const [a, b] = f.cotes_cm, s = 1.1, W = a * s + 40, H = b * s + 40;
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="system-ui,sans-serif"><rect x="20" y="20" width="${a * s}" height="${b * s}" fill="#eef2f6" stroke="#2b5d8a" stroke-width="3"/><text x="${W / 2}" y="${H / 2 + 6}" text-anchor="middle" fill="#2b5d8a" font-size="18" font-weight="bold">${fz(a / 100)} × ${fz(b / 100)} m</text></svg>`;
       return { nom: f.nom, svg, chiffres: `${fr(Math.round(a * b) / 1e4)} m² au sol · ${f.note || ""}`, href: f.url || "", commerce: true };
     }
-    if (f.type === "variante") {
-      const v = base.variantes.find((x: any) => x.id === f.id), q = base.planches[`variante-${f.id}`];
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
-    }
+    // etude figee : plan et chiffres du jour ou elle a ete archivee (le plan arrive dans params.js, recopie par emit)
+    if (f.type === "archive") return { nom: f.nom, svg: f.svg || "", chiffres: f.chiffres || "", href: f.href || "" };
     return null;
   }).filter(Boolean);
 }
@@ -186,7 +184,7 @@ export function rend_abri(a: Abri) {
   html("questions-corps", D ? numerotee("❓", "Questions", "Q", D.questions) + numerotee("💡", "Idées à explorer", "I", D.idees) : "");
 
   // formes etudiees : une carte par forme de params.formes_etudiees
-  const formes = formes_etudiees(a.p, core), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` · <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
     liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `${MEMOIRE}-formes`, ancre: el("alternatives-liste") || undefined,

@@ -877,9 +877,7 @@ export function buildCore(p: Params) {
   const g = geometry(p);
   const svg: Record<string, string> = {};
   if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
-  if (g.dalle && g.dalle.zone_utile) svg["plan-dalle-bandes"] = plan_dalle_svg(g, true);
   const vars = variantes(p, g);
-  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v);
   // modele 2D de la forme retenue (option 13 amenagee)
   const v13 = vars.find((v: any) => v.id === 13 && v.bureaux);
   const modele: any = v13 ? modele_trapeze(p, v13) : null;
@@ -895,10 +893,6 @@ export function buildCore(p: Params) {
   }
   // planches de la page : le meme corps que les fichiers SVG, l'entete a part (la page la rend en texte)
   const planches: Record<string, Planche> = {};
-  if (g.dalle) {
-    // les formes etudiees : chaque option, sans entete
-    for (const v of vars) planches[`variante-${v.id}`] = { nom: `Option ${v.id}`, detail: v.titre, lignes: [], svg: plan_dalle_svg(g, true, v, null, true) };
-  }
   if (modele && g.dalle) {
     planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
     planches.resume = { nom: "Résumé", lignes: [], svg: resume_svg(g, v13, modele) };
@@ -909,79 +903,6 @@ export function buildCore(p: Params) {
     for (const f of modele.faces) planches[`facade-${f.cle}`] = { ...entete_facade(f), svg: modele_facade_svg(modele, f, true, plus_long) };
   }
   return { geometrie: g, variantes: vars, modele, modele3d, svg, planches };
-}
-
-/* ----------------------------------------------------------------- */
-/* Resume des variantes (markdown, genere par le CLI)                 */
-/* ----------------------------------------------------------------- */
-const AVIS: Record<number, [string[], string[]]> = {
-  1: [["panneaux entiers sur les 4 faces : aucune recoupe", "le plus simple et le moins cher à monter", "sous le seuil même si la mairie compte les débords"], ["le plus petit bureau de la liste", "laisse inutilisée toute la bande de dalle à droite"]],
-  2: [["un peu plus grand que l'option 1, toujours à angles droits"], ["gain minime pour des panneaux à recouper sur les 4 faces"]],
-  3: [["façade la plus large : porte et fenêtre côte à côte", "passage arrière confortable"], ["peu profond : le plus petit intérieur", "panneaux à recouper en largeur"]],
-  4: [["sous le seuil de surface", "pleine largeur et un seul pan coupé, court"], ["5 murs et 2 angles obtus : profils d'angle sur mesure", "le pan coupé rogne un coin pour un petit gain"]],
-  5: [["le plus grand intérieur sans angle aigu : que des angles obtus, faciles à meubler", "le pan coupé suit le mur du fond : passage régulier"], ["au-dessus du seuil : déclaration préalable probable", "5 murs, 2 profils d'angle sur mesure, toit recoupé en biais, gouttière avec un angle"]],
-  6: [["la surface maximale de la zone"], ["la pointe du fond est un coin perdu", "3 angles non droits, toit et gouttière les plus compliqués", "au-dessus du seuil"]],
-  7: [["prouve qu'aucune rotation ne fait mieux qu'un rectangle droit"], ["identique à l'option 2 avec la zone actuelle"]],
-  8: [["la plus grande surface possible avec 4 murs"], ["mur gauche en biais : un coin perdu en long contre le mur de propriété", "deux angles aigus, difficiles à meubler"]],
-  9: [["4 murs, un seul en biais, deux angles droits côté porte", "toit simple : un seul bord en biais"], ["au-dessus du seuil", "angle aigu au fond à gauche"]],
-  10: [["sous le seuil, même forme que l'option 9", "passage arrière un peu élargi"], ["façade plus étroite"]],
-  13: [["pleine largeur et la plus grande surface des trapèzes, avec le passage voulu derrière", "porte sur le côté droit : bureau en L sur tout le mur gauche et toute la façade", "façade libre pour des fenêtres, lumière sur le bureau"], ["au-dessus du seuil : déclaration préalable probable", "angle aigu au fond à gauche, occupé par le bout du bureau", "mur gauche très haut contre la propriété : panneau long, inaccessible après montage"]],
-  12: [["mur gauche et mur du fond en panneaux entiers : aucune recoupe sur les deux murs contre la propriété, inaccessibles après montage", "sous le seuil, même intérieur que le 200 × 240 d'origine", "façade pleine largeur : porte et fenêtre côté jardin", "que des angles droits ou obtus, pan coupé court", "le pan coupé tombe sous la bande de toit déjà recoupée : une seule coupe de toit en biais"], ["5 murs et 2 angles obtus : profils d'angle pliés sur mesure", "3 bandes de panneau à recouper (façade, mur droit, pan coupé), tirées de 2 panneaux", "gouttière arrière arrêtée avant le pan coupé"]],
-  11: [["sous le seuil sans perdre de largeur de façade", "le passage arrière le plus large des trapèzes"], ["mur droit court : peu de place pour une porte ou une fenêtre à droite", "angle aigu au fond à gauche, plus fermé que l'option 9"]],
-};
-
-export function variantes_md(p: Params, core: any): string {
-  const vs = core.variantes, g = core.geometrie, d = g.dalle;
-  const ep = +p.panneau.epaisseur_mm / 10, pl = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
-  const seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
-  const H = +p.murs.hauteur_cm, chute = +p.disposition_trapeze.toit.chute_cm;
-  const hAv = H + chute - pl, hFd = H - pl;
-  const b = d.zone_utile.bandes_cm, noms = d.cotes_noms;
-  const fr = (x: number) => String(x).replace(".", ",");
-  const NOM: Record<string, string> = { avant: "avant", droite: "droite", arriere_droite: "grand pan du fond", arriere_gauche: "petit pan du fond", gauche: "gauche" };
-  const pas = (v: any, c: string) => { const q = v.passages.find((x: any) => x.cote === c); return q ? `${fr(q.cm)} cm` : "–"; };
-  let md = `# Formes d'abri possibles sur la dalle\n\n`;
-  if (core.modele) md += `> **Abri retenu : option 13.** Ses plans complets (sol, toit, rehausse, 4 façades) sont dans [abri.md](abri.md).\n\n`;
-  md += `> Généré par \`npm run emit\` depuis \`params.json\` et \`site/src/compute.ts\` : ne pas éditer à la main.\n\n`;
-  md += `## Hypothèses\n\n`;
-  md += `- **Dalle réelle** : ${fr(d.aire_m2)} m², côtés ${noms.map((n: string, i: number) => `${NOM[n] || n} ${fz(d.cotes_cm[i])}`).join(", ")} cm.\n`;
-  md += `- **Bandes libres** laissées le long de chaque côté : ${noms.map((n: string, i: number) => `${NOM[n] || n} ${fz(b[i])}`).join(", ")} cm. Reste la **zone utile** : ${fr(d.zone_utile.aire_m2)} m².\n`;
-  md += `- **Porte** de ${fz(+p.porte.largeur_cm)} cm sur le côté avant (jardin), ouvrant vers l'extérieur : elle ne prend aucune place dedans.\n`;
-  md += `- **Intérieur** = murs en panneaux sandwich de ${fz(ep)} cm retirés sur tout le tour. Les couvre-joints d'angle intérieurs (quelques mm) sont négligés.\n`;
-  md += `- **Hauteur sous plafond** (toutes les options) : ${fr(rnd(hAv / 100, 2))} m à l'avant, ${fr(rnd(hFd / 100, 2))} m au fond = murs ${fz(H)} + rehausse ${fr(chute)} à l'avant, moins le plancher isolé de ${fz(pl)} cm.\n`;
-  md += `- **Seuil** : jusqu'à ${fz(seuil)} m² de murs, aucune formalité (à confirmer en mairie, et le PLU s'applique quand même).\n`;
-  md += `- **Passage** : écart réel entre l'abri et chaque mur de propriété du fond (vert ≥ 50, orange 35 à 50, rouge < 35).\n\n`;
-  md += `![dalle et zone utile](site/assets/plan-dalle-bandes.svg)\n\n`;
-  md += `## En bref\n\n`;
-  md += `- **Le plus simple** : option 1, panneaux entiers, angles droits.\n`;
-  if (vs.some((v: any) => v.id === 12)) md += `- **Le meilleur compromis sous le seuil** : option 12, l'option 1 élargie à toute la façade avec un seul coin coupé.\n`;
-  md += `- **Sous le seuil avec 4 murs** : option 11, pleine largeur et le passage le plus large des trapèzes.\n`;
-  if (vs.some((v: any) => v.id === 13 && v.bureaux)) md += `- **Bureau en L, passage visé derrière** : option 13, porte à droite, bureau sur tout le mur gauche et toute la façade.\n`;
-  md += `- **Le plus grand intérieur facile à meubler** : option 5, que des angles obtus, mais au-dessus du seuil.\n\n`;
-  md += `## Comparatif\n\n`;
-  md += `| # | forme | murs (ext.) | **intérieur** | côtés | passage grand pan | passage petit pan | ≤ ${fz(seuil)} m² |\n|---|---|---|---|---|---|---|---|\n`;
-  for (const v of vs) md += `| [${v.id}](#option-${v.id}) | ${v.titre} | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** | ${v.polygone.length} | ${pas(v, "arriere_droite")} | ${pas(v, "arriere_gauche")} | ${v.aire_m2 <= seuil ? "oui" : "non"} |\n`;
-  md += `\n`;
-  for (const v of vs) {
-    const [pour, contre] = AVIS[v.id] || [[], []];
-    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? " · **retenue : plans complets dans [abri.md](abri.md)**" : ""}\n\n`;
-    md += `![option ${v.id}](site/assets/variante-${v.id}.svg)\n\n`;
-    md += `| | murs (extérieur) | intérieur |\n|---|---|---|\n`;
-    md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
-    v.noms_cotes.forEach((n: string, i: number) => { md += `| côté ${n} | ${fr(v.cotes_cm[i])} cm | ${fr(v.cotes_interieures_cm[i])} cm |\n`; });
-    md += `| angles | ${v.angles_deg.map((a: number) => fr(a) + "°").join(" · ")} | |\n`;
-    md += `| passage arrière | grand pan ${pas(v, "arriere_droite")} · petit pan ${pas(v, "arriere_gauche")} | |\n`;
-    if (v.porte) md += `| porte | ${fz(v.porte.largeur_cm)} cm sur le côté ${v.porte.nom}, de ${fr(v.porte.debut_cm)} à ${fr(rnd(v.porte.debut_cm + v.porte.largeur_cm, 1))} cm | |\n`;
-    for (const f of v.fenetres || []) md += `| fenêtre ${f.ouvrant ? "ouvrante" : "fixe"} | ${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)} cm sur le côté ${f.nom}, de ${fr(f.debut_cm)} à ${fr(rnd(f.debut_cm + f.largeur_cm, 1))} cm, allège ${fz(f.allege_cm)} cm${f.tient ? "" : " · **NE TIENT PAS**"} | |\n`;
-    for (const b of v.bureaux || []) md += `| bureau ${b.cote} | | ${fz(b.profondeur_cm)} cm de profondeur sur ${fr(b.longueur_cm)} cm |\n`;
-    if (v.bureaux) md += `| sol libre | | **${fr(v.sol_libre_m2)} m²** (bureaux ${fr(v.bureaux_m2)} m²) |\n`;
-    for (const st of v.sieges || []) md += `| ${st.type} | | ${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)} cm devant le bureau ${st.contre}${st.tient ? "" : " · **NE TIENT PAS**"} |\n`;
-    md += `\n`;
-    for (const x of pour) md += `- ✅ ${x}\n`;
-    for (const x of contre) md += `- ⚠️ ${x}\n`;
-    md += `\n`;
-  }
-  return md;
 }
 
 /* ----------------------------------------------------------------- */

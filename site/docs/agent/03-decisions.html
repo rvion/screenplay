@@ -457,6 +457,20 @@ pages de documents. <em>Vérification :</em> sur la sortie complète de l&#39;ab
 planches et les 22 autres plans sont identiques. <em>Garde remplacée :</em> les snapshots du rectangle
 cèdent la place à un snapshot golden de l&#39;abri (<code>tests/snapshots/abri.json</code>), vu rouge sur une chute
 changée de 22,5 à 23 cm. <em>Remplace</em> D16 à D24 pour le code ; ces décisions restent comme historique.</p>
+<h2 id="d42--les-formes-étudiées-restent-quatre-et-l39étude-des-formes-est-figée">D42 — Les formes étudiées restent quatre, et l&#39;étude des formes est figée</h2>
+<p>Correction de Rémi (2026-09-22) : la section « Formes étudiées » devait garder <strong>Everbox, Carré,
+Rectangle, Trapèze</strong> ; D40 et D41 avaient retiré le rectangle et le trapèze avec leur code, et le carré
+était devenu un rectangle de 2 m². <em>Cause :</em> la fusion de D40 a aussi changé les bandes libres de la
+dalle (avant 10, gauche 10, venues des surcouches de la v2 et de la v3) ; l&#39;étude des 13 formes se
+recalculait sur ces bandes, et l&#39;option 1 est passée de 200 × 200 à 100 × 200. <code>etudes/variantes.md</code>
+avait changé de même sans que personne le demande. <em>Maintenant :</em> ces cartes sont des <strong>archives</strong>
+(<code>type: &quot;archive&quot;</code>) : un plan figé sous <code>site/assets/etudes/formes/</code>, recopié dans <code>params.js</code> par
+<code>npm run emit</code> (la page ne lit aucun fichier), leurs chiffres du 2026-09-22 et leur document. Les trois
+dessins sont identiques octet pour octet à ceux du matin. <code>etudes/variantes.md</code> est lui aussi figé, avec
+ses plans du matin sous <code>site/assets/etudes/variantes/</code> ; le calcul ne dessine plus les 13 formes.
+<em>Garde :</em> <code>tests/abri_dom.mjs</code> exige les quatre cartes dans cet ordre, et un carré à 4 m² de murs (vue
+rouge sur les chiffres de 2 m²). <em>Leçon :</em> un chiffre d&#39;étude qui bouge avec les paramètres de l&#39;abri
+n&#39;est pas une étude : ce qui est archivé se fige.</p>
 </main>
 </body>
 </html>

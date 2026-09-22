@@ -27,7 +27,8 @@ Angles intérieurs (`dalle.angles_deg`, plan `plan-dalle.svg`) : **90 / 90 / 132
 **Bandes libres et zone utile** (`bandes_libres_cm`, `dalle.zone_utile`) : chaque côté est
 décalé vers l'intérieur de sa bande, la zone utile est l'intersection des demi-plans. Bandes :
 avant 10, droite 5, grand pan 45, petit pan 12, gauche 10 ⇒ zone utile **6,53 m²**. Elle sert aux
-13 formes de `etudes/variantes.md` ; l'abri, lui, impose ses cotes.
+13 formes de `variantes(p, g)` ; l'abri, lui, impose ses cotes. L'étude des formes publiée
+(`etudes/variantes.md`) est figée : elle a été faite avec les bandes de la première forme (gauche 12, avant 5).
 
 ### Murs de propriété
 `murs_mitoyens = [gauche, arriere_gauche, arriere_droite]` : ces côtés de la dalle **sont** la limite

@@ -1162,9 +1162,7 @@ function buildCore(p) {
   const g = geometry(p);
   const svg = {};
   if (g.dalle) svg["plan-dalle"] = plan_dalle_svg(g);
-  if (g.dalle && g.dalle.zone_utile) svg["plan-dalle-bandes"] = plan_dalle_svg(g, true);
   const vars = variantes(p, g);
-  for (const v of vars) svg[`variante-${v.id}`] = plan_dalle_svg(g, true, v);
   const v13 = vars.find((v) => v.id === 13 && v.bureaux);
   const modele = v13 ? modele_trapeze(p, v13) : null;
   if (modele) modele.budget = budget_modele(p, v13, modele);
@@ -1178,9 +1176,6 @@ function buildCore(p) {
     for (const f of modele.faces) svg[`modele-facade-${f.cle}`] = modele_facade_svg(modele, f);
   }
   const planches = {};
-  if (g.dalle) {
-    for (const v of vars) planches[`variante-${v.id}`] = { nom: `Option ${v.id}`, detail: v.titre, lignes: [], svg: plan_dalle_svg(g, true, v, null, true) };
-  }
   if (modele && g.dalle) {
     planches.implantation = { ...entete_implantation(v13, g.dalle), svg: plan_dalle_svg(g, false, v13, modele, true) };
     planches.resume = { nom: "R\xE9sum\xE9", lignes: [], svg: resume_svg(g, v13, modele) };
@@ -1800,17 +1795,14 @@ function calcule_abri(p) {
   const core = buildCore(p), v = core.variantes.find((x) => x.id === 13), m = core.modele;
   return { p, core, v, m, textes: textes_abri(p, core) };
 }
-function formes_etudiees(p, base) {
+function formes_etudiees(p) {
   return (p.formes_etudiees || []).map((f) => {
     if (f.type === "commerce") {
       const [a, b] = f.cotes_cm, s = 1.1, W = a * s + 40, H = b * s + 40;
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="system-ui,sans-serif"><rect x="20" y="20" width="${a * s}" height="${b * s}" fill="#eef2f6" stroke="#2b5d8a" stroke-width="3"/><text x="${W / 2}" y="${H / 2 + 6}" text-anchor="middle" fill="#2b5d8a" font-size="18" font-weight="bold">${fz3(a / 100)} \xD7 ${fz3(b / 100)} m</text></svg>`;
       return { nom: f.nom, svg, chiffres: `${fr2(Math.round(a * b) / 1e4)} m\xB2 au sol \xB7 ${f.note || ""}`, href: f.url || "", commerce: true };
     }
-    if (f.type === "variante") {
-      const v = base.variantes.find((x) => x.id === f.id), q = base.planches[`variante-${f.id}`];
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs \xB7 ${fr2(v.aire_m2)} m\xB2 de murs \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
-    }
+    if (f.type === "archive") return { nom: f.nom, svg: f.svg || "", chiffres: f.chiffres || "", href: f.href || "" };
     return null;
   }).filter(Boolean);
 }
@@ -1968,7 +1960,7 @@ function rend_abri(a) {
   if (sq) sq.hidden = !(D && (D.questions.length || D.idees.length));
   const numerotee = (marque, titre, lettre2, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre2}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "";
   html("questions-corps", D ? numerotee("\u2753", "Questions", "Q", D.questions) + numerotee("\u{1F4A1}", "Id\xE9es \xE0 explorer", "I", D.idees) : "");
-  const formes = formes_etudiees(a.p, core), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
+  const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
   html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
     liste: liste_formes,

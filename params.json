@@ -195,12 +195,28 @@
       "url": ""
     },
     {
-      "type": "variante",
-      "id": 1,
-      "nom": "Carré 2 × 2 m"
+      "type": "archive",
+      "nom": "Carré 2 × 2 m",
+      "plan": "assets/etudes/formes/carre.svg",
+      "chiffres": "4 murs · 4 m² de murs · 3,53 m² int.",
+      "href": "docs/etudes/variantes.html#option-1"
+    },
+    {
+      "type": "archive",
+      "nom": "Rectangle 200 × 240",
+      "plan": "assets/etudes/formes/rectangle.svg",
+      "chiffres": "4 murs · 4,8 m² de murs · 4,29 m² int. · étude initiale, figée",
+      "href": ""
+    },
+    {
+      "type": "archive",
+      "nom": "Trapèze",
+      "plan": "assets/etudes/formes/trapeze.svg",
+      "chiffres": "4 murs · 5,37 m² de murs · 4,81 m² int. · passage 51 cm · 3 680 €",
+      "href": "docs/etudes/abri-v1.html"
     }
   ],
-  "_formes_etudiees_comment": "Section « Formes étudiées » de la page d'accueil : une carte par forme. commerce = produit du commerce (dessin d'un simple rectangle aux cotes donnees, note, url facultative) ; variante = une des 13 formes de etudes/variantes.md (id).",
+  "_formes_etudiees_comment": "Section « Formes étudiées » de la page d'accueil : une carte par forme. commerce = produit du commerce (dessin d'un simple rectangle aux cotes donnees, note, url facultative) ; archive = une etude figee le 2026-09-22 : son plan (plan, un SVG de site/, que npm run emit recopie dans params.js), ses chiffres de ce jour et son document.",
   "reglementaire": {
     "seuil_sans_formalite_m2": 5,
     "seuil_declaration_m2": 20,

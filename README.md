@@ -56,7 +56,7 @@ npm run site                        # prévisualiser sur http://localhost:5885 (
 ```
 params.json          ← l'abri et la dalle (source unique des dimensions, en cm)
 abri.md              ← le document complet de l'abri (généré)
-etudes/              ← formes étudiées (variantes.md généré) et études archivées (figées)
+etudes/              ← études archivées, figées : les 13 formes (variantes.md) et les versions 1 à 3
 site/src/            ← TypeScript : compute + chantier (logique pure), abri_page + viewer_abri (page)
 site/                ← site GitHub Pages (index.html + abri.js bundlé + params.js + plans + docs/)
 tests/               ← tests Node (modèle, dalle, 3D, page sous jsdom) + fixtures des études
