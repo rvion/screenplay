@@ -25,9 +25,9 @@ export function cloture_pleine(gr: Vec, oui: boolean) {
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
 export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
-  porte: { titre: "Côté porte", position: [4.45, 1.75, 2.99], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1, cloture: 1 } },
   arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
+  porte: { titre: "Côté porte", position: [2.14, 4.67, 3.06], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
   lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
   lit2: { titre: "Lit déplié 2, en biais", position: [1.6, 4.4, 2.6], cible: [0, 0.5, -0.3], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
@@ -410,22 +410,28 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     // rien d'utilise : a moitie rentre sous le bureau
     siege(st, sieges_mi, pousse[0] / 2, pousse[1] / 2);
-    // lit 2 : fauteuil et tabouret sont tous deux cales sous le bureau de facade (le fauteuil glisse jusqu'au mur, a 4 cm)
+    // lit 2 : les deux sieges sous le bureau de facade. Le fauteuil est tourne (dossier vers la piece) et cale
+    // au mur a 4 cm ; le tabouret va dans le coin avant droit (contre le mur de la porte)
     const bureau_av = data.mobilier.bureaux.find((b: any) => b.cote === "avant");
     const avant_int = bureau_av ? Math.min(...bureau_av.polygone.map((z: Pt) => z[1])) : null;
-    let pousse2 = st.contre === "avant" || avant_int === null ? pousse : [0, -((s.cy - s.profondeur / 2) - avant_int - 4)];
-    // puis, s'il chevauche encore le lit 2, glisse vers la gauche
-    if (data.mobilier.lit2 && st.contre !== "avant") {
-      const bed: Pt[] = data.mobilier.lit2.polygone;
-      const dedans = (pt: Pt) => bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.01; }) || bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) <= 0.01; });
-      const chevauche = (dx: number, dy: number) => {
-        const x0 = s.cx - s.largeur / 2 + dx, x1 = s.cx + s.largeur / 2 + dx, y0 = s.cy - s.profondeur / 2 + dy, y1 = s.cy + s.profondeur / 2 + dy;
-        const coins: Pt[] = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
-        return coins.some(dedans) || bed.some((z) => z[0] >= x0 && z[0] <= x1 && z[1] >= y0 && z[1] <= y1);
-      };
-      for (let dx = 0; dx >= pousse[0] && chevauche(dx, pousse2[1]); dx -= 5) pousse2 = [dx - 5, pousse2[1]];
+    const droite_int = Math.max(...data.sol.polygone.map((z: Pt) => z[0]));
+    if (avant_int === null) siege(st, sieges_ranges2, pousse[0], pousse[1]);
+    else if (s.tabouret) siege(st, sieges_ranges2, (droite_int - 4 - s.largeur / 2) - s.cx, (avant_int + 4 + s.profondeur / 2) - s.cy);
+    else {
+      let dy = (avant_int + 4 + s.profondeur / 2) - s.cy, dx = 0;
+      // s'il chevauche le lit 2, glisse vers la gauche
+      if (data.mobilier.lit2) {
+        const bed: Pt[] = data.mobilier.lit2.polygone;
+        const dedans = (pt: Pt) => bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.01; }) || bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) <= 0.01; });
+        const chevauche = (ddx: number) => {
+          const x0 = s.cx - s.largeur / 2 + ddx, x1 = s.cx + s.largeur / 2 + ddx, y0 = s.cy - s.profondeur / 2 + dy, y1 = s.cy + s.profondeur / 2 + dy;
+          const coins: Pt[] = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+          return coins.some(dedans) || bed.some((z) => z[0] >= x0 && z[0] <= x1 && z[1] >= y0 && z[1] <= y1);
+        };
+        while (dx >= pousse[0] && chevauche(dx)) dx -= 5;
+      }
+      siege({ ...st, contre: "avant" }, sieges_ranges2, dx, dy);
     }
-    siege(st, sieges_ranges2, pousse2[0], pousse2[1]);
     // la personne assise sur le fauteuil, tournee vers son bureau
     if (!s.tabouret) {
       const g = assise(s.haut / 100);

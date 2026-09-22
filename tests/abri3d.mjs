@@ -28,7 +28,7 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit,lit2" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
+ok(Object.keys(VUES).join() === "jardin,arriere,droite,porte,interieur,lit,lit2" && VUES.jardin.position[2] > 3 && VUES.porte.etats.murs === 2 && VUES.porte.etats.toit === 0 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
 ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.lit.etats.mobilier === 2 && VUES.lit.etats.personne === 2 && VUES.lit.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, lit déplié = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
@@ -70,7 +70,14 @@ const paroi = groupes.murs.children;
     const dedans_lit = (pt) => q2.every((a, i) => { const b = q2[(i + 1) % q2.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.5; });
     const coins = [[bf2.min.x, bf2.min.z], [bf2.max.x, bf2.min.z], [bf2.max.x, bf2.max.z], [bf2.min.x, bf2.max.z]].map(([X, Z]) => plan(X, Z));
     const bureau_av3 = groupes.mobilier.children.find((o) => o.isMesh && boite(o).max.z > 0.5 && (boite(o).max.x - boite(o).min.x) > 1.5);
-    ok(bureau_av3 && bf2.max.z > boite(bureau_av3).min.z + 0.3 && !coins.some(dedans_lit), "lit 2 : le fauteuil est cale sous le bureau de facade et ne chevauche pas le lit");
+    // toutes les pieces du fauteuil range (celles hors du coin du tabouret), de l'assise au dossier
+    const bm = boite(groupes.murs), fauteuil_pieces = groupes.sieges_ranges2.children.filter((o) => o.isMesh && boite(o).max.x < bm.max.x - 0.45), uf = new THREE.Box3(); fauteuil_pieces.forEach((o) => uf.union(boite(o)));
+    const bav = boite(bureau_av3);
+    ok(bureau_av3 && uf.max.z > bav.max.z - 0.1 && uf.min.z < bav.min.z && !coins.some(dedans_lit), "lit 2 : le fauteuil est cale sous le bureau de facade (du mur jusque dans la piece) et ne chevauche pas le lit");
+    // le dossier du fauteuil range est tourne vers la piece (etroit en z, large en x) ; le tabouret est dans le coin avant droit
+    ok((bf2.max.x - bf2.min.x) > (bf2.max.z - bf2.min.z) * 3, "lit 2 : le fauteuil est tourne, dossier face a la piece");
+    const tab2 = groupes.sieges_ranges2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.x - boite(p).max.x)[0], bt2 = boite(tab2);
+    ok(bt2.max.x > bm.max.x - 0.16 && bt2.max.z > bm.max.z - 0.16, "lit 2 : le tabouret est dans le coin avant droit");
     // la tete du lit 2 (l'oreiller, piece la plus haute) est du cote de la porte (x max), pas sous le bureau gauche
     const oreiller2 = groupes.lit2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
     ok(boite(oreiller2).min.x > (b2.min.x + b2.max.x) / 2, "lit 2 : l'oreiller est du cote de la porte");

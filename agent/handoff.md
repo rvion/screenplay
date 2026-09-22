@@ -66,6 +66,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Menu : Plan, Ouvertures et Mobilier séparés, Pourquoi, Alternatives
 - [x] Plaque de taille du lit plus petite, dans le coin ; police qui se réduit
 - [x] Lit 70 × 190 (standard une place ; 80 et 90 ne tiennent pas en biais)
+- [x] Lit 2 : fauteuil tourné sous le bureau de façade, tabouret dans le coin avant droit
+- [x] Preset « Côté porte » avec la vue collée (murs coupés, sans toit), en quatrième position
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)
