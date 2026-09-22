@@ -89,7 +89,7 @@ ok(morts.length === 0, "aucun lien, image, ancre ou lien vers le depot mort dans
   ok(disque.join() === attendu.join(), "site/docs/ contient exactement une page par .md suivi + l'index (" + disque.length + " fichiers)");
   const perimes = attendu.filter((n) => existsSync(join(DOCS, n)) && readFileSync(join(DOCS, n), "utf8") !== frais[n]);
   ok(perimes.length === 0, "chaque page est a jour avec son .md" + (perimes.length ? " : relancer npm run emit (" + perimes.join(", ") + ")" : ""));
-  ok(["abri.html", "abri-v2.html", "variantes.html", "readme.html"].every((n) => attendu.includes(n)), "abri, abri-v2, variantes et README ont leur page");
+  ok(["abri.html", "etudes/abri-v2.html", "etudes/variantes.html", "readme.html"].every((n) => attendu.includes(n)), "abri, abri-v2, variantes et README ont leur page");
 }
 
 console.log(fails ? `\n${fails} echec(s) docs.` : "\nPages de documents OK ✓");

@@ -34,6 +34,16 @@ function vers(depuis: string, cible: string): string {
   return [...a.slice(k).map(() => ".."), ...b.slice(k)].join("/") || ".";
 }
 
+// les generateurs ecrivent leurs liens depuis la racine du depot : on les rend relatifs a la page qui les porte
+export function relativise(md: string, chemin: string): string {
+  const un = (href: string) => {
+    if (!href || /^([a-z][a-z0-9+.-]*:|#|\/)/i.test(href)) return href;
+    const [c, diese] = href.split("#");
+    return vers(chemin, c) + (diese !== undefined ? "#" + diese : "");
+  };
+  return md.replace(/(\]\()([^)\s]+)(\))/g, (_m, a, h, z) => a + un(h) + z).replace(/(\s(?:src|href)=")([^"]+)(")/g, (_m, a, h, z) => a + un(h) + z);
+}
+
 // lien ou image relatifs : fichier du site -> chemin du site ; .md publie -> sa page ; le reste -> le depot
 function reecrit(href: string, page: DocSource, publies: Set<string>, depot: string): string {
   if (!href || /^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(href)) return href;

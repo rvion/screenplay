@@ -1,6 +1,6 @@
 // Page d'accueil : l'abri retenu (params.abri_principal), tout calcule depuis les parametres.
 // DOM seulement, aucun import de Three : testable sous jsdom. La scene 3D est branchee par abri_main.ts.
-import { buildCore, params_v2, version_principale, versions_abri, textes_variante, type Params } from "./compute";
+import { buildCore, params_v2, version_principale, versions_abri, textes_variante, nom_page, type Params } from "./compute";
 import { maitre_detail, type Entree } from "./maitre_detail";
 
 const fr = (x: number) => String(x).replace(".", ",");
@@ -78,14 +78,14 @@ export function formes_etudiees(p: Params) {
     }
     if (f.type === "variante") {
       const v = base.variantes.find((x: any) => x.id === f.id), q = base.planches[`variante-${f.id}`];
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int.`, href: `docs/variantes.html#option-${f.id}` };
+      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v.polygone.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
     }
     if (f.type === "rectangle") {
       const g = base.geometrie, q = base.planches.rectangle;
       return { nom: f.nom, svg: q ? q.svg : "", chiffres: `4 murs · ${fr(g.aire_m2)} m² de murs · ${fr(g.aire_interieure_m2)} m² int. · étude initiale, réglable`, href: "configurateur.html" };
     }
     const { core } = coeur(p, f.n), v = core.variantes.find((x: any) => x.id === 13), m = core.modele, passage = v.passages.find((q: any) => q.cote === "arriere_droite");
-    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int. · passage ${fz(Math.round(passage.cm))} cm · ${eur(m.budget.total_eur)}`, href: `docs/abri-v${f.n}.html` };
+    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs · ${fr(v.aire_m2)} m² de murs · ${fr(v.aire_interieure_m2)} m² int. · passage ${fz(Math.round(passage.cm))} cm · ${eur(m.budget.total_eur)}`, href: "docs/" + nom_page(f.n, version_principale(p)).replace(/\.md$/, ".html") };
   });
 }
 

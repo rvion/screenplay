@@ -1,6 +1,6 @@
 # Abri de jardin : le bureau à cinq murs
 
-> Généré par `npm run emit` depuis `params.json` (bloc `abri_v4`) et `site/src/compute.ts` : ne pas éditer à la main. Autres versions : [version 1](abri-v1.md), [version 2](abri-v2.md), [version 3](abri-v3.md). Autres formes étudiées : [variantes.md](variantes.md).
+> Généré par `npm run emit` depuis `params.json` (bloc `abri_v4`) et `site/src/compute.ts` : ne pas éditer à la main. Autres versions : [version 1](etudes/abri-v1.md), [version 2](etudes/abri-v2.md), [version 3](etudes/abri-v3.md). Autres formes étudiées : [variantes.md](etudes/variantes.md).
 
 ![implantation sur la dalle](site/assets/modele-v4-implantation.svg)
 
@@ -482,7 +482,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 Comparée à la version 3, dont elle reprend les réglages.
 
-| | version 3 ([abri-v3.md](abri-v3.md)) | **version 4** |
+| | version 3 ([abri-v3.md](etudes/abri-v3.md)) | **version 4** |
 |---|---|---|
 | murs (extérieur) | 5 m² | 5 m² |
 | intérieur | **4,48 m²** | **4,48 m²** |

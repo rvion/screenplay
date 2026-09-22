@@ -443,3 +443,16 @@ borne les dessins à 40 % de page, et le plan du rectangle (seul SVG sans `width
 l'écran reste à juger par Rémi. Dans la foulée : le titre « Sommaire » du menu tombe, et la section
 des questions devient « Questions et idées », deux listes simples (Q1…, I1…) au lieu d'un texte en
 deux colonnes, les idées étant des pistes de simplification à explorer, aucune décidée.
+
+## D39 — Les études sortent de la racine : `etudes/`, et plus de page relais
+Demande de Rémi (2026-09-22) : la racine mêlait l'abri retenu et quatre pages d'étude (`abri-v1.md` à
+`abri-v4.md`, `variantes.md`), sans dire où vit la version du site. Désormais la racine ne porte que
+`README.md` et `abri.md` (la version retenue) ; `npm run emit` vide puis réécrit `etudes/` avec les
+autres versions et les 13 formes. La page relais `abri-v4.md` disparaît : les pages de `docs/` sont
+cachées (`noindex`, D29), aucune adresse publique n'en dépendait. *Mécanisme :* les générateurs
+écrivent tous leurs liens depuis la racine du dépôt (`nom_page` rend `etudes/abri-v2.md`), et une seule
+fonction (`relativise`, `docs.ts`) les rend relatifs au dossier de la page au moment de l'écrire. Les
+textes de `params.json` suivent la même règle, ce qui sert aussi la page d'accueil (lien vers
+`docs/etudes/…`). *Écarté :* supprimer ces pages (les comparaisons calculées gardent leur valeur) ;
+un dossier `archive/` (les versions restent recalculées, ce ne sont pas des fichiers figés).
+

@@ -207,7 +207,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(["modele-facade-C", "modele-facade-B"].every((k) => c3.svg[k] && c3.svg[k].startsWith("<svg")), "v3 : une elevation par mur, pan C compris");
   ok(v3.porte.tient !== false && v3.fenetres.every((f) => f.tient !== false) && v3.lit_pliant.tient === true, "v3 : porte, fenetres et lit pliant tiennent");
   const b3 = base.abri_v3, page3 = abri_md(p3, c3, { prefixe: "modele-v3-", version: 3, depuis: 2, titre: b3.titre, atouts: b3.atouts, pertes: b3.pertes, notes: b3.notes, hors_modele: b3.hors_modele, base: c2 });
-  ok(page3.includes("## Ce qui change par rapport à la version 2") && page3.includes("| | version 2 ([abri-v2.md](abri-v2.md)) | **version 3** |"), "abri-v3.md se compare a la version 2");
+  ok(page3.includes("## Ce qui change par rapport à la version 2") && page3.includes("| | version 2 ([abri-v2.md](etudes/abri-v2.md)) | **version 3** |"), "abri-v3.md se compare a la version 2");
   ok(page3.includes("**5 murs**") && page3.includes("site/assets/modele-v3-facade-C.svg") && page3.includes("5 angles"), "abri-v3.md : 5 murs, 5 angles, l'elevation du pan");
   ok(!/\{\w+\}/.test(page3) && page3.includes("aucune formalité"), "abri-v3.md : tous les {champs} remplaces, et aucune formalite annoncee");
   ok(abri_md(base, core).includes("**4 murs**") && abri_md(base, core).includes("- 4 angles :"), "abri.md : toujours 4 murs et 4 angles");
@@ -240,7 +240,7 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.panneaux.length === 2 && m4.toit.panneaux.every((t) => near(t.largeur_cm, 100)) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit de 100, un seul coupe en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
   const b4 = base.abri_v4, page4 = abri_md(p4, c4, { prefixe: "modele-v4-", version: 4, depuis: 3, titre: b4.titre, atouts: b4.atouts, pertes: b4.pertes, notes: b4.notes, hors_modele: b4.hors_modele, base: c3 });
-  ok(page4.includes("| | version 3 ([abri-v3.md](abri-v3.md)) | **version 4** |") && !/\{\w+\}/.test(page4), "abri-v4.md se compare a la version 3, tous les {champs} remplaces");
+  ok(page4.includes("| | version 3 ([abri-v3.md](etudes/abri-v3.md)) | **version 4** |") && !/\{\w+\}/.test(page4), "abri-v4.md se compare a la version 3, tous les {champs} remplaces");
   ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("à l'entrée du passage"), "abri-v4.md : gouttiere derriere en 2 troncons, descente a l'entree du passage");
   ok(abri_md(base, core).includes("descente au coin arrière gauche (point bas), atteignable par le passage"), "abri.md : phrase de gouttiere de la v1 inchangee");
 }

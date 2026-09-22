@@ -1,8 +1,8 @@
 # Abri de jardin : le bureau trapèze, version 1 (première forme retenue)
 
-> Généré par `npm run emit` depuis `params.json` et `site/src/compute.ts` : ne pas éditer à la main. L'abri retenu aujourd'hui est dans [abri.md](abri.md). Autres formes étudiées : [variantes.md](variantes.md).
+> Généré par `npm run emit` depuis `params.json` et `site/src/compute.ts` : ne pas éditer à la main. L'abri retenu aujourd'hui est dans [abri.md](../abri.md). Autres formes étudiées : [variantes.md](variantes.md).
 
-![implantation sur la dalle](site/assets/modele-implantation.svg)
+![implantation sur la dalle](../site/assets/modele-implantation.svg)
 
 ## En bref
 
@@ -28,35 +28,35 @@
 
 ### Implantation sur la dalle
 
-![Implantation sur la dalle](site/assets/modele-implantation.svg)
+![Implantation sur la dalle](../site/assets/modele-implantation.svg)
 
 ### Plan de sol
 
-![Plan de sol](site/assets/modele-sol.svg)
+![Plan de sol](../site/assets/modele-sol.svg)
 
 ### Toiture
 
-![Toiture](site/assets/modele-toit.svg)
+![Toiture](../site/assets/modele-toit.svg)
 
 ### Face A · façade (jardin)
 
-![Face A · façade (jardin)](site/assets/modele-facade-A.svg)
+![Face A · façade (jardin)](../site/assets/modele-facade-A.svg)
 
 ### Face D · droite (porte)
 
-![Face D · droite (porte)](site/assets/modele-facade-D.svg)
+![Face D · droite (porte)](../site/assets/modele-facade-D.svg)
 
 ### Face B · fond en biais
 
-![Face B · fond en biais](site/assets/modele-facade-B.svg)
+![Face B · fond en biais](../site/assets/modele-facade-B.svg)
 
 ### Face G · gauche
 
-![Face G · gauche](site/assets/modele-facade-G.svg)
+![Face G · gauche](../site/assets/modele-facade-G.svg)
 
 ### Rehausse bois : débit des madriers
 
-![Rehausse bois : débit des madriers](site/assets/modele-rehausse.svg)
+![Rehausse bois : débit des madriers](../site/assets/modele-rehausse.svg)
 
 ## Dimensions
 

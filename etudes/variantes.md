@@ -1,6 +1,6 @@
 # Formes d'abri possibles sur la dalle
 
-> **Abri retenu : option 13.** Ses plans complets (sol, toit, rehausse, 4 façades) sont dans [abri.md](abri.md).
+> **Abri retenu : option 13.** Ses plans complets (sol, toit, rehausse, 4 façades) sont dans [abri.md](../abri.md).
 
 > Généré par `npm run emit` depuis `params.json` et `site/src/compute.ts` : ne pas éditer à la main.
 
@@ -14,7 +14,7 @@
 - **Seuil** : jusqu'à 5 m² de murs, aucune formalité (à confirmer en mairie, et le PLU s'applique quand même).
 - **Passage** : écart réel entre l'abri et chaque mur de propriété du fond (vert ≥ 50, orange 35 à 50, rouge < 35).
 
-![dalle et zone utile](site/assets/plan-dalle-bandes.svg)
+![dalle et zone utile](../site/assets/plan-dalle-bandes.svg)
 
 ## En bref
 
@@ -46,7 +46,7 @@
 
 **rectangle en panneaux entiers** · 2 × 2 modules de 100 : aucune recoupe, angles droits
 
-![option 1](site/assets/variante-1.svg)
+![option 1](../site/assets/variante-1.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -69,7 +69,7 @@
 
 **plus grand rectangle** · le plus grand rectangle qui tient dans la zone
 
-![option 2](site/assets/variante-2.svg)
+![option 2](../site/assets/variante-2.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -89,7 +89,7 @@
 
 **rectangle pleine largeur** · toute la largeur de la zone, profondeur limitée par le grand pan
 
-![option 3](site/assets/variante-3.svg)
+![option 3](../site/assets/variante-3.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -111,7 +111,7 @@
 
 **coin coupé, plafonné à 5 m²** · mur arrière reculé pour ne pas dépasser 5 m² de murs
 
-![option 4](site/assets/variante-4.svg)
+![option 4](../site/assets/variante-4.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -134,7 +134,7 @@
 
 **coin coupé, pleine profondeur** · un pan coupé parallèle au mur du fond, le reste à angle droit
 
-![option 5](site/assets/variante-5.svg)
+![option 5](../site/assets/variante-5.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -157,7 +157,7 @@
 
 **toute la zone utile** · suit toute la zone : 3 angles non droits, pointe à l'arrière
 
-![option 6](site/assets/variante-6.svg)
+![option 6](../site/assets/variante-6.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -180,7 +180,7 @@
 
 **plus grand rectangle, orientation libre** · 209.5 × 194.2 : aucune rotation ne fait mieux que le rectangle droit
 
-![option 7](site/assets/variante-7.svg)
+![option 7](../site/assets/variante-7.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -199,7 +199,7 @@
 
 **plus grand quadrilatère** · 4 murs, le coin de 135.6° de la zone est sacrifié : l'aire maximale à 4 murs
 
-![option 8](site/assets/variante-8.svg)
+![option 8](../site/assets/variante-8.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -220,7 +220,7 @@
 
 **trapèze, mur arrière en biais** · côtés gauche et droit d'équerre sur l'avant, un seul mur en biais au fond
 
-![option 9](site/assets/variante-9.svg)
+![option 9](../site/assets/variante-9.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -242,7 +242,7 @@
 
 **trapèze plafonné à 5 m²** · le trapèze 9, mur droit reculé à 198 de large : sous 5 m²
 
-![option 10](site/assets/variante-10.svg)
+![option 10](../site/assets/variante-10.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -263,7 +263,7 @@
 
 **trapèze pivoté, plafonné à 5 m²** · le trapèze 9, coin arrière droit abaissé à 94 : sous 5 m², passage arrière élargi
 
-![option 11](site/assets/variante-11.svg)
+![option 11](../site/assets/variante-11.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -285,7 +285,7 @@
 
 **coin coupé au module** · l'option 1 élargie à toute la façade : mur du fond 2 et mur gauche 2 modules de 100 sans recoupe, pan coupé parallèle au grand pan
 
-![option 12](site/assets/variante-12.svg)
+![option 12](../site/assets/variante-12.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|
@@ -310,9 +310,9 @@
 
 ## Option 13
 
-**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur · **première forme retenue : plans dans [abri-v1.md](abri-v1.md)** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](abri.md)
+**trapèze, 50 cm derrière, ~4.8 m² intérieur** · mur arrière du haut du côté gauche, pivoté pour 50 cm de passage derrière, façade 218 pour ~4.8 m² intérieur · **première forme retenue : plans dans [abri-v1.md](abri-v1.md)** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](../abri.md)
 
-![option 13](site/assets/variante-13.svg)
+![option 13](../site/assets/variante-13.svg)
 
 | | murs (extérieur) | intérieur |
 |---|---|---|

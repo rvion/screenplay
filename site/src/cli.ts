@@ -7,8 +7,8 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCore, variantes_md, abri_md, params_v2, versions_abri, nom_page, version_principale } from "./compute";
-import { construit_docs, est_publie } from "./docs";
+import { buildCore, variantes_md, abri_md, params_v2, versions_abri, nom_page, version_principale, DOSSIER_ETUDES } from "./compute";
+import { construit_docs, est_publie, relativise } from "./docs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -34,13 +34,18 @@ function emit(p: any) {
   writeFileSync(join(SITE, "params.js"),
     "// Genere par scripts/build.mjs - parametres par defaut pour l'app.\nwindow.SHED_PARAMS = " +
     JSON.stringify(p, null, 2) + ";\n");
-  writeFileSync(join(ROOT, "variantes.md"), variantes_md(p, core));
+  // pages markdown generees : liens ecrits depuis la racine, rendus relatifs a leur dossier (etudes/ archive les versions non retenues)
+  rmSync(join(ROOT, DOSSIER_ETUDES), { recursive: true, force: true });
+  mkdirSync(join(ROOT, DOSSIER_ETUDES), { recursive: true });
+  const ecrit_md = (chemin: string, md: string) => writeFileSync(join(ROOT, chemin), relativise(md, chemin));
+  const VARIANTES = `${DOSSIER_ETUDES}/variantes.md`;
+  ecrit_md(VARIANTES, variantes_md(p, core));
   // abri_principal : cette version-la devient abri.md ; la premiere forme retenue passe dans abri-v1.md
   const principale = version_principale(p);
   const autres = principale ? `Autres versions : ${[1, ...versions_abri(p).map((x) => x.n)].filter((n) => n !== principale).map((n) => `[version ${n}](${nom_page(n, principale)})`).join(", ")}. ` : "";
-  writeFileSync(join(ROOT, nom_page(1, principale)), abri_md(p, core, principale ? { titre: "Abri de jardin : le bureau trapèze, version 1 (première forme retenue)", autres: `L'abri retenu aujourd'hui est dans [abri.md](abri.md). ` } : {}));
+  ecrit_md(nom_page(1, principale), abri_md(p, core, principale ? { titre: "Abri de jardin : le bureau trapèze, version 1 (première forme retenue)", autres: `L'abri retenu aujourd'hui est dans [abri.md](abri.md). ` } : {}));
   // variantes proposees (blocs abri_v2, abri_v3...) : memes plans sous modele-vN-, et une page comparee chacune
-  const generes = ["variantes.md", "abri.md", nom_page(1, principale)];
+  const generes = [VARIANTES, "abri.md", nom_page(1, principale)];
   const cores: Record<number, any> = { 1: core };
   for (const { n, cle } of versions_abri(p)) {
     const pn = params_v2(p, cle)!, coren = buildCore(pn), bloc = p[cle], prefixe = `modele-v${n}-`;
@@ -51,10 +56,8 @@ function emit(p: any) {
       if (name.startsWith("modele-")) writeFileSync(join(SITE, "assets", name.replace("modele-", prefixe) + ".svg"), content as string);
     }
     const est_principale = n === principale;
-    writeFileSync(join(ROOT, nom_page(n, principale)), abri_md(pn, coren, { prefixe, version: n, titre: est_principale ? bloc.titre_principal || bloc.titre : bloc.titre, atouts: bloc.atouts, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: cores[depuis], depuis, principale, en_fin: est_principale, autres: est_principale ? autres : "" }));
+    ecrit_md(nom_page(n, principale), abri_md(pn, coren, { prefixe, version: n, titre: est_principale ? bloc.titre_principal || bloc.titre : bloc.titre, atouts: bloc.atouts, pertes: bloc.pertes, notes: bloc.notes, hors_modele: bloc.hors_modele, base: cores[depuis], depuis, principale, en_fin: est_principale, autres: est_principale ? autres : "" }));
     generes.push(nom_page(n, principale));
-    // l'ancienne adresse de la version devenue principale reste valide : une page relais
-    if (est_principale) { writeFileSync(join(ROOT, `abri-v${n}.md`), `# La version ${n} est devenue l'abri retenu\n\nSes plans, son débit, son budget et ses raisons sont dans **[abri.md](abri.md)**. La page d'accueil du site montre le même abri en 3D.\n`); generes.push(`abri-v${n}.md`); }
   }
   emitDocs(p, generes);
   stamp();

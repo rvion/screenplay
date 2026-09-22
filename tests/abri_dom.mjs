@@ -152,7 +152,7 @@ ok($$("#vignettes button[data-vue] canvas").length === 7 && $$("#vignettes butto
 for (const n of versions_pretes(params).filter((k) => k !== a.principale)) {
   const b = run(params, n);
   ok(b.version === n && $("#bandeau").hidden === false && new RegExp("version " + n).test($("#bandeau").textContent) && $("#bandeau a").getAttribute("href") === "?v=" + a.principale, `?v=${n} : bandeau « version ${n}, une étude », retour à la version retenue`);
-  ok(existsSync(join(ROOT, "site/docs", `abri-v${n}.html`)), `?v=${n} : son document docs/abri-v${n}.html existe`);
+  ok(existsSync(join(ROOT, "site/docs/etudes", `abri-v${n}.html`)), `?v=${n} : son document docs/etudes/abri-v${n}.html existe`);
   ok($$("#murs tbody tr").length === b.m.faces.length && $$("#plans-details article[data-cle^='facade-'] svg").length === b.m.faces.length && new RegExp(b.m.faces.length === 5 ? "cinq" : "quatre").test($("#titre").textContent), `?v=${n} : ${b.m.faces.length} murs, autant d'élévations, titre accordé`);
   ok(!/undefined|NaN|\[object/.test($("main").textContent) && $$("#etapes article.etape").length >= 12 && $("#pourquoi").hidden === (n === 1), `?v=${n} : aucune valeur manquante, montage complet${n === 1 ? ", pas de section « pourquoi » (forme de base)" : ""}`);
 }

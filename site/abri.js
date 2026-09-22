@@ -2386,6 +2386,8 @@ function modele_facade_svg(m, f, sans_entete = false, largeur_commune = 0) {
   if (!sans_entete) svg += dessine_entete(W, entete_facade(f));
   return svg + "</svg>\n";
 }
+var DOSSIER_ETUDES = "etudes";
+var nom_page = (n, principale = 0) => (principale ? n === principale : n === 1) ? "abri.md" : `${DOSSIER_ETUDES}/abri-v${n}.md`;
 var version_principale = (p) => {
   const m = /^abri_v(\d+)$/.exec(p.abri_principal || "");
   return m && p[p.abri_principal] ? +m[1] : 0;
@@ -2589,14 +2591,14 @@ function formes_etudiees(p) {
     }
     if (f.type === "variante") {
       const v2 = base.variantes.find((x) => x.id === f.id), q = base.planches[`variante-${f.id}`];
-      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v2.polygone.length} murs \xB7 ${fr2(v2.aire_m2)} m\xB2 de murs \xB7 ${fr2(v2.aire_interieure_m2)} m\xB2 int.`, href: `docs/variantes.html#option-${f.id}` };
+      return { nom: f.nom, svg: q ? q.svg : "", chiffres: `${v2.polygone.length} murs \xB7 ${fr2(v2.aire_m2)} m\xB2 de murs \xB7 ${fr2(v2.aire_interieure_m2)} m\xB2 int.`, href: `docs/etudes/variantes.html#option-${f.id}` };
     }
     if (f.type === "rectangle") {
       const g = base.geometrie, q = base.planches.rectangle;
       return { nom: f.nom, svg: q ? q.svg : "", chiffres: `4 murs \xB7 ${fr2(g.aire_m2)} m\xB2 de murs \xB7 ${fr2(g.aire_interieure_m2)} m\xB2 int. \xB7 \xE9tude initiale, r\xE9glable`, href: "configurateur.html" };
     }
     const { core } = coeur(p, f.n), v = core.variantes.find((x) => x.id === 13), m = core.modele, passage = v.passages.find((q) => q.cote === "arriere_droite");
-    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs \xB7 ${fr2(v.aire_m2)} m\xB2 de murs \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(passage.cm))} cm \xB7 ${eur(m.budget.total_eur)}`, href: `docs/abri-v${f.n}.html` };
+    return { nom: f.nom, svg: core.planches && core.planches.sol ? core.planches.sol.svg : "", chiffres: `${m.faces.length} murs \xB7 ${fr2(v.aire_m2)} m\xB2 de murs \xB7 ${fr2(v.aire_interieure_m2)} m\xB2 int. \xB7 passage ${fz3(Math.round(passage.cm))} cm \xB7 ${eur(m.budget.total_eur)}`, href: "docs/" + nom_page(f.n, version_principale(p)).replace(/\.md$/, ".html") };
   });
 }
 var el = (id) => document.getElementById(id);

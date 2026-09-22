@@ -147,7 +147,7 @@ cachée</strong> (surcoût <code>fixation_cachee_m2</code>), toit en <strong>cou
 <td>formes d&#39;abri possibles dans la zone utile (<code>variantes(p, g)</code>, porte sur le côté avant) : 1 rectangle en modules entiers, 2 plus grand rectangle, 3 rectangle pleine largeur, 4 coin coupé plafonné à <code>reglementaire.seuil_sans_formalite_m2</code>, 5 coin coupé pleine profondeur, 6 toute la zone, 7 plus grand rectangle à orientation libre (<code>plus_grand_rectangle</code>, sans contrainte de porte ; avec la zone par défaut il retombe sur l&#39;option 2, toute rotation perd de 0,5 à 1,1 m²). 8 plus grand quadrilatère gardant le mur avant (<code>plus_grand_k_gone</code> : ses sommets sont des sommets de la zone), 9 trapèze à mur arrière en biais, 10 le même trapèze dont le mur droit glisse vers la gauche le long du mur arrière jusqu&#39;au seuil (le passage ne peut que s&#39;élargir), 11 le même trapèze dont le mur arrière pivote vers le bas autour de son coin gauche jusqu&#39;au seuil (la pince au bout du grand pan s&#39;élargit), 12 coin coupé <strong>au module</strong> : mur gauche et mur du fond en panneaux entiers (<code>i × j</code> modules, le plus grand couple sous le seuil dont le coin arrière tient dans la zone), façade sur toute la largeur de la zone, pan coupé parallèle au grand pan tiré depuis le bout du mur du fond (les deux murs difficiles d&#39;accès n&#39;ont aucune recoupe, le pan coupé tombe sous la seule bande de toit recoupée), 13 trapèze pleine largeur dont le mur arrière part du haut du côté gauche et pivote jusqu&#39;à garder <code>dalle_cm.passage_souhaite_cm</code> derrière l&#39;abri (vraie distance au grand pan, seule contrainte du fond : il peut dépasser la bande du grand pan près du bout du mur), aménagé par <code>disposition_trapeze</code> (porte sur le côté droit, bureau en L sur tout le mur gauche et toute la façade, sol libre calculé ; <code>sieges</code> : fauteuil 70 × 70 devant le bureau gauche et tabouret 30 × 30 devant celui de façade, posés sur la plus longue partie libre du bord du bureau ; <code>lit_pliant</code> : emprise dépliée en pointillé, cherchée hors de l&#39;accès à la porte et des bureaux, et seulement si le sol libre ne suffit pas, le pied sous un bureau quand <code>sous_bureau</code> ; <code>pied_sous</code> impose le bureau sous lequel passe le pied, <code>pres_de</code> le mur que le lit longe, <code>parallele_a</code> son orientation, <code>sieges_ranges</code> ignore la gêne des sièges ; <code>lit_pliant_2</code> = la même spec surchargée pour une seconde position, <code>v.lit_pliant_2</code>). Chaque variante porte ses <code>passages</code> (par mur du fond : vraie distance entre la forme et le segment de mur, extrémités du mur comprises, cotée sur le plan). Chaque plan garde la dalle entière, les bandes et la zone</td>
 </tr>
 <tr>
-<td><code>abri-v2.md</code> + <code>site/assets/modele-v2-*.svg</code></td>
+<td><code>etudes/abri-v2.md</code> + <code>site/assets/modele-v2-*.svg</code></td>
 <td><strong>variante proposée de l&#39;abri retenu</strong> : <code>params.json</code> porte un bloc <code>abri_v2</code> dont <code>params</code> est une <strong>surcouche</strong> (fusion en profondeur par <code>params_v2</code>, les listes sont remplacées). Le CLI rejoue <code>buildCore</code> sur ce second jeu et écrit les mêmes plans sous le préfixe <code>modele-v2-</code>, plus une page qui s&#39;ouvre sur un <strong>tableau comparé calculé</strong> (<code>compare_md</code> : surfaces, formalités, côtés, faces en panneaux entiers, bandes étroites, passage, sens du toit, pente, portée, panneaux de toit, gouttière, rehausse, porte, fenêtres, lit, budget), puis <code>pertes</code>, <code>notes</code> (le pourquoi) et <code>hors_modele</code> (conseils non dessinés). Aucun chiffre du tableau n&#39;est saisi. Le modèle accepte pour cela : <code>disposition_trapeze.cotes_cm</code> (façade, droite, gauche imposées, le fond en découle, à la place du solveur d&#39;intérieur visé), <code>toit.sens = &quot;droite&quot;</code> (haut contre le mur gauche, égout et descente côté jardin, panneaux de toit du mur gauche au mur droit, <code>portee_cm</code> = largeur) et des débords par face (<code>debord_cm.droite</code>, <code>debord_cm.gauche</code>)</td>
 </tr>
 <tr>
@@ -199,8 +199,9 @@ est le plus étroit (recoupe).</li>
 <li><code>params.json</code> nomme <strong>la version retenue</strong> : <code>abri_principal</code> (aujourd&#39;hui <code>abri_v4</code>). Changer ce
 nom suffit à en retenir une autre. Conséquences, toutes générées :<ul>
 <li><code>abri.md</code> = cette version (titre <code>titre_principal</code>, sa comparaison et ses raisons <strong>en fin</strong> de
-page sous « Pourquoi cette version ») ; la première forme passe dans <code>abri-v1.md</code> ; l&#39;ancienne
-adresse de cette version (<code>abri-v4.md</code>) devient une page relais ; les liens entre pages suivent (<code>nom_page</code>).</li>
+page sous « Pourquoi cette version ») ; les autres versions et <code>variantes.md</code> sont archivées
+sous <code>etudes/</code> (la première forme dans <code>etudes/abri-v1.md</code>), sans page relais ; les liens entre pages suivent
+(<code>nom_page</code> rend un chemin depuis la racine, <code>relativise</code> le rend relatif à la page qui l&#39;écrit, D39).</li>
 <li><strong><code>site/index.html</code> = le dossier de construction de l&#39;abri retenu</strong> (bundle <code>site/abri.js</code>, entrée
 <code>src/abri_main.ts</code>, feuille <code>site/abri.css</code> autonome). C&#39;est un document de travail pour Rémi et
 pour les personnes qu&#39;il fera venir : en-tête fin sans couleur ni emoji, texte dense, tableaux
@@ -232,7 +233,7 @@ gras ; aucune n&#39;est décidée ni dessinée) ; textes
 <strong>autonomes</strong>, sans comparaison avec une autre version ; chaque puce ouvre sur son accroche en gras, la
 suite en petit ; à défaut de <code>dossier</code>, les textes comparés <code>atouts/pertes/notes/hors_modele</code>) ;
 <strong>Formes étudiées</strong> (<code>params.formes_etudiees</code> : une carte par forme, produit du commerce dessiné en
-simple rectangle, option de <code>variantes.md</code>, rectangle de l&#39;étude initiale, ou version ; dessins sans
+simple rectangle, option de <code>etudes/variantes.md</code>, rectangle de l&#39;étude initiale, ou version ; dessins sans
 entête, chiffres, lien). Les <strong>matériaux</strong> tiennent en quatre colonnes : la règle de calcul, la note et
 la source sont sous le nom de l&#39;article, en petit italique. Tout est calculé dans
 le navigateur depuis <code>params.js</code> (<code>calcule_abri</code> puis <code>rend_abri</code>, <code>src/abri_page.ts</code>, DOM seul) :
@@ -327,9 +328,9 @@ bureaux) ; <code>tests/abri_dom.mjs</code> remplit <code>index.html</code> sous 
 </ul>
 <h2 id="documents-partageables-sitedocs">Documents partageables (<code>site/docs/</code>)</h2>
 <ul>
-<li>Chaque fichier <strong>Markdown suivi par git</strong> (racine : <code>README.md</code>, <code>variantes.md</code>, <code>abri.md</code>,
-<code>abri-vN.md</code> ; et <code>agent/*.md</code>) a sa page HTML sous <code>site/docs/</code>, donc une adresse stable :
-<code>https://rvion.github.io/screenplay/docs/abri-v2.html</code>. <code>site/docs/index.html</code> les liste
+<li>Chaque fichier <strong>Markdown suivi par git</strong> (racine : <code>README.md</code>, <code>abri.md</code> ; <code>etudes/*.md</code> ;
+et <code>agent/*.md</code>) a sa page HTML sous <code>site/docs/</code>, au même chemin :
+<code>https://rvion.github.io/screenplay/docs/etudes/abri-v2.html</code>. <code>site/docs/index.html</code> les liste
 (README, puis tri naturel : abri, abri-v2, abri-v3… ; puis la spécification).</li>
 <li><strong>Rien à déclarer</strong> pour une nouvelle page : <code>npm run emit</code> prend les <code>.md</code> de <code>git ls-files</code>
 et les nouveaux <code>.md</code> que git n&#39;ignore pas (<code>--others --exclude-standard</code>). <strong>git fait foi</strong> : un fichier ignoré (<code>CLAUDE.local.md</code>,

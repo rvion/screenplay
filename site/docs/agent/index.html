@@ -17,6 +17,11 @@
 (<code>abri_v4</code> : bureau à cinq murs, toit vers le fond). C&#39;est elle que montrent <code>abri.md</code>, la page d&#39;accueil du site
 (<code>site/index.html</code>, bundle <code>site/abri.js</code>) et le modèle 3D. Le rectangle décrit ci-dessous est
 l&#39;étude initiale, toujours réglable sur <code>site/configurateur.html</code> (bundle <code>site/app.js</code>).</p>
+<p><strong>Où vivent ses cotes</strong> : <code>abri_v4</code> n&#39;est qu&#39;une surcouche. Ses paramètres réels = la base de
+<code>params.json</code> (<code>disposition_trapeze</code>, <code>dalle_cm</code>, <code>panneau</code>, <code>prix_materiaux_eur_ttc</code>…) fusionnée avec
+<code>abri_v2.params</code>, puis <code>abri_v3.params</code>, puis <code>abri_v4.params</code> (chaîne <code>herite</code>, <code>params_v2</code>). Ses textes
+(résumé, points forts, questions, idées) vivent dans <code>abri_v4.dossier</code>. Les autres versions et les
+formes étudiées sont archivées, générées, sous <code>etudes/</code> (D39).</p>
 </blockquote>
 <p>Conception, plans, débit, budget et modèle 3D d&#39;un petit bureau de jardin (rectangle 200 × 240,
 panneaux sandwich 60 mm autoportants, pente par rehausse bois, bloc-porte + 2 fenêtres,

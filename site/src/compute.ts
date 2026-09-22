@@ -1688,7 +1688,7 @@ export function variantes_md(p: Params, core: any): string {
   md += `\n`;
   for (const v of vs) {
     const [pour, contre] = AVIS[v.id] || [[], []];
-    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? (version_principale(p) ? ` · **première forme retenue : plans dans [${nom_page(1, version_principale(p))}](${nom_page(1, version_principale(p))})** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](abri.md)` : " · **retenue : plans complets dans [abri.md](abri.md)**") : ""}\n\n`;
+    md += `## Option ${v.id}\n\n**${v.titre}** · ${v.note}${v.id === 13 && core.modele ? (version_principale(p) ? ` · **première forme retenue : plans dans [${nom_court(nom_page(1, version_principale(p)))}](${nom_page(1, version_principale(p))})** ; l'abri retenu aujourd'hui, à cinq murs, est dans [abri.md](abri.md)` : " · **retenue : plans complets dans [abri.md](abri.md)**") : ""}\n\n`;
     md += `![option ${v.id}](site/assets/variante-${v.id}.svg)\n\n`;
     md += `| | murs (extérieur) | intérieur |\n|---|---|---|\n`;
     md += `| surface | ${fr(v.aire_m2)} m² | **${fr(v.aire_interieure_m2)} m²** |\n`;
@@ -2185,8 +2185,10 @@ export function modele_facade_svg(m: any, f: any, sans_entete = false, largeur_c
 /* Page de l'abri retenu (markdown, genere par le CLI)                */
 /* ----------------------------------------------------------------- */
 // jeu de parametres de la variante proposee : params + surcouche abri_v2.params (listes remplacees)
-// page d'une version : sans version principale, la version 1 est abri.md ; avec, c'est la principale
-export const nom_page = (n: number, principale = 0) => (principale ? (n === principale ? "abri.md" : `abri-v${n}.md`) : n > 1 ? `abri-v${n}.md` : "abri.md");
+// page d'une version, chemin depuis la racine du depot : la principale (ou la v1 sans principale) est abri.md, les autres sont archivees sous etudes/
+export const DOSSIER_ETUDES = "etudes";
+export const nom_page = (n: number, principale = 0) => ((principale ? n === principale : n === 1) ? "abri.md" : `${DOSSIER_ETUDES}/abri-v${n}.md`);
+const nom_court = (chemin: string) => chemin.split("/").pop();
 export const version_principale = (p: Params): number => { const m = /^abri_v(\d+)$/.exec(p.abri_principal || ""); return m && p[p.abri_principal] ? +m[1] : 0; };
 
 // blocs abri_v2, abri_v3... de params.json, dans l'ordre des numeros
@@ -2290,7 +2292,7 @@ function compare_md(a: { m: any; v: any }, b: { m: any; v: any }, seuil: number,
   ];
   void ep;
   const page = nom_page(depuis, principale);
-  let md = `| | version ${depuis} ([${page}](${page})) | **version ${n}** |\n|---|---|---|\n`;
+  let md = `| | version ${depuis} ([${nom_court(page)}](${page})) | **version ${n}** |\n|---|---|---|\n`;
   for (const [nom, f] of lignes) md += `| ${nom} | ${f(a)} | ${f(b)} |\n`;
   return md + "\n";
 }
@@ -2305,7 +2307,7 @@ export function abri_md(p: Params, core: any, opts: any = {}): string {
   const ep = +p.panneau.epaisseur_mm / 10, seuil = +(p.reglementaire && p.reglementaire.seuil_sans_formalite_m2) || 5;
   const derriere = v.passages.find((q: any) => q.cote === "arriere_droite");
   let md = `# ${opts.titre || "Abri de jardin : le bureau trapèze"}\n\n`;
-  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? ` (bloc \`abri_v${opts.version || 2}\`)` : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base && !opts.en_fin ? `Version de départ : [${nom_page(opts.depuis || 1, opts.principale)}](${nom_page(opts.depuis || 1, opts.principale)}). ` : ""}${opts.autres || ""}Autres formes étudiées : [variantes.md](variantes.md).\n\n`;
+  md += `> Généré par \`npm run emit\` depuis \`params.json\`${opts.base ? ` (bloc \`abri_v${opts.version || 2}\`)` : ""} et \`site/src/compute.ts\` : ne pas éditer à la main. ${opts.base && !opts.en_fin ? `Version de départ : [${nom_court(nom_page(opts.depuis || 1, opts.principale))}](${nom_page(opts.depuis || 1, opts.principale)}). ` : ""}${opts.autres || ""}Autres formes étudiées : [variantes.md](${DOSSIER_ETUDES}/variantes.md).\n\n`;
   md += `![implantation sur la dalle](site/assets/${img("modele-implantation")}.svg)\n\n`;
   // la comparaison ouvre la page d'une variante, et ferme celle de l'abri retenu (en_fin)
   let pourquoi = "";

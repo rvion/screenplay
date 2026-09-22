@@ -414,6 +414,17 @@ borne les dessins à 40 % de page, et le plan du rectangle (seul SVG sans <code>
 l&#39;écran reste à juger par Rémi. Dans la foulée : le titre « Sommaire » du menu tombe, et la section
 des questions devient « Questions et idées », deux listes simples (Q1…, I1…) au lieu d&#39;un texte en
 deux colonnes, les idées étant des pistes de simplification à explorer, aucune décidée.</p>
+<h2 id="d39--les-études-sortent-de-la-racine--etudes-et-plus-de-page-relais">D39 — Les études sortent de la racine : <code>etudes/</code>, et plus de page relais</h2>
+<p>Demande de Rémi (2026-09-22) : la racine mêlait l&#39;abri retenu et quatre pages d&#39;étude (<code>abri-v1.md</code> à
+<code>abri-v4.md</code>, <code>variantes.md</code>), sans dire où vit la version du site. Désormais la racine ne porte que
+<code>README.md</code> et <code>abri.md</code> (la version retenue) ; <code>npm run emit</code> vide puis réécrit <code>etudes/</code> avec les
+autres versions et les 13 formes. La page relais <code>abri-v4.md</code> disparaît : les pages de <code>docs/</code> sont
+cachées (<code>noindex</code>, D29), aucune adresse publique n&#39;en dépendait. <em>Mécanisme :</em> les générateurs
+écrivent tous leurs liens depuis la racine du dépôt (<code>nom_page</code> rend <code>etudes/abri-v2.md</code>), et une seule
+fonction (<code>relativise</code>, <code>docs.ts</code>) les rend relatifs au dossier de la page au moment de l&#39;écrire. Les
+textes de <code>params.json</code> suivent la même règle, ce qui sert aussi la page d&#39;accueil (lien vers
+<code>docs/etudes/…</code>). <em>Écarté :</em> supprimer ces pages (les comparaisons calculées gardent leur valeur) ;
+un dossier <code>archive/</code> (les versions restent recalculées, ce ne sont pas des fichiers figés).</p>
 </main>
 </body>
 </html>
