@@ -102,6 +102,12 @@ ok($$("#debit-murs tbody tr").length === m.faces.reduce((s, f) => s + f.panneaux
   ok(visibles().length === Gd.etapes.length + 2, "guide : « tout afficher » déroule toutes les étapes");
   bascule.checked = false; bascule.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
   ok(visibles().length === 1 && visibles()[0].dataset.etape === "2", "guide : la bascule relâchée revient à l'étape choisie");
+  // fleches du clavier depuis la liste : bas / droite = suivante, haut / gauche = precedente
+  const touche = (key) => $("#etapes-liste li.ici button").dispatchEvent(new dom.window.KeyboardEvent("keydown", { key, bubbles: true }));
+  touche("ArrowDown"); ok(visibles()[0].dataset.etape === "3", "guide : flèche bas ouvre l'étape suivante");
+  touche("ArrowRight"); ok(visibles()[0].dataset.etape === "4", "guide : flèche droite aussi");
+  touche("ArrowUp"); touche("ArrowLeft"); ok(visibles()[0].dataset.etape === "2" && dom.window.document.activeElement === $("#etapes-liste li.ici button"), "guide : haut et gauche reviennent en arrière, le focus suit l'entrée ouverte");
+  touche("Home"); ok(visibles()[0].id === "guide-avant-etape", "guide : Home revient à la première entrée");
 }
 ok($$("#ouvertures-table tbody tr").length === 1 + v.fenetres.length && /porte pleine/.test($("#ouvertures-table").textContent) && $$("#amenagement tbody tr").length >= 4, "ouvertures et aménagement");
 ok($$("#pourquoi-corps li").length >= 8 && !/\{\w+\}/.test($("#pourquoi-corps").textContent), "pourquoi : textes de la version, tous les {champs} remplacés");

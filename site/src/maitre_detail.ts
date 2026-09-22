@@ -53,6 +53,15 @@ export function maitre_detail(o: Options): MaitreDetail {
     const b = (ev.target as HTMLElement).closest("[data-aller]") as HTMLElement | null;
     if (b && b.dataset.aller !== undefined) montrer(b.dataset.aller, etat.tout || b.parentElement!.classList.contains("suivante"));
   });
+  // fleches : apres un clic dans la liste, haut/gauche = precedente, bas/droite = suivante (le focus reste sur le bouton)
+  o.liste.addEventListener("keydown", (ev) => {
+    const ke = ev as KeyboardEvent, k = cles(), i = k.indexOf(etat.cle);
+    const suiv = ke.key === "ArrowDown" || ke.key === "ArrowRight" ? i + 1 : ke.key === "ArrowUp" || ke.key === "ArrowLeft" ? i - 1 : ke.key === "Home" ? 0 : ke.key === "End" ? k.length - 1 : -1;
+    if (suiv < 0 || suiv >= k.length) return;
+    ev.preventDefault();
+    montrer(k[suiv], etat.tout);
+    const b = o.liste.querySelector<HTMLElement>(`[data-aller="${k[suiv]}"]`); if (b) b.focus();
+  });
   o.mode.addEventListener("change", (ev) => {
     const c = ev.target as HTMLInputElement;
     if (c && c.dataset && c.dataset.tout !== undefined) { etat.tout = c.checked; applique(); }

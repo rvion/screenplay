@@ -2414,6 +2414,15 @@ function maitre_detail(o) {
     const b = ev.target.closest("[data-aller]");
     if (b && b.dataset.aller !== void 0) montrer(b.dataset.aller, etat.tout || b.parentElement.classList.contains("suivante"));
   });
+  o.liste.addEventListener("keydown", (ev) => {
+    const ke = ev, k = cles(), i = k.indexOf(etat.cle);
+    const suiv = ke.key === "ArrowDown" || ke.key === "ArrowRight" ? i + 1 : ke.key === "ArrowUp" || ke.key === "ArrowLeft" ? i - 1 : ke.key === "Home" ? 0 : ke.key === "End" ? k.length - 1 : -1;
+    if (suiv < 0 || suiv >= k.length) return;
+    ev.preventDefault();
+    montrer(k[suiv], etat.tout);
+    const b = o.liste.querySelector(`[data-aller="${k[suiv]}"]`);
+    if (b) b.focus();
+  });
   o.mode.addEventListener("change", (ev) => {
     const c = ev.target;
     if (c && c.dataset && c.dataset.tout !== void 0) {
