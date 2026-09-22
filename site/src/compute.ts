@@ -944,19 +944,20 @@ export function variantes(p: Params, g: any) {
     // lit pliant (pointille) : meilleure place a l'interieur, hors de l'acces a la porte, en genant le
     // moins possible les sieges (qu'on deplace pour le deplier). S'il ne tient pas sur le sol libre et que
     // sous_bureau le permet (lit plus bas que le plateau), son pied peut passer sous un bureau
-    if (disp.lit_pliant) {
-      const LW = +disp.lit_pliant.largeur_cm, LL = +disp.lit_pliant.longueur_cm;
+    // place un lit selon sa spec (lit_pliant, ou lit_pliant_2 fusionne dessus) : contre un mur, ou libre avec ses preferences
+    const place_lit = (spec: any) => {
+      const LW = +spec.largeur_cm, LL = +spec.longueur_cm;
       const acces: Pt[][] = [];
       if (v.porte) {
         const k = v.porte.cote, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
-        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm ?? 60);
+        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(spec.acces_porte_cm ?? 60);
         acces.push([[a[0] + ux * s0, a[1] + uy * s0], [a[0] + ux * s1, a[1] + uy * s1], [a[0] + ux * s1 + nx * pr, a[1] + uy * s1 + ny * pr], [a[0] + ux * s0 + nx * pr, a[1] + uy * s0 + ny * pr]]);
       }
-      const sous = !!disp.lit_pliant.sous_bureau;
+      const sous = !!spec.sous_bureau;
       const fixes = sous ? acces : [...v.bureaux.map((b: any) => b.brut), ...acces];
       // candidats : plaque contre la face interieure du mur `contre` (lit rabattable), sinon partout
       const candidats: { q: Pt[]; s?: number }[] = [];
-      const kc = disp.lit_pliant.contre ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(disp.lit_pliant.contre)) : -1;
+      const kc = spec.contre ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(spec.contre)) : -1;
       let mur: any = null;
       if (kc >= 0) {
         const a = r[kc], c = r[(kc + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
@@ -964,7 +965,10 @@ export function variantes(p: Params, g: any) {
         for (let s = 0; s + LL <= l; s += 1) candidats.push({ s, q: [[a[0] + ux * s + nx * ep, a[1] + uy * s + ny * ep], [a[0] + ux * (s + LL) + nx * ep, a[1] + uy * (s + LL) + ny * ep], [a[0] + ux * (s + LL) + nx * (ep + LW), a[1] + uy * (s + LL) + ny * (ep + LW)], [a[0] + ux * s + nx * (ep + LW), a[1] + uy * s + ny * (ep + LW)]] });
       } else {
         const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
-        const angles = [0, 90, ...r.map((a, i) => { const c = r[(i + 1) % r.length]; return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI; })];
+        // parallele_a : seules les orientations paralleles a ce mur (les deux sens) ; sinon toutes
+        const kpa = spec.parallele_a ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(spec.parallele_a)) : -1;
+        const angle_mur = (i: number) => { const a = r[i], c = r[(i + 1) % r.length]; return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI; };
+        const angles = kpa >= 0 ? [angle_mur(kpa), angle_mur(kpa) + 180] : [0, 90, ...r.map((_a, i) => angle_mur(i))];
         for (const deg of angles) {
           const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
           for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2)
@@ -975,8 +979,8 @@ export function variantes(p: Params, g: any) {
       {
         // pied_sous : le pied du lit va sous ce bureau (jusqu'a sa profondeur, rien sous les autres) ;
         // pres_de : le lit longe ce mur (distance au mur penalisee) ; sinon on evite les bureaux et on gene le moins les sieges
-        const b_pied = disp.lit_pliant.pied_sous ? v.bureaux.find((b: any) => b.cote === disp.lit_pliant.pied_sous) : null;
-        const kp = disp.lit_pliant.pres_de ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(disp.lit_pliant.pres_de)) : -1;
+        const b_pied = spec.pied_sous ? v.bureaux.find((b: any) => b.cote === spec.pied_sous) : null;
+        const kp = spec.pres_de ? v.noms_cotes.findIndex((nm: string) => nm.startsWith(spec.pres_de)) : -1;
         const dist_mur = (q: Pt[]) => {
           if (kp < 0) return 0;
           const a = r[kp], c = r[(kp + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), nx = -(c[1] - a[1]) / l, ny = (c[0] - a[0]) / l;
@@ -986,7 +990,8 @@ export function variantes(p: Params, g: any) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o: Pt[]) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous ? v.bureaux.reduce((s: number, b: any) => s + poly_area(clip_convex(q, b.brut)), 0) : 0;
-          const gene = poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
+          // sieges_ranges : les sieges seront pousses sous les bureaux, leur gene ne compte pas
+          const gene = spec.sieges_ranges ? 0 : poses.reduce((s, o) => s + poly_area(clip_convex(q, o)), 0);
           let cout = dessous * 1000 + gene;
           if (b_pied) {
             const sous_pied = poly_area(clip_convex(q, b_pied.brut)), autres = dessous - sous_pied;
@@ -996,17 +1001,22 @@ export function variantes(p: Params, g: any) {
           if (!best || cout < best.cout - 1) best = { gene, dessous, cout, q, s };
         }
       }
-      v.lit_pliant = best
+      return best
         ? {
           largeur_cm: LW, longueur_cm: LL, tient: true, gene_sieges_m2: rnd(best.gene / 1e4, 2), sous_bureau_cm2: rnd(best.dessous, 0), polygone: best.q.map(([x, y]: Pt) => [rnd(x, 1), rnd(y, 1)]),
           // rabattable : replie a plat contre le mur, deux fixations (charnieres) sur la face interieure
           ...(mur ? (() => {
-            const e = +(disp.lit_pliant.epaisseur_replie_cm ?? 10), s0 = best.s, { a, ux, uy, nx, ny } = mur, at = (s: number, d: number): Pt => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+            const e = +(spec.epaisseur_replie_cm ?? 10), s0 = best.s, { a, ux, uy, nx, ny } = mur, at = (s: number, d: number): Pt => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
             const rep = [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + e), at(s0, ep + e)], fx = [at(s0 + 15, ep), at(s0 + LL - 15, ep)];
             return { contre: v.noms_cotes[kc], debut_cm: s0, replie: rep.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]), epaisseur_replie_cm: e, fixations: fx.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]) };
           })() : {}),
         }
         : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
+    };
+    if (disp.lit_pliant) {
+      v.lit_pliant = place_lit(disp.lit_pliant);
+      // second lit : la meme spec, surchargee (autre mur a longer, autre bureau sous le pied)
+      v.lit_pliant_2 = disp.lit_pliant_2 ? place_lit({ ...disp.lit_pliant, ...disp.lit_pliant_2 }) : null;
     }
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd(occ / 1e4, 2);
@@ -1848,6 +1858,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
       bureaux: (v.bureaux || []).map((b: any) => ({ cote: b.cote, polygone: b.polygone })),
       sieges: (v.sieges || []).filter((st: any) => st.tient !== false).map((st: any) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
       lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
+      lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
     },
   };
 }

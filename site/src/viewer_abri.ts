@@ -15,7 +15,7 @@ export interface AbriViewer {
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
 export type Etats = { toit: number; murs: number; porte: number; mobilier: number; etiquettes: number; personne: number; cloture: number };
-// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise, 1 fauteuil au bureau, 2 lit deplie (sieges ranges sous les bureaux) ;
+// murs : 1 pleins, 2 coupes a 1 m, 0 sans ; mobilier : 0 rien d'utilise, 1 fauteuil au bureau, 2 lit deplie (sieges ranges sous les bureaux), 3 lit en biais au fond ;
 // personne : 0 sans, 1 dehors, 2 dedans (debout, assise au bureau ou couchee selon le mobilier)
 export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, etiquettes: 1, personne: 0, cloture: 0 };
 // la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
@@ -30,19 +30,22 @@ export const VUES = {
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Au bureau", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
   lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
+  lit2: { titre: "Lit déplié 2, en biais", position: [1.6, 4.4, 2.6], cible: [0, 0.5, -0.3], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)
 export function applique_etats(vue: AbriViewer, e: Etats) {
   vue.montrer("toit", e.toit > 0); vue.montrer("etiquettes", e.etiquettes > 0);
-  vue.montrer("lit", e.mobilier === 2); vue.montrer("sieges", e.mobilier !== 2); vue.montrer("sieges_ranges", e.mobilier === 2);
+  // sieges : a moitie rentres quand rien n'est utilise, tires quand on est au bureau, ranges quand un lit est deplie
+  vue.montrer("lit", e.mobilier === 2); vue.montrer("lit2", e.mobilier === 3);
+  vue.montrer("sieges_mi", e.mobilier === 0); vue.montrer("sieges", e.mobilier === 1); vue.montrer("sieges_ranges", e.mobilier === 2); vue.montrer("sieges_ranges2", e.mobilier === 3);
   vue.montrer("porte", e.porte === 1); vue.montrer("porte_fermee", e.porte === 2);
   vue.montrer("personne", e.personne === 1);
-  vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0); vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1); vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2);
+  vue.montrer("personne_dedans", e.personne === 2 && e.mobilier === 0); vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1); vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2); vue.montrer("personne_couchee2", e.personne === 2 && e.mobilier === 3);
   vue.montrer("cloture", e.cloture > 0);
   vue.montrer("murs", e.murs > 0); vue.montrer("murs_coupes", e.murs === 2);
 }
-export type Masquable = "toit" | "mobilier" | "lit" | "sieges" | "sieges_ranges" | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | "porte" | "porte_fermee" | "cloture" | "murs" | "murs_coupes";
+export type Masquable = "toit" | "mobilier" | "lit" | "lit2" | "sieges" | "sieges_mi" | "sieges_ranges" | "sieges_ranges2" | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | "personne_couchee2" | "porte" | "porte_fermee" | "cloture" | "murs" | "murs_coupes";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
 const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
@@ -89,7 +92,7 @@ function dessine_tuile_grillage(): HTMLCanvasElement | null {
 
 // construit la scene de l'abri dans `abri` (sans renderer ni DOM : testable sous Node) ; rend les groupes masquables
 export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string, boolean> = {}): Record<string, Vec> {
-  const groupes: Record<string, Vec> = {}, visible: Record<string, boolean> = { lit: false, sieges_ranges: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte_fermee: false, cloture: false, ...visible_demande };
+  const groupes: Record<string, Vec> = {}, visible: Record<string, boolean> = { lit: false, lit2: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
   const mat = (couleur: number, extra: any = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
   const xs = data.dalle.map((z: Pt) => z[0]), ys = data.dalle.map((z: Pt) => z[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -356,7 +359,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // mobilier : bureaux toujours la ; sieges en place, ou ranges sous les bureaux quand le lit est deplie
   const mob = groupe("mobilier"), sol = data.sol.epaisseur_cm;
   for (const b of data.mobilier.bureaux) mob.add(ombre(new THREE.Mesh(prisme(b.polygone, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
-  const sieges = groupe("sieges"), sieges_ranges = groupe("sieges_ranges");
+  const sieges = groupe("sieges"), sieges_mi = groupe("sieges_mi"), sieges_ranges = groupe("sieges_ranges"), sieges_ranges2 = groupe("sieges_ranges2");
   const matPers = mat(COUL.personne, { roughness: 0.9 });
   // silhouette assise (cuisses vers +x, le bureau) ; le groupe est ensuite tourne vers le bureau
   const assise = (h_assise: number) => {
@@ -377,7 +380,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const tete = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), matPers); tete.position.set(0.72, h + 0.16, 0); g.add(ombre(tete));
     return g;
   };
-  const p_assise = groupe("personne_assise"), p_couchee = groupe("personne_couchee");
+  const p_assise = groupe("personne_assise"), p_couchee = groupe("personne_couchee"), p_couchee2 = groupe("personne_couchee2");
   // siege : assise, quatre pieds, et un dossier du cote oppose au bureau (fauteuil) ; le tabouret n'a pas de dossier
   const siege = (st: any, dans: Vec, dx = 0, dy = 0) => {
     const tabouret = /tabouret/.test(st.type), haut = tabouret ? 45 : 47, matS = mat(COUL.siege), q: Pt[] = st.polygone.map((z: Pt) => [z[0] + dx, z[1] + dy] as Pt), sieges = dans;
@@ -401,6 +404,24 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     // pousse jusqu'a ce que le dossier arrive a 4 cm du bord du bureau (l'assise passe dessous, le dossier reste dehors, sans toucher)
     const pousse = st.contre === "gauche" ? [-(s.largeur - 12), 0] : st.contre === "droite" ? [s.largeur - 12, 0] : [0, -(s.profondeur - 12)];
     siege(st, sieges_ranges, pousse[0], pousse[1]);
+    // rien d'utilise : a moitie rentre sous le bureau
+    siege(st, sieges_mi, pousse[0] / 2, pousse[1] / 2);
+    // lit 2 : le fauteuil est pousse vers le bureau de facade (jusqu'a 4 cm de son bord), le tabouret dessous comme avant
+    const bureau_av = data.mobilier.bureaux.find((b: any) => b.cote === "avant");
+    const bord_av = bureau_av ? Math.max(...bureau_av.polygone.map((z: Pt) => z[1])) : null;
+    let pousse2 = st.contre === "avant" || bord_av === null ? pousse : [0, -((s.cy - s.profondeur / 2) - bord_av - 4)];
+    // puis glisse vers le bureau gauche jusqu'a sortir de l'emprise du lit 2 (le fauteuil ne doit pas la chevaucher)
+    if (data.mobilier.lit2 && st.contre !== "avant") {
+      const bed: Pt[] = data.mobilier.lit2.polygone;
+      const dedans = (pt: Pt) => bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.01; }) || bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) <= 0.01; });
+      const chevauche = (dx: number, dy: number) => {
+        const x0 = s.cx - s.largeur / 2 + dx, x1 = s.cx + s.largeur / 2 + dx, y0 = s.cy - s.profondeur / 2 + dy, y1 = s.cy + s.profondeur / 2 + dy;
+        const coins: Pt[] = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+        return coins.some(dedans) || bed.some((z) => z[0] >= x0 && z[0] <= x1 && z[1] >= y0 && z[1] <= y1);
+      };
+      for (let dx = 0; dx >= pousse[0] && chevauche(dx, pousse2[1]); dx -= 5) pousse2 = [dx - 5, pousse2[1]];
+    }
+    siege(st, sieges_ranges2, pousse2[0], pousse2[1]);
     // la personne assise sur le fauteuil, tournee vers son bureau
     if (!s.tabouret) {
       const g = assise(s.haut / 100);
@@ -408,21 +429,37 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       g.position.copy(W(s.cx, s.cy, sol)); p_assise.add(g);
     }
   }
-  const lit = groupe("lit");
-  if (data.mobilier.lit) {
-    // sommier sombre, matelas clair, drap bleu sur les deux tiers du pied, oreiller blanc a la tete (le bout vers le fond)
-    const q: Pt[] = data.mobilier.lit.polygone, lx = q.map((z) => z[0]), ly = q.map((z) => z[1]), x0 = Math.min(...lx), x1 = Math.max(...lx), y0 = Math.min(...ly), y1 = Math.max(...ly);
-    const long_y = y1 - y0 >= x1 - x0, tete = long_y ? [[x0 + 4, y1 - 40], [x1 - 4, y1 - 40], [x1 - 4, y1 - 6], [x0 + 4, y1 - 6]] : [[x1 - 40, y0 + 4], [x1 - 6, y0 + 4], [x1 - 6, y1 - 4], [x1 - 40, y1 - 4]];
-    const drap = long_y ? [[x0 - 1, y0 - 1], [x1 + 1, y0 - 1], [x1 + 1, y0 + (y1 - y0) * 0.66], [x0 - 1, y0 + (y1 - y0) * 0.66]] : [[x0 - 1, y0 - 1], [x0 + (x1 - x0) * 0.66, y0 - 1], [x0 + (x1 - x0) * 0.66, y1 + 1], [x0 - 1, y1 + 1]];
-    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(0x5a4a3c, { roughness: 0.9 }))));
-    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(0xf1ede4, { roughness: 0.95 }))));
-    lit.add(ombre(new THREE.Mesh(prisme(drap as Pt[], plat(sol + 45), plat(sol + 48)), mat(0x6f8fbf, { roughness: 0.95 }))));
-    lit.add(ombre(new THREE.Mesh(prisme(tete as Pt[], plat(sol + 45), plat(sol + 55)), mat(0xffffff, { roughness: 1 }))));
-    // la personne couchee : le long du lit, la tete sur l'oreiller
+  // lit deplie (quelle que soit son orientation) : sommier, matelas, drap sur les deux tiers du pied, oreiller a la tete ;
+  // la tete est au bout le plus au fond ; la personne couchee le long du lit, la tete sur l'oreiller
+  const fait_lit = (q: Pt[], dans: Vec, qui: Vec) => {
+    // axe long du rectangle : du milieu du petit cote le plus en avant vers celui du fond
+    const cotes = q.map((a, i) => ({ a, b: q[(i + 1) % 4], l: Math.hypot(q[(i + 1) % 4][0] - a[0], q[(i + 1) % 4][1] - a[1]) }));
+    const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => (c1.a[1] + c1.b[1]) - (c2.a[1] + c2.b[1]));
+    const pied = courts[0], tete = courts[courts.length - 1];
+    const mp: Pt = [(pied.a[0] + pied.b[0]) / 2, (pied.a[1] + pied.b[1]) / 2], mt: Pt = [(tete.a[0] + tete.b[0]) / 2, (tete.a[1] + tete.b[1]) / 2];
+    const L = Math.hypot(mt[0] - mp[0], mt[1] - mp[1]) || 1, ux = (mt[0] - mp[0]) / L, uy = (mt[1] - mp[1]) / L, nx = -uy, ny = ux, lw = pied.l;
+    const rect = (s0: number, s1: number, marge: number): Pt[] => [[mp[0] + ux * s0 + nx * (-lw / 2 + marge), mp[1] + uy * s0 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (-lw / 2 + marge), mp[1] + uy * s1 + ny * (-lw / 2 + marge)], [mp[0] + ux * s1 + nx * (lw / 2 - marge), mp[1] + uy * s1 + ny * (lw / 2 - marge)], [mp[0] + ux * s0 + nx * (lw / 2 - marge), mp[1] + uy * s0 + ny * (lw / 2 - marge)]];
+    dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(0x5a4a3c, { roughness: 0.9 }))));
+    dans.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(0xf1ede4, { roughness: 0.95 }))));
+    dans.add(ombre(new THREE.Mesh(prisme(rect(-1, L * 0.66, -1), plat(sol + 45), plat(sol + 48)), mat(0x6f8fbf, { roughness: 0.95 }))));
+    dans.add(ombre(new THREE.Mesh(prisme(rect(L - 40, L - 6, 4), plat(sol + 45), plat(sol + 55)), mat(0xe3dff0, { roughness: 1 }))));
+    // la taille du lit sur une petite plaque posee a plat au coin de l'oreiller
+    const tx = etiquette(`${Math.round(lw)} × ${Math.round(L)}`);
+    if (tx) {
+      const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.15), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+      const c: Pt = [mt[0] - ux * 22 + nx * (lw / 2 - 20), mt[1] - uy * 22 + ny * (lw / 2 - 20)];
+      plaque.position.copy(W(c[0], c[1], sol + 55.6));
+      plaque.rotation.set(-Math.PI / 2, 0, Math.atan2(uy, ux) - Math.PI / 2);
+      dans.add(plaque);
+    }
     const g = couchee(0.45);
-    g.rotation.y = long_y ? Math.PI / 2 : 0;
-    g.position.copy(W((x0 + x1) / 2, (y0 + y1) / 2, sol)); p_couchee.add(g);
-  }
+    // l'axe +x local va vers la tete : une rotation de atan2(uy, ux) autour de y envoie +x sur la direction (ux, -uy) du monde
+    g.rotation.y = Math.atan2(uy, ux);
+    g.position.copy(W((mp[0] + mt[0]) / 2, (mp[1] + mt[1]) / 2, sol)); qui.add(g);
+  };
+  const lit = groupe("lit"), lit2 = groupe("lit2");
+  if (data.mobilier.lit) fait_lit(data.mobilier.lit.polygone, lit, p_couchee);
+  if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2);
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }
@@ -462,7 +499,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_ranges: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, personne_couchee2: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {

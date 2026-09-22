@@ -2696,6 +2696,7 @@
      ]
     ]
    },
+   "lit_pliant_2": null,
    "bureaux_m2": 2.4,
    "sol_libre_m2": 2.41
   }
@@ -4521,7 +4522,8 @@
       172.3
      ]
     ]
-   }
+   },
+   "lit2": null
   }
  },
  "svg": {

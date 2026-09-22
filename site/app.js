@@ -1210,18 +1210,18 @@ function variantes(p, g) {
       poses.push(q);
       return { type: st.type, largeur_cm: W, profondeur_cm: Dp, contre: st.contre, tient: true, debut_cm: Math.round(s0), polygone: q.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]) };
     }).filter(Boolean);
-    if (disp.lit_pliant) {
-      const LW = +disp.lit_pliant.largeur_cm, LL = +disp.lit_pliant.longueur_cm;
+    const place_lit = (spec) => {
+      const LW = +spec.largeur_cm, LL = +spec.longueur_cm;
       const acces = [];
       if (v.porte) {
         const k = v.porte.cote, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
-        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(disp.lit_pliant.acces_porte_cm ?? 60);
+        const s0 = v.porte.debut_cm, s1 = s0 + v.porte.largeur_cm, pr = ep + +(spec.acces_porte_cm ?? 60);
         acces.push([[a[0] + ux * s0, a[1] + uy * s0], [a[0] + ux * s1, a[1] + uy * s1], [a[0] + ux * s1 + nx * pr, a[1] + uy * s1 + ny * pr], [a[0] + ux * s0 + nx * pr, a[1] + uy * s0 + ny * pr]]);
       }
-      const sous2 = !!disp.lit_pliant.sous_bureau;
+      const sous2 = !!spec.sous_bureau;
       const fixes = sous2 ? acces : [...v.bureaux.map((b) => b.brut), ...acces];
       const candidats = [];
-      const kc = disp.lit_pliant.contre ? v.noms_cotes.findIndex((nm) => nm.startsWith(disp.lit_pliant.contre)) : -1;
+      const kc = spec.contre ? v.noms_cotes.findIndex((nm) => nm.startsWith(spec.contre)) : -1;
       let mur = null;
       if (kc >= 0) {
         const a = r[kc], c = r[(kc + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
@@ -1229,10 +1229,12 @@ function variantes(p, g) {
         for (let s = 0; s + LL <= l; s += 1) candidats.push({ s, q: [[a[0] + ux * s + nx * ep, a[1] + uy * s + ny * ep], [a[0] + ux * (s + LL) + nx * ep, a[1] + uy * (s + LL) + ny * ep], [a[0] + ux * (s + LL) + nx * (ep + LW), a[1] + uy * (s + LL) + ny * (ep + LW)], [a[0] + ux * s + nx * (ep + LW), a[1] + uy * s + ny * (ep + LW)]] });
       } else {
         const xs = inter.map((z) => z[0]), ys = inter.map((z) => z[1]);
-        const angles = [0, 90, ...r.map((a, i) => {
-          const c = r[(i + 1) % r.length];
+        const kpa = spec.parallele_a ? v.noms_cotes.findIndex((nm) => nm.startsWith(spec.parallele_a)) : -1;
+        const angle_mur = (i) => {
+          const a = r[i], c = r[(i + 1) % r.length];
           return Math.atan2(c[1] - a[1], c[0] - a[0]) * 180 / Math.PI;
-        })];
+        };
+        const angles = kpa >= 0 ? [angle_mur(kpa), angle_mur(kpa) + 180] : [0, 90, ...r.map((_a, i) => angle_mur(i))];
         for (const deg of angles) {
           const t = deg * Math.PI / 180, ca = Math.cos(t), sa = Math.sin(t);
           for (let x = Math.min(...xs); x <= Math.max(...xs); x += 2) for (let y = Math.min(...ys); y <= Math.max(...ys); y += 2)
@@ -1241,8 +1243,8 @@ function variantes(p, g) {
       }
       let best2 = null;
       {
-        const b_pied = disp.lit_pliant.pied_sous ? v.bureaux.find((b) => b.cote === disp.lit_pliant.pied_sous) : null;
-        const kp = disp.lit_pliant.pres_de ? v.noms_cotes.findIndex((nm) => nm.startsWith(disp.lit_pliant.pres_de)) : -1;
+        const b_pied = spec.pied_sous ? v.bureaux.find((b) => b.cote === spec.pied_sous) : null;
+        const kp = spec.pres_de ? v.noms_cotes.findIndex((nm) => nm.startsWith(spec.pres_de)) : -1;
         const dist_mur = (q) => {
           if (kp < 0) return 0;
           const a = r[kp], c = r[(kp + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), nx = -(c[1] - a[1]) / l, ny = (c[0] - a[0]) / l;
@@ -1252,7 +1254,7 @@ function variantes(p, g) {
           if (!q.every(dedans_int)) continue;
           if (!fixes.every((o) => poly_area(clip_convex(q, o)) < 1)) continue;
           const dessous = sous2 ? v.bureaux.reduce((s2, b) => s2 + poly_area(clip_convex(q, b.brut)), 0) : 0;
-          const gene = poses.reduce((s2, o) => s2 + poly_area(clip_convex(q, o)), 0);
+          const gene = spec.sieges_ranges ? 0 : poses.reduce((s2, o) => s2 + poly_area(clip_convex(q, o)), 0);
           let cout = dessous * 1e3 + gene;
           if (b_pied) {
             const sous_pied = poly_area(clip_convex(q, b_pied.brut)), autres = dessous - sous_pied;
@@ -1262,7 +1264,7 @@ function variantes(p, g) {
           if (!best2 || cout < best2.cout - 1) best2 = { gene, dessous, cout, q, s };
         }
       }
-      v.lit_pliant = best2 ? {
+      return best2 ? {
         largeur_cm: LW,
         longueur_cm: LL,
         tient: true,
@@ -1271,11 +1273,15 @@ function variantes(p, g) {
         polygone: best2.q.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]),
         // rabattable : replie a plat contre le mur, deux fixations (charnieres) sur la face interieure
         ...mur ? (() => {
-          const e = +(disp.lit_pliant.epaisseur_replie_cm ?? 10), s0 = best2.s, { a, ux, uy, nx, ny } = mur, at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+          const e = +(spec.epaisseur_replie_cm ?? 10), s0 = best2.s, { a, ux, uy, nx, ny } = mur, at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
           const rep = [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + e), at(s0, ep + e)], fx = [at(s0 + 15, ep), at(s0 + LL - 15, ep)];
           return { contre: v.noms_cotes[kc], debut_cm: s0, replie: rep.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]), epaisseur_replie_cm: e, fixations: fx.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]) };
         })() : {}
       } : { largeur_cm: LW, longueur_cm: LL, tient: false, polygone: [] };
+    };
+    if (disp.lit_pliant) {
+      v.lit_pliant = place_lit(disp.lit_pliant);
+      v.lit_pliant_2 = disp.lit_pliant_2 ? place_lit({ ...disp.lit_pliant, ...disp.lit_pliant_2 }) : null;
     }
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd2(occ / 1e4, 2);
@@ -2067,7 +2073,8 @@ function modele3d_abri(p, g, v, m) {
     mobilier: {
       bureaux: (v.bureaux || []).map((b) => ({ cote: b.cote, polygone: b.polygone })),
       sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
-      lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null
+      lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
+      lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null
     }
   };
 }

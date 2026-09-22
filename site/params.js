@@ -199,6 +199,13 @@ window.SHED_PARAMS = {
           "pres_de": "droite",
           "_comment": "lit pliant libre : le pied passe sous le bureau de facade (jusqu'a sa profondeur), le lit longe le mur droit, pres de la porte (elle ouvre dehors, aucun degagement)"
         },
+        "lit_pliant_2": {
+          "pied_sous": "",
+          "pres_de": "fond en biais",
+          "parallele_a": "fond en biais",
+          "sieges_ranges": true,
+          "_comment": "seconde position, en biais au fond : le lit est parallele au pan a 45 degres et au plus pres de lui ; les sieges sont ranges (leur gene ne compte pas), le fauteuil pousse vers le bureau de facade"
+        },
         "fenetres": [
           {
             "cote": "avant",
