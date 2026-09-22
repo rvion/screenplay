@@ -68,8 +68,12 @@ table { width: 100%; border-collapse: collapse; font-size: .85rem; }
 th, td { text-align: left; vertical-align: top; padding: .25rem .5rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 /* les cellules ne se replient pas : le tableau defile de cote (.table-wrap) ; seule la regle des materiaux reste un texte */
 /* materiaux : la regle et la source sous le nom, en petit italique ; la cellule peut se replier */
-.bom td .regle { white-space: normal; font-size: .76rem; font-style: italic; color: var(--muted); line-height: 1.35; max-width: 36rem; margin-top: .1rem; }
-.bom td .poste { white-space: nowrap; }
+/* materiaux : jamais de defilement. Les trois colonnes de chiffres se serrent sur leur contenu (entetes courtes),
+   la premiere prend le reste et se replie ; le nom de l'article en demi-gras, sa regle en dessous */
+.table-wrap.fixe { overflow: visible; }
+.bom th.num, .bom td.num { width: 1%; }
+.bom td .regle { white-space: normal; font-size: .76rem; font-style: italic; color: var(--muted); line-height: 1.35; margin-top: .1rem; }
+.bom td .poste { white-space: normal; font-weight: 600; }
 td.pliable { white-space: normal; }
 thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 1px solid #b9c0c8; white-space: nowrap; }
 tbody tr:nth-child(even) td { background: #f8f9fa; }
@@ -269,7 +273,6 @@ body.document .details .planbox svg { height: auto; max-height: 60vh; }
   #plans, #montage, #alternatives { break-before: page; }
   /* les tableaux tiennent dans la page : le nom d'un article peut se replier, rien ne defile */
   .table-wrap { overflow: visible; }
-  .bom td .poste { white-space: normal; }
   table { font-size: 10px; }
   a { color: inherit; text-decoration: none; }
 }
