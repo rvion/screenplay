@@ -496,6 +496,12 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
     gs.visible = visible[`sieges_ranges${n}`] === true;
     for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+    // quatre pieds sous le plateau : deux au ras du lit, deux au fond
+    for (const [px, py] of lm.pieds_bureau || []) {
+      const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));
+      pied.position.copy(W(px, py, sol + 36));
+      gb.add(ombre(pied));
+    }
     for (const st of lm.sieges) siege(st, gs);
     fait_lit(lm.polygone, cache(`lit${n}`), cache(`personne_couchee${n}`), lm.tete);
   });

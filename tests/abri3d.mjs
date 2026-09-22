@@ -107,6 +107,12 @@ const paroi = groupes.murs.children;
       const plateaux = g("bureaux").children.filter((o) => o.isMesh).map((o) => serre(boite(o)));
       const traverse = g("sieges_ranges").children.filter((o) => o.isMesh).filter((o) => plateaux.some((b) => b.intersectsBox(serre(boite(o)))));
       ok(traverse.length === 0, `lit ${l.nom} : aucune pièce de siège rangé ne traverse un plateau de bureau (${traverse.length} en faute)`);
+      // les pieds du plateau : quatre, aucun dans le lit, et le siege en usage hors du lit
+      const pieds = (l.pieds_bureau || []);
+      const bed2 = l.polygone, dans_bed = (pt) => pt[0] > Math.min(...bed2.map((z) => z[0])) - 0.5 && pt[0] < Math.max(...bed2.map((z) => z[0])) + 0.5 && pt[1] > Math.min(...bed2.map((z) => z[1])) - 0.5 && pt[1] < Math.max(...bed2.map((z) => z[1])) + 0.5;
+      ok(pieds.length === 4 && !pieds.some(dans_bed), `lit ${l.nom} : quatre pieds sous le plateau, aucun dans le lit`);
+      const siege_usage = v.sieges.filter((st) => st.tient !== false);
+      ok(siege_usage.every((st) => !st.polygone.some(dans_bed)), `lit ${l.nom} : le siège en usage est hors du lit, centré sur la partie libre du bureau`);
     });
     const plan_box = (q) => { const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
     const si = plan_box(d.sol.polygone), v3 = lm.find((x) => x.nom === "v3"), v4 = lm.find((x) => x.nom === "v4");

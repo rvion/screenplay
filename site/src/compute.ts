@@ -504,13 +504,23 @@ export function variantes(p: Params, g: any) {
     // de ce bord (dans l'interieur, hors des autres bureaux et des sieges deja poses)
     const dedans_int = (z: Pt) => inter.every((a, i) => { const b = inter[(i + 1) % inter.length]; return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -1e-6; });
     const poses: Pt[][] = [];
+    // les lits a demeure sont places plus bas, mais le siege en usage doit deja les eviter :
+    // on calcule leur emprise ici pour la retirer de la course libre le long du bureau
+    const emprises_lits: Pt[][] = (disp.lits_muraux || []).map((lm: any) => {
+      const k = v.noms_cotes.indexOf(lm.contre);
+      if (k < 0) return null;
+      const LW = +lm.largeur_cm, LL = +lm.longueur_cm, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]);
+      const ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux, s0 = lm.position === "fin" ? l - ep - LL : ep;
+      const at = (s: number, d: number): Pt => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+      return [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + LW), at(s0, ep + LW)];
+    }).filter(Boolean) as Pt[][];
     v.sieges = (disp.sieges || []).map((st: any) => {
       const bu = v.bureaux.find((b: any) => b.cote === st.contre);
       if (!bu) return null;
       const i = v.noms_cotes.indexOf(bu.cote), a = r[i], c = r[(i + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]);
       const ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux, e = ep + bu.profondeur_cm, W = +st.largeur_cm, Dp = +st.profondeur_cm;
       const carre = (s: number): Pt[] => [[a[0] + ux * s + nx * e, a[1] + uy * s + ny * e], [a[0] + ux * (s + W) + nx * e, a[1] + uy * (s + W) + ny * e], [a[0] + ux * (s + W) + nx * (e + Dp), a[1] + uy * (s + W) + ny * (e + Dp)], [a[0] + ux * s + nx * (e + Dp), a[1] + uy * s + ny * (e + Dp)]];
-      const libre = (s: number) => { const q = carre(s); return q.every(dedans_int) && [...v.bureaux.filter((b: any) => b !== bu).map((b: any) => b.brut), ...poses].every((o: Pt[]) => poly_area(clip_convex(q, o)) < 1); };
+      const libre = (s: number) => { const q = carre(s); return q.every(dedans_int) && [...v.bureaux.filter((b: any) => b !== bu).map((b: any) => b.brut), ...emprises_lits, ...poses].every((o: Pt[]) => poly_area(clip_convex(q, o)) < 1); };
       let run: number[] | null = null, cur: number[] | null = null;
       for (let s = 0; s <= l; s += 1) {
         if (libre(s)) { cur = cur ? [cur[0], s] : [s, s]; if (!run || cur[1] - cur[0] > run[1] - run[0]) run = [...cur]; } else cur = null;
@@ -648,7 +658,17 @@ export function variantes(p: Params, g: any) {
         return null;
       }).filter(Boolean);
       const pts = (z: Pt[]) => z.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]);
-      return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", sous_bureau_cm2: rnd(bureaux.reduce((s: number, b: any) => s + poly_area(clip_convex(q, b.brut)), 0), 0), tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b: any) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
+      // pieds du plateau : quatre, aux coins de la partie qui n'est pas au-dessus du lit
+      const pieds = bureaux.flatMap((bu: any) => {
+        const xs = bu.brut.map((z: Pt) => z[0]), ys = bu.brut.map((z: Pt) => z[1]);
+        const axe_x = bu.brut.every((z: Pt, i: number) => { const w = bu.brut[(i + 1) % bu.brut.length]; return Math.abs(z[0] - w[0]) < 0.5 || Math.abs(z[1] - w[1]) < 0.5; });
+        if (!axe_x) return [];
+        const lits_ys = q.map((z) => z[1]), sur_lit = Math.max(...xs) > Math.min(...q.map((z) => z[0])) && Math.min(...xs) < Math.max(...q.map((z) => z[0]));
+        const y0 = sur_lit ? Math.max(Math.min(...ys), Math.max(...lits_ys)) + 5 : Math.min(...ys) + 5, y1 = Math.max(...ys) - 5;
+        const x0 = Math.min(...xs) + 5, x1 = Math.max(...xs) - 5;
+        return [[x0, y0], [x1, y0], [x0, y1], [x1, y1]].map(([x, y]) => [rnd(x, 1), rnd(y, 1)] as Pt);
+      });
+      return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", pieds_bureau: pieds, sous_bureau_cm2: rnd(bureaux.reduce((s: number, b: any) => s + poly_area(clip_convex(q, b.brut)), 0), 0), tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b: any) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
     }).filter(Boolean);
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd(occ / 1e4, 2);
@@ -1110,7 +1130,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
       sieges: (v.sieges || []).filter((st: any) => st.tient !== false).map((st: any) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
       lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
       lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
-      lits_muraux: (v.lits_muraux || []).filter((lm: any) => lm.tient).map((lm: any) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, sous_bureau_cm2: lm.sous_bureau_cm2, bureaux: lm.bureaux.map((b: any) => b.polygone), sieges: lm.sieges })),
+      lits_muraux: (v.lits_muraux || []).filter((lm: any) => lm.tient).map((lm: any) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, sous_bureau_cm2: lm.sous_bureau_cm2, bureaux: lm.bureaux.map((b: any) => b.polygone), pieds_bureau: lm.pieds_bureau || [], sieges: lm.sieges })),
     },
   };
 }

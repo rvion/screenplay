@@ -819,6 +819,14 @@
         return (b[0] - a[0]) * (z[1] - a[1]) - (b[1] - a[1]) * (z[0] - a[0]) >= -1e-6;
       });
       const poses = [];
+      const emprises_lits = (disp.lits_muraux || []).map((lm) => {
+        const k = v.noms_cotes.indexOf(lm.contre);
+        if (k < 0) return null;
+        const LW = +lm.largeur_cm, LL = +lm.longueur_cm, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]);
+        const ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux, s0 = lm.position === "fin" ? l - ep - LL : ep;
+        const at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+        return [at(s0, ep), at(s0 + LL, ep), at(s0 + LL, ep + LW), at(s0, ep + LW)];
+      }).filter(Boolean);
       v.sieges = (disp.sieges || []).map((st) => {
         const bu = v.bureaux.find((b) => b.cote === st.contre);
         if (!bu) return null;
@@ -827,7 +835,7 @@
         const carre = (s) => [[a[0] + ux * s + nx * e, a[1] + uy * s + ny * e], [a[0] + ux * (s + W) + nx * e, a[1] + uy * (s + W) + ny * e], [a[0] + ux * (s + W) + nx * (e + Dp), a[1] + uy * (s + W) + ny * (e + Dp)], [a[0] + ux * s + nx * (e + Dp), a[1] + uy * s + ny * (e + Dp)]];
         const libre = (s) => {
           const q2 = carre(s);
-          return q2.every(dedans_int) && [...v.bureaux.filter((b) => b !== bu).map((b) => b.brut), ...poses].every((o) => poly_area(clip_convex(q2, o)) < 1);
+          return q2.every(dedans_int) && [...v.bureaux.filter((b) => b !== bu).map((b) => b.brut), ...emprises_lits, ...poses].every((o) => poly_area(clip_convex(q2, o)) < 1);
         };
         let run = null, cur = null;
         for (let s = 0; s <= l; s += 1) {
@@ -956,7 +964,19 @@
           return null;
         }).filter(Boolean);
         const pts = (z) => z.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]);
-        return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", sous_bureau_cm2: rnd2(bureaux.reduce((s, b) => s + poly_area(clip_convex(q, b.brut)), 0), 0), tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
+        const pieds = bureaux.flatMap((bu) => {
+          const xs = bu.brut.map((z) => z[0]), ys = bu.brut.map((z) => z[1]);
+          const axe_x = bu.brut.every((z, i) => {
+            const w = bu.brut[(i + 1) % bu.brut.length];
+            return Math.abs(z[0] - w[0]) < 0.5 || Math.abs(z[1] - w[1]) < 0.5;
+          });
+          if (!axe_x) return [];
+          const lits_ys = q.map((z) => z[1]), sur_lit = Math.max(...xs) > Math.min(...q.map((z) => z[0])) && Math.min(...xs) < Math.max(...q.map((z) => z[0]));
+          const y02 = sur_lit ? Math.max(Math.min(...ys), Math.max(...lits_ys)) + 5 : Math.min(...ys) + 5, y1 = Math.max(...ys) - 5;
+          const x02 = Math.min(...xs) + 5, x12 = Math.max(...xs) - 5;
+          return [[x02, y02], [x12, y02], [x02, y1], [x12, y1]].map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]);
+        });
+        return { nom: lm.nom, largeur_cm: LW, longueur_cm: LL, contre: lm.contre, tete: lm.tete || "fond", pieds_bureau: pieds, sous_bureau_cm2: rnd2(bureaux.reduce((s, b) => s + poly_area(clip_convex(q, b.brut)), 0), 0), tient: q.every(dedans_int), polygone: pts(q), bureaux: bureaux.map((b) => ({ cote: b.cote, polygone: pts(b.brut) })), sieges };
       }).filter(Boolean);
       for (const b of v.bureaux) delete b.brut;
       v.bureaux_m2 = rnd2(occ / 1e4, 2);
@@ -1452,7 +1472,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
         lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
         lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
-        lits_muraux: (v.lits_muraux || []).filter((lm) => lm.tient).map((lm) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, sous_bureau_cm2: lm.sous_bureau_cm2, bureaux: lm.bureaux.map((b) => b.polygone), sieges: lm.sieges }))
+        lits_muraux: (v.lits_muraux || []).filter((lm) => lm.tient).map((lm) => ({ nom: lm.nom, polygone: lm.polygone, tete: lm.tete, sous_bureau_cm2: lm.sous_bureau_cm2, bureaux: lm.bureaux.map((b) => b.polygone), pieds_bureau: lm.pieds_bureau || [], sieges: lm.sieges }))
       }
     };
   }
@@ -2724,6 +2744,11 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const gb = cache(`bureaux${n}`), gs = cache(`sieges_ranges${n}`);
       gs.visible = visible[`sieges_ranges${n}`] === true;
       for (const b of lm.bureaux) gb.add(ombre(new THREE.Mesh(prisme(b, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+      for (const [px, py] of lm.pieds_bureau || []) {
+        const pied = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.72, 0.06), mat(COUL.bureau));
+        pied.position.copy(W(px, py, sol + 36));
+        gb.add(ombre(pied));
+      }
       for (const st of lm.sieges) siege(st, gs);
       fait_lit(lm.polygone, cache(`lit${n}`), cache(`personne_couchee${n}`), lm.tete);
     });
