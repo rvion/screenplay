@@ -38,38 +38,38 @@ Le **passage** derrière l'abri est la vraie distance entre la forme et chaque m
 (`v.passages`, extrémités du mur comprises), visée : `passage_souhaite_cm`.
 
 ## L'abri : option 13 à cotes imposées (`modele_trapeze`)
-`disposition_trapeze.cotes_cm` impose façade 215, droite 175, gauche 275 et un mur du fond de 115
+`disposition_trapeze.cotes_cm` impose façade 210, droite 175, gauche 245 et un mur du fond de 140
 d'équerre sur le mur gauche ; le pan **C** relie le haut du mur droit au bout du fond. Contour :
-`(10,10) → (225,10) → (225,185) → (125,285) → (10,285)` : 10 cm de dalle à gauche et devant, 37 à droite.
+`(10,10) → (220,10) → (220,185) → (150,255) → (10,255)` : 10 cm de dalle à gauche et devant, 42 à droite.
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 215 | 237,5 → 237,5 | 100 + 100 + 15 |
-| D droite | 175 | 237,5 → 223,2 | 75 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan à 45° | 141,4 | 223,2 → 215 | 100 + 41,4 |
-| B fond | 115 | 215 → 215 | 100 + 15 |
-| G gauche | 275 | 215 → 237,5 | 100 + 100 + 75 |
+| A façade | 210 | 237,5 → 237,5 | 100 + 100 + 10 |
+| D droite | 175 | 237,5 → 221,4 | 75 + 100 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan à 45° | 99 | 221,4 → 215 | 99 |
+| B fond | 140 | 215 → 215 | 100 + 40 |
+| G gauche | 245 | 215 → 237,5 | 100 + 100 + 45 |
 
-- Angles **90 / 90 / 135 / 135 / 90**. Murs **5,41 m²** ⇒ **déclaration préalable** (seuil 5 m²),
-  intérieur 4,87 m², sol libre hors bureaux 2,15 m². Cotes intérieures : façade **203**, droite 166,5,
-  pan 136,5, fond 106,5, gauche 263. Passage derrière : 47,6 cm au grand pan, 40,3 cm au petit pan.
-- **La façade de 203 dedans est la raison de cette forme** : un lit de 190 y tient à demeure, la tête
-  contre le mur de la porte, et il reste 67 cm de baie de porte dégagés sur 80. Le fond passe de 100 à
-  115 pour que le pan reste un vrai 45° (deux profils d'angle identiques).
-- **Toit plan vers le fond** (`toit.sens = "arriere"`) : `h(y) = H + c·(1 − (y − y0)/D)`, `H` = 215,
-  `c` = 22,5, `D` = profondeur 275 ⇒ pente **8,2 %** (4,68°), portée 2,75 m. Débords 5 devant et
-  derrière, 0 sur les côtés : **3 panneaux de toit** (100 × 286, 100 × 286 en biais, bande de
-  15 × 203 en biais).
+- Angles **90 / 90 / 135 / 135 / 90**. Murs **4,90 m²** ⇒ **aucune formalité** (seuil 5 m²),
+  intérieur 4,39 m², sol libre hors bureaux et lit 1,94 m². Cotes intérieures : façade **198**,
+  droite 166,5, pan 94, fond 131,5, gauche 233. Passage derrière : 52,6 cm au grand pan, 69,7 au
+  petit pan. Matériaux 2 888 € TTC.
+- **La façade de 198 dedans est la raison de cette forme** : un lit de 190 y tient à demeure. Le fond
+  passe de 100 à 140 pour que le pan reste un vrai 45° (deux profils d'angle identiques).
+- **Le lit fait 80 de large, pas 90** : il s'arrête avant la baie de la porte, qui reste dégagée sur
+  **77 cm de ses 80**, et la porte reste le bloc de service de stock 205 × 80.
+- **Toit plan vers le fond** (`toit.sens = "arriere"`) : `H` = 215, `c` = 22,5, `D` = 245 ⇒ pente
+  **9,2 %** (5,25°), portée 2,45 m. **3 panneaux de toit** (100 × 256, 100 × 256 en biais, bande de
+  10 × 198 en biais).
 - **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
-- **Gouttière** derrière l'abri, sur le pan C et le fond B ; descente au bout droit (`toit.descente`).
+- **Gouttière** derrière l'abri, sur le pan C et le fond B ; descente au bout droit.
 - **Porte** pleine 80 × 205 sur D, à 82,5 cm de la façade, chambranle 5. **Fenêtres** 80 × 75 de
   stock, oscillo-battantes, allège 110, en façade.
-- **Mobilier** : bureau en L, le bureau gauche à **80 de profondeur** (trois écrans de 27") sur les
-  263 cm du mur ; lit pliant 70 × 190 (`lit_pliant`, `lit_pliant_2`) ; lits à demeure
-  (`lits_muraux`) : **v3**, lit 90 × 190 le long de la façade, calé à droite (`position: "fin"`),
+- **Mobilier** : bureau gauche **80 de profondeur sur 233 cm** (trois écrans de 27" = 190 cm) et
+  bureau de façade 50 ; lit pliant 70 × 190 (`lit_pliant`, `lit_pliant_2`) ; un lit à demeure
+  (`lits_muraux`) : **v3**, lit **80 × 190** le long de la façade, calé à droite (`position: "fin"`),
   **tête côté porte** : couché, les pieds vont vers le bureau gauche et ses écrans, et le plateau du
-  bureau (72 cm) passe **au-dessus du pied du lit** (55 cm) sur 6 030 cm², donc il n'est pas coupé
-  (`bureaux_entiers`) ; **v4**, lit 90 × 190 contre le mur gauche, tête au fond, bureau en L devant.
+  bureau passe **au-dessus du pied du lit** sans être coupé (`bureaux_entiers`).
 
 Les études qui ont précédé (4 murs à angle aigu, toit vers la droite) sont figées dans `etudes/`
 et restent couvertes par les tests via `tests/fixtures/etude-v{1,2,3}.json`.

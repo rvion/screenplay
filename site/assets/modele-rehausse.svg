@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 955 364" font-family="system-ui,sans-serif" font-size="13">
 <rect width="955" height="364" fill="#fbfbf8"/>
-<text x="50.0" y="60.0" text-anchor="start" fill="#5a4f3a" font-size="12" font-weight="bold">madrier 1 · 75 × 225 · 450 cm · chute 0 cm</text>
+<text x="50.0" y="60.0" text-anchor="start" fill="#5a4f3a" font-size="12" font-weight="bold">madrier 1 · 75 × 225 · 450 cm · chute 106 cm</text>
 <polygon points="50.0,142.0 905.0,142.0 905.0,70.0 50.0,70.0" fill="#f3ece0" stroke="#b8a888" stroke-width="1" stroke-dasharray="4 3"/>
-<polygon points="50.0,142.0 572.5,142.0 572.5,70.0 50.0,142.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
-<text x="311.2" y="122.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R4 · face G · 275 · 0 → 22.5</text>
-<polygon points="50.0,70.0 318.7,70.0 318.7,70.0 50.0,96.2" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
-<text x="184.3" y="82.7" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R3 · face C · 141.4 · 8.2 → 0</text>
-<polygon points="572.5,142.0 905.0,142.0 905.0,115.8 572.5,70.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
-<text x="738.8" y="122.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R2 · face D · 175 · 22.5 → 8.2</text>
-<text x="50.0" y="192.0" text-anchor="start" fill="#5a4f3a" font-size="12" font-weight="bold">madrier 2 · 75 × 225 · 450 cm · chute 235 cm</text>
+<polygon points="50.0,142.0 515.5,142.0 515.5,70.0 50.0,142.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="282.8" y="122.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R4 · face G · 245 · 0 → 22.5</text>
+<polygon points="50.0,70.0 382.5,70.0 382.5,90.5 50.0,142.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="216.2" y="98.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R2 · face D · 175 · 22.5 → 6.4</text>
+<polygon points="515.5,142.0 703.6,142.0 703.6,142.0 515.5,121.5" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="609.5" y="139.2" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R3 · face C · 99 · 6.4 → 0</text>
+<text x="50.0" y="192.0" text-anchor="start" fill="#5a4f3a" font-size="12" font-weight="bold">madrier 2 · 75 × 225 · 450 cm · chute 240 cm</text>
 <polygon points="50.0,274.0 905.0,274.0 905.0,202.0 50.0,202.0" fill="#f3ece0" stroke="#b8a888" stroke-width="1" stroke-dasharray="4 3"/>
-<polygon points="50.0,274.0 458.5,274.0 458.5,202.0 50.0,202.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
-<text x="254.2" y="254.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R1 · face A · 215 · 22.5 → 22.5</text>
+<polygon points="50.0,274.0 449.0,274.0 449.0,202.0 50.0,202.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="249.5" y="254.0" text-anchor="middle" fill="#5a3a1a" font-size="11" font-weight="bold">R1 · face A · 210 · 22.5 → 22.5</text>
 <text x="477.5" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face R · Rehausse bois · 4 pièces dans 2 madriers</text>
 <text x="477.5" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">hauteur de chaque pièce : de son début à sa fin, dans le sens de la face (vue de l'extérieur, de gauche à droite)</text>
 </svg>

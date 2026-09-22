@@ -2146,8 +2146,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
     lit: { titre: "Lit v1, le long de la porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
     lit2: { titre: "Lit v2, en biais au fond", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
-    lit3: { titre: "Lit v3, en fa\xE7ade, t\xEAte c\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } },
-    lit4: { titre: "Lit v4, mur gauche, bureau en L", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 5, personne: 2, etiquettes: 0 } }
+    lit3: { titre: "Lit v3, en fa\xE7ade, t\xEAte c\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);

@@ -1,122 +1,122 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 584 730" font-family="system-ui,sans-serif" font-size="13">
-<rect width="584" height="730" fill="#fbfbf8"/>
-<polygon points="120.0,610.0 464.0,610.0 464.0,330.0 304.0,170.0 120.0,170.0" fill="#8fa3b8" stroke="#2b5d8a" stroke-width="1.5"/>
-<polygon points="129.6,600.4 454.4,600.4 454.4,334.0 300.0,179.6 129.6,179.6" fill="#fbfbf8" stroke="#2b5d8a" stroke-width="1.2"/>
-<polygon points="129.6,600.4 257.6,600.4 257.6,179.6 129.6,179.6" fill="#e6c79c" stroke="#9a7040" stroke-width="1"/>
-<text x="193.6" y="390.0" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold" transform="rotate(-90 193.6 390.0)">bureau 80 × 263</text>
-<polygon points="129.6,600.4 454.4,600.4 454.4,520.4 129.6,520.4" fill="#e6c79c" stroke="#9a7040" stroke-width="1"/>
-<text x="292.0" y="560.4" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold">bureau 50 × 203</text>
-<polygon points="257.6,330.0 257.6,442.0 369.6,442.0 369.6,330.0" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
-<text x="313.6" y="382.0" text-anchor="middle" fill="#44445a" font-size="10" font-weight="bold">fauteuil de bureau</text>
-<text x="313.6" y="396.0" text-anchor="middle" fill="#44445a" font-size="9" font-weight="normal">70 × 70</text>
-<polygon points="332.8,520.4 380.8,520.4 380.8,472.4 332.8,472.4" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
-<text x="356.8" y="499.4" text-anchor="middle" fill="#44445a" font-size="8" font-weight="bold">tab.</text>
-<polygon points="414.4,600.4 414.4,296.4 302.4,296.4 302.4,600.4" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
-<text x="358.4" y="561.9" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit pliant 70 × 190</text>
-<text x="358.4" y="574.9" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
-<polygon points="136.0,610.0 264.0,610.0 264.0,600.4 136.0,600.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
-<polygon points="296.0,610.0 424.0,610.0 424.0,600.4 296.0,600.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
-<line x1="120.0" y1="614.0" x2="120.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="136.0" y1="614.0" x2="136.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="120.0" y1="638.0" x2="136.0" y2="638.0" stroke="#666" stroke-width="1"/>
-<line x1="117.0" y1="641.0" x2="123.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<line x1="133.0" y1="641.0" x2="139.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<text x="128.0" y="658.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 128.0 658.0)">10</text>
-<line x1="136.0" y1="614.0" x2="136.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="264.0" y1="614.0" x2="264.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="136.0" y1="638.0" x2="264.0" y2="638.0" stroke="#666" stroke-width="1"/>
-<line x1="133.0" y1="641.0" x2="139.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<line x1="261.0" y1="641.0" x2="267.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<text x="200.0" y="646.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 200.0 646.0)">80</text>
-<line x1="264.0" y1="614.0" x2="264.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="296.0" y1="614.0" x2="296.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="264.0" y1="638.0" x2="296.0" y2="638.0" stroke="#666" stroke-width="1"/>
-<line x1="261.0" y1="641.0" x2="267.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<line x1="293.0" y1="641.0" x2="299.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<text x="280.0" y="646.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 280.0 646.0)">20</text>
-<line x1="296.0" y1="614.0" x2="296.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="424.0" y1="614.0" x2="424.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="296.0" y1="638.0" x2="424.0" y2="638.0" stroke="#666" stroke-width="1"/>
-<line x1="293.0" y1="641.0" x2="299.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<line x1="421.0" y1="641.0" x2="427.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<text x="360.0" y="646.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 360.0 646.0)">80</text>
-<line x1="424.0" y1="614.0" x2="424.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="464.0" y1="614.0" x2="464.0" y2="642.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="424.0" y1="638.0" x2="464.0" y2="638.0" stroke="#666" stroke-width="1"/>
-<line x1="421.0" y1="641.0" x2="427.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<line x1="461.0" y1="641.0" x2="467.0" y2="635.0" stroke="#666" stroke-width="1"/>
-<text x="444.0" y="646.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 444.0 646.0)">25</text>
-<line x1="120.0" y1="614.0" x2="120.0" y2="672.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="464.0" y1="614.0" x2="464.0" y2="672.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="120.0" y1="668.0" x2="464.0" y2="668.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="117.0" y1="671.0" x2="123.0" y2="665.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="461.0" y1="671.0" x2="467.0" y2="665.0" stroke="#2b5d8a" stroke-width="1"/>
-<text x="292.0" y="676.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 292.0 676.0)">A · 215</text>
-<polygon points="464.0,486.0 464.0,478.0 454.4,478.0 454.4,486.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
-<polygon points="464.0,350.0 464.0,342.0 454.4,342.0 454.4,350.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
-<polygon points="464.0,478.0 464.0,350.0 454.4,350.0 454.4,478.0" fill="#fbfbf8" stroke="#c0392b" stroke-width="1.5"/>
-<line x1="464.0" y1="350.0" x2="592.0" y2="350.0" stroke="#c0392b" stroke-width="2"/>
-<polyline points="464.0,478.0 476.5,477.4 489.0,475.5 501.2,472.5 513.0,468.3 524.3,462.9 535.1,456.4 545.2,448.9 554.5,440.5 562.9,431.2 570.4,421.1 576.9,410.3 582.3,399.0 586.5,387.2 589.5,375.0 591.4,362.5 592.0,350.0" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
-<line x1="468.0" y1="610.0" x2="496.0" y2="610.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="486.0" x2="496.0" y2="486.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="492.0" y1="610.0" x2="492.0" y2="486.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="613.0" x2="489.0" y2="607.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="489.0" x2="489.0" y2="483.0" stroke="#666" stroke-width="1"/>
-<text x="500.0" y="548.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 500.0 548.0)">77.5</text>
-<line x1="468.0" y1="486.0" x2="496.0" y2="486.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="478.0" x2="496.0" y2="478.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="492.0" y1="486.0" x2="492.0" y2="478.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="489.0" x2="489.0" y2="483.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="481.0" x2="489.0" y2="475.0" stroke="#666" stroke-width="1"/>
-<text x="512.0" y="482.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 512.0 482.0)">5</text>
-<line x1="468.0" y1="478.0" x2="496.0" y2="478.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="350.0" x2="496.0" y2="350.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="492.0" y1="478.0" x2="492.0" y2="350.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="481.0" x2="489.0" y2="475.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="353.0" x2="489.0" y2="347.0" stroke="#666" stroke-width="1"/>
-<text x="500.0" y="414.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 500.0 414.0)">80</text>
-<line x1="468.0" y1="350.0" x2="496.0" y2="350.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="342.0" x2="496.0" y2="342.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="492.0" y1="350.0" x2="492.0" y2="342.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="353.0" x2="489.0" y2="347.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="345.0" x2="489.0" y2="339.0" stroke="#666" stroke-width="1"/>
-<text x="500.0" y="346.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 500.0 346.0)">5</text>
-<line x1="468.0" y1="342.0" x2="496.0" y2="342.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="330.0" x2="496.0" y2="330.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="492.0" y1="342.0" x2="492.0" y2="330.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="345.0" x2="489.0" y2="339.0" stroke="#666" stroke-width="1"/>
-<line x1="495.0" y1="333.0" x2="489.0" y2="327.0" stroke="#666" stroke-width="1"/>
-<text x="512.0" y="336.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 512.0 336.0)">7.5</text>
-<line x1="468.0" y1="610.0" x2="526.0" y2="610.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="468.0" y1="330.0" x2="526.0" y2="330.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="522.0" y1="610.0" x2="522.0" y2="330.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="525.0" y1="613.0" x2="519.0" y2="607.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="525.0" y1="333.0" x2="519.0" y2="327.0" stroke="#2b5d8a" stroke-width="1"/>
-<text x="530.0" y="470.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(-90.0 530.0 470.0)">D · 175</text>
-<line x1="466.8" y1="327.2" x2="488.0" y2="306.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="306.8" y1="167.2" x2="328.0" y2="146.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="485.2" y1="308.8" x2="325.2" y2="148.8" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="489.5" y1="308.8" x2="481.0" y2="308.8" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="329.5" y1="148.8" x2="321.0" y2="148.8" stroke="#2b5d8a" stroke-width="1"/>
-<text x="410.9" y="223.1" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(45.0 410.9 223.1)">C · 141.4</text>
-<line x1="304.0" y1="166.0" x2="304.0" y2="136.0" stroke="#aaa" stroke-width="0.7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 682" font-family="system-ui,sans-serif" font-size="13">
+<rect width="576" height="682" fill="#fbfbf8"/>
+<polygon points="120.0,562.0 456.0,562.0 456.0,282.0 344.0,170.0 120.0,170.0" fill="#8fa3b8" stroke="#2b5d8a" stroke-width="1.5"/>
+<polygon points="129.6,552.4 446.4,552.4 446.4,286.0 340.0,179.6 129.6,179.6" fill="#fbfbf8" stroke="#2b5d8a" stroke-width="1.2"/>
+<polygon points="129.6,552.4 257.6,552.4 257.6,179.6 129.6,179.6" fill="#e6c79c" stroke="#9a7040" stroke-width="1"/>
+<text x="193.6" y="366.0" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold" transform="rotate(-90 193.6 366.0)">bureau 80 × 233</text>
+<polygon points="129.6,552.4 446.4,552.4 446.4,472.4 129.6,472.4" fill="#e6c79c" stroke="#9a7040" stroke-width="1"/>
+<text x="288.0" y="512.4" text-anchor="middle" dominant-baseline="middle" fill="#7a5530" font-size="12" font-weight="bold">bureau 50 × 198</text>
+<polygon points="257.6,285.2 257.6,397.2 369.6,397.2 369.6,285.2" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
+<text x="313.6" y="337.2" text-anchor="middle" fill="#44445a" font-size="10" font-weight="bold">fauteuil de bureau</text>
+<text x="313.6" y="351.2" text-anchor="middle" fill="#44445a" font-size="9" font-weight="normal">70 × 70</text>
+<polygon points="328.0,472.4 376.0,472.4 376.0,424.4 328.0,424.4" fill="#dcdce6" stroke="#55556a" stroke-width="1.2"/>
+<text x="352.0" y="451.4" text-anchor="middle" fill="#44445a" font-size="8" font-weight="bold">tab.</text>
+<polygon points="408.0,552.4 408.0,248.4 296.0,248.4 296.0,552.4" fill="none" stroke="#6a3d9a" stroke-width="1.8" stroke-dasharray="7 4"/>
+<text x="352.0" y="513.9" text-anchor="middle" fill="#6a3d9a" font-size="10" font-weight="bold">lit pliant 70 × 190</text>
+<text x="352.0" y="526.9" text-anchor="middle" fill="#6a3d9a" font-size="9" font-weight="normal">pied sous le bureau</text>
+<polygon points="136.0,562.0 264.0,562.0 264.0,552.4 136.0,552.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
+<polygon points="296.0,562.0 424.0,562.0 424.0,552.4 296.0,552.4" fill="#bfe3ef" stroke="#1b9aa8" stroke-width="1.5"/>
+<line x1="120.0" y1="566.0" x2="120.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="136.0" y1="566.0" x2="136.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="120.0" y1="590.0" x2="136.0" y2="590.0" stroke="#666" stroke-width="1"/>
+<line x1="117.0" y1="593.0" x2="123.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<line x1="133.0" y1="593.0" x2="139.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<text x="128.0" y="610.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 128.0 610.0)">10</text>
+<line x1="136.0" y1="566.0" x2="136.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="264.0" y1="566.0" x2="264.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="136.0" y1="590.0" x2="264.0" y2="590.0" stroke="#666" stroke-width="1"/>
+<line x1="133.0" y1="593.0" x2="139.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<line x1="261.0" y1="593.0" x2="267.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<text x="200.0" y="598.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 200.0 598.0)">80</text>
+<line x1="264.0" y1="566.0" x2="264.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="296.0" y1="566.0" x2="296.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="264.0" y1="590.0" x2="296.0" y2="590.0" stroke="#666" stroke-width="1"/>
+<line x1="261.0" y1="593.0" x2="267.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<line x1="293.0" y1="593.0" x2="299.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<text x="280.0" y="598.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 280.0 598.0)">20</text>
+<line x1="296.0" y1="566.0" x2="296.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="424.0" y1="566.0" x2="424.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="296.0" y1="590.0" x2="424.0" y2="590.0" stroke="#666" stroke-width="1"/>
+<line x1="293.0" y1="593.0" x2="299.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<line x1="421.0" y1="593.0" x2="427.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<text x="360.0" y="598.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 360.0 598.0)">80</text>
+<line x1="424.0" y1="566.0" x2="424.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="456.0" y1="566.0" x2="456.0" y2="594.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="424.0" y1="590.0" x2="456.0" y2="590.0" stroke="#666" stroke-width="1"/>
+<line x1="421.0" y1="593.0" x2="427.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<line x1="453.0" y1="593.0" x2="459.0" y2="587.0" stroke="#666" stroke-width="1"/>
+<text x="440.0" y="598.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(0.0 440.0 598.0)">20</text>
+<line x1="120.0" y1="566.0" x2="120.0" y2="624.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="456.0" y1="566.0" x2="456.0" y2="624.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="120.0" y1="620.0" x2="456.0" y2="620.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="117.0" y1="623.0" x2="123.0" y2="617.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="453.0" y1="623.0" x2="459.0" y2="617.0" stroke="#2b5d8a" stroke-width="1"/>
+<text x="288.0" y="628.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 288.0 628.0)">A · 210</text>
+<polygon points="456.0,438.0 456.0,430.0 446.4,430.0 446.4,438.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
+<polygon points="456.0,302.0 456.0,294.0 446.4,294.0 446.4,302.0" fill="#b98a55" stroke="#7a5530" stroke-width="1"/>
+<polygon points="456.0,430.0 456.0,302.0 446.4,302.0 446.4,430.0" fill="#fbfbf8" stroke="#c0392b" stroke-width="1.5"/>
+<line x1="456.0" y1="302.0" x2="584.0" y2="302.0" stroke="#c0392b" stroke-width="2"/>
+<polyline points="456.0,430.0 468.5,429.4 481.0,427.5 493.2,424.5 505.0,420.3 516.3,414.9 527.1,408.4 537.2,400.9 546.5,392.5 554.9,383.2 562.4,373.1 568.9,362.3 574.3,351.0 578.5,339.2 581.5,327.0 583.4,314.5 584.0,302.0" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="460.0" y1="562.0" x2="488.0" y2="562.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="438.0" x2="488.0" y2="438.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="562.0" x2="484.0" y2="438.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="565.0" x2="481.0" y2="559.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="441.0" x2="481.0" y2="435.0" stroke="#666" stroke-width="1"/>
+<text x="492.0" y="500.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 500.0)">77.5</text>
+<line x1="460.0" y1="438.0" x2="488.0" y2="438.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="430.0" x2="488.0" y2="430.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="438.0" x2="484.0" y2="430.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="441.0" x2="481.0" y2="435.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="433.0" x2="481.0" y2="427.0" stroke="#666" stroke-width="1"/>
+<text x="504.0" y="434.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 504.0 434.0)">5</text>
+<line x1="460.0" y1="430.0" x2="488.0" y2="430.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="302.0" x2="488.0" y2="302.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="430.0" x2="484.0" y2="302.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="433.0" x2="481.0" y2="427.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="305.0" x2="481.0" y2="299.0" stroke="#666" stroke-width="1"/>
+<text x="492.0" y="366.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 366.0)">80</text>
+<line x1="460.0" y1="302.0" x2="488.0" y2="302.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="294.0" x2="488.0" y2="294.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="302.0" x2="484.0" y2="294.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="305.0" x2="481.0" y2="299.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="297.0" x2="481.0" y2="291.0" stroke="#666" stroke-width="1"/>
+<text x="492.0" y="298.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 492.0 298.0)">5</text>
+<line x1="460.0" y1="294.0" x2="488.0" y2="294.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="282.0" x2="488.0" y2="282.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="484.0" y1="294.0" x2="484.0" y2="282.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="297.0" x2="481.0" y2="291.0" stroke="#666" stroke-width="1"/>
+<line x1="487.0" y1="285.0" x2="481.0" y2="279.0" stroke="#666" stroke-width="1"/>
+<text x="504.0" y="288.0" text-anchor="middle" dominant-baseline="middle" fill="#666" font-size="10" font-weight="bold" transform="rotate(-90.0 504.0 288.0)">7.5</text>
+<line x1="460.0" y1="562.0" x2="518.0" y2="562.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="460.0" y1="282.0" x2="518.0" y2="282.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="514.0" y1="562.0" x2="514.0" y2="282.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="517.0" y1="565.0" x2="511.0" y2="559.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="517.0" y1="285.0" x2="511.0" y2="279.0" stroke="#2b5d8a" stroke-width="1"/>
+<text x="522.0" y="422.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(-90.0 522.0 422.0)">D · 175</text>
+<line x1="458.8" y1="279.2" x2="480.0" y2="258.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="346.8" y1="167.2" x2="368.0" y2="146.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="477.2" y1="260.8" x2="365.2" y2="148.8" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="481.5" y1="260.8" x2="473.0" y2="260.8" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="369.5" y1="148.8" x2="361.0" y2="148.8" stroke="#2b5d8a" stroke-width="1"/>
+<text x="426.9" y="199.1" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(45.0 426.9 199.1)">C · 99</text>
+<line x1="344.0" y1="166.0" x2="344.0" y2="136.0" stroke="#aaa" stroke-width="0.7"/>
 <line x1="120.0" y1="166.0" x2="120.0" y2="136.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="304.0" y1="140.0" x2="120.0" y2="140.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="307.0" y1="137.0" x2="301.0" y2="143.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="344.0" y1="140.0" x2="120.0" y2="140.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="347.0" y1="137.0" x2="341.0" y2="143.0" stroke="#2b5d8a" stroke-width="1"/>
 <line x1="123.0" y1="137.0" x2="117.0" y2="143.0" stroke="#2b5d8a" stroke-width="1"/>
-<text x="212.0" y="132.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 212.0 132.0)">B · 115</text>
+<text x="232.0" y="132.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 232.0 132.0)">B · 140</text>
 <line x1="116.0" y1="170.0" x2="86.0" y2="170.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="116.0" y1="610.0" x2="86.0" y2="610.0" stroke="#aaa" stroke-width="0.7"/>
-<line x1="90.0" y1="170.0" x2="90.0" y2="610.0" stroke="#2b5d8a" stroke-width="1"/>
+<line x1="116.0" y1="562.0" x2="86.0" y2="562.0" stroke="#aaa" stroke-width="0.7"/>
+<line x1="90.0" y1="170.0" x2="90.0" y2="562.0" stroke="#2b5d8a" stroke-width="1"/>
 <line x1="87.0" y1="167.0" x2="93.0" y2="173.0" stroke="#2b5d8a" stroke-width="1"/>
-<line x1="87.0" y1="607.0" x2="93.0" y2="613.0" stroke="#2b5d8a" stroke-width="1"/>
-<text x="82.0" y="390.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(90.0 82.0 390.0)">G · 275</text>
-<text x="227.0" y="588.4" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(0.0 227.0 588.4)">int. 203</text>
-<text x="442.4" y="520.5" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(-90.0 442.4 520.5)">int. 166.5</text>
-<text x="399.6" y="296.2" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(45.0 399.6 296.2)">int. 136.5</text>
-<text x="155.2" y="191.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(0.0 155.2 191.6)">int. 106.5</text>
-<text x="141.6" y="305.8" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(90.0 141.6 305.8)">int. 263</text>
-<text x="292.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · murs 5.41 m² · intérieur 4.87 m²</text>
-<text x="292.0" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 80 ouvrant dehors · fenêtres en bleu · sol libre 2.15 m² · violet pointillé = lit déplié</text>
-<text x="292.0" y="718.0" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (jardin)</text>
+<line x1="87.0" y1="559.0" x2="93.0" y2="565.0" stroke="#2b5d8a" stroke-width="1"/>
+<text x="82.0" y="366.0" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(90.0 82.0 366.0)">G · 245</text>
+<text x="224.6" y="540.4" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(0.0 224.6 540.4)">int. 198</text>
+<text x="434.4" y="472.5" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(-90.0 434.4 472.5)">int. 166.5</text>
+<text x="406.0" y="262.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(45.0 406.0 262.6)">int. 94</text>
+<text x="161.2" y="191.6" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(0.0 161.2 191.6)">int. 131.5</text>
+<text x="141.6" y="291.4" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="10" transform="rotate(90.0 141.6 291.4)">int. 233</text>
+<text x="288.0" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Plan de sol · murs 4.9 m² · intérieur 4.39 m²</text>
+<text x="288.0" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">murs 6 cm · porte 80 ouvrant dehors · fenêtres en bleu · sol libre 1.94 m² · violet pointillé = lit déplié</text>
+<text x="288.0" y="670.0" text-anchor="middle" fill="#666" font-size="12" font-weight="normal">AVANT (jardin)</text>
 </svg>

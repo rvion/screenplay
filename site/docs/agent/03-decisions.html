@@ -518,24 +518,27 @@ hors du lit ; la 3D boucle sur la liste sans code propre à une variante. Un lit
 <code>params.json</code>, un point au bouton et une vignette. <em>Garde :</em> <code>tests/abri3d.mjs</code> mesure chaque lit (caché au
 départ, rien dessus, sièges rangés) et les cotes de v3 et v4 ; vue rouge sans l&#39;entrée v4. <em>Remplace</em> le
 mécanisme de D46 (la variante v3 reste).</p>
-<h2 id="d49--branche-d39essai--façade-215-lit-à-demeure-en-façade-la-tête-côté-porte-non-décidé">D49 — Branche d&#39;essai : façade 215, lit à demeure en façade la tête côté porte (non décidé)</h2>
-<p>Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27&quot;. Les deux besoins veulent
-le même mur long, et un lit de 190 ne tenait contre aucun mur libre : la façade faisait 188 dedans.
-Cette branche essaie la seule disposition qui satisfait les trois contraintes qu&#39;il a données (bureau sur
-le mur gauche, voir les écrans couché, pas de fenêtre au-dessus des écrans ni de lumière dans les yeux) :</p>
-<ul>
-<li><strong>Façade 215</strong> (203 dedans) et <strong>fond 115</strong> : un lit de 190 tient le long de la façade, et le fond
-passe de 100 à 115 pour que le pan reste un vrai 45°, donc deux profils d&#39;angle identiques.</li>
-<li><strong>Lit v3 : 90 × 190 le long de la façade, calé à droite, tête contre le mur de la porte.</strong> Couché, on a
-les pieds vers le bureau gauche et ses écrans. Il reste <strong>67 cm</strong> de baie de porte dégagés sur 80.</li>
-<li><strong>Bureau gauche à 80 de profondeur sur 263 cm</strong> : trois écrans de 27&quot; (190 cm) tiennent, et son plateau
-passe <strong>au-dessus du pied du lit</strong> sans être coupé (<code>bureaux_entiers</code>, 6 030 cm² de recouvrement).
-<em>Ce que ça coûte :</em> emprise <strong>5,41 m²</strong>, donc <strong>déclaration préalable</strong> (un formulaire et environ un mois) ;
-passage arrière 47,6 cm au lieu de 57,8 ; sol libre 2,15 m² ; un troisième panneau de toit (bande de 15).
-<em>Garde :</em> <code>tests/abri3d.mjs</code> mesure, pour chaque lit à demeure, ce qui reste de baie de porte (55 cm
-minimum) et refuse toute pièce DANS le lit, un plateau au-dessus étant permis. <em>État :</em> branche
-<code>test-bed-front-head-right</code>, aucun déploiement (<code>pages.yml</code> n&#39;écoute que <code>main</code>). <strong>Rien n&#39;est décidé.</strong></li>
-</ul>
+<h2 id="d49--branche-d39essai--lit-80-x-190-à-demeure-en-façade-sous-le-seuil-non-décidé">D49 — Branche d&#39;essai : lit 80 x 190 à demeure en façade, sous le seuil (non décidé)</h2>
+<p>Rémi passe la moitié de son temps allongé et travaille sur trois écrans de 27&quot;. Les deux veulent un mur
+long, et aucun mur libre ne prenait un lit de 190 : la façade faisait 188 dedans. Cette branche cherche
+la forme qui tient ses trois conditions (bureau sur le mur gauche, voir les écrans couché, rien de
+lumineux au-dessus des écrans) <strong>sans formalité</strong>.</p>
+<p>Retenu : <strong>façade 210, droite 175, fond 140, gauche 245</strong>, pan à 45° conservé (A − B = G − D), emprise
+<strong>4,90 m²</strong>, donc <strong>aucune formalité</strong>. Le déclic est la largeur du lit : un <strong>80 × 190</strong> au lieu d&#39;un
+90 s&#39;arrête avant la baie de la porte, qui reste dégagée sur <strong>77 de ses 80 cm</strong>, et la porte reste le
+bloc de stock 205 × 80. Le lit est calé à droite, <strong>tête contre le mur de la porte</strong> : couché, les pieds
+vont vers le bureau gauche et ses écrans. Le bureau gauche passe à <strong>80 de profondeur sur 233 cm</strong> (trois
+écrans = 190) et son plateau (72 cm) court <strong>au-dessus du pied du lit</strong> (55 cm) sans être coupé
+(<code>bureaux_entiers</code>). Passage derrière 52,6 et 69,7 cm. Matériaux 2 888 €.</p>
+<p><em>Ce que ça coûte :</em> intérieur 4,39 m² au lieu de 4,48 et sol libre 1,94 m², puisque le lit ne se replie
+plus ; un troisième panneau de toit (bande de 10) ; pente 9,2 % et portée 2,45 m (deux effets
+favorables). <em>Ce qui a été retiré ici :</em> le lit v4 sur le mur gauche, incompatible avec un bureau gauche
+de 80 (le lit couvrait tout le plateau, les sièges n&#39;avaient plus où se ranger).</p>
+<p><em>Mécanismes ajoutés :</em> <code>position: &quot;fin&quot;</code> (lit calé à l&#39;autre bout de son mur) et <code>bureaux_entiers</code> (un
+plateau qui passe au-dessus du pied du lit n&#39;est pas coupé). <em>Gardes :</em> <code>tests/abri3d.mjs</code> mesure, pour
+chaque lit à demeure, la baie de porte qui reste (55 cm minimum) et refuse toute pièce DANS le lit, un
+plateau au-dessus étant permis. <em>État :</em> branche <code>test-bed-front-head-right</code>, aucun déploiement
+(<code>pages.yml</code> n&#39;écoute que <code>main</code>). <strong>Rien n&#39;est décidé.</strong></p>
 </main>
 </body>
 </html>
