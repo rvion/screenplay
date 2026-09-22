@@ -14,6 +14,8 @@ const cote = (x: number | string, u = "cm") => {
   return `<span class="cote"><span class="n">${n}</span>${d !== undefined ? `<span class="d">,${d}</span>` : ""}${u ? `<span class="u">${u}</span>` : ""}</span>`;
 };
 const face = (id: string) => `<span class="face">${id}</span>`;
+// repere + cote qui ne se separent jamais (A 200cm)
+const paire = (id: string, c: string) => `<span class="paire">${face(id)} ${c}</span>`;
 
 // markdown en ligne des textes de params.json : gras, code, liens (un .md publie pointe vers sa page de docs/)
 export function md_en_ligne(s: string): string {
@@ -112,7 +114,7 @@ export function rend_abri(a: Abri) {
   const grillage_gauche = ((a.pp.dalle_cm && a.pp.dalle_cm.grillages) || []).includes("gauche");
   html("intro", `Bureau de jardin à ${NOMBRES[n] || n} murs en panneaux sandwich de ${cote(ep)} autoportants, posé sur la dalle existante à ${cote(gauche)} ${grillage_gauche ? "du grillage" : "du mur"} de la limite, toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}. Porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau en L le long des murs ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}.`);
   const paires: [string, string][] = [
-    ["Murs", m.faces.map((f: any) => `${face(f.cle)}&nbsp;${cote(f.longueur_cm)}`).join(", ")],
+    ["Murs", m.faces.map((f: any) => paire(f.cle, cote(f.longueur_cm))).join(", ")],
     ["Hauteurs", `panneaux ${cote(m.hauteur_mur_cm)}<br>finies ${cote(Math.max(...m.hauteurs_coins_cm))} → ${cote(Math.min(...m.hauteurs_coins_cm))}`],
     ["Toit", `pente ${cote(m.pente.pourcent, "%")} · portée ${cote(Math.round(m.portee_cm) / 100, "m")}${a.pp.disposition_trapeze.toit.panne_intermediaire ? " + panne" : ""}<br>gouttière ${G.troncons.map((t: any) => face(t.face)).join(" ")}`],
     ["Surfaces", `${cote(v.aire_m2, "m²")} de murs${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}<br>${cote(v.aire_interieure_m2, "m²")} intérieur`],
@@ -121,7 +123,7 @@ export function rend_abri(a: Abri) {
   ];
   html("fiche", paires.map(([k, val]) => `<div class="carte"><span class="k">${k}</span><span class="v">${val}</span></div>`).join(""));
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
-    m.faces.map((f: any, i: number) => [`${face(f.cle)}&nbsp;${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)}&nbsp;${cote(pn.largeur_cm)}`).join(", "), cote(m.angles_deg[i], "°")]), [3, 4]);
+    m.faces.map((f: any, i: number) => [paire(f.cle, nom_face(f)), cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => paire(pn.id, cote(pn.largeur_cm))).join(", "), cote(m.angles_deg[i], "°")]), [3, 4]);
 
   // implantation et plans : les SVG du modele, injectes tels quels
   // planches : l'entete en texte (titre, detail, legende), le dessin sans titre dessous
