@@ -20,7 +20,7 @@ vit dans `03-decisions.md`, l'historique dans git.
 - [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
       fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
 - [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237,5 en façade).
-- [ ] **Porte pleine 80 × 205** : confirmer chez le menuisier (bloc-porte, sens d'ouverture).
+- [ ] **Porte de service 70 × 200** : relever le prix du 70 en magasin (199 € noté, celui du 80) et prendre une serrure multipoint.
 - [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).
 - [ ] **Largeur utile de panneau** réelle du fournisseur (100 vs 115 cm).
 - [ ] **Âme** : PIR vs laine de roche.

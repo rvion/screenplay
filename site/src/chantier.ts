@@ -49,7 +49,8 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   // --- bois
   pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 (rehausse, lisse haute)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pièce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
   if (panne) pose("Bois", "panne_ml", "Panne intermédiaire 75 × 150 classe 4, en travers à mi-profondeur", panne, `portée du toit ${fz(m.portee_cm / 100)} m : une panne de la longueur de la façade la ramène à ${fz(m.portee_cm / 200)} m`);
-  if (po) pose("Bois", "chevron_cadre_ml", `Bois du cadre de porte, section ${fz(po.chambranle_cm * 10)} × ${ep} mm`, (2 * (po.hauteur_cm + po.chambranle_cm) + po.largeur_cm) / 100, "deux montants + une traverse haute");
+  // un bloc de service exterieur a son dormant : pas de cadre bois (chambranle 0)
+  if (po && po.chambranle_cm > 0) pose("Bois", "chevron_cadre_ml", `Bois du cadre de porte, section ${fz(po.chambranle_cm * 10)} × ${ep} mm`, (2 * (po.hauteur_cm + po.chambranle_cm) + po.largeur_cm) / 100, "deux montants + une traverse haute");
   // --- profils acier
   pose("Profils et bavettes", "profil_pied_ml", "Profil de départ en U (rail de pied)", perim - (po ? (po.largeur_cm + 2 * po.chambranle_cm) / 100 : 0), "périmètre des murs moins le cadre de la porte");
   pose("Profils et bavettes", "angle_standard_ml", "Profils d'angle à 90°, extérieur + intérieur", 2 * angles_droits.reduce((s: number, x: any) => s + x.h, 0), `${angles_droits.length} angles droits, hauteur finie de chaque coin, deux faces`);
@@ -220,9 +221,9 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       controler: ["Verser un seau d'eau en haut du toit : tout doit arriver à la descente."],
     },
     ...(po ? [{
-      titre: "Poser la porte", but: "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles.",
+      titre: "Poser la porte", but: po.chambranle_cm > 0 ? "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles." : "Le dormant du bloc-porte porte le battant : il se fixe au rail, à la rehausse et à la tôle des panneaux, jamais dans la mousse.",
       outils: ["visseuse", "niveau", "cales"],
-      faire: [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, vissé dans la dalle en pied et dans la rehausse en tête.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitrée"} de ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.`, "Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic."],
+      faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, vissé dans la dalle en pied et dans la rehausse en tête.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitrée"} de ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.`, "Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm, mur ${face_porte.cle}) d'un profil en U.`, `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitré"} de service, dormant compris, calé d'aplomb, ferré côté fond, ouvrant vers l'extérieur : vissé dans le rail en pied, dans la rehausse en tête, et dans la tôle des panneaux par le profil en U.`, "Bande comprimée entre dormant et profil, mastic à l'extérieur, seuil sur cordon de mastic."],
       controler: ["Jeu régulier de 3 mm autour du battant, la porte se ferme sans forcer.", "Arrêt de porte à prévoir : ouverte, elle prend le vent."],
     } as EtapeGuide] : []),
     {

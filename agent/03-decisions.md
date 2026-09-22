@@ -601,3 +601,11 @@ question de la mairie (secteur protégé, PLU) est close et **ne se soulève plu
 ni dans le backlog, ni dans les documents (la réserve « secteur protégé » a quitté `formalites()`). Le
 calcul du seuil reste, comparé à l'aire exacte (`tests/formalites.mjs`) : c'est lui qui garde l'abri
 sous 5 m² quand ses cotes bougent.
+
+## D51 — Porte de service extérieure de 70, sans cadre bois
+Choix de Rémi (2026-09-23) : une porte **extérieure**, mais petite. Bloc de service PVC plein de **70 × 200
+hors tout**, dormant compris, à **10 cm** de la face intérieure du pan C. Son dormant remplace le cadre bois
+(`porte_chambranle_cm: 0`) : le bois du cadre sort des matériaux, et le guide fixe le dormant au rail, à la
+rehausse et à la tôle par un profil en U. Remplace la porte intérieure Artens Lia 73 × 204 (âme alvéolaire,
+sans étanchéité). Prix du 70 à relever (199 € est celui du 80 × 205).
+

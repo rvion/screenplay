@@ -29,7 +29,6 @@
       ],
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
-        "Porte : le bloc intérieur de 73 (160 €), un bloc de service extérieur plein de 80 (199 €), ou une porte de service vitrée de 70 (482 €) ?",
         "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
@@ -38,7 +37,6 @@
       "idees": [
         "**Fixation visible derrière.** Le mur du fond et le pan en biais ne se voient que depuis le passage : les commander en fixation visible, et garder la fixation cachée pour la façade, le mur droit et le mur gauche.",
         "**Angles à 135° sans pliage sur mesure.** Une cornière alu pliée à la main sur un tasseau, ou deux profils plats à recouvrement avec mastic, ou un tasseau bois intérieur plus une bavette extérieure : le seul article sans prix public disparaît.",
-        "**Porte sans cadre bois.** Le dormant du bloc-porte vissé dans le rail en bas, dans la rehausse en haut, et dans la tranche des panneaux par un profil en U : le cadre 50 × 60, ses coupes et son calage disparaissent.",
         "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
         "**Plancher flottant.** L'isolant rigide posé sur le film, l'OSB rainuré directement dessus, collé aux rainures : sans lambourdes, sans vis dans la dalle, 45 mm au lieu de 60.",
         "**Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.",
@@ -90,9 +88,9 @@
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
-    "porte_largeur_cm": 73,
-    "porte_chambranle_cm": 5,
-    "porte_marge_cm": 5,
+    "porte_largeur_cm": 70,
+    "porte_chambranle_cm": 0,
+    "porte_marge_cm": 10,
     "toit": {
       "sens": "arriere",
       "chute_cm": 22.5,
@@ -172,7 +170,7 @@
       }
     ],
     "_comment_lits_muraux": "le lit de l'abri, pose a demeure contre le mur `contre` et cale a l'autre bout (position 'fin') ; tete = cote de l'oreiller ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges se rangent dessous, jamais sur le lit. Ici : lit 80 x 190 le long de la facade (198 dedans), tete contre le mur de la porte, pieds vers le bureau gauche et ses ecrans",
-    "porte_hauteur_cm": 204
+    "porte_hauteur_cm": 200
   },
   "formes_etudiees": [
     {
@@ -378,10 +376,9 @@
       "note": "750 ml : de 7,90 a 9,90 EUR"
     },
     "porte_pleine_u": {
-      "pu": 160,
+      "pu": 199,
       "unite": "u",
-      "source": "https://www.leroymerlin.fr/produits/bloc-porte-fin-de-chantier-lia-blanc-lin-h-204-x-l-73-cm-reversible-92079358.html",
-      "note": "bloc-porte fin de chantier Artens Lia 204 x 73 (Leroy Merlin, 160 EUR) : reservation 79,3 x 207,6, contenue par le cadre bois. C'est une porte INTERIEURE (ame alveolaire, sans isolation ni etancheite) : la proteger par le debord et un seuil. En porte de service EXTERIEURE : PVC plein 205 x 80 a 199 EUR (Brico Depot), ou sur fenetre24 le modele Nice 200 x 70 vitre, serrure 3 points, profile 70 mm, a 482 EUR hors livraison. Le lit de 80 laisse 75 cm de baie libres meme avec une porte de 80"
+      "note": "bloc-porte de service EXTERIEUR en PVC, plein, 70 x 200 hors tout, dormant compris : Brico Depot le fait en 70, 80 ou 90 de large et 200 ou 205 de haut (https://www.bricodepot.fr/catalogue/construction-renovation/fenetre-porte-escalier/porte-dentree-interieure-garage/porte-de-service/). Prix du 80 x 205 (199 EUR) : celui du 70 est a relever en magasin. Choisir un modele a serrure multipoint."
     },
     "porte_vitree_u": {
       "pu": 900,

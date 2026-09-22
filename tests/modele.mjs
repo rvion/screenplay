@@ -204,6 +204,12 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(f.length === 2 && f.every((w) => w.largeur_cm === 80 && w.hauteur_cm === 75 && w.allege_cm === 115 && w.ouvrant && w.tient !== false), "abri actuel : deux fenetres de stock 80 x 75 oscillo-battantes, allege 115 (haut a 190)");
 }
 
+// porte : bloc de service exterieur de 70 hors tout, dormant compris (pas de cadre bois), 200 de haut,
+// a 10 cm de la face interieure du pan C ; le lit laisse la baie libre
+{
+  const pa = buildCore(actuel).variantes.find((x) => x.id === 13).porte;
+  ok(pa.largeur_cm === 70 && pa.chambranle_cm === 0 && pa.hauteur_cm === 200 && pa.marge_cm === 10 && near(pa.debut_cm, 97.5, 0.1) && pa.tient, "porte : bloc exterieur 70 x 200, dormant compris, a 10 cm du pan C (" + JSON.stringify(pa) + ")");
+}
 // gaine electrique : le trou dans la dalle (85 depuis la gauche, de 12 a 16 depuis l'avant, 4 cm) se voit sur l'implantation ;
 // facade a 5 cm du bord de la dalle, panneau de 6 : face interieure a 11, donc la gaine sort dans l'abri
 {

@@ -75,7 +75,8 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 - **Rehausse** (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
-- **Porte** pleine 73 × 204 sur D, chambranle 5 (le choix du bloc reste ouvert, question Q2).
+- **Porte** : bloc de service **extérieur** PVC plein, **70 × 200 hors tout**, dormant compris (pas de cadre
+  bois), sur D, à **10 cm** de la face intérieure du pan C, ouvrant vers l'extérieur.
   **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 115, en façade.
 - **Mobilier, une seule disposition** : le bureau gauche **70 de profondeur sur 238 cm** (trois écrans
   de 27" = 190), le fauteuil qui se range dessous et se **centre sur la partie libre** du bureau quand on s'en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27" de 62 × 37 près du mur, un MacBook Pro 16 ouvert, puis un clavier nomade au bord du plateau, aux cotes réelles), et le lit **80 × 190** le long de la façade,

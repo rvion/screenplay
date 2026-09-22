@@ -13,7 +13,7 @@
 - Bureau gauche 70 × 238, sur quatre pieds, qui passe au-dessus du pied du lit
 - Poste de travail sur le bureau : deux écrans 27", MacBook Pro 16, clavier, imprimante dans le coin A/G
 - Fauteuil centré sur la partie libre du bureau
-- Porte de stock pleine 73 × 204 (160 €), baie entièrement dégagée
+- Porte de service extérieure PVC pleine 70 × 200 hors tout, dormant compris, à 10 cm de l'angle : plus de cadre bois
 - Fenêtres avec le bas à 115 cm
 - Gouttière au bon endroit : descente au coin arrière gauche
 - Sol modélisé d'après plan (10 cm : PIR 60, OSB 22, revêtement)
