@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=ace8b80f" />
+  <link rel="stylesheet" href="abri.css?v=0b57246b" />
   <script type="importmap">
   {
     "imports": {
@@ -74,6 +74,7 @@
           </div>
           <div class="bascules" id="bascules">
             <button type="button" id="voir-toit" data-etat="1" data-etats="2" aria-pressed="true" title="Toit"><svg viewBox="0 0 16 16"><path d="M2 8.5 8 3l6 5.5M4 7.5V13h8V7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>toit</span></button>
+            <button type="button" id="voir-murs" data-etat="1" data-etats="3" aria-pressed="true" title="Murs : pleins, coupés à 1 m (fondu), ou sans"><svg viewBox="0 0 16 16"><path d="M2 13V5h12v8M2 9h12M5 5v4M9 9v4M7 5v4M11 9v4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-noms="sans murs|murs|coupés">murs</span><i class="points"><b></b><b class="ici"></b><b></b></i></button>
             <button type="button" id="voir-porte" data-etat="1" data-etats="3" aria-pressed="true" title="Battant de porte : ouvert, fermé, ou sans"><svg viewBox="0 0 16 16"><path d="M4 2h8v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9.7" cy="8" r=".9" fill="currentColor"/></svg><span data-noms="sans porte|ouverte|fermée">ouverte</span><i class="points"><b></b><b class="ici"></b><b></b></i></button>
             <button type="button" id="voir-mobilier" data-etat="1" data-etats="2" aria-pressed="true" title="Bureaux et sièges"><svg viewBox="0 0 16 16"><path d="M2 6h12M3 6v6M13 6v6M6 9h4v3H6z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>mobilier</span></button>
             <button type="button" id="voir-lit" data-etat="0" data-etats="2" aria-pressed="false" title="Lit déplié"><svg viewBox="0 0 16 16"><path d="M2 12V5M2 9h12v3M14 12V7H7v2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="4.5" cy="7" r="1.2" fill="currentColor"/></svg><span>lit</span></button>
@@ -179,7 +180,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=ace8b80f"></script>
-  <script type="module" src="abri.js?v=ace8b80f"></script>
+  <script src="params.js?v=0b57246b"></script>
+  <script type="module" src="abri.js?v=0b57246b"></script>
 </body>
 </html>

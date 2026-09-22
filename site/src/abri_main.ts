@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error(e);
   }
   // boutons d'etat : un clic avance l'etat ; un point de vue les regle tous d'un coup
-  const NOMS = ["toit", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"] as const;
+  const NOMS = ["toit", "murs", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"] as const;
   const bouton = (nom: string) => document.getElementById("voir-" + nom) as HTMLButtonElement | null;
   const montre_bouton = (nom: string, etat: number) => {
     const b = bouton(nom); if (!b) return;

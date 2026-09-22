@@ -46,6 +46,10 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Vignettes rendues au chargement (le rendu différé manquait du bundle)
 - [x] Résumé : légende « marge avant dalle », dessin plus grand et lisible
 - [x] Résumé : lettre du mur en badge sur le trait, longueur le long du mur, arc et valeur à chaque angle
+- [x] Légende : le passage est une marge comme les autres (même couleur, une seule entrée)
+- [x] Vignette « Côté porte » avec la vue collée par Rémi
+- [x] Lit : sommier, matelas, drap, oreiller
+- [x] Bouton « murs » : pleins, coupés à 1 m avec fondu sur 20 cm, sans ; presets intérieur et lit en murs coupés
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

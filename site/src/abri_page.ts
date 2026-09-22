@@ -135,7 +135,7 @@ export function rend_abri(a: Abri) {
   ];
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w: any) => w.type));
   const legende = [
-    ["trait", "#2b5d8a", "mur, cote extérieure en cm"], ["arc", "#b0452a", "angle du coin"], ["trait", "#b86e1f", "marge avant dalle"], ["trait", "#2a8a4a", "passage derrière"],
+    ["trait", "#2b5d8a", "mur, cote extérieure en cm"], ["arc", "#b0452a", "angle du coin"], ["trait", "#b86e1f", "marge avant dalle"],
     ...(types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : []), ...(types.has("mur") ? [["trait-epais", "#5b4a3a", "mur de propriété"]] : []), ...(types.has("grillage") ? [["pointille", "#5f8a4a", "grillage (limite)"]] : []),
     ["aplat", "#f3f1ec", "dalle béton"],
   ];

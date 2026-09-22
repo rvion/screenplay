@@ -14,8 +14,9 @@ export interface AbriViewer {
 }
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // etats des options de la scene (0 = eteint ; porte 1 ouverte 2 fermee ; personne 1 dehors 2 dedans ; cloture 1 pleine 0 translucide)
-export type Etats = { toit: number; porte: number; mobilier: number; lit: number; etiquettes: number; personne: number; cloture: number };
-export const ETATS_DEFAUT: Etats = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
+export type Etats = { toit: number; murs: number; porte: number; mobilier: number; lit: number; etiquettes: number; personne: number; cloture: number };
+// murs : 1 pleins, 2 coupes a 1 m (fondu sur 20 cm), 0 sans
+export const ETATS_DEFAUT: Etats = { toit: 1, murs: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
 // la palissade reste toujours visible : pleine, ou translucide pour voir l'abri derriere
 export function cloture_pleine(gr: Vec, oui: boolean) {
   gr.traverse((o: any) => { if (o.isMesh) { o.material.transparent = !oui; o.material.opacity = oui ? 1 : 0.3; o.material.depthWrite = oui; o.castShadow = oui; } });
@@ -23,11 +24,11 @@ export function cloture_pleine(gr: Vec, oui: boolean) {
 // vues fixes (metres, cible et angle) avec les etats d'options qui vont avec : la premiere est la vue de depart
 export const VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
-  porte: { titre: "Côté porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
+  porte: { titre: "Côté porte", position: [4.45, 1.75, 2.99], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1, cloture: 1 } },
   arriere: { titre: "Derrière, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
-  interieur: { titre: "Intérieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
-  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } },
+  interieur: { titre: "Intérieur, murs coupés", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, personne: 2 } },
+  lit: { titre: "Lit déplié", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, lit: 1, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;
 // applique un jeu d'etats a la scene (sans toucher aux boutons de la page)
@@ -36,8 +37,9 @@ export function applique_etats(vue: AbriViewer, e: Etats) {
   vue.montrer("porte", e.porte === 1); vue.montrer("porte_fermee", e.porte === 2);
   vue.montrer("personne", e.personne === 1); vue.montrer("personne_dedans", e.personne === 2);
   vue.montrer("cloture", e.cloture > 0);
+  vue.montrer("murs", e.murs > 0); vue.montrer("murs_coupes", e.murs === 2);
 }
-export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee" | "cloture";
+export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee" | "cloture" | "murs" | "murs_coupes";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
 const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
@@ -91,6 +93,18 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // plan (x vers la droite, y vers le fond, h vers le haut, en cm) -> monde (m) : la facade regarde +Z
   const W = (x: number, y: number, h: number) => new THREE.Vector3((x - cx) / 100, h / 100, -(y - cy) / 100);
   const groupe = (nom: string) => { const gr = new THREE.Group(); groupes[nom] = gr; gr.visible = visible[nom] !== false; abri.add(gr); return gr; };
+  // coupe des parois : au-dessus de uCoupe (m) la matiere s'efface sur 20 cm puis disparait ; 100 = pas de coupe
+  const coupe = { value: visible.murs_coupes ? 1.0 : 100 };
+  (groupes as any).coupe = coupe;
+  const coupable = (m: Vec) => {
+    m.transparent = true;
+    m.onBeforeCompile = (sh: any) => {
+      sh.uniforms.uCoupe = coupe;
+      sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vHaut;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvHaut = (modelMatrix * vec4(transformed, 1.0)).y;");
+      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <dithering_fragment>", "#include <dithering_fragment>\nif (vHaut > uCoupe + 0.2) discard;\ngl_FragColor.a *= 1.0 - smoothstep(uCoupe, uCoupe + 0.2, vHaut);");
+    };
+    return m;
+  };
   const ombre = (mesh: Vec) => { mesh.castShadow = true; mesh.receiveShadow = true; return mesh; };
 
   // prisme vertical sur un contour convexe, entre deux hauteurs donnees par sommet
@@ -158,9 +172,10 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // plancher
   if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
 
-  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
+  const ep = data.epaisseur_cm, matMur = coupable(mat(COUL.mur, { metalness: 0.55, roughness: 0.38 })), matJoint = coupable(mat(COUL.joint)), matBois = coupable(mat(COUL.bois, { roughness: 0.85 }));
+  const parois = groupe("murs");
   // aretes sombres sur les volumes : les angles se lisent meme sous une lumiere plate
-  const matArete = new THREE.LineBasicMaterial({ color: 0x2c3640, transparent: true, opacity: 0.55 });
+  const matArete = coupable(new THREE.LineBasicMaterial({ color: 0x2c3640, transparent: true, opacity: 0.55 }));
   // les aretes sont relevees de 5 mm : celle du seuil, a y = 0, se battrait en profondeur avec le dessus de la dalle
   const aretes = (geo: Vec, deg = 25) => { const e = new THREE.EdgesGeometry(geo, deg); e.translate(0, 0.005, 0); return new THREE.LineSegments(e, matArete); };
   const etiq = groupe("etiquettes");
@@ -169,7 +184,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     // repere du mur : X le long du mur, Y vers le haut, Z vers l'exterieur (contour antihoraire, interieur a gauche)
     const base = new THREE.Matrix4().makeBasis(new THREE.Vector3(ux, 0, -uy), new THREE.Vector3(0, 1, 0), new THREE.Vector3(uy, 0, ux));
     base.setPosition(W(f.de[0], f.de[1], 0));
-    const pose = (mesh: Vec, parent: Vec = abri) => { mesh.applyMatrix4(base); parent.add(mesh); return mesh; };
+    const pose = (mesh: Vec, parent: Vec = parois) => { mesh.applyMatrix4(base); parent.add(mesh); return mesh; };
     // boite dans le repere du mur : s0..s1 le long, h0..h1 en hauteur, z0..z1 vers l'exterieur (cm)
     const boite = (s0: number, s1: number, h0: number, h1: number, z0: number, z1: number, m: Vec) => {
       const geo = new THREE.BoxGeometry((s1 - s0) / 100, (h1 - h0) / 100, (z1 - z0) / 100);
@@ -209,7 +224,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       const tx = etiquette(pn.id);
       if (tx) {
         // au-dessus des fenetres (haut a 190), sous la tete du mur
-        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.22), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.22), coupable(new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false })));
         plaque.position.set((pn.debut_cm + pn.largeur_cm / 2) / 100, f.hauteur_mur_cm / 100 - 0.16, 0.012);
         pose(plaque, etiq);
       }
@@ -227,27 +242,27 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       if (tr) {
         const xr = f.hauteur_debut_cm >= f.hauteur_fin_cm ? 0.2 : 0.8, hr = (f.hauteur_debut_cm + (f.hauteur_fin_cm - f.hauteur_debut_cm) * xr) - Hm * 100;
         const haut = Math.min(0.13, Math.max(0.08, hr / 100 - 0.03));
-        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut * 2, haut), new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false }));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut * 2, haut), coupable(new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false })));
         plaque.position.set(xr * L / 100, Hm + hr / 200, 0.012);
         pose(plaque, etiq);
       }
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
-        const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = mat(COUL.cadre);
+        const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = coupable(mat(COUL.cadre));
         if (ch > 0) {
           pose(boite(s0 - ch, s0, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s0, s1, o.hauteur_cm, o.hauteur_cm + ch, -ep, 0, matCadre));
         }
         // battant ferre du cote de la fin du mur : un groupe ouvert vers l'exterieur, un groupe ferme dans le cadre
-        const matB = o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 });
+        const matB = coupable(o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }));
         const battant = (angle: number) => {
           const g = new THREE.Group(), geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
           geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
           g.add(ombre(new THREE.Mesh(geoB, matB)));
           // poignee (bequille) et cylindre de serrure, cote oppose aux charnieres, a 1,05 m, sur les deux faces
-          const matM = mat(COUL.metal, { metalness: 0.8, roughness: 0.3 }), xg = -o.largeur_cm / 100 + 0.09;
+          const matM = coupable(mat(COUL.metal, { metalness: 0.8, roughness: 0.3 })), xg = -o.largeur_cm / 100 + 0.09;
           for (const face of [1, -1]) {
             const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.16, 0.006), matM); plaque.position.set(xg, 1.03, face * 0.023); g.add(plaque);
             const bequille = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.12, 8), matM); bequille.rotation.z = Math.PI / 2; bequille.position.set(xg + 0.05, 1.06, face * 0.045); g.add(ombre(bequille));
@@ -273,8 +288,8 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
         pose(silhouette(0.45, 0, -0.3), groupe("personne"));
         pose(silhouette(-(ep + 60) / 100, data.sol.epaisseur_cm / 100), groupe("personne_dedans"));
       } else {
-        const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(0xf4f5f6), c = 4;
-        pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
+        const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = coupable(mat(0xf4f5f6)), c = 4;
+        pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, coupable(mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 }))));
         pose(boite(s0, s1, h0, h0 + c, -ep, 0.5, matCadre)); pose(boite(s0, s1, h1 - c, h1, -ep, 0.5, matCadre));
         pose(boite(s0, s0 + c, h0, h1, -ep, 0.5, matCadre)); pose(boite(s1 - c, s1, h0, h1, -ep, 0.5, matCadre));
         if (o.ouvrant) pose(boite((s0 + s1) / 2 - 1, (s0 + s1) / 2 + 1, h0, h1, -ep, 0.5, matCadre));
@@ -357,7 +372,16 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     }
   }
   const lit = groupe("lit");
-  if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
+  if (data.mobilier.lit) {
+    // sommier sombre, matelas clair, drap bleu sur les deux tiers du pied, oreiller blanc a la tete (le bout vers le fond)
+    const q: Pt[] = data.mobilier.lit.polygone, lx = q.map((z) => z[0]), ly = q.map((z) => z[1]), x0 = Math.min(...lx), x1 = Math.max(...lx), y0 = Math.min(...ly), y1 = Math.max(...ly);
+    const long_y = y1 - y0 >= x1 - x0, tete = long_y ? [[x0 + 4, y1 - 40], [x1 - 4, y1 - 40], [x1 - 4, y1 - 6], [x0 + 4, y1 - 6]] : [[x1 - 40, y0 + 4], [x1 - 6, y0 + 4], [x1 - 6, y1 - 4], [x1 - 40, y1 - 4]];
+    const drap = long_y ? [[x0 - 1, y0 - 1], [x1 + 1, y0 - 1], [x1 + 1, y0 + (y1 - y0) * 0.66], [x0 - 1, y0 + (y1 - y0) * 0.66]] : [[x0 - 1, y0 - 1], [x0 + (x1 - x0) * 0.66, y0 - 1], [x0 + (x1 - x0) * 0.66, y1 + 1], [x0 - 1, y1 + 1]];
+    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(0x5a4a3c, { roughness: 0.9 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(0xf1ede4, { roughness: 0.95 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(drap as Pt[], plat(sol + 45), plat(sol + 48)), mat(0x6f8fbf, { roughness: 0.95 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(tete as Pt[], plat(sol + 45), plat(sol + 55)), mat(0xffffff, { roughness: 1 }))));
+  }
   sieges.visible = !visible.lit;
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
@@ -398,7 +422,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes: Record<string, Vec> = {};
-  const visible: Record<string, boolean> = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
+  const visible: Record<string, boolean> = { toit: true, murs: true, murs_coupes: false, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data: any) => { groupes = peuple_abri(abri, data, visible); };
 
   function rebuild(data: any) {
@@ -415,6 +439,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     visible[nom] = oui;
     // cloture : jamais cachee, mais pleine (oui) ou translucide (non), pour voir l'abri derriere
     if (nom === "cloture") { if (groupes.cloture) cloture_pleine(groupes.cloture, oui); return; }
+    if (nom === "murs_coupes") { const c = (groupes as any).coupe; if (c) c.value = oui ? 1.0 : 100; return; }
     if (groupes[nom]) groupes[nom].visible = oui;
     if (nom === "lit" && groupes.sieges) groupes.sieges.visible = !oui;
   }

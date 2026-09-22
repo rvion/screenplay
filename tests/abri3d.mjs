@@ -28,8 +28,9 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, lit: false, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
-ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.lit === 0 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.personne === 2 && VUES.lit.etats.lit === 1, "états : jardin = départ (clôture translucide), intérieur sans toit avec la personne dedans, lit déplié");
+ok(Object.keys(VUES).join() === "jardin,porte,arriere,droite,interieur,lit" && VUES.jardin.position[2] > 3 && VUES.porte.position[0] > 4 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 8), "six points de vue fixes, chacun avec ses huit états d'options");
+ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.lit === 0 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.lit.etats.lit === 1 && VUES.lit.etats.murs === 2, "états : jardin = départ (clôture translucide), intérieur sans toit avec murs coupés et la personne dedans, lit déplié");
+ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte le fondu de coupe");
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
 ok(groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry").length >= 4 && groupes.porte.children[0].children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry").length >= 3, "porte : béquille, tige et cylindre de serrure sur chaque face du battant");
 racine.updateMatrixWorld(true);
@@ -46,7 +47,9 @@ const monde = (x, y, h) => [(x - cx) / 100, h / 100, -(y - cy) / 100];
 const boite = (o) => new THREE.Box3().setFromObject(o, true);
 
 // chaque mur : sa boite englobante doit etre celle du segment [de, a] epaissi vers l'INTERIEUR, de 0 a la hauteur des murs
-const murs = racine.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
+const paroi = groupes.murs.children;
+ok(groupes.lit.children.length === 4 && groupes.lit.children.some((o) => o.material.color.getHex() === 0xffffff && boite(o).max.y > boite(groupes.lit.children[0]).max.y), "lit : sommier, matelas, drap et oreiller blanc au-dessus");
+const murs = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && Math.abs(boite(o).min.y) < 1e-6 && boite(o).max.y > 2);
 ok(murs.length === d.murs.length, "un volume de mur par face (" + murs.length + ")");
 const centre_abri = v.polygone.reduce((s, z) => [s[0] + z[0] / v.polygone.length, s[1] + z[1] / v.polygone.length], [0, 0]);
 d.murs.forEach((f, i) => {
@@ -83,7 +86,7 @@ ok(bt.min.y >= (pl.bas_cm - 5) / 100 && bt.min.y <= pl.bas_cm / 100 + 1e-6, "toi
   ok(pl.sens === "droite" ? hautG > hautD + 0.15 : hautAv > hautFd + 0.15, `toit : penche vers ${pl.sens === "droite" ? "la droite (gauche " + (hautG * 100).toFixed(0) + " cm, droite " + (hautD * 100).toFixed(0) + " cm)" : "le fond"}`);
 }
 // rehausse : autant de pieces que le debit, chacune entre la tete du mur et le dessous du toit
-const rehausses = racine.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && boite(o).min.y > 2);
+const rehausses = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && boite(o).min.y > 2);
 ok(rehausses.length === m.rehausse.pieces.length && rehausses.every((o) => near(boite(o).min.y, m.hauteur_mur_cm / 100, 1e-6) && boite(o).max.y <= pl.haut_cm / 100 + 1e-6), rehausses.length + " pièces de rehausse, de la tête des murs au dessous du toit");
 ok(d.rehausse_pieces.length === m.rehausse.pieces.length && d.rehausse_pieces.every((r) => /^R\d$/.test(r.id) && d.murs.some((w) => w.cle === r.face)), "modele3d : une étiquette R1..R" + d.rehausse_pieces.length + " par pièce de rehausse, chacune sur sa face");
 // gouttiere : un troncon par bord d'egout, sous le bord du toit ; descente jusqu'au sol

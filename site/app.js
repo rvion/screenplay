@@ -2128,8 +2128,8 @@ function resume_svg(g, v, m) {
   const pas = v.passages.find((x) => x.cote === "arriere_droite");
   if (pas && pas.segment) {
     const [s0, s1] = pas.segment, pa = P(s0), pb = P(s1), L = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
-    svg += line(pa[0], pa[1], pb[0], pb[1], "#2a8a4a", 1.6);
-    svg += text(pb[0] + (pb[0] - pa[0]) / L * 18 + 3, pb[1] + (pb[1] - pa[1]) / L * 18 + 2, `${fr1(pas.cm)}`, "middle", "#2a8a4a", 10.5, "bold");
+    svg += line(pa[0], pa[1], pb[0], pb[1], "#b86e1f", 1.4);
+    svg += text(pb[0] + (pb[0] - pa[0]) / L * 18 + 3, pb[1] + (pb[1] - pa[1]) / L * 18 + 2, `${fr1(pas.cm)}`, "middle", "#b86e1f", 10.5, "bold");
   }
   return svg + "</svg>\n";
 }

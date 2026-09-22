@@ -23,6 +23,11 @@
   plan et un volume en 3D ; une palissade un trait brun sur le plan et, en 3D, des poteaux carrés à chaque
   travée (`palissade_travee_cm`) et entre eux un panneau de planches de `palissade_epaisseur_cm` à sommet
   bombé, dans le groupe `cloture`, **translucide au départ** (bouton « clôture » pour la rendre pleine) ;
+  les **parois** (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe `murs`
+  et portent un fondu de coupe injecté dans leurs matériaux (`onBeforeCompile`, uniform `uCoupe`) : le
+  bouton « murs » les laisse pleins, les **coupe à 1 m** (la matière s'efface sur 20 cm puis disparaît) ou
+  les cache ; les vues « intérieur » et « lit » sont en murs coupés. Le **lit** déplié a un sommier, un
+  matelas, un drap et un oreiller à la tête ;
   un grillage un pointillé vert sur le plan, et en 3D un treillis
   à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
   translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur

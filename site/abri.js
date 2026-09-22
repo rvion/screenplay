@@ -2128,8 +2128,8 @@ function resume_svg(g, v, m) {
   const pas = v.passages.find((x) => x.cote === "arriere_droite");
   if (pas && pas.segment) {
     const [s0, s1] = pas.segment, pa = P(s0), pb = P(s1), L = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]) || 1;
-    svg += line(pa[0], pa[1], pb[0], pb[1], "#2a8a4a", 1.6);
-    svg += text(pb[0] + (pb[0] - pa[0]) / L * 18 + 3, pb[1] + (pb[1] - pa[1]) / L * 18 + 2, `${fr1(pas.cm)}`, "middle", "#2a8a4a", 10.5, "bold");
+    svg += line(pa[0], pa[1], pb[0], pb[1], "#b86e1f", 1.4);
+    svg += text(pb[0] + (pb[0] - pa[0]) / L * 18 + 3, pb[1] + (pb[1] - pa[1]) / L * 18 + 2, `${fr1(pas.cm)}`, "middle", "#b86e1f", 10.5, "bold");
   }
   return svg + "</svg>\n";
 }
@@ -2631,7 +2631,6 @@ function rend_abri(a) {
     ["trait", "#2b5d8a", "mur, cote ext\xE9rieure en cm"],
     ["arc", "#b0452a", "angle du coin"],
     ["trait", "#b86e1f", "marge avant dalle"],
-    ["trait", "#2a8a4a", "passage derri\xE8re"],
     ...types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : [],
     ...types.has("mur") ? [["trait-epais", "#5b4a3a", "mur de propri\xE9t\xE9"]] : [],
     ...types.has("grillage") ? [["pointille", "#5f8a4a", "grillage (limite)"]] : [],
@@ -2813,7 +2812,7 @@ function surligne_section() {
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-var ETATS_DEFAUT = { toit: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
+var ETATS_DEFAUT = { toit: 1, murs: 1, porte: 1, mobilier: 1, lit: 0, etiquettes: 1, personne: 0, cloture: 0 };
 function cloture_pleine(gr, oui) {
   gr.traverse((o) => {
     if (o.isMesh) {
@@ -2826,11 +2825,11 @@ function cloture_pleine(gr, oui) {
 }
 var VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
-  porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1 } },
+  porte: { titre: "C\xF4t\xE9 porte", position: [4.45, 1.75, 2.99], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1, cloture: 1 } },
   arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
-  interieur: { titre: "Int\xE9rieur, sans toit", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, porte: 2, personne: 2 } },
-  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, lit: 1, etiquettes: 0 } }
+  interieur: { titre: "Int\xE9rieur, murs coup\xE9s", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, personne: 2 } },
+  lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, lit: 1, etiquettes: 0 } }
 };
 function applique_etats(vue, e) {
   vue.montrer("toit", e.toit > 0);
@@ -2842,6 +2841,8 @@ function applique_etats(vue, e) {
   vue.montrer("personne", e.personne === 1);
   vue.montrer("personne_dedans", e.personne === 2);
   vue.montrer("cloture", e.cloture > 0);
+  vue.montrer("murs", e.murs > 0);
+  vue.montrer("murs_coupes", e.murs === 2);
 }
 var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
 function etiquette(txt) {
@@ -2908,6 +2909,17 @@ function peuple_abri(abri, data, visible_demande = {}) {
     gr.visible = visible[nom] !== false;
     abri.add(gr);
     return gr;
+  };
+  const coupe = { value: visible.murs_coupes ? 1 : 100 };
+  groupes.coupe = coupe;
+  const coupable = (m) => {
+    m.transparent = true;
+    m.onBeforeCompile = (sh) => {
+      sh.uniforms.uCoupe = coupe;
+      sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vHaut;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvHaut = (modelMatrix * vec4(transformed, 1.0)).y;");
+      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <dithering_fragment>", "#include <dithering_fragment>\nif (vHaut > uCoupe + 0.2) discard;\ngl_FragColor.a *= 1.0 - smoothstep(uCoupe, uCoupe + 0.2, vHaut);");
+    };
+    return m;
   };
   const ombre = (mesh) => {
     mesh.castShadow = true;
@@ -2997,8 +3009,9 @@ function peuple_abri(abri, data, visible_demande = {}) {
     abri.add(ombre(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(-14), plat(w.hauteur_cm)), mat(COUL.propriete, { roughness: 0.95 }))));
   }
   if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
-  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
-  const matArete = new THREE.LineBasicMaterial({ color: 2897472, transparent: true, opacity: 0.55 });
+  const ep = data.epaisseur_cm, matMur = coupable(mat(COUL.mur, { metalness: 0.55, roughness: 0.38 })), matJoint = coupable(mat(COUL.joint)), matBois = coupable(mat(COUL.bois, { roughness: 0.85 }));
+  const parois = groupe("murs");
+  const matArete = coupable(new THREE.LineBasicMaterial({ color: 2897472, transparent: true, opacity: 0.55 }));
   const aretes = (geo, deg = 25) => {
     const e = new THREE.EdgesGeometry(geo, deg);
     e.translate(0, 5e-3, 0);
@@ -3009,7 +3022,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
     const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
     const base = new THREE.Matrix4().makeBasis(new THREE.Vector3(ux, 0, -uy), new THREE.Vector3(0, 1, 0), new THREE.Vector3(uy, 0, ux));
     base.setPosition(W(f.de[0], f.de[1], 0));
-    const pose = (mesh, parent = abri) => {
+    const pose = (mesh, parent = parois) => {
       mesh.applyMatrix4(base);
       parent.add(mesh);
       return mesh;
@@ -3055,7 +3068,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
       if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
       const tx = etiquette(pn.id);
       if (tx) {
-        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.22), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false }));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.22), coupable(new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthWrite: false })));
         plaque.position.set((pn.debut_cm + pn.largeur_cm / 2) / 100, f.hauteur_mur_cm / 100 - 0.16, 0.012);
         pose(plaque, etiq);
       }
@@ -3075,25 +3088,25 @@ function peuple_abri(abri, data, visible_demande = {}) {
       if (tr) {
         const xr = f.hauteur_debut_cm >= f.hauteur_fin_cm ? 0.2 : 0.8, hr = f.hauteur_debut_cm + (f.hauteur_fin_cm - f.hauteur_debut_cm) * xr - Hm * 100;
         const haut2 = Math.min(0.13, Math.max(0.08, hr / 100 - 0.03));
-        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut2 * 2, haut2), new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false }));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut2 * 2, haut2), coupable(new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false })));
         plaque.position.set(xr * L / 100, Hm + hr / 200, 0.012);
         pose(plaque, etiq);
       }
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
-        const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = mat(COUL.cadre);
+        const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = coupable(mat(COUL.cadre));
         if (ch > 0) {
           pose(boite(s0 - ch, s0, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s0, s1, o.hauteur_cm, o.hauteur_cm + ch, -ep, 0, matCadre));
         }
-        const matB = o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 });
+        const matB = coupable(o.vitree === false ? mat(COUL.porte, { metalness: 0.2, roughness: 0.5 }) : mat(COUL.verre, { transparent: true, opacity: 0.45 }));
         const battant = (angle) => {
           const g = new THREE.Group(), geoB = new THREE.BoxGeometry(o.largeur_cm / 100, o.hauteur_cm / 100, 0.04);
           geoB.translate(-o.largeur_cm / 200, o.hauteur_cm / 200, 0);
           g.add(ombre(new THREE.Mesh(geoB, matB)));
-          const matM = mat(COUL.metal, { metalness: 0.8, roughness: 0.3 }), xg = -o.largeur_cm / 100 + 0.09;
+          const matM = coupable(mat(COUL.metal, { metalness: 0.8, roughness: 0.3 })), xg = -o.largeur_cm / 100 + 0.09;
           for (const face2 of [1, -1]) {
             const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.16, 6e-3), matM);
             plaque.position.set(xg, 1.03, face2 * 0.023);
@@ -3137,8 +3150,8 @@ function peuple_abri(abri, data, visible_demande = {}) {
         pose(silhouette(0.45, 0, -0.3), groupe("personne"));
         pose(silhouette(-(ep + 60) / 100, data.sol.epaisseur_cm / 100), groupe("personne_dedans"));
       } else {
-        const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = mat(16053750), c = 4;
-        pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 })));
+        const s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, h0 = o.allege_cm, h1 = o.allege_cm + o.hauteur_cm, matCadre = coupable(mat(16053750)), c = 4;
+        pose(boite(s0, s1, h0, h1, -ep / 2 - 0.6, -ep / 2 + 0.6, coupable(mat(COUL.verre, { transparent: true, opacity: 0.4, roughness: 0.1 }))));
         pose(boite(s0, s1, h0, h0 + c, -ep, 0.5, matCadre));
         pose(boite(s0, s1, h1 - c, h1, -ep, 0.5, matCadre));
         pose(boite(s0, s0 + c, h0, h1, -ep, 0.5, matCadre));
@@ -3223,7 +3236,15 @@ function peuple_abri(abri, data, visible_demande = {}) {
     }
   }
   const lit = groupe("lit");
-  if (data.mobilier.lit) lit.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit.polygone, plat(sol + 25), plat(sol + 40)), mat(COUL.lit, { transparent: true, opacity: 0.85 }))));
+  if (data.mobilier.lit) {
+    const q = data.mobilier.lit.polygone, lx = q.map((z) => z[0]), ly = q.map((z) => z[1]), x0 = Math.min(...lx), x1 = Math.max(...lx), y0 = Math.min(...ly), y1 = Math.max(...ly);
+    const long_y = y1 - y0 >= x1 - x0, tete = long_y ? [[x0 + 4, y1 - 40], [x1 - 4, y1 - 40], [x1 - 4, y1 - 6], [x0 + 4, y1 - 6]] : [[x1 - 40, y0 + 4], [x1 - 6, y0 + 4], [x1 - 6, y1 - 4], [x1 - 40, y1 - 4]];
+    const drap = long_y ? [[x0 - 1, y0 - 1], [x1 + 1, y0 - 1], [x1 + 1, y0 + (y1 - y0) * 0.66], [x0 - 1, y0 + (y1 - y0) * 0.66]] : [[x0 - 1, y0 - 1], [x0 + (x1 - x0) * 0.66, y0 - 1], [x0 + (x1 - x0) * 0.66, y1 + 1], [x0 - 1, y1 + 1]];
+    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 25), plat(sol + 33)), mat(5917244, { roughness: 0.9 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(q, plat(sol + 33), plat(sol + 45)), mat(15855076, { roughness: 0.95 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(drap, plat(sol + 45), plat(sol + 48)), mat(7311295, { roughness: 0.95 }))));
+    lit.add(ombre(new THREE.Mesh(prisme(tete, plat(sol + 45), plat(sol + 55)), mat(16777215, { roughness: 1 }))));
+  }
   sieges.visible = !visible.lit;
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
@@ -3270,7 +3291,7 @@ function createAbriViewer(container, data0) {
   const abri = new THREE.Group();
   scene.add(abri);
   let groupes = {};
-  const visible = { toit: true, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
+  const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, lit: false, etiquettes: true, personne: false, personne_dedans: false, porte: true, porte_fermee: false, cloture: false };
   const construit = (data) => {
     groupes = peuple_abri(abri, data, visible);
   };
@@ -3289,6 +3310,11 @@ function createAbriViewer(container, data0) {
     visible[nom] = oui;
     if (nom === "cloture") {
       if (groupes.cloture) cloture_pleine(groupes.cloture, oui);
+      return;
+    }
+    if (nom === "murs_coupes") {
+      const c = groupes.coupe;
+      if (c) c.value = oui ? 1 : 100;
       return;
     }
     if (groupes[nom]) groupes[nom].visible = oui;
@@ -3375,7 +3401,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
   }
-  const NOMS = ["toit", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"];
+  const NOMS = ["toit", "murs", "porte", "mobilier", "lit", "etiquettes", "personne", "cloture"];
   const bouton = (nom) => document.getElementById("voir-" + nom);
   const montre_bouton = (nom, etat) => {
     const b = bouton(nom);
