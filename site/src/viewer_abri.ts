@@ -120,7 +120,8 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
   // aretes sombres sur les volumes : les angles se lisent meme sous une lumiere plate
   const matArete = new THREE.LineBasicMaterial({ color: 0x2c3640, transparent: true, opacity: 0.55 });
-  const aretes = (geo: Vec, deg = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, deg), matArete);
+  // les aretes sont relevees de 5 mm : celle du seuil, a y = 0, se battrait en profondeur avec le dessus de la dalle
+  const aretes = (geo: Vec, deg = 25) => { const e = new THREE.EdgesGeometry(geo, deg); e.translate(0, 0.005, 0); return new THREE.LineSegments(e, matArete); };
   const etiq = groupe("etiquettes");
   for (const f of data.murs) {
     const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
@@ -325,7 +326,7 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   const soleil = new THREE.DirectionalLight(0xfff4e0, 2.6);
-  soleil.position.set(6, 9, 4); soleil.castShadow = true; soleil.shadow.bias = -0.0005; soleil.shadow.normalBias = 0.02; soleil.shadow.mapSize.set(2048, 2048);
+  soleil.position.set(6, 9, 4); soleil.castShadow = true; soleil.shadow.bias = -0.0003; soleil.shadow.normalBias = 0.035; soleil.shadow.mapSize.set(1536, 1536);
   soleil.shadow.camera.left = soleil.shadow.camera.bottom = -7; soleil.shadow.camera.right = soleil.shadow.camera.top = 7; soleil.shadow.camera.near = 1; soleil.shadow.camera.far = 30;
   scene.add(soleil);
   scene.add(new THREE.HemisphereLight(0xbcd4ea, 0x55603a, 0.55));

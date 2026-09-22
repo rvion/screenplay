@@ -2823,7 +2823,11 @@ function peuple_abri(abri, data, visible_demande = {}) {
   if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
   const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
   const matArete = new THREE.LineBasicMaterial({ color: 2897472, transparent: true, opacity: 0.55 });
-  const aretes = (geo, deg = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, deg), matArete);
+  const aretes = (geo, deg = 25) => {
+    const e = new THREE.EdgesGeometry(geo, deg);
+    e.translate(0, 5e-3, 0);
+    return new THREE.LineSegments(e, matArete);
+  };
   const etiq = groupe("etiquettes");
   for (const f of data.murs) {
     const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
@@ -3042,9 +3046,9 @@ function createAbriViewer(container, data0) {
   const soleil = new THREE.DirectionalLight(16774368, 2.6);
   soleil.position.set(6, 9, 4);
   soleil.castShadow = true;
-  soleil.shadow.bias = -5e-4;
-  soleil.shadow.normalBias = 0.02;
-  soleil.shadow.mapSize.set(2048, 2048);
+  soleil.shadow.bias = -3e-4;
+  soleil.shadow.normalBias = 0.035;
+  soleil.shadow.mapSize.set(1536, 1536);
   soleil.shadow.camera.left = soleil.shadow.camera.bottom = -7;
   soleil.shadow.camera.right = soleil.shadow.camera.top = 7;
   soleil.shadow.camera.near = 1;
