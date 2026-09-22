@@ -406,11 +406,11 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     // rien d'utilise : a moitie rentre sous le bureau
     siege(st, sieges_mi, pousse[0] / 2, pousse[1] / 2);
-    // lit 2 : le fauteuil est pousse vers le bureau de facade (jusqu'a 4 cm de son bord), le tabouret dessous comme avant
+    // lit 2 : fauteuil et tabouret sont tous deux cales sous le bureau de facade (le fauteuil glisse jusqu'au mur, a 4 cm)
     const bureau_av = data.mobilier.bureaux.find((b: any) => b.cote === "avant");
-    const bord_av = bureau_av ? Math.max(...bureau_av.polygone.map((z: Pt) => z[1])) : null;
-    let pousse2 = st.contre === "avant" || bord_av === null ? pousse : [0, -((s.cy - s.profondeur / 2) - bord_av - 4)];
-    // puis glisse vers le bureau gauche jusqu'a sortir de l'emprise du lit 2 (le fauteuil ne doit pas la chevaucher)
+    const avant_int = bureau_av ? Math.min(...bureau_av.polygone.map((z: Pt) => z[1])) : null;
+    let pousse2 = st.contre === "avant" || avant_int === null ? pousse : [0, -((s.cy - s.profondeur / 2) - avant_int - 4)];
+    // puis, s'il chevauche encore le lit 2, glisse vers la gauche
     if (data.mobilier.lit2 && st.contre !== "avant") {
       const bed: Pt[] = data.mobilier.lit2.polygone;
       const dedans = (pt: Pt) => bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.01; }) || bed.every((a, i) => { const b = bed[(i + 1) % bed.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) <= 0.01; });
@@ -431,10 +431,11 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   }
   // lit deplie (quelle que soit son orientation) : sommier, matelas, drap sur les deux tiers du pied, oreiller a la tete ;
   // la tete est au bout le plus au fond ; la personne couchee le long du lit, la tete sur l'oreiller
-  const fait_lit = (q: Pt[], dans: Vec, qui: Vec) => {
-    // axe long du rectangle : du milieu du petit cote le plus en avant vers celui du fond
+  // tete : "fond" = le petit cote le plus au fond, "droite" = le plus a droite (vers la porte)
+  const fait_lit = (q: Pt[], dans: Vec, qui: Vec, tete_vers: "fond" | "droite" = "fond") => {
     const cotes = q.map((a, i) => ({ a, b: q[(i + 1) % 4], l: Math.hypot(q[(i + 1) % 4][0] - a[0], q[(i + 1) % 4][1] - a[1]) }));
-    const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => (c1.a[1] + c1.b[1]) - (c2.a[1] + c2.b[1]));
+    const k = tete_vers === "droite" ? 0 : 1;
+    const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => (c1.a[k] + c1.b[k]) - (c2.a[k] + c2.b[k]));
     const pied = courts[0], tete = courts[courts.length - 1];
     const mp: Pt = [(pied.a[0] + pied.b[0]) / 2, (pied.a[1] + pied.b[1]) / 2], mt: Pt = [(tete.a[0] + tete.b[0]) / 2, (tete.a[1] + tete.b[1]) / 2];
     const L = Math.hypot(mt[0] - mp[0], mt[1] - mp[1]) || 1, ux = (mt[0] - mp[0]) / L, uy = (mt[1] - mp[1]) / L, nx = -uy, ny = ux, lw = pied.l;
@@ -459,7 +460,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   };
   const lit = groupe("lit"), lit2 = groupe("lit2");
   if (data.mobilier.lit) fait_lit(data.mobilier.lit.polygone, lit, p_couchee);
-  if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2);
+  if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2, "droite");
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }

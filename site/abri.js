@@ -3304,8 +3304,8 @@ function peuple_abri(abri, data, visible_demande = {}) {
     siege(st, sieges_ranges, pousse[0], pousse[1]);
     siege(st, sieges_mi, pousse[0] / 2, pousse[1] / 2);
     const bureau_av = data.mobilier.bureaux.find((b) => b.cote === "avant");
-    const bord_av = bureau_av ? Math.max(...bureau_av.polygone.map((z) => z[1])) : null;
-    let pousse2 = st.contre === "avant" || bord_av === null ? pousse : [0, -(s.cy - s.profondeur / 2 - bord_av - 4)];
+    const avant_int = bureau_av ? Math.min(...bureau_av.polygone.map((z) => z[1])) : null;
+    let pousse2 = st.contre === "avant" || avant_int === null ? pousse : [0, -(s.cy - s.profondeur / 2 - avant_int - 4)];
     if (data.mobilier.lit2 && st.contre !== "avant") {
       const bed = data.mobilier.lit2.polygone;
       const dedans = (pt) => bed.every((a, i) => {
@@ -3330,9 +3330,10 @@ function peuple_abri(abri, data, visible_demande = {}) {
       p_assise.add(g);
     }
   }
-  const fait_lit = (q, dans, qui) => {
+  const fait_lit = (q, dans, qui, tete_vers = "fond") => {
     const cotes = q.map((a, i) => ({ a, b: q[(i + 1) % 4], l: Math.hypot(q[(i + 1) % 4][0] - a[0], q[(i + 1) % 4][1] - a[1]) }));
-    const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => c1.a[1] + c1.b[1] - (c2.a[1] + c2.b[1]));
+    const k = tete_vers === "droite" ? 0 : 1;
+    const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => c1.a[k] + c1.b[k] - (c2.a[k] + c2.b[k]));
     const pied = courts[0], tete = courts[courts.length - 1];
     const mp = [(pied.a[0] + pied.b[0]) / 2, (pied.a[1] + pied.b[1]) / 2], mt = [(tete.a[0] + tete.b[0]) / 2, (tete.a[1] + tete.b[1]) / 2];
     const L = Math.hypot(mt[0] - mp[0], mt[1] - mp[1]) || 1, ux = (mt[0] - mp[0]) / L, uy = (mt[1] - mp[1]) / L, nx = -uy, ny = ux, lw = pied.l;
@@ -3356,7 +3357,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
   };
   const lit = groupe("lit"), lit2 = groupe("lit2");
   if (data.mobilier.lit) fait_lit(data.mobilier.lit.polygone, lit, p_couchee);
-  if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2);
+  if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2, "droite");
   if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
   return groupes;
 }

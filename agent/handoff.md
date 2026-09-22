@@ -60,7 +60,7 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Résumé : plus d'étiquettes, les faits clés surlignés dans le paragraphe (points médians)
 - [x] Trois mises en page : large (texte + dessin | 3D), moyenne (texte | dessin, puis 3D pleine largeur), téléphone (tout empilé)
 - [x] Preset « Lit déplié » porte fermée ; fauteuil rangé sans traverser le plateau
-- [x] Lit 2 en biais au fond (`lit_pliant_2` : `parallele_a`, `pres_de`, `sieges_ranges`), quatrième état du mobilier, preset « Lit déplié 2 » ; fauteuil poussé vers la façade et hors du lit
+- [x] Lit 2 en biais au fond (`lit_pliant_2` : `parallele_a`, `pres_de`, `sieges_ranges`), quatrième état du mobilier, preset « Lit déplié 2 » ; tête du lit côté porte ; fauteuil et tabouret calés sous le bureau de façade
 - [x] Taille du lit sur une plaque au coin de l'oreiller ; oreiller lavande
 - [x] Mobilier « rien » : fauteuil à moitié rentré
 - [x] Menu : Plan, Ouvertures et Mobilier séparés, Pourquoi, Alternatives

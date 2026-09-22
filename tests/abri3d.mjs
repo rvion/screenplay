@@ -69,7 +69,11 @@ const paroi = groupes.murs.children;
     const plan = (X, Z) => [X * 100 + cx, -Z * 100 + cy];
     const dedans_lit = (pt) => q2.every((a, i) => { const b = q2[(i + 1) % q2.length]; return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= -0.5; });
     const coins = [[bf2.min.x, bf2.min.z], [bf2.max.x, bf2.min.z], [bf2.max.x, bf2.max.z], [bf2.min.x, bf2.max.z]].map(([X, Z]) => plan(X, Z));
-    ok(r2.max.z > boite(groupes.sieges).max.z - 0.05 && !coins.some(dedans_lit), "lit 2 : le fauteuil est pousse vers la facade et ne chevauche pas le lit");
+    const bureau_av3 = groupes.mobilier.children.find((o) => o.isMesh && boite(o).max.z > 0.5 && (boite(o).max.x - boite(o).min.x) > 1.5);
+    ok(bureau_av3 && bf2.max.z > boite(bureau_av3).min.z + 0.3 && !coins.some(dedans_lit), "lit 2 : le fauteuil est cale sous le bureau de facade et ne chevauche pas le lit");
+    // la tete du lit 2 (l'oreiller, piece la plus haute) est du cote de la porte (x max), pas sous le bureau gauche
+    const oreiller2 = groupes.lit2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
+    ok(boite(oreiller2).min.x > (b2.min.x + b2.max.x) / 2, "lit 2 : l'oreiller est du cote de la porte");
     const mi = boite(groupes.sieges_mi);
     ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
   }

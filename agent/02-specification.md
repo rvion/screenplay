@@ -28,8 +28,8 @@
   bouton « murs » les laisse pleins, les **coupe net à 1 m** ou les cache ; les vues « au bureau » et « lit
   déplié » sont en murs coupés. Le bouton **mobilier** a quatre états : rien d'utilisé (fauteuil à moitié
   rentré), fauteuil au bureau, lit déplié (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
-  une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), lit 2 en biais au fond (le fauteuil
-  est poussé vers le bureau de façade puis glissé hors de l'emprise du lit). La **personne** dedans suit le
+  une plaque ; le fauteuil et le tabouret sont **rangés sous les bureaux**), lit 2 en biais au fond, la tête côté porte (le fauteuil
+  et le tabouret sont calés sous le bureau de façade, le fauteuil glissé à gauche s'il chevauche le lit). La **personne** dedans suit le
   mobilier : debout, assise au fauteuil face au bureau, ou couchée sur le lit la tête sur l'oreiller
   (groupes `personne_dedans`, `personne_assise`, `personne_couchee`, `personne_couchee2`) ;
   un grillage un pointillé vert sur le plan, et en 3D un treillis
