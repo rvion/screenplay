@@ -1877,15 +1877,25 @@ export function resume_svg(g: any, v: any, m: any): string {
     svg += grillage.has(nom) ? line(pa[0], pa[1], pb[0], pb[1], "#5f8a4a", 2.5, "5 3") : line(pa[0], pa[1], pb[0], pb[1], "#5b4a3a", 4);
   });
   svg += poly(q.map(P), "#dbe6f0", "#2b5d8a", 2);
-  // murs : lettre et longueur a l'interieur, le long du mur ; angle a chaque coin, sur la bissectrice interieure
+  // murs : la lettre dans un carre pose sur le trait, la longueur ecrite le long du mur juste dedans ;
+  // a chaque coin un petit arc et la valeur de l'angle sur la bissectrice interieure
   m.faces.forEach((f: any, i: number) => {
-    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / L, ny = -(b[0] - a[0]) / L;
-    // mur vertical : texte ancre au bord, decale de 6 ; mur horizontal ou en biais : centre, decale de 15
-    const vertical = Math.abs(nx) > 0.6, ancre = vertical ? (nx > 0 ? "start" : "end") : "middle", off = vertical ? 6 : 18;
-    svg += text((a[0] + b[0]) / 2 + nx * off, (a[1] + b[1]) / 2 + ny * off + 4, `${f.cle} ${fr1(f.longueur_cm)}`, ancre, "#1f5a8c", 11, "bold");
+    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, nx = uy, ny = -ux;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    // angle du texte le long du mur, toujours lisible (jamais a l'envers)
+    let deg = Math.atan2(uy, ux) * 180 / Math.PI; if (deg > 90 || deg < -90) deg += 180;
+    const tx = mx + nx * 11, ty = my + ny * 11;
+    svg += `<text x="${f1(tx)}" y="${f1(ty)}" transform="rotate(${f1(deg)} ${f1(tx)} ${f1(ty)})" text-anchor="middle" dominant-baseline="middle" fill="#1f5a8c" font-size="10.5" font-weight="bold">${fr1(f.longueur_cm)}</text>\n`;
+    svg += `<rect x="${f1(mx - 7)}" y="${f1(my - 7)}" width="14" height="14" rx="3" fill="#1c2530" stroke="#fff" stroke-width="1.2"/>\n`;
+    svg += `<text x="${f1(mx)}" y="${f1(my + 0.5)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="9" font-weight="bold" font-family="ui-monospace,Menlo,monospace">${f.cle}</text>\n`;
     const p0 = P(q[i]), prev = P(q[(i - 1 + q.length) % q.length]), next = P(q[(i + 1) % q.length]);
-    const bx = (prev[0] - p0[0]) + (next[0] - p0[0]), by = (prev[1] - p0[1]) + (next[1] - p0[1]), bl = Math.hypot(bx, by) || 1;
-    svg += text(p0[0] + bx / bl * 28, p0[1] + by / bl * 28 + 3, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 8.5);
+    const v1 = [prev[0] - p0[0], prev[1] - p0[1]], v2 = [next[0] - p0[0], next[1] - p0[1]], l1 = Math.hypot(v1[0], v1[1]) || 1, l2 = Math.hypot(v2[0], v2[1]) || 1;
+    const r = 13, e1 = [p0[0] + v1[0] / l1 * r, p0[1] + v1[1] / l1 * r], e2 = [p0[0] + v2[0] / l2 * r, p0[1] + v2[1] / l2 * r];
+    // l'arc est centre sur le coin : il bombe vers l'interieur
+    const sweep = v1[0] * v2[1] - v1[1] * v2[0] > 0 ? 1 : 0;
+    svg += `<path d="M ${f1(e1[0])} ${f1(e1[1])} A ${r} ${r} 0 0 ${sweep} ${f1(e2[0])} ${f1(e2[1])}" fill="none" stroke="#b0452a" stroke-width="1.2"/>\n`;
+    const bx = v1[0] / l1 + v2[0] / l2, by = v1[1] / l1 + v2[1] / l2, bl = Math.hypot(bx, by) || 1;
+    svg += text(p0[0] + bx / bl * 27, p0[1] + by / bl * 27 + 3, `${fr1(m.angles_deg[i])}°`, "middle", "#b0452a", 8.5);
   });
   // marges : trait entre l'abri et le bord, libelle hors de la dalle
   const marge = (a: Pt, b: Pt, label: string, ou: "gauche" | "bas" | "droite", col = "#b86e1f") => {

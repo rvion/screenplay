@@ -2094,12 +2094,25 @@ function resume_svg(g, v, m) {
   });
   svg += poly(q.map(P), "#dbe6f0", "#2b5d8a", 2);
   m.faces.forEach((f, i) => {
-    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / L, ny = -(b[0] - a[0]) / L;
-    const vertical = Math.abs(nx) > 0.6, ancre = vertical ? nx > 0 ? "start" : "end" : "middle", off = vertical ? 6 : 18;
-    svg += text((a[0] + b[0]) / 2 + nx * off, (a[1] + b[1]) / 2 + ny * off + 4, `${f.cle} ${fr1(f.longueur_cm)}`, ancre, "#1f5a8c", 11, "bold");
+    const a = P(f.de), b = P(f.a), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, nx = uy, ny = -ux;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    let deg = Math.atan2(uy, ux) * 180 / Math.PI;
+    if (deg > 90 || deg < -90) deg += 180;
+    const tx = mx + nx * 11, ty = my + ny * 11;
+    svg += `<text x="${f1(tx)}" y="${f1(ty)}" transform="rotate(${f1(deg)} ${f1(tx)} ${f1(ty)})" text-anchor="middle" dominant-baseline="middle" fill="#1f5a8c" font-size="10.5" font-weight="bold">${fr1(f.longueur_cm)}</text>
+`;
+    svg += `<rect x="${f1(mx - 7)}" y="${f1(my - 7)}" width="14" height="14" rx="3" fill="#1c2530" stroke="#fff" stroke-width="1.2"/>
+`;
+    svg += `<text x="${f1(mx)}" y="${f1(my + 0.5)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="9" font-weight="bold" font-family="ui-monospace,Menlo,monospace">${f.cle}</text>
+`;
     const p0 = P(q[i]), prev = P(q[(i - 1 + q.length) % q.length]), next = P(q[(i + 1) % q.length]);
-    const bx = prev[0] - p0[0] + (next[0] - p0[0]), by = prev[1] - p0[1] + (next[1] - p0[1]), bl = Math.hypot(bx, by) || 1;
-    svg += text(p0[0] + bx / bl * 28, p0[1] + by / bl * 28 + 3, `${fr1(m.angles_deg[i])}\xB0`, "middle", "#b0452a", 8.5);
+    const v1 = [prev[0] - p0[0], prev[1] - p0[1]], v2 = [next[0] - p0[0], next[1] - p0[1]], l1 = Math.hypot(v1[0], v1[1]) || 1, l2 = Math.hypot(v2[0], v2[1]) || 1;
+    const r = 13, e1 = [p0[0] + v1[0] / l1 * r, p0[1] + v1[1] / l1 * r], e2 = [p0[0] + v2[0] / l2 * r, p0[1] + v2[1] / l2 * r];
+    const sweep = v1[0] * v2[1] - v1[1] * v2[0] > 0 ? 1 : 0;
+    svg += `<path d="M ${f1(e1[0])} ${f1(e1[1])} A ${r} ${r} 0 0 ${sweep} ${f1(e2[0])} ${f1(e2[1])}" fill="none" stroke="#b0452a" stroke-width="1.2"/>
+`;
+    const bx = v1[0] / l1 + v2[0] / l2, by = v1[1] / l1 + v2[1] / l2, bl = Math.hypot(bx, by) || 1;
+    svg += text(p0[0] + bx / bl * 27, p0[1] + by / bl * 27 + 3, `${fr1(m.angles_deg[i])}\xB0`, "middle", "#b0452a", 8.5);
   });
   const marge = (a, b, label, ou, col = "#b86e1f") => {
     const pa = P(a), pb = P(b);
@@ -2615,8 +2628,8 @@ function rend_abri(a) {
   ];
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w) => w.type));
   const legende = [
-    ["trait", "#2b5d8a", "mur, cote ext\xE9rieure"],
-    ["texte", "#b0452a", "angle \xE0 chaque coin"],
+    ["trait", "#2b5d8a", "mur, cote ext\xE9rieure en cm"],
+    ["arc", "#b0452a", "angle du coin"],
     ["trait", "#b86e1f", "marge avant dalle"],
     ["trait", "#2a8a4a", "passage derri\xE8re"],
     ...types.has("palissade") ? [["trait-epais", "#5b4a3a", "palissade bois (limite)"]] : [],

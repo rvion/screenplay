@@ -85,7 +85,7 @@ ul.legende i.trait { border-top: 2px solid var(--c); height: 0; }
 ul.legende i.trait-epais { border-top: 4px solid var(--c); height: 0; }
 ul.legende i.pointille { border-top: 2.5px dashed var(--c); height: 0; }
 ul.legende i.aplat { background: var(--c); border: 1px solid #b5b0a5; }
-ul.legende i.texte { height: 0; border-top: 2px dotted var(--c); }
+ul.legende i.arc { width: 12px; height: 12px; border: 1.5px solid var(--c); border-color: transparent transparent var(--c) var(--c); border-radius: 50%; }
 ul.resume-points { margin: .6rem 0 0; padding-left: 1.1rem; font-size: .88rem; }
 ul.resume-points li { margin: .2rem 0; }
 ul.resume-points b { font-weight: 600; color: var(--muted); font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; margin-right: .3rem; }
