@@ -3,6 +3,7 @@
 // THREE est externe (importmap CDN), comme pour viewer.ts.
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 type Vec = any;
 type Pt = number[];
@@ -22,7 +23,8 @@ export const VUES = {
 export type NomVue = keyof typeof VUES;
 export type Masquable = "toit" | "mobilier" | "lit" | "etiquettes" | "personne" | "personne_dedans" | "porte" | "porte_fermee";
 
-const COUL = { mur: 0xe9ecee, joint: 0x5b656e, bois: 0xc89b62, toit: 0xdfe4e8, nervure: 0xc3cad1, dalle: 0xd9d6cd, propriete: 0xb9ab97, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
+// panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
+const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f };
 
 // plaque blanche a bord sombre, texte gras : lisible de loin sur un panneau clair comme sur le toit
 function etiquette(txt: string): Vec | null {
@@ -115,7 +117,10 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // plancher
   if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
 
-  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.1, roughness: 0.6 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois);
+  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
+  // aretes sombres sur les volumes : les angles se lisent meme sous une lumiere plate
+  const matArete = new THREE.LineBasicMaterial({ color: 0x2c3640, transparent: true, opacity: 0.55 });
+  const aretes = (geo: Vec, deg = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, deg), matArete);
   const etiq = groupe("etiquettes");
   for (const f of data.murs) {
     const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
@@ -155,6 +160,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     }
     const geoMur = onglet(new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false }), ep);
     pose(ombre(new THREE.Mesh(geoMur, matMur)));
+    pose(aretes(geoMur));
     // joints de panneaux et etiquettes
     for (const pn of f.panneaux) {
       if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
@@ -172,6 +178,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       r.moveTo(0, Hm); r.lineTo(L / 100, Hm); r.lineTo(L / 100, f.hauteur_fin_cm / 100); r.lineTo(0, f.hauteur_debut_cm / 100); r.closePath();
       const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
+      pose(aretes(geoR));
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
@@ -219,8 +226,10 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   const T = data.toit, pl = T.plan, droite = pl.sens === "droite";
   const hz = (z: Pt) => pl.haut_cm - (pl.haut_cm - pl.bas_cm) * ((droite ? z[0] : z[1]) - pl.origine_cm) / pl.course_cm;
   const toit = groupe("toit");
-  toit.add(ombre(new THREE.Mesh(prisme(T.contour, hz, (z) => hz(z) + T.epaisseur_cm), mat(COUL.toit, { metalness: 0.2, roughness: 0.5 }))));
-  const matNerv = mat(COUL.nervure, { metalness: 0.3 });
+  const geoToit = prisme(T.contour, hz, (z) => hz(z) + T.epaisseur_cm);
+  toit.add(ombre(new THREE.Mesh(geoToit, mat(COUL.toit, { metalness: 0.6, roughness: 0.42 }))));
+  toit.add(aretes(geoToit));
+  const matNerv = mat(COUL.nervure, { metalness: 0.6, roughness: 0.4 });
   const trait = (a: Pt, b: Pt, dessus: number, larg: number, m: Vec) => {
     const A = W(a[0], a[1], hz(a) + T.epaisseur_cm + dessus), B = W(b[0], b[1], hz(b) + T.epaisseur_cm + dessus), dir = new THREE.Vector3().subVectors(B, A), len = dir.length();
     if (len < 0.02) return;
@@ -295,25 +304,33 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
 
 export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xdfeaf3);
+  scene.background = new THREE.Color(0xd6e4f0);
   const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
   camera.position.set(...VUES.jardin.position);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
   container.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.target.set(0, 1.0, 0);
   controls.maxPolarAngle = Math.PI / 2 - 0.02;
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-  const soleil = new THREE.DirectionalLight(0xffffff, 1.0);
-  soleil.position.set(5, 8, 6); soleil.castShadow = true; soleil.shadow.bias = -0.0008; soleil.shadow.mapSize.set(2048, 2048);
+  // lumiere : un soleil franc avec ombres douces, un ciel + sol en hemisphere, un contre-jour faible ;
+  // l'environnement de piece donne leurs reflets aux panneaux metalliques
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const soleil = new THREE.DirectionalLight(0xfff4e0, 2.6);
+  soleil.position.set(6, 9, 4); soleil.castShadow = true; soleil.shadow.bias = -0.0005; soleil.shadow.normalBias = 0.02; soleil.shadow.mapSize.set(2048, 2048);
+  soleil.shadow.camera.left = soleil.shadow.camera.bottom = -7; soleil.shadow.camera.right = soleil.shadow.camera.top = 7; soleil.shadow.camera.near = 1; soleil.shadow.camera.far = 30;
   scene.add(soleil);
-  scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x6b6b50, 0.4));
-  const herbe = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 0x83a957, roughness: 1 }));
+  scene.add(new THREE.HemisphereLight(0xbcd4ea, 0x55603a, 0.55));
+  const contre = new THREE.DirectionalLight(0xdbe6f2, 0.5); contre.position.set(-6, 4, -5); scene.add(contre);
+  const herbe = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 0x5e8340, roughness: 1 }));
   herbe.rotation.x = -Math.PI / 2; herbe.position.y = -0.15; herbe.receiveShadow = true;
   scene.add(herbe);
 

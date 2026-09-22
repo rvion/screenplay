@@ -203,7 +203,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   nervuré dans le sens de la pente, gouttière sur chaque bord d'égout, descente,
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
   panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** pour l'échelle, devant la porte ou à
-  60 cm du seuil dedans, sur le plancher. **Bascules** sous la vue : boutons carrés à icône et petit libellé
+  60 cm du seuil dedans, sur le plancher. **Rendu** : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
+  contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),
+  tone mapping ACES ; couleurs distinctes par plan (panneaux RAL 9002, toit gris moyen, dalle béton, herbe
+  sombre) ; **arêtes** sombres (EdgesGeometry) sur murs, rehausse et toit pour lire les angles. **Bascules** sous la vue : boutons carrés à icône et petit libellé
   (toit, porte (le battant), mobilier, lit, repères, personne) ; lit et personne éteints au départ ; la
   personne a trois états (éteinte, dehors, dedans) marqués par trois points sous le bouton.
   Sur la vue, une **barre de caméra** fine et translucide (angle 15 à 110°, distance, les valeurs en petit

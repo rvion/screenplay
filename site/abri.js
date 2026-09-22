@@ -2693,13 +2693,14 @@ function surligne_section() {
 // site/src/viewer_abri.ts
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 var VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42 },
   porte: { titre: "C\xF4t\xE9 porte", position: [5.2, 2.2, 1.2], cible: [0.4, 1, 0], fov: 42 },
   arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42 },
   dessus: { titre: "Vue de dessus", position: [0.3, 6.4, 1], cible: [0.3, 0, 0.8], fov: 42 }
 };
-var COUL = { mur: 15330542, joint: 5989742, bois: 13146978, toit: 14673128, nervure: 12831441, dalle: 14276301, propriete: 12168087, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799 };
+var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799 };
 function etiquette(txt) {
   if (typeof document === "undefined") return null;
   const c = document.createElement("canvas");
@@ -2817,7 +2818,9 @@ function peuple_abri(abri, data, visible_demande = {}) {
     abri.add(ombre(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(-14), plat(w.hauteur_cm)), mat(COUL.propriete, { roughness: 0.95 }))));
   }
   if (data.sol.epaisseur_cm > 0) abri.add(ombre(new THREE.Mesh(prisme(data.sol.polygone, plat(0.3), plat(data.sol.epaisseur_cm)), mat(COUL.sol))));
-  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.1, roughness: 0.6 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois);
+  const ep = data.epaisseur_cm, matMur = mat(COUL.mur, { metalness: 0.55, roughness: 0.38 }), matJoint = mat(COUL.joint), matBois = mat(COUL.bois, { roughness: 0.85 });
+  const matArete = new THREE.LineBasicMaterial({ color: 2897472, transparent: true, opacity: 0.55 });
+  const aretes = (geo, deg = 25) => new THREE.LineSegments(new THREE.EdgesGeometry(geo, deg), matArete);
   const etiq = groupe("etiquettes");
   for (const f of data.murs) {
     const L = f.longueur_cm, ux = (f.a[0] - f.de[0]) / L, uy = (f.a[1] - f.de[1]) / L;
@@ -2864,6 +2867,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
     }
     const geoMur = onglet(new THREE.ExtrudeGeometry(forme, { depth: ep / 100, bevelEnabled: false }), ep);
     pose(ombre(new THREE.Mesh(geoMur, matMur)));
+    pose(aretes(geoMur));
     for (const pn of f.panneaux) {
       if (pn.debut_cm > 0.5) pose(boite(pn.debut_cm - 0.5, pn.debut_cm + 0.5, 0, f.hauteur_mur_cm, -0.2, 0.4, matJoint));
       const tx = etiquette(pn.id);
@@ -2882,6 +2886,7 @@ function peuple_abri(abri, data, visible_demande = {}) {
       r.closePath();
       const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
+      pose(aretes(geoR));
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
@@ -2935,8 +2940,10 @@ function peuple_abri(abri, data, visible_demande = {}) {
   const T = data.toit, pl = T.plan, droite = pl.sens === "droite";
   const hz = (z) => pl.haut_cm - (pl.haut_cm - pl.bas_cm) * ((droite ? z[0] : z[1]) - pl.origine_cm) / pl.course_cm;
   const toit = groupe("toit");
-  toit.add(ombre(new THREE.Mesh(prisme(T.contour, hz, (z) => hz(z) + T.epaisseur_cm), mat(COUL.toit, { metalness: 0.2, roughness: 0.5 }))));
-  const matNerv = mat(COUL.nervure, { metalness: 0.3 });
+  const geoToit = prisme(T.contour, hz, (z) => hz(z) + T.epaisseur_cm);
+  toit.add(ombre(new THREE.Mesh(geoToit, mat(COUL.toit, { metalness: 0.6, roughness: 0.42 }))));
+  toit.add(aretes(geoToit));
+  const matNerv = mat(COUL.nervure, { metalness: 0.6, roughness: 0.4 });
   const trait = (a, b, dessus, larg, m) => {
     const A = W(a[0], a[1], hz(a) + T.epaisseur_cm + dessus), B = W(b[0], b[1], hz(b) + T.epaisseur_cm + dessus), dir = new THREE.Vector3().subVectors(B, A), len = dir.length();
     if (len < 0.02) return;
@@ -3012,27 +3019,39 @@ function peuple_abri(abri, data, visible_demande = {}) {
 }
 function createAbriViewer(container, data0) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(14674675);
+  scene.background = new THREE.Color(14083312);
   const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
   camera.position.set(...VUES.jardin.position);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
   container.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.target.set(0, 1, 0);
   controls.maxPolarAngle = Math.PI / 2 - 0.02;
-  scene.add(new THREE.AmbientLight(16777215, 0.75));
-  const soleil = new THREE.DirectionalLight(16777215, 1);
-  soleil.position.set(5, 8, 6);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const soleil = new THREE.DirectionalLight(16774368, 2.6);
+  soleil.position.set(6, 9, 4);
   soleil.castShadow = true;
-  soleil.shadow.bias = -8e-4;
+  soleil.shadow.bias = -5e-4;
+  soleil.shadow.normalBias = 0.02;
   soleil.shadow.mapSize.set(2048, 2048);
+  soleil.shadow.camera.left = soleil.shadow.camera.bottom = -7;
+  soleil.shadow.camera.right = soleil.shadow.camera.top = 7;
+  soleil.shadow.camera.near = 1;
+  soleil.shadow.camera.far = 30;
   scene.add(soleil);
-  scene.add(new THREE.HemisphereLight(13624319, 7039824, 0.4));
-  const herbe = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 8628567, roughness: 1 }));
+  scene.add(new THREE.HemisphereLight(12375274, 5595194, 0.55));
+  const contre = new THREE.DirectionalLight(14411506, 0.5);
+  contre.position.set(-6, 4, -5);
+  scene.add(contre);
+  const herbe = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), new THREE.MeshStandardMaterial({ color: 6193984, roughness: 1 }));
   herbe.rotation.x = -Math.PI / 2;
   herbe.position.y = -0.15;
   herbe.receiveShadow = true;

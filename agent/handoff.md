@@ -22,6 +22,7 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Unité `cm` collée au nombre, plus petite ; `100cm` dans le tableau des panneaux
 - [x] Implantation et plan de sol : deux boîtes ; tableau des murs dans sa boîte
 - [x] Ouvertures et mobilier : deux boîtes
+- [x] 3D : lumière, ombres, couleurs distinctes, panneaux métalliques, arêtes des angles
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)
