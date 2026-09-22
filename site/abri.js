@@ -3438,11 +3438,14 @@ function createAbriViewer(container, data0) {
       ctx.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height);
     }
   }
-  window.addEventListener("resize", () => {
+  const retaille = () => {
+    if (!container.clientWidth || !container.clientHeight) return;
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
-  });
+  };
+  window.addEventListener("resize", retaille);
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(retaille).observe(container);
   (function boucle() {
     requestAnimationFrame(boucle);
     controls.update();

@@ -48,7 +48,10 @@ ul, ol { margin: .3rem 0; padding-left: 1.2rem; }
 li { margin: .15rem 0; }
 
 .deux { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
-.fiche-vue { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+/* la 3D prend toute la hauteur de la colonne de gauche */
+.fiche-vue { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: stretch; }
+.vue { display: flex; flex-direction: column; }
+.vue .scene { flex: 1; min-height: 380px; }
 /* deux boites cote a cote (implantation, plan de sol) */
 .rangee { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
 .rangee section { margin-bottom: .85rem; }
@@ -75,9 +78,9 @@ td.regle { color: var(--muted); font-size: .78rem; }
 .note-prix { color: #7a8591; }
 a.source { font-size: .72rem; white-space: nowrap; }
 p.intro { margin: 0 0 .6rem; font-size: .92rem; line-height: 1.55; }
-.resume-figs { display: grid; grid-template-columns: minmax(0, 2fr) minmax(6.5rem, 1fr); gap: .5rem; align-items: center; background: var(--creux); border-radius: 6px; padding: .4rem .5rem; max-width: 560px; }
+.resume-figs { display: grid; grid-template-columns: minmax(0, 2fr) minmax(6.5rem, 1fr); gap: .5rem; align-items: center; background: var(--creux); border-radius: 6px; padding: .4rem .5rem; max-width: 480px; }
 .resume-figs figure { margin: 0; min-width: 0; }
-.resume-figs svg { display: block; width: 100%; height: auto; max-height: 400px; }
+.resume-figs svg { display: block; width: auto; max-width: 100%; height: auto; max-height: 300px; margin: 0 auto; }
 ul.legende { list-style: none; margin: 0; padding: 0; font-size: .64rem; color: var(--muted); display: grid; gap: .25rem; line-height: 1.2; }
 ul.legende li { display: flex; align-items: center; gap: .35rem; }
 ul.legende i { flex: none; width: 18px; height: 10px; display: inline-block; }
@@ -127,7 +130,7 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .tip::after { content: attr(data-tip); position: absolute; top: calc(100% + 4px); left: 0; z-index: 3; padding: .15rem .4rem; border-radius: 4px; background: rgba(28, 37, 48, .92); color: #fff; font-size: .62rem; white-space: nowrap; pointer-events: none; opacity: 0; transition: none; }
 .tip:hover::after { opacity: 1; }
 button.tip::after { left: auto; right: 0; }
-#viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
+#viewer { width: 100%; height: 100%; min-height: 380px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
 /* options de la scene : une colonne de textes poses sur la vue, en bas a gauche ; la pilule n'apparait qu'au survol */
 .bascules { position: absolute; left: .35rem; bottom: .35rem; display: flex; flex-direction: column; gap: .05rem; pointer-events: none; }
 .bascules button { pointer-events: auto; display: inline-flex; align-items: center; gap: .25rem; height: 18px; padding: 0 .35rem 0 .25rem; border: 1px solid transparent; border-radius: 9px; background: transparent; color: rgba(28, 37, 48, .78); cursor: pointer; font-size: .6rem; line-height: 1; width: max-content; text-shadow: 0 0 4px rgba(255, 255, 255, .9); }
@@ -143,7 +146,7 @@ button.tip::after { left: auto; right: 0; }
 .vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .45rem; margin-top: .6rem; }
 .vignettes button { padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); cursor: pointer; overflow: hidden; text-align: left; }
 .vignettes button:hover { border-color: var(--accent); }
-.vignettes canvas { display: block; width: 100%; height: auto; background: #dfe7ee; }
+.vignettes canvas { display: block; width: 100%; height: 100px; object-fit: cover; background: #dfe7ee; }
 .vignettes span { display: block; font-size: .66rem; color: var(--muted); padding: .15rem .4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 figcaption { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
@@ -214,14 +217,21 @@ ol.liste.formes button { padding: .2rem .5rem; }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre, .pourquoi { grid-template-columns: minmax(0, 1fr); }
-  /* telephone : le dessin reste a gauche, plus petit, la legende a droite */
-  .resume-figs { grid-template-columns: minmax(0, 1fr) max-content; gap: .4rem; }
-  .resume-figs svg { max-height: 240px; width: auto; max-width: 100%; }
-  ul.legende { grid-template-columns: minmax(0, 1fr); font-size: .6rem; }
+  /* tablette : le resume reste a cote de la 3D, en deux colonnes egales */
+  .fiche-vue { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .vue .scene, #viewer { min-height: 340px; }
   ol.questions { columns: 1; }
   .rangee { grid-template-columns: minmax(0, 1fr); }
   .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+}
+@media (max-width: 640px) {
+  /* telephone : resume puis 3D l'un sous l'autre ; le dessin reste a gauche, plus petit, la legende a droite */
+  .fiche-vue { grid-template-columns: minmax(0, 1fr); }
+  .resume-figs { grid-template-columns: minmax(0, 1fr) max-content; gap: .4rem; }
+  .resume-figs svg { max-height: 240px; width: auto; max-width: 100%; }
+  ul.legende { font-size: .6rem; }
+  .vue .scene, #viewer { min-height: 300px; height: 300px; }
 }
 @media print {
   body { background: #fff; font-size: 11px; }

@@ -518,11 +518,15 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     if (ctx) { canvas.width = 320; canvas.height = Math.round(320 / camera.aspect); ctx.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height); }
   }
 
-  window.addEventListener("resize", () => {
+  // la boite suit la colonne de gauche : on retaille a chaque changement de sa taille, pas seulement de la fenetre
+  const retaille = () => {
+    if (!container.clientWidth || !container.clientHeight) return;
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
-  });
+  };
+  window.addEventListener("resize", retaille);
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(retaille).observe(container);
   (function boucle() { requestAnimationFrame(boucle); controls.update(); renderer.render(scene, camera); })();
   const viewer: AbriViewer = { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
   return viewer;
