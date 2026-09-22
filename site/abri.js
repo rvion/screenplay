@@ -2832,7 +2832,7 @@ function cloture_pleine(gr, oui) {
 var VUES = {
   jardin: { titre: "Depuis le jardin", position: [3.3, 2.7, 4.3], cible: [0, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT } },
   porte: { titre: "C\xF4t\xE9 porte", position: [4.45, 1.75, 2.99], cible: [0.4, 1, 0], fov: 42, etats: { ...ETATS_DEFAUT, personne: 1, cloture: 1 } },
-  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT } },
+  arriere: { titre: "Derri\xE8re, le passage", position: [2.2, 3.4, -3.8], cible: [0, 0.8, -0.5], fov: 42, etats: { ...ETATS_DEFAUT, porte: 2 } },
   droite: { titre: "Vue de droite", position: [-2.52, 3.38, 4.61], cible: [-0.1, 0.9, 0.15], fov: 42, etats: { ...ETATS_DEFAUT } },
   interieur: { titre: "Int\xE9rieur, murs coup\xE9s", position: [1.6, 4.6, 2.6], cible: [0, 0.6, 0.1], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, personne: 2 } },
   lit: { titre: "Lit d\xE9pli\xE9", position: [-1.4, 4.4, 2.4], cible: [0, 0.5, 0], fov: 42, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, lit: 1, etiquettes: 0 } }
