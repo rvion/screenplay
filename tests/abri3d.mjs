@@ -82,6 +82,7 @@ ok(bt.min.y >= (pl.bas_cm - 5) / 100 && bt.min.y <= pl.bas_cm / 100 + 1e-6, "toi
 // rehausse : autant de pieces que le debit, chacune entre la tete du mur et le dessous du toit
 const rehausses = racine.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && boite(o).min.y > 2);
 ok(rehausses.length === m.rehausse.pieces.length && rehausses.every((o) => near(boite(o).min.y, m.hauteur_mur_cm / 100, 1e-6) && boite(o).max.y <= pl.haut_cm / 100 + 1e-6), rehausses.length + " pièces de rehausse, de la tête des murs au dessous du toit");
+ok(d.rehausse_pieces.length === m.rehausse.pieces.length && d.rehausse_pieces.every((r) => /^R\d$/.test(r.id) && d.murs.some((w) => w.cle === r.face)), "modele3d : une étiquette R1..R" + d.rehausse_pieces.length + " par pièce de rehausse, chacune sur sa face");
 // gouttiere : un troncon par bord d'egout, sous le bord du toit ; descente jusqu'au sol
 const gouttieres = groupes.toit.children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry" && o.geometry.parameters.depth === 0.11);
 ok(gouttieres.length === d.gouttiere.troncons.length, gouttieres.length + " tronçon(s) de gouttière, comme le modèle");

@@ -77,8 +77,10 @@ export function alternatives(p: Params, courante: number) {
 const el = (id: string) => document.getElementById(id);
 const texte = (id: string, s: string) => { const e = el(id); if (e) e.textContent = s; };
 const html = (id: string, s: string) => { const e = el(id); if (e) e.innerHTML = s; };
-const table = (id: string, tetes: string[], lignes: string[][], pied: string[] | null = null) => {
-  html(id, `<thead><tr>${tetes.map((t) => `<th>${t}</th>`).join("")}</tr></thead><tbody>${lignes.map((l) => `<tr>${l.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>${pied ? `<tfoot><tr>${pied.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}`);
+// pliables : colonnes ou une cellule peut passer a la ligne (entre deux cotes, entre deux panneaux, dans un texte) ; les autres ne se replient jamais
+const table = (id: string, tetes: string[], lignes: string[][], pliables: number[] = [], pied: string[] | null = null) => {
+  const td = (c: string, i: number) => `<td${pliables.includes(i) ? ' class="pliable"' : ""}>${c}</td>`;
+  html(id, `<thead><tr>${tetes.map((t) => `<th>${t}</th>`).join("")}</tr></thead><tbody>${lignes.map((l) => `<tr>${l.map(td).join("")}</tr>`).join("")}</tbody>${pied ? `<tfoot><tr>${pied.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}`);
 };
 const liste = (id: string, items: string[]) => html(id, items.map((s) => `<li>${s}</li>`).join(""));
 
@@ -119,7 +121,7 @@ export function rend_abri(a: Abri) {
   ];
   html("fiche", paires.map(([k, val]) => `<div class="carte"><span class="k">${k}</span><span class="v">${val}</span></div>`).join(""));
   table("murs", ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au début"],
-    m.faces.map((f: any, i: number) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)} ${cote(pn.largeur_cm)}`).join(" · "), cote(m.angles_deg[i], "°")]));
+    m.faces.map((f: any, i: number) => [`${face(f.cle)}&nbsp;${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} → ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn: any) => `${face(pn.id)}&nbsp;${cote(pn.largeur_cm)}`).join(" · "), cote(m.angles_deg[i], "°")]), [3, 4]);
 
   // implantation et plans : les SVG du modele, injectes tels quels
   // planches : l'entete en texte (titre, detail, legende), le dessin sans titre dessous
@@ -158,10 +160,10 @@ export function rend_abri(a: Abri) {
 
   // debit
   table("debit-murs", ["pièce", "largeur", "provenance", "découpe"],
-    m.faces.flatMap((f: any) => f.panneaux.map((pn: any) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoupé" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "–"])));
+    m.faces.flatMap((f: any) => f.panneaux.map((pn: any) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoupé" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "–"])), [2, 3]);
   table("debit-toit", ["pièce", "largeur", "longueur", "coupe"],
-    m.toit.panneaux.map((t: any) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]));
-  table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} → ${cote(r.h1)}`]));
+    m.toit.panneaux.map((t: any) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]), [3]);
+  table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} → ${cote(r.h1)}`]), [3]);
 
   // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait
   html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>matériau</th><th class="num">quantité</th><th class="num">prix unitaire</th><th class="num">montant</th><th>règle · source</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
@@ -181,12 +183,12 @@ export function rend_abri(a: Abri) {
   table("ouvertures-table", ["ouverture", "taille", "où", "détail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitrée"}`, `${cote(`${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)}`)} (cadre ${cote(`${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} à ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la façade`, "ouvre vers l'extérieur, ferrée côté fond"],
     ...v.fenetres.map((f: any) => [`fenêtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm)} à ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `allège ${cote(f.allege_cm)}, dans un seul panneau`]),
-  ]);
+  ], [2, 3]);
   table("amenagement", ["élément", "taille", "place"], [
     ...v.bureaux.map((b: any) => [`bureau ${b.cote === "avant" ? "de façade" : b.cote}`, cote(`${fz(b.profondeur_cm)} × ${fr(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de façade" : b.cote}`]),
     ...(v.sieges || []).map((st: any) => [st.type, cote(`${fz(st.largeur_cm)} × ${fz(st.profondeur_cm)}`), `devant le bureau ${st.contre === "avant" ? "de façade" : st.contre}`]),
     ...(v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz(v.lit_pliant.largeur_cm)} × ${fz(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? (v.lit_pliant.replie ? "contre un mur" : "déplié au sol libre, sièges rangés") : "ne tient pas"]] : []),
-  ]);
+  ], [2]);
 
   // pourquoi : une puce par idee, l'accroche en gras, le reste en petit ; un marqueur par groupe
   const T = a.textes;

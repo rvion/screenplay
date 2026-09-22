@@ -4228,6 +4228,24 @@
    }
   ],
   "rehausse_epaisseur_cm": 7.5,
+  "rehausse_pieces": [
+   {
+    "id": "R1",
+    "face": "A"
+   },
+   {
+    "id": "R2",
+    "face": "D"
+   },
+   {
+    "id": "R3",
+    "face": "B"
+   },
+   {
+    "id": "R4",
+    "face": "G"
+   }
+  ],
   "toit": {
    "contour": [
     [

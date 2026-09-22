@@ -2034,6 +2034,7 @@ function modele3d_abri(p, g, v, m) {
       ouvertures: f.ouvertures
     })),
     rehausse_epaisseur_cm: +sec[0] / 10,
+    rehausse_pieces: m.rehausse.pieces.map((r) => ({ id: r.id, face: r.face })),
     toit: { contour: m.toit.contour, plan: m.toit.plan, epaisseur_cm: +p.panneau.epaisseur_mm / 10, panneaux: m.toit.panneaux.map((t) => ({ id: t.id, polygone: t.polygone })) },
     gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
     mobilier: {

@@ -2034,6 +2034,7 @@ function modele3d_abri(p, g, v, m) {
       ouvertures: f.ouvertures
     })),
     rehausse_epaisseur_cm: +sec[0] / 10,
+    rehausse_pieces: m.rehausse.pieces.map((r) => ({ id: r.id, face: r.face })),
     toit: { contour: m.toit.contour, plan: m.toit.plan, epaisseur_cm: +p.panneau.epaisseur_mm / 10, panneaux: m.toit.panneaux.map((t) => ({ id: t.id, polygone: t.polygone })) },
     gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
     mobilier: {
@@ -2498,8 +2499,9 @@ var html = (id, s) => {
   const e = el(id);
   if (e) e.innerHTML = s;
 };
-var table = (id, tetes, lignes, pied = null) => {
-  html(id, `<thead><tr>${tetes.map((t) => `<th>${t}</th>`).join("")}</tr></thead><tbody>${lignes.map((l) => `<tr>${l.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>${pied ? `<tfoot><tr>${pied.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}`);
+var table = (id, tetes, lignes, pliables = [], pied = null) => {
+  const td = (c, i) => `<td${pliables.includes(i) ? ' class="pliable"' : ""}>${c}</td>`;
+  html(id, `<thead><tr>${tetes.map((t) => `<th>${t}</th>`).join("")}</tr></thead><tbody>${lignes.map((l) => `<tr>${l.map(td).join("")}</tr>`).join("")}</tbody>${pied ? `<tfoot><tr>${pied.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}`);
 };
 var liste = (id, items) => html(id, items.map((s) => `<li>${s}</li>`).join(""));
 function rend_abri(a) {
@@ -2541,7 +2543,8 @@ function rend_abri(a) {
   table(
     "murs",
     ["mur", "long. ext.", "long. int.", "hauteur finie", "panneaux", "angle au d\xE9but"],
-    m.faces.map((f, i) => [`${face(f.cle)} ${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)} ${cote(pn.largeur_cm)}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")])
+    m.faces.map((f, i) => [`${face(f.cle)}&nbsp;${nom_face(f)}`, cote(f.longueur_cm), cote(v.cotes_interieures_cm[i]), `${cote(f.hauteur_debut_cm)} \u2192 ${cote(f.hauteur_fin_cm)}`, f.panneaux.map((pn) => `${face(pn.id)}&nbsp;${cote(pn.largeur_cm)}`).join(" \xB7 "), cote(m.angles_deg[i], "\xB0")]),
+    [3, 4]
   );
   const PL = core.planches || {};
   const planche = (cle, extra = "") => {
@@ -2586,14 +2589,16 @@ function rend_abri(a) {
   table(
     "debit-murs",
     ["pi\xE8ce", "largeur", "provenance", "d\xE9coupe"],
-    m.faces.flatMap((f) => f.panneaux.map((pn) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"]))
+    m.faces.flatMap((f) => f.panneaux.map((pn) => [face(pn.id), cote(pn.largeur_cm), pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < mod - 0.05 ? "panneau recoup\xE9" : "panneau entier", pn.decoupes.length ? pn.decoupes.join(", ") : "\u2013"])),
+    [2, 3]
   );
   table(
     "debit-toit",
     ["pi\xE8ce", "largeur", "longueur", "coupe"],
-    m.toit.panneaux.map((t) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`])
+    m.toit.panneaux.map((t) => [face(t.id), cote(t.largeur_cm), cote(t.longueur_cm), `${t.largeur_cm < mod - 0.05 ? "refendu en largeur, " : ""}${t.biais ? "un bord en biais" : "entier"}`]),
+    [3]
   );
-  table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} \u2192 ${cote(r.h1)}`]));
+  table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} \u2192 ${cote(r.h1)}`]), [3]);
   html("materiaux", B.groupes.map((gr) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">quantit\xE9</th><th class="num">prix unitaire</th><th class="num">montant</th><th>r\xE8gle \xB7 source</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td>${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td><td class="regle">${l.regle}${l.note ? `<br><span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
   const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
   if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
@@ -2612,12 +2617,12 @@ function rend_abri(a) {
   table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
     [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
     ...v.fenetres.map((f) => [`fen\xEAtre ${f.ouvrant ? "oscillo-battante" : "fixe"}`, cote(`${fz3(f.largeur_cm)} \xD7 ${fz3(f.hauteur_cm)}`), `face ${face("A")}, de ${cote(f.debut_cm)} \xE0 ${cote(Math.round((f.debut_cm + f.largeur_cm) * 10) / 10)} depuis le coin gauche`, `all\xE8ge ${cote(f.allege_cm)}, dans un seul panneau`])
-  ]);
+  ], [2, 3]);
   table("amenagement", ["\xE9l\xE9ment", "taille", "place"], [
     ...v.bureaux.map((b) => [`bureau ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`, cote(`${fz3(b.profondeur_cm)} \xD7 ${fr2(b.longueur_cm)}`), `tout le mur ${b.cote === "avant" ? "de fa\xE7ade" : b.cote}`]),
     ...(v.sieges || []).map((st) => [st.type, cote(`${fz3(st.largeur_cm)} \xD7 ${fz3(st.profondeur_cm)}`), `devant le bureau ${st.contre === "avant" ? "de fa\xE7ade" : st.contre}`]),
     ...v.lit_pliant ? [[`lit ${v.lit_pliant.replie ? "rabattable" : "pliant"}`, cote(`${fz3(v.lit_pliant.largeur_cm)} \xD7 ${fz3(v.lit_pliant.longueur_cm)}`), v.lit_pliant.tient ? v.lit_pliant.replie ? "contre un mur" : "d\xE9pli\xE9 au sol libre, si\xE8ges rang\xE9s" : "ne tient pas"]] : []
-  ]);
+  ], [2]);
   const T = a.textes;
   const puce = (s) => {
     const gras = s.match(/^\*\*(.+?)\*\*\s*[:.]?\s*([\s\S]*)$/);
@@ -2894,6 +2899,15 @@ function peuple_abri(abri, data, visible_demande = {}) {
       const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
       pose(aretes(geoR));
+      const pc = data.rehausse_pieces ? data.rehausse_pieces.find((x) => x.face === f.cle) : null;
+      const tr = pc ? etiquette(pc.id) : null;
+      if (tr) {
+        const xr = f.hauteur_debut_cm >= f.hauteur_fin_cm ? 0.2 : 0.8, hr = f.hauteur_debut_cm + (f.hauteur_fin_cm - f.hauteur_debut_cm) * xr - Hm * 100;
+        const haut2 = Math.min(0.13, Math.max(0.08, hr / 100 - 0.03));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut2 * 2, haut2), new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false }));
+        plaque.position.set(xr * L / 100, Hm + hr / 200, 0.012);
+        pose(plaque, etiq);
+      }
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
@@ -3174,7 +3188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (titre) titre.textContent = VUES[b.dataset.vue].titre;
     b.addEventListener("click", () => vue && vue.voir(b.dataset.vue));
   }
-  rend_vignettes();
+  window.requestAnimationFrame(() => window.setTimeout(rend_vignettes, 0));
   const fov = document.getElementById("cam-fov"), dist = document.getElementById("cam-dist"), copier = document.getElementById("cam-copier");
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
   if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
@@ -3182,7 +3196,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const affiche_etat = () => {
     if (vue && etat_el) {
       const e = vue.etat();
-      etat_el.innerHTML = `<i class="pos">pos(${e.position.join(",")})</i><i class="cible">cible(${e.cible.join(",")})</i><i class="fov">${e.fov}\xB0</i><i class="dist">${e.distance}m</i>`;
+      etat_el.innerHTML = `<i class="cible">cible(${e.cible.join(",")})</i><i class="fov">${e.fov}\xB0</i><i class="dist">${e.distance}m</i><i class="pos">pos(${e.position.join(",")})</i>`;
     }
   };
   if (vue) vue.surChangement((e) => {

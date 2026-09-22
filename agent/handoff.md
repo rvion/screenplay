@@ -24,6 +24,10 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Ouvertures et mobilier : deux boîtes, l'une sous l'autre
 - [x] Cotes des tableaux alignées sur le dernier chiffre entier, décimales plus petites, unité dans sa colonne
 - [x] 3D : lumière, ombres, couleurs distinctes, panneaux métalliques, arêtes des angles
+- [x] Seuil qui scintillait (arête à y = 0 contre la dalle) ; vignettes après la première image
+- [x] Rehausse R1..R4 étiquetée en 3D
+- [x] Tableaux : pas de repli sauf colonnes choisies (hauteur finie, panneaux, textes), défilement de côté
+- [x] Barre caméra : pos en dernier, le reste ne bouge plus
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

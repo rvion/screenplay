@@ -180,6 +180,16 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
       const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
       pose(aretes(geoR));
+      // etiquette R1..R4 la ou la bande est la plus haute (a 20 % du bout haut), plaque a la hauteur de la bande
+      const pc = data.rehausse_pieces ? data.rehausse_pieces.find((x: any) => x.face === f.cle) : null;
+      const tr = pc ? etiquette(pc.id) : null;
+      if (tr) {
+        const xr = f.hauteur_debut_cm >= f.hauteur_fin_cm ? 0.2 : 0.8, hr = (f.hauteur_debut_cm + (f.hauteur_fin_cm - f.hauteur_debut_cm) * xr) - Hm * 100;
+        const haut = Math.min(0.13, Math.max(0.08, hr / 100 - 0.03));
+        const plaque = new THREE.Mesh(new THREE.PlaneGeometry(haut * 2, haut), new THREE.MeshBasicMaterial({ map: tr, transparent: true, depthWrite: false }));
+        plaque.position.set(xr * L / 100, Hm + hr / 200, 0.012);
+        pose(plaque, etiq);
+      }
     }
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
