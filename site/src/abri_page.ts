@@ -109,14 +109,23 @@ export function rend_abri(a: Abri) {
   // implantation et plans : les SVG du modele, injectes tels quels
   // planches : l'entete en texte (titre, detail, legende), le dessin sans titre dessous
   const PL = core.planches || {};
-  const planche = (cle: string, extra = "") => { const q = PL[cle], f = m.faces.find((x: any) => `facade-${x.cle}` === cle); return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} · ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">· ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" · ")}</p><div class="planbox" id="plan-${cle}">${q.svg}</div>` : ""; };
-  html("planche-implantation", planche("implantation") + `<ul id="implantation-points"></ul>`);
+  // chaque planche a son lien « agrandir » : le SVG s'ouvre seul dans un nouvel onglet (blob : marche aussi en file://)
+  const planche = (cle: string, extra = "") => { const q = PL[cle], f = m.faces.find((x: any) => `facade-${x.cle}` === cle); return q ? `<h3>${q.lettre ? `Face ${face(q.lettre)} · ` : ""}${f ? nom_face(f) : q.nom}${extra}${q.detail ? ` <span class="precision">· ${q.detail}</span>` : ""}</h3><p class="note">${q.lignes.join(" · ")}</p><div class="planbox" id="plan-${cle}"><a class="zoom" href="#" data-zoom="${cle}" title="Ouvrir en grand dans un nouvel onglet">agrandir ↗</a>${q.svg}</div>` : ""; };
+  html("planche-implantation", planche("implantation"));
   html("planche-sol", planche("sol"));
-  liste("implantation-points", [
-    `${cote(gauche)} du bord gauche (mur de propriété), ${cote(avant)} du bord avant, ${cote(droite_libre)} de dalle à droite : le chemin vers la porte et l'arrière.`,
-    `Passage derrière, le long du grand pan : ${cote(passage.cm)} au plus étroit.`,
-    v.arriere ? `${cote(v.arriere.aire_m2, "m²")} de dalle cachés derrière l'abri (hachures vertes), jusqu'à ${cote(v.arriere.profondeur_max_cm)} de profondeur : les outils de jardin.` : "",
-  ].filter(Boolean));
+  const main = document.querySelector("main");
+  if (main && !(main as any).__zoom) {
+    (main as any).__zoom = true;
+    main.addEventListener("click", (ev) => {
+      const z = (ev.target as HTMLElement).closest("a.zoom") as HTMLElement | null;
+      if (!z || !z.dataset.zoom) return;
+      ev.preventDefault();
+      const q = (a.core.planches || {})[z.dataset.zoom];
+      if (!q) return;
+      const url = URL.createObjectURL(new Blob([q.svg.replace("<svg ", '<svg style="background:#fff" ')], { type: "image/svg+xml" }));
+      window.open(url, "_blank");
+    });
+  }
   const details_plans = el("plans-details"), liste_plans = el("plans-liste"), mode_plans = el("plans-mode");
   if (details_plans && liste_plans && mode_plans) {
     const cles = [...m.faces.map((f: any) => `facade-${f.cle}`), "toit", "rehausse"];

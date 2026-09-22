@@ -1210,10 +1210,7 @@ function variante_svg(v: any, P: (q: Pt) => number[], scale: number, sobre = fal
 // m (modele de l'abri retenu) : plan d'implantation, sans bandes ni zone, avec toit, gouttiere et
 // distances de l'abri aux bords de la dalle
 export function entete_implantation(v: any, d: any): EntetePlan {
-  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, lignes: [
-    "murs pleins, intérieur en pointillé fin, toit (débords) en pointillé brun, gouttière et descente en bleu",
-    "orange = distance aux bords de la dalle · vert/orange = passage derrière, jusqu'aux murs de propriété (cm)",
-  ] };
+  return { nom: "Implantation sur la dalle", detail: `abri ${v.aire_m2} m² sur ${d.aire_m2} m² de dalle`, lignes: ["brun = mur de propriété · orange = distance aux bords · vert = passage derrière · hachures = rangement caché"] };
 }
 export function plan_dalle_svg(g: any, avecBandes = false, v: any = null, m: any = null, sans_entete = false): string {
   const d = g.dalle;
@@ -1585,7 +1582,8 @@ export function buildCore(p: Params) {
     planches.sol = { ...entete_sol(p, v13), svg: modele_sol_svg(p, v13, modele, true) };
     planches.toit = { ...entete_toit(modele), svg: modele_toit_svg(v13, modele, true) };
     planches.rehausse = { ...entete_rehausse(modele), svg: modele_rehausse_svg(modele, true) };
-    for (const f of modele.faces) planches[`facade-${f.cle}`] = { ...entete_facade(f), svg: modele_facade_svg(modele, f, true) };
+    const plus_long = Math.max(...modele.faces.map((f: any) => f.longueur_cm));
+    for (const f of modele.faces) planches[`facade-${f.cle}`] = { ...entete_facade(f), svg: modele_facade_svg(modele, f, true, plus_long) };
   }
   return { geometrie: g, debit: t, achats: sh, budget: bud, ouvertures: openings, model3d: m, variantes: vars, modele, modele3d, svg, planches };
 }
@@ -1857,8 +1855,7 @@ function cadre_plan(pts: Pt[], scale: number, pad: number, top: number) {
 }
 
 export function entete_sol(p: Params, v: any): EntetePlan {
-  const lignes = [`murs ${fz(+p.panneau.epaisseur_mm / 10)} cm · porte ${fz(v.porte.largeur_cm)} ouvrant dehors · fenêtres en façade (bleu)${v.sol_libre_m2 != null ? ` · sol libre hors bureaux ${v.sol_libre_m2} m²` : ""}`];
-  if (v.lit_pliant && v.lit_pliant.tient) lignes.push(`violet pointillé = lit déplié${v.lit_pliant.replie ? " · violet plein = replié contre le mur · carrés = fixations" : ""}${v.lit_pliant.gene_sieges_m2 > 0.05 ? " · on range les sièges pour le déplier" : ""}`);
+  const lignes = [`murs ${fz(+p.panneau.epaisseur_mm / 10)} cm · porte ${fz(v.porte.largeur_cm)} ouvrant dehors · fenêtres en bleu${v.sol_libre_m2 != null ? ` · sol libre ${v.sol_libre_m2} m²` : ""}${v.lit_pliant && v.lit_pliant.tient ? " · violet pointillé = lit déplié" : ""}`];
   return { nom: "Plan de sol", detail: `murs ${v.aire_m2} m² · intérieur ${v.aire_interieure_m2} m²`, lignes };
 }
 export function modele_sol_svg(p: Params, v: any, m: any, sans_entete = false): string {
@@ -2028,9 +2025,10 @@ export function modele_rehausse_svg(m: any, sans_entete = false): string {
 export function entete_facade(f: any): EntetePlan {
   return { lettre: f.cle, nom: f.nom, lignes: [`vue de l'extérieur · ${f.panneaux.length} panneau${f.panneaux.length > 1 ? "x" : ""} de ${fz(f.hauteur_mur_cm)} · hauteurs finies aux deux bouts`] };
 }
-export function modele_facade_svg(m: any, f: any, sans_entete = false): string {
+// largeur_commune : toutes les elevations de la page ont la meme boite (celle du mur le plus long), dessin cale a gauche
+export function modele_facade_svg(m: any, f: any, sans_entete = false, largeur_commune = 0): string {
   const scale = 1.25, pad = sans_entete ? 30 : 60, top = sans_entete ? 0 : 50, L = f.longueur_cm, Hm = f.hauteur_mur_cm, h0 = f.hauteur_debut_cm, h1 = f.hauteur_fin_cm;
-  const W = L * scale + 2 * pad + 60, H = Math.max(h0, h1) * scale + 2 * pad + top + 30;
+  const W = Math.max(L, largeur_commune) * scale + 2 * pad + 60, H = Math.max(...m.hauteurs_coins_cm, h0, h1) * scale + 2 * pad + top + 30;
   const P = (x: number, h: number) => [pad + 30 + x * scale, H - pad - 30 - h * scale];
   let svg = svgHeader(rnd(W), rnd(H), sans_entete);
   for (const pn of f.panneaux) {

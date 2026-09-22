@@ -49,10 +49,14 @@ li { margin: .15rem 0; }
 
 .deux { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
 .fiche-vue { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
-.plans-haut { margin-bottom: .6rem; }
-.plans-haut figure { margin: 0; min-width: 0; }
-.plans-haut h3 { margin: 0 0 .35rem; }
-.plans-haut ul { font-size: .84rem; }
+/* deux planches cote a cote, titres, legendes et dessins alignes rang par rang */
+.plans-haut { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto auto; grid-auto-flow: column; gap: 0 .6rem; margin-bottom: .6rem; align-items: start; }
+.plans-haut figure { display: contents; }
+.plans-haut h3 { margin: 0 0 .2rem; }
+.plans-haut p.note { margin: 0 0 .35rem; }
+.planbox { position: relative; width: fit-content; max-width: 100%; }
+a.zoom { position: absolute; top: .35rem; right: .35rem; font-size: .72rem; text-decoration: none; background: rgba(255, 255, 255, .85); border: 1px solid var(--line); border-radius: 4px; padding: .05rem .4rem; }
+a.zoom:hover { border-color: var(--accent); }
 h3 .precision { font-weight: 400; color: var(--muted); }
 .detail > p.note, .plans-haut p.note { margin: 0 0 .4rem; }
 .trois { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
@@ -79,7 +83,9 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .viewer-fallback { padding: 1rem; color: var(--muted); }
 
 figcaption { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
-.planbox svg { display: block; width: auto; height: auto; max-width: 100%; max-height: 66vh; margin: 0 auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.planbox svg { display: block; width: auto; height: auto; max-width: 100%; max-height: 66vh; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+/* dans une liste de plans, meme hauteur de dessin pour chaque entree (la largeur suit, plafonnee a la colonne) */
+.details .planbox svg { height: min(62vh, 520px); }
 #plans-details.tout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 #plans-details.tout article[data-cle="implantation"], #plans-details.tout article[data-cle="sol"] { grid-column: 1 / -1; }
 #plans-details h3 { margin-bottom: .45rem; }
@@ -127,14 +133,15 @@ p.suivante button:hover { border-color: var(--accent); }
   nav.sections { display: flex; flex-wrap: wrap; gap: 0 .2rem; }
   main { padding: .8rem 1rem 3rem; }
   .deux, .trois, .maitre { grid-template-columns: minmax(0, 1fr); }
+  .plans-haut { grid-template-columns: minmax(0, 1fr); grid-auto-flow: row; }
   .maitre .cote-liste { position: static; }
   ol.liste { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 }
 @media print {
   body { background: #fff; font-size: 11px; }
-  .planbox svg { max-height: none; }
+  .planbox svg { max-height: none; height: auto; }
   header.barre { position: static; border: 0; padding: 0 0 .3rem; }
-  .actions, aside.menu, .vue, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante { display: none; }
+  .actions, aside.menu, .vue, p.bandeau, .maitre .cote-liste, h2 .mode, p.suivante, a.zoom { display: none; }
   .mise-en-page { display: block; max-width: none; }
   main { padding: 0; }
   section { border: 0; box-shadow: none; padding: 0; margin: 0 0 .8rem; break-inside: auto; }

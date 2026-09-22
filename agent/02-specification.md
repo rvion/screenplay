@@ -156,7 +156,12 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
     lettre, nom, détail chiffré, lignes de légende ; `entete_facade`, `entete_sol`…) et deux rendus :
     le fichier SVG la dessine (image autonome pour `abri.md` et `docs/`), la page prend le corps **sans
     entête** (`sans_entete`) et rend le titre en `h3` et la légende en `p.note` au-dessus du dessin :
-    rien n'est écrit deux fois, la page contrôle la taille du dessin.
+    rien n'est écrit deux fois, la page contrôle la taille du dessin : pas de fond, marges serrées, boîte à
+    la taille du dessin (calé à gauche, jamais centré), **même boîte pour toutes les élévations** (largeur du
+    mur le plus long, `largeur_commune`) et même hauteur rendue pour chaque entrée de la liste. Les deux
+    planches de tête (implantation, plan de sol) s'alignent rang par rang (titre, légende d'une ligne,
+    dessin). Chaque planche a un lien **« agrandir »** qui ouvre le SVG seul dans un nouvel onglet (blob,
+    donc aussi en `file://`).
   - **Cotes et repères** : toute cote de la page passe par `cote(x, unité)` (`span.cote`, chiffres
     tabulaires, unité en gris, le degré collé) et tout repère de face ou de panneau par `face(id)`
     (`span.face`, monospace sur fond gris) : un seul style, dans la fiche, les tableaux et les listes.
