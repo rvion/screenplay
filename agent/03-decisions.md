@@ -526,3 +526,11 @@ fixe en 80 × 80 sur mesure (4 à 5 semaines). *Effet :* une seule référence, 
 fenêtres qui aèrent. L'allège reste à 110 cm. La question de dossier et l'idée « deux fenêtres
 identiques » sortent de la page : elles sont tranchées. Découper les panneaux aux cotes hors tout de
 l'article reçu (85 × 78 annoncées).
+
+## D45 — Pas de panne intermédiaire tant qu'elle n'est pas dessinée
+Choix de Rémi (2026-09-22) : la simplicité d'abord. La panne à mi-profondeur était comptée aux matériaux
+et au guide de montage sans être dessinée nulle part. `toit.panne_intermediaire` passe à `false` : elle
+sort de la liste d'achats et du guide, et reste une question (Q2 : le panneau de 60 mm porte-t-il la
+portée seul ?). Si le fabricant dit non, on la dessine et on la remet, en une fois. *Garde :*
+`tests/abri_dom.mjs` refuse une panne dans le guide ou les matériaux et exige la question (vue rouge
+avec la panne activée).

@@ -236,7 +236,7 @@ et <code>agent/*.md</code>) a sa page HTML sous <code>site/docs/</code>, au mêm
 (README, puis tri naturel : abri, etudes/… ; puis la spécification).</li>
 <li><strong>Rien à déclarer</strong> pour une nouvelle page : <code>npm run emit</code> prend les <code>.md</code> de <code>git ls-files</code>
 et les nouveaux <code>.md</code> que git n&#39;ignore pas (<code>--others --exclude-standard</code>). <strong>git fait foi</strong> : un fichier ignoré (<code>CLAUDE.local.md</code>,
-<code>STATUS.md</code>) ne peut pas être publié ; <code>CLAUDE*.md</code> et <code>STATUS*.md</code> sont exclus par nom en plus.</li>
+<code>STATUS.md</code>) ne peut pas être publié ; <code>CLAUDE*.md</code> et <code>STATUS*.md</code> sont exclus par nom en plus, et <code>asks/</code> (la file <code>shipkit asks</code> des actions à faire par Rémi) par dossier.</li>
 <li>Rendu par <code>site/src/docs.ts</code> (<strong>côté Node seulement</strong>, <code>marked</code> en devDependency : le bundle du
 navigateur n&#39;en dépend pas, le site reste statique et marche en <code>file://</code>). Une seule passe de
 réécriture des liens : fichier sous <code>site/</code> → chemin du site ; <code>.md</code> publié → sa page ; tout le

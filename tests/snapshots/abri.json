@@ -2447,19 +2447,6 @@
     },
     {
      "groupe": "Bois",
-     "poste": "Panne intermédiaire 75 × 150 classe 4, en travers à mi-profondeur",
-     "qte": 2,
-     "unite": "ml",
-     "pu_eur": 9,
-     "montant_eur": 18,
-     "regle": "portée du toit 2,8 m : une panne de la longueur de la façade la ramène à 1,4 m",
-     "a_confirmer": false,
-     "source": "https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4",
-     "note": "68 x 145 classe 4 : 6,20 EUR/m ; 75 x 145 rabote : 17 EUR/m",
-     "optionnel": false
-    },
-    {
-     "groupe": "Bois",
      "poste": "Bois du cadre de porte, section 50 × 60 mm",
      "qte": 5,
      "unite": "ml",
@@ -2552,11 +2539,11 @@
     {
      "groupe": "Fixations",
      "poste": "Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois)",
-     "qte": 0.27,
+     "qte": 0.18,
      "unite": "cent",
      "pu_eur": 90,
-     "montant_eur": 24,
-     "regle": "2 panneaux × 3 appuis × 4 vis, +10 %",
+     "montant_eur": 16,
+     "regle": "2 panneaux × 2 appuis × 4 vis, +10 %",
      "a_confirmer": false,
      "source": "https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/",
      "note": "inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois.",
@@ -2909,7 +2896,7 @@
     },
     {
      "nom": "Bois",
-     "total_eur": 175,
+     "total_eur": 157,
      "optionnel": false
     },
     {
@@ -2919,7 +2906,7 @@
     },
     {
      "nom": "Fixations",
-     "total_eur": 117,
+     "total_eur": 109,
      "optionnel": false
     },
     {
@@ -2953,7 +2940,7 @@
      "optionnel": false
     }
    ],
-   "materiaux_eur": 2944,
+   "materiaux_eur": 2918,
    "options_eur": 216,
    "a_confirmer": 9,
    "hors_materiaux": [
@@ -2963,12 +2950,12 @@
      "note": "service, affiche a part, jamais dans le total des materiaux. Aucun tarif public : sur devis, selon la quantite et la distance."
     }
    ],
-   "coque_eur": 2732,
+   "coque_eur": 2706,
    "amenagement_eur": 212,
-   "total_eur": 2944,
+   "total_eur": 2918,
    "incertitude_pct": 15,
-   "total_bas_eur": 2502,
-   "total_haut_eur": 3386
+   "total_bas_eur": 2480,
+   "total_haut_eur": 3356
   },
   "guide": {
    "avant": [
@@ -2976,7 +2963,7 @@
     "**Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.",
     "Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.",
     "Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.",
-    "Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici, ramenée à 1,4 m par la panne intermédiaire ; et la **pente minimale** (8,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).",
+    "Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici ; et la **pente minimale** (8,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).",
     "Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.",
     "Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).",
     "Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile."
@@ -3119,21 +3106,6 @@
      ]
     },
     {
-     "titre": "Poser la panne intermédiaire",
-     "but": "Le toit porte sur 2,8 m : une panne en travers ramène la portée à 1,4 m.",
-     "outils": [
-      "visseuse",
-      "niveau"
-     ],
-     "faire": [
-      "Poser un bois de 75 × 150 de 200 cm en travers, à mi-profondeur, du mur gauche au mur droit, porté par deux sabots ou deux tasseaux vissés dans la rehausse.",
-      "Régler son dessus dans le plan du toit : il est plus bas que la rehausse de façade et plus haut que celle du fond."
-     ],
-     "controler": [
-      "Une règle posée de la façade au fond touche la panne sans la forcer."
-     ]
-    },
-    {
      "titre": "Couvrir",
      "but": "Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que par le bas des panneaux.",
      "outils": [
@@ -3144,7 +3116,7 @@
      "faire": [
       "Poser T1 (100 × 286 cm), T2 (100 × 286 cm), en commençant du côté opposé aux vents dominants.",
       "Closoirs mousse sous les nervures, en haut et en bas, avant de visser.",
-      "Visser dans la rehausse et dans la panne par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.",
+      "Visser dans la rehausse par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.",
       "Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.",
       "Bandes de rive sur les bords parallèles à la pente, bavette de tête sur le bord haut."
      ],

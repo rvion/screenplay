@@ -21,7 +21,7 @@ window.SHED_PARAMS = {
         "**Bureau en L** sur tout le mur gauche et toute la façade, un fauteuil, un tabouret, et un lit rabattable contre le fond."
       ],
       "limites": [
-        "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : une panne en bois à mi-profondeur, de mur à mur, est prévue dans les matériaux et le guide.",
+        "**Portée du toit {portee_m} m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).",
         "**Pente {pente_pourcent} %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.",
         "**La descente est {descente}.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.",
         "**Aucun débord au-dessus de la porte.** Prévoir une petite marquise.",
@@ -30,7 +30,7 @@ window.SHED_PARAMS = {
       ],
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
-        "Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?",
+        "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
         "Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?",
         "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
         "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
@@ -102,7 +102,7 @@ window.SHED_PARAMS = {
         "droite": 0
       },
       "descente": "droite",
-      "panne_intermediaire": true
+      "panne_intermediaire": false
     },
     "rehausse_section_mm": [
       75,

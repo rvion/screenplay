@@ -18,7 +18,7 @@ export function sortie_de(chemin: string): string {
 export function est_publie(chemin: string): boolean {
   if (!/\.md$/i.test(chemin)) return false;
   const segs = chemin.split("/");
-  if (segs.some((s) => s.startsWith(".")) || segs[0] === "node_modules" || segs[0] === "site") return false;
+  if (segs.some((s) => s.startsWith(".")) || segs[0] === "node_modules" || segs[0] === "site" || segs[0] === "asks") return false;
   return !/^(CLAUDE(\..*)?|STATUS(\..*)?)\.md$/i.test(segs[segs.length - 1]);
 }
 

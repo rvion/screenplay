@@ -15,8 +15,8 @@ vit dans `03-decisions.md`, l'historique dans git.
       navigateur, pas encore par l'œil de Rémi.
 - [ ] **Toit : portée et pente** (D34) : portée 2,75 m, pente 8,2 % (4,7°, sous les 5° usuels).
       Confirmer les deux dans le tableau du fabricant pour du 60 mm (charge neige et vent).
-- [ ] **Panne à mi-profondeur** : comptée aux matériaux et au guide de montage, pas encore dessinée
-      (plans, élévations, 3D).
+- [ ] **Panne à mi-profondeur** : retirée des matériaux et du guide ; seulement une question (Q2) tant
+      que le fabricant n'a pas dit si le 60 mm porte 2,75 m seul. Si oui, rien à faire ; sinon la dessiner.
 - [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
       fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
 - [ ] **Formalités** : l'emprise au sol est celle des murs, débords de toiture exclus (R*420-1,
@@ -29,8 +29,6 @@ vit dans `03-decisions.md`, l'historique dans git.
 - [ ] **Âme** : PIR vs laine de roche.
 
 ## Défauts connus
-- [ ] `abri.md` écrit « portée … sans panne : à confirmer » même quand `toit.panne_intermediaire`
-      est vrai : la phrase doit citer la portée ramenée par la panne.
 
 ## Améliorations possibles (non bloquantes)
 - [ ] Élévations : cotes des joints de panneaux et de la porte plus détaillées.

@@ -11,7 +11,7 @@
 - **5 murs** en panneaux sandwich 6 cm autoportants : façade 200, droite 175, fond en biais 141,4, fond 100, gauche 275 cm.
 - **Toit** mono-pente vers le fond, 4,68° : 237,5 cm devant, 215 cm au plus bas.
 - **Porte pleine** 80 × 205 sur le mur droit, **2 fenêtres** en façade, **bureau en L** sur la façade et le mur gauche.
-- **Matériaux** : 2 944 € TTC (2 502 € à 3 386 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
+- **Matériaux** : 2 918 € TTC (2 480 € à 3 356 €), sans main-d'œuvre ni livraison ; équipement optionnel 216 €.
 
 - **Formalités** : emprise au sol 5 m², surface de plancher 4,48 m² ⇒ aucune formalité.
 
@@ -145,12 +145,11 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Panneaux sandwich de mur 60 mm, 100 × 215 cm *(prix à confirmer)* | 21,5 m² | 44 € | 946 € | 10 panneaux entiers à commander (les bandes recoupées sortent des chutes). fixation cachee PIR 60 mm : 37,80 EUR/m2 par paquet entier ; 40 a 50 EUR/m2 en petite quantite ou au detail (negoce). La plupart des vendeurs en ligne imposent 100 m2 ou un paquet de 12 panneaux de 6 m. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwichs-bardage-fixation-cachee-60-mm-lw-70)) |
 | Panneaux sandwich de toiture 60 mm, nervurés, teinte claire *(prix à confirmer)* | 5,72 m² | 45 € | 257 € | 2 panneaux coupés à longueur : T1 286 cm, T2 286 cm. 35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande. ([source](https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128)) |
 
-### Bois · 175 €
+### Bois · 157 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
 | Madrier 75 × 225 classe 4 (rehausse, lisse haute) | 9 ml | 15 € | 132 € | 2 pièce(s) de 450 cm. classe 4 : la section en stock est 70 x 220 (58,80 EUR les 4 m, 66 EUR les 4,5 m). Le 75 x 225 n'existe en stock qu'en classe 2 (environ 10 EUR/m). ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
-| Panne intermédiaire 75 × 150 classe 4, en travers à mi-profondeur | 2 ml | 9 € | 18 € | portée du toit 2,8 m : une panne de la longueur de la façade la ramène à 1,4 m. 68 x 145 classe 4 : 6,20 EUR/m ; 75 x 145 rabote : 17 EUR/m ([source](https://www.boidiscount.com/index.php?p=1_190_PRIX-BASTAINGS-MADRIERS-BOIS-D-OSSATURE.-TRAIT-AUTOCLAVE-CLASSE-4)) |
 | Bois du cadre de porte, section 50 × 60 mm *(prix à confirmer)* | 5 ml | 5 € | 25 € | deux montants + une traverse haute. pas de prix releve |
 
 ### Profils et bavettes · 474 €
@@ -164,11 +163,11 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 | Bavette de tête (bord haut du toit) | 2 ml | 14 € | 28 € | bord haut du toit. solin ou faitiere 2,10 m : 29 EUR ([source](https://www.mastock.fr/toiture/846-1506-accessoires-tole-bac-acier.html)) |
 | Closoirs mousse sous les nervures *(prix à confirmer)* | 4,41 ml | 4 € | 15 € | bord haut + bord d'égout. rouleau de 6 m de 11,90 a 21,90 EUR ; le profil doit correspondre aux nervures du panneau choisi ([source](https://www.leroymerlin.fr/produits/closoir-mousse-pour-plaque-acier-6-m-66887583.html)) |
 
-### Fixations · 117 €
+### Fixations · 109 €
 
 | matériau | quantité | prix unitaire | montant | comment c'est compté, d'où vient le prix |
 |---|---|---|---|---|
-| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) | 0,27 cent | 90 € | 24 € | 2 panneaux × 3 appuis × 4 vis, +10 %. inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois. ([source](https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/)) |
+| Vis autoperceuses de toiture à rondelle, longues (panneau + nervure dans le bois) | 0,18 cent | 90 € | 16 € | 2 panneaux × 2 appuis × 4 vis, +10 %. inox 6,5 x 145 a rondelle EPDM : 89,99 EUR le cent. Longueur = panneau + nervure + 50 mm dans le bois. ([source](https://www.wovar.fr/vis-pour-panneaux-sandwich-inox/)) |
 | Vis de couture (recouvrements de panneaux, bavettes, profils) | 0,65 cent | 35 € | 23 € | un recouvrement tous les 40 cm, une bavette tous les 30 cm, +10 %. 4,8 x 20 : de 24 a 45 EUR le cent ([source](https://www.toletome.fr/les-produits-tole-to-me/accessoires-de-fixation/visserie/vis-de-couture-en-acier-(4-8-x-20).html)) |
 | Vis autoperceuses de panneaux de mur (pied et tête) | 0,66 cent | 90 € | 59 € | 10 panneaux × 2 extrémités × 3 vis, +10 %. vis 6,3 x 100 + rondelle + cache de couleur ([source](https://www.tolesmoinscheres.com/produit/100-fixations-pour-panneau-sandwich-de-bardage)) |
 | Chevilles ou goujons pour fixer le rail dans la dalle | 20 u | 1 € | 11 € | une tous les 50 cm. goujons 8 x 80 : 55,90 EUR la boite de 100 ([source](https://www.toutbrico.com/goujons-d-ancrage/7242-boite-100-goujons-d-ancrage-8-x-80mm-zingue-batifix-3700013413404.html)) |
@@ -226,7 +225,7 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 |---|---|---|---|---|
 | Lame de scie circulaire pour métal (coupe à froid des panneaux) | 1 u | 67 € | 67 € | jamais de meuleuse : elle brûle le laquage et la mousse. Bosch Expert for Sandwich Panel, 36 dents ([source](https://clickoutil.com/lame-scie-circulaire/142169-lames-de-scies-circulaires-expert-for-sandwich-panel-bosch.html)) |
 
-**Total des matériaux : 2 944 € TTC** (fourchette 2 502 € à 3 386 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
+**Total des matériaux : 2 918 € TTC** (fourchette 2 480 € à 3 356 €, ±15 %). Équipement optionnel en plus : 216 €. Hors total : Livraison des panneaux (service, hors total) ≈ 250 €.
 
 Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `params.json`, source notée pour chacun) ; les quantités se recalculent avec l'abri.
 
@@ -238,7 +237,7 @@ Prix relevés chez des marchands français (`prix_materiaux_eur_ttc` dans `param
 - **Acheter des panneaux en petite quantité est le vrai sujet.** Les vendeurs en ligne les moins chers imposent 100 m² ou un paquet entier de panneaux de 6 à 7,5 m. Demander un devis « coupé à longueur, petite quantité » à deux spécialistes et à un négoce local, qui vend au panneau mais plus cher. Sinon acheter des longueurs de stock et les recouper sur place : compter alors plus de surface que le débit.
 - Rehausse : le madrier 75 × 225 ne se trouve en stock qu'en **classe 2**. En **classe 4** la section courante est 70 × 220, en 4 m ou 4,5 m : la prendre (la chute du toit perd 5 mm, sans conséquence) ou protéger un classe 2 par la bavette.
 - Fenêtres et porte sont des articles de stock, sans délai : la découpe des panneaux se fait aux cotes hors tout lues sur l'article reçu, pas aux cotes nominales.
-- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici, ramenée à 1,4 m par la panne intermédiaire ; et la **pente minimale** (8,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
+- Faire confirmer la **portée** admise du panneau de toit de 6 cm : 2,8 m ici ; et la **pente minimale** (8,2 % ici ; ArcelorMittal admet 5 % pour des panneaux d'une seule longueur, sans pénétration ni recouvrement en bout).
 - Commander les panneaux de toit **coupés à longueur**, et les profils des angles de 135° **pliés sur mesure**, en même temps que les panneaux.
 - Vérifier au PLU la règle d'implantation (l'abri est à 10 cm de la limite).
 - Prévoir deux personnes pour lever les murs et poser le toit, et une journée sans vent : un panneau de 2 m² est une voile.
@@ -360,20 +359,7 @@ Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les mu
 - [ ] Hauteurs finies des coins : 237,5 · 237,5 · 223,2 · 215 · 215 cm (dans l'ordre des coins, à partir du coin avant gauche).
 - [ ] Dessus de la rehausse dans un même plan : poser une règle d'un mur à l'autre.
 
-### Étape 8 · Poser la panne intermédiaire
-
-Le toit porte sur 2,8 m : une panne en travers ramène la portée à 1,4 m.
-
-**Outils :** visseuse, niveau
-
-1. Poser un bois de 75 × 150 de 200 cm en travers, à mi-profondeur, du mur gauche au mur droit, porté par deux sabots ou deux tasseaux vissés dans la rehausse.
-2. Régler son dessus dans le plan du toit : il est plus bas que la rehausse de façade et plus haut que celle du fond.
-
-**À contrôler avant de continuer :**
-
-- [ ] Une règle posée de la façade au fond touche la panne sans la forcer.
-
-### Étape 9 · Couvrir
+### Étape 8 · Couvrir
 
 Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que par le bas des panneaux.
 
@@ -381,7 +367,7 @@ Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que pa
 
 1. Poser T1 (100 × 286 cm), T2 (100 × 286 cm), en commençant du côté opposé aux vents dominants.
 2. Closoirs mousse sous les nervures, en haut et en bas, avant de visser.
-3. Visser dans la rehausse et dans la panne par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
+3. Visser dans la rehausse par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.
 4. Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.
 5. Bandes de rive sur les bords parallèles à la pente, bavette de tête sur le bord haut.
 
@@ -390,7 +376,7 @@ Nervures dans le sens de la pente, vers le fond : l'eau ne quitte le toit que pa
 - [ ] Débords : 5 cm devant, 5 cm au fond, 0 cm à droite, 0 cm à gauche.
 - [ ] Ne jamais marcher entre deux appuis : marcher au droit des murs, sur une planche.
 
-### Étape 10 · Gouttière et descente
+### Étape 9 · Gouttière et descente
 
 Recueillir toute l'eau du toit et l'emmener au jardin.
 
@@ -404,7 +390,7 @@ Recueillir toute l'eau du toit et l'emmener au jardin.
 
 - [ ] Verser un seau d'eau en haut du toit : tout doit arriver à la descente.
 
-### Étape 11 · Poser la porte
+### Étape 10 · Poser la porte
 
 Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles.
 
@@ -419,7 +405,7 @@ Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles.
 - [ ] Jeu régulier de 3 mm autour du battant, la porte se ferme sans forcer.
 - [ ] Arrêt de porte à prévoir : ouverte, elle prend le vent.
 
-### Étape 12 · Poser les fenêtres
+### Étape 11 · Poser les fenêtres
 
 Une fenêtre se fixe dans la tôle des deux faces, jamais dans la mousse.
 
@@ -434,7 +420,7 @@ Une fenêtre se fixe dans la tôle des deux faces, jamais dans la mousse.
 - [ ] Niveau et aplomb du dormant avant le serrage final.
 - [ ] L'ouvrante s'ouvre sans toucher le bureau.
 
-### Étape 13 · Étanchéité générale
+### Étape 12 · Étanchéité générale
 
 L'air qui entre apporte l'humidité qui condense sur l'acier.
 
@@ -448,7 +434,7 @@ L'air qui entre apporte l'humidité qui condense sur l'acier.
 
 - [ ] De nuit, une lampe allumée dedans : aucun jour visible de dehors.
 
-### Étape 14 · Plancher isolé
+### Étape 13 · Plancher isolé
 
 La dalle est froide : le plancher fait le confort des pieds.
 
@@ -462,7 +448,7 @@ La dalle est froide : le plancher fait le confort des pieds.
 
 - [ ] Hauteur sous plafond après plancher : 2,32 m au plus haut, 2,09 m au plus bas.
 
-### Étape 15 · Ventilation, électricité, aménagement
+### Étape 14 · Ventilation, électricité, aménagement
 
 Une pièce étanche et chauffée sans ventilation condense.
 
@@ -491,7 +477,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 ### Points faibles
 
-- **Portée du toit 2,8 m.** À la limite pour des panneaux de 60 mm : une panne en bois à mi-profondeur, de mur à mur, est prévue dans les matériaux et le guide.
+- **Portée du toit 2,8 m.** À la limite pour des panneaux de 60 mm : sans panne, le fabricant doit confirmer qu'il la porte seul (question Q2).
 - **Pente 8,2 %.** Faible pour une toiture en panneaux ; le fabricant doit la confirmer pour des panneaux d'une seule longueur, sans recouvrement.
 - **La descente est à l'arrière du mur droit, à l'entrée du passage.** Un tuyau au sol le long du mur droit ramène l'eau au jardin : rien ne doit s'écouler au pied du mur de propriété.
 - **Aucun débord au-dessus de la porte.** Prévoir une petite marquise.
@@ -501,7 +487,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 ### Questions
 
 - **Q1** La pente de 8,2 % est-elle admise par le fabricant des panneaux de toit, pour 2,8 m de portée en 60 mm ?
-- **Q2** Panne intermédiaire : quelle section (75 × 150 supposé), et comment la fixer sur les murs gauche et droit ?
+- **Q2** Le panneau de toit de 60 mm porte-t-il 2,8 m seul, ou faut-il une panne en travers à mi-profondeur ?
 - **Q3** Madrier de rehausse : 75 × 225 en classe 2 protégé par la bavette, ou 70 × 220 en classe 4 ?
 - **Q4** Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?
 - **Q5** Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?

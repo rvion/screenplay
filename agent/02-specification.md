@@ -190,7 +190,7 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   (README, puis tri naturel : abri, etudes/… ; puis la spécification).
 - **Rien à déclarer** pour une nouvelle page : `npm run emit` prend les `.md` de `git ls-files`
   et les nouveaux `.md` que git n'ignore pas (`--others --exclude-standard`). **git fait foi** : un fichier ignoré (`CLAUDE.local.md`,
-  `STATUS.md`) ne peut pas être publié ; `CLAUDE*.md` et `STATUS*.md` sont exclus par nom en plus.
+  `STATUS.md`) ne peut pas être publié ; `CLAUDE*.md` et `STATUS*.md` sont exclus par nom en plus, et `asks/` (la file `shipkit asks` des actions à faire par Rémi) par dossier.
 - Rendu par `site/src/docs.ts` (**côté Node seulement**, `marked` en devDependency : le bundle du
   navigateur n'en dépend pas, le site reste statique et marche en `file://`). Une seule passe de
   réécriture des liens : fichier sous `site/` → chemin du site ; `.md` publié → sa page ; tout le

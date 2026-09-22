@@ -20,7 +20,7 @@ const DEPOT = "https://github.com/rvion/screenplay";
 
 // ---- ce qui est publie
 ok(["abri.md", "abri-v3.md", "README.md", "agent/04-geometrie.md"].every(est_publie), "publies : documents de la racine, versions futures, agent/");
-ok(!["CLAUDE.md", "CLAUDE.local.md", "STATUS.md", "STATUS.full.md", ".rv-reflections/x.md", "site/x.md", "node_modules/a/README.md", "params.json"].some(est_publie), "jamais publies : CLAUDE*, STATUS*, dossiers caches, site/, node_modules");
+ok(!["CLAUDE.md", "CLAUDE.local.md", "STATUS.md", "STATUS.full.md", ".rv-reflections/x.md", "site/x.md", "node_modules/a/README.md", "asks/001-x.md", "params.json"].some(est_publie), "jamais publies : CLAUDE*, STATUS*, dossiers caches, site/, node_modules, asks/ (la file des actions de Rémi)");
 ok(sortie_de("README.md") === "readme.html" && sortie_de("agent/04-geometrie.md") === "agent/04-geometrie.html", "adresses : readme.html, agent/04-geometrie.html");
 ok(ancre("Option 1") === "option-1" && ancre("Ce qui change par rapport à la version 1") === "ce-qui-change-par-rapport-à-la-version-1", "ancres facon GitHub");
 
