@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bureau de jardin · dossier de construction</title>
   <meta name="description" content="Dossier de construction d'un bureau de jardin en panneaux sandwich : modèle 3D, plans cotés, débit, matériaux à acheter et guide de montage." />
-  <link rel="stylesheet" href="abri.css?v=f7670d78" />
+  <link rel="stylesheet" href="abri.css?v=9e771b04" />
   <script type="importmap">
   {
     "imports": {
@@ -63,9 +63,10 @@
         <div class="vue">
           <div id="viewer"></div>
           <div class="vue-barre">
-            <label>focale <input type="range" id="cam-fov" min="20" max="80" value="42"></label>
-            <label>distance <input type="range" id="cam-dist" min="2" max="14" step="0.1" value="6.1"></label>
-            <button type="button" id="cam-copier" title="Copie position, cible, focale et distance de la caméra">copier la vue</button>
+            <label title="Angle de vue : 15° télé, 110° grand angle (effet fish-eye)">angle <input type="range" id="cam-fov" min="15" max="110" value="42"></label>
+            <label title="Distance de la caméra à sa cible">dist. <input type="range" id="cam-dist" min="2" max="14" step="0.1" value="6.1"></label>
+            <span class="cam-etat" id="cam-etat"></span>
+            <button type="button" id="cam-copier" title="Copier la vue (position, cible, angle, distance)" aria-label="Copier la vue"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><rect x="5" y="4" width="8" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 11V3.5A1.5 1.5 0 0 1 4.5 2H10" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
           </div>
           <p class="viewer-toggles">
             <label><input type="checkbox" id="voir-toit" checked> toit</label>
@@ -145,7 +146,7 @@
   </main>
   </div>
 
-  <script src="params.js?v=f7670d78"></script>
-  <script type="module" src="abri.js?v=f7670d78"></script>
+  <script src="params.js?v=9e771b04"></script>
+  <script type="module" src="abri.js?v=9e771b04"></script>
 </body>
 </html>

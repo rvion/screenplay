@@ -34,7 +34,8 @@ des longueurs qui ne ferment pas donnent un quadrilatère, jamais une erreur.</l
 fond), infranchissables. <code>dalle_cm.grillages</code> nomme ceux fermés par un <strong>grillage</strong> et non un mur
 (gauche, petit pan de 104) : <code>dalle.murs[].type</code> vaut <code>grillage</code> ou <code>mur</code>. Un mur est un trait brun
 épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
-translucide avec poteaux tous les 2 m et lisse haute, haut de <code>grillage_hauteur_cm</code> (100, mesuré) ; le mur
+à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
+translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de <code>grillage_hauteur_cm</code> (100, mesuré) ; le mur
 garde <code>mur_hauteur_cm</code> (180, hypothèse à mesurer). La légende (<code>legende_clotures</code>) et les textes du guide suivent. <code>dalle.passage</code> = largeur de la bande entre l&#39;abri et le mur du fond au
 point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
 garde <code>passage_souhaite_cm</code>. Carte <strong>Passage derrière l&#39;abri</strong> en vigilance. Un débord hors
@@ -260,9 +261,10 @@ nervuré dans le sens de la pente, gouttière sur chaque bord d&#39;égout, desc
 bureaux, sièges, lit, <strong>étiquettes</strong> de panneaux sur plaque blanche à bord sombre en haut de chaque
 panneau (au-dessus des fenêtres), et une <strong>silhouette de 1,80 m</strong> devant la porte pour l&#39;échelle (cases à cocher :
 toit, porte (le battant), mobilier, lit déplié, repères, personne ; lit et personne cachés au départ).
-Sur la vue, une <strong>barre de caméra</strong> translucide (focale, distance, « copier la vue » qui met sur le
-presse-papiers position, cible, focale et distance en JSON : c&#39;est ainsi que Rémi transmet un point de
-vue à régler dans <code>VUES</code>). Sous la vue, <strong>trois
+Sur la vue, une <strong>barre de caméra</strong> fine et translucide (angle 15 à 110°, distance, les valeurs en petit
+sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
+et distance en JSON : c&#39;est ainsi que Rémi transmet un point de vue à régler dans <code>VUES</code> ;
+<code>window.abri_vue.placer({...})</code> rejoue un état copié). Sous la vue, <strong>trois
 vignettes</strong> (côté porte, derrière avec le passage, dessus) : des rendus fixes des points de vue <code>VUES</code>,
 tirés du même contexte WebGL (rendu puis copie du tampon dans un canvas 2D), refaits à chaque case cochée ;
 un clic sur une vignette amène la caméra principale à ce point de vue. <code>peuple_abri</code>

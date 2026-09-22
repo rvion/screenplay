@@ -20,7 +20,8 @@
   fond), infranchissables. `dalle_cm.grillages` nomme ceux fermés par un **grillage** et non un mur
   (gauche, petit pan de 104) : `dalle.murs[].type` vaut `grillage` ou `mur`. Un mur est un trait brun
   épais sur le plan et un volume en 3D ; un grillage un pointillé vert sur le plan, et en 3D un treillis
-  translucide avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur
+  à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
+  translucide uni sans canvas) avec poteaux tous les 2 m et lisse haute, haut de `grillage_hauteur_cm` (100, mesuré) ; le mur
   garde `mur_hauteur_cm` (180, hypothèse à mesurer). La légende (`legende_clotures`) et les textes du guide suivent. `dalle.passage` = largeur de la bande entre l'abri et le mur du fond au
   point le plus étroit, cotée sur le plan (vert / orange / rouge), avec la profondeur maximale qui
   garde `passage_souhaite_cm`. Carte **Passage derrière l'abri** en vigilance. Un débord hors
@@ -200,9 +201,10 @@ l'exposent, le site et les pages `abri*.md` n'affichent que ce calcul. Garde : `
   bureaux, sièges, lit, **étiquettes** de panneaux sur plaque blanche à bord sombre en haut de chaque
   panneau (au-dessus des fenêtres), et une **silhouette de 1,80 m** devant la porte pour l'échelle (cases à cocher :
   toit, porte (le battant), mobilier, lit déplié, repères, personne ; lit et personne cachés au départ).
-  Sur la vue, une **barre de caméra** translucide (focale, distance, « copier la vue » qui met sur le
-  presse-papiers position, cible, focale et distance en JSON : c'est ainsi que Rémi transmet un point de
-  vue à régler dans `VUES`). Sous la vue, **trois
+  Sur la vue, une **barre de caméra** fine et translucide (angle 15 à 110°, distance, les valeurs en petit
+  sur deux lignes, un bouton icône « copier la vue » qui met sur le presse-papiers position, cible, angle
+  et distance en JSON : c'est ainsi que Rémi transmet un point de vue à régler dans `VUES` ;
+  `window.abri_vue.placer({...})` rejoue un état copié). Sous la vue, **trois
   vignettes** (côté porte, derrière avec le passage, dessus) : des rendus fixes des points de vue `VUES`,
   tirés du même contexte WebGL (rendu puis copie du tampon dans un canvas 2D), refaits à chaque case cochée ;
   un clic sur une vignette amène la caméra principale à ce point de vue. `peuple_abri`

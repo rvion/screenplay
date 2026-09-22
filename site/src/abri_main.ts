@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let vue: AbriViewer | null = null;
   try {
     if (boite && abri.core.modele3d) vue = createAbriViewer(boite, abri.core.modele3d);
+    // abri_vue.placer({...}) depuis la console : rejouer un etat copie
+    (window as any).abri_vue = vue;
   } catch (e) {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent entièrement valables.</p>';
     console.error(e);
@@ -31,12 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const fov = document.getElementById("cam-fov") as HTMLInputElement | null, dist = document.getElementById("cam-dist") as HTMLInputElement | null, copier = document.getElementById("cam-copier") as HTMLButtonElement | null;
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
   if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
-  if (vue) vue.surChangement((e) => { if (dist && document.activeElement !== dist) dist.value = String(e.distance); if (fov) fov.value = String(e.fov); });
+  const etat_el = document.getElementById("cam-etat");
+  const affiche_etat = () => { if (vue && etat_el) { const e = vue.etat(); etat_el.innerHTML = `<span>pos ${e.position.join(" ")} · ${e.fov}°</span><span>cible ${e.cible.join(" ")} · ${e.distance} m</span>`; } };
+  if (vue) vue.surChangement((e) => { if (dist && document.activeElement !== dist) dist.value = String(e.distance); if (fov) fov.value = String(e.fov); affiche_etat(); });
+  if (fov) fov.addEventListener("input", affiche_etat);
+  if (dist) dist.addEventListener("input", affiche_etat);
+  affiche_etat();
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
     const texte = JSON.stringify(vue.etat());
-    try { await navigator.clipboard.writeText(texte); copier.textContent = "copié"; } catch { window.prompt("Copier la vue :", texte); }
-    window.setTimeout(() => { copier.textContent = "copier la vue"; }, 1500);
+    try { await navigator.clipboard.writeText(texte); copier.classList.add("copie"); } catch { window.prompt("Copier la vue :", texte); }
+    window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"] as const) {
     const c = document.getElementById("voir-" + nom) as HTMLInputElement | null;

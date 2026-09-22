@@ -104,7 +104,7 @@ ok(bureaux.length === v.bureaux.length && bureaux.every((o) => near(boite(o).max
   const murs_p = d.murs_propriete.filter((w) => w.type === "mur"), grillages = d.murs_propriete.filter((w) => w.type === "grillage");
   const h = murs_p[0].hauteur_cm / 100, hg = grillages[0].hauteur_cm / 100;
   const volumes = racine.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry" && near(boite(o).max.y, h, 1e-6) && near(boite(o).min.y, -0.14, 1e-6));
-  const treillis = racine.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry" && o.material.transparent && near(boite(o).max.y, hg, 1e-6) && near(boite(o).min.y, 0, 1e-6));
+  const treillis = racine.children.filter((o) => o.isMesh && o.geometry.type === "PlaneGeometry" && o.material.transparent && near(boite(o).max.y, hg, 1e-6) && near(boite(o).min.y, 0, 1e-6));
   const poteaux = racine.children.filter((o) => o.isMesh && o.geometry.type === "CylinderGeometry" && near(boite(o).max.y, hg, 1e-3) && near(boite(o).min.y, -0.14, 1e-3));
   ok(hg === 1 && h === 1.8, "grillage à 1 m (mesuré), mur à 180 cm (hypothèse)");
   ok(d.murs_propriete.length === 3 && murs_p.length === 1 && murs_p[0].cote === "arriere_droite" && grillages.map((w) => w.cote).sort().join() === "arriere_gauche,gauche", "limites : un mur (grand pan de 258) et deux grillages (gauche, petit pan de 104)");

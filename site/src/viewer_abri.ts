@@ -9,7 +9,7 @@ type Pt = number[];
 
 export interface AbriViewer {
   rebuild(data: any): void; montrer(nom: Masquable, oui: boolean): void; voir(vue: NomVue): void; vignette(canvas: HTMLCanvasElement, vue: NomVue): void;
-  etat(): EtatCamera; regler(o: { fov?: number; distance?: number }): void; surChangement(cb: (e: EtatCamera) => void): void;
+  etat(): EtatCamera; regler(o: { fov?: number; distance?: number }): void; placer(e: Partial<EtatCamera>): void; surChangement(cb: (e: EtatCamera) => void): void;
 }
 export interface EtatCamera { position: number[]; cible: number[]; fov: number; distance: number }
 // points de vue fixes (metres, cible incluse) : la vue principale et les vignettes
@@ -40,6 +40,30 @@ function etiquette(txt: string): Vec | null {
   return t;
 }
 
+// grillage a mailles losange (chain-link) : une tuile de 5 cm, fils verts, vide entre les fils ; null sans canvas (tests Node)
+let tuile_grillage: HTMLCanvasElement | null | undefined;
+function texture_grillage(): Vec | null {
+  if (tuile_grillage === undefined) tuile_grillage = dessine_tuile_grillage();
+  if (!tuile_grillage) return null;
+  const t = new THREE.CanvasTexture(tuile_grillage);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function dessine_tuile_grillage(): HTMLCanvasElement | null {
+  if (typeof document === "undefined") return null;
+  const c = document.createElement("canvas"); c.width = 64; c.height = 64;
+  const x = c.getContext("2d");
+  if (!x) return null;
+  x.clearRect(0, 0, 64, 64);
+  x.strokeStyle = "#2f6b3a"; x.lineWidth = 5; x.lineCap = "round";
+  // deux diagonales par tuile, prolongees pour que le motif se raccorde en se repetant
+  for (const [a, b] of [[[-32, 32], [32, -32]], [[0, 64], [64, 0]], [[32, 96], [96, 32]], [[-32, 32], [32, 96]], [[0, 0], [64, 64]], [[32, -32], [96, 32]]]) {
+    x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); x.stroke();
+  }
+  return c;
+}
+
 // construit la scene de l'abri dans `abri` (sans renderer ni DOM : testable sous Node) ; rend les groupes masquables
 export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string, boolean> = {}): Record<string, Vec> {
   const groupes: Record<string, Vec> = {}, visible = { lit: false, personne: false, ...visible_demande };
@@ -66,10 +90,15 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   for (const w of data.murs_propriete) {
     const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, ux = (w.a[0] - w.de[0]) / l, uy = (w.a[1] - w.de[1]) / l;
     if (w.type === "grillage") {
-      // grillage : treillis translucide, poteaux tous les 2 m, lisse haute
-      const matG = mat(COUL.grillage, { transparent: true, opacity: 0.35, roughness: 0.6, metalness: 0.4 }), matP = mat(COUL.grillage, { metalness: 0.5, roughness: 0.5 });
-      const nx = uy * 1, ny = -ux * 1;
-      abri.add(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx, w.a[1] + ny], [w.de[0] + nx, w.de[1] + ny]], plat(0), plat(w.hauteur_cm)), matG));
+      // grillage : mailles losange sur un plan (texture repetee, maille de 5 cm), poteaux tous les 2 m, lisse haute
+      const tx = texture_grillage(), matP = mat(COUL.grillage, { metalness: 0.5, roughness: 0.5 });
+      let matG: Vec;
+      if (tx) { tx.repeat.set(l / 5, w.hauteur_cm / 5); matG = new THREE.MeshStandardMaterial({ map: tx, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.5, metalness: 0.3 }); }
+      else matG = mat(COUL.grillage, { transparent: true, opacity: 0.35, roughness: 0.6, metalness: 0.4 });
+      const plan = new THREE.Mesh(new THREE.PlaneGeometry(l / 100, w.hauteur_cm / 100), matG);
+      plan.rotation.y = Math.atan2(uy, ux);
+      plan.position.copy(W(w.de[0] + ux * l / 2, w.de[1] + uy * l / 2, w.hauteur_cm / 2));
+      abri.add(plan);
       const nb = Math.max(1, Math.round(l / 200));
       for (let k = 0; k <= nb; k++) {
         const t = k / nb, poteau = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, (w.hauteur_cm + 14) / 100, 8), matP);
@@ -304,6 +333,13 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     if (o.distance) { const dir = camera.position.clone().sub(controls.target).normalize(); camera.position.copy(controls.target).addScaledVector(dir, o.distance); }
     controls.update();
   }
+  // place la camera d'apres un etat copie (position, cible, fov) : ce que « copier la vue » produit
+  function placer(e: Partial<EtatCamera>) {
+    if (e.position) camera.position.set(e.position[0], e.position[1], e.position[2]);
+    if (e.cible) controls.target.set(e.cible[0], e.cible[1], e.cible[2]);
+    regler({ fov: e.fov, distance: e.position ? undefined : e.distance });
+    controls.dispatchEvent({ type: "change" });
+  }
   function surChangement(cb: (e: EtatCamera) => void) { controls.addEventListener("change", () => cb(etat())); }
   // rendu fixe d'un point de vue dans un petit canvas 2D : un seul contexte WebGL, copie du tampon juste apres le rendu
   function vignette(canvas: HTMLCanvasElement, vue: NomVue) {
@@ -320,5 +356,5 @@ export function createAbriViewer(container: HTMLElement, data0: any): AbriViewer
     renderer.setSize(container.clientWidth, container.clientHeight);
   });
   (function boucle() { requestAnimationFrame(boucle); controls.update(); renderer.render(scene, camera); })();
-  return { rebuild, montrer, voir, vignette, etat, regler, surChangement };
+  return { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
 }

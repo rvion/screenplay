@@ -2703,6 +2703,34 @@ function etiquette(txt) {
   if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
+var tuile_grillage;
+function texture_grillage() {
+  if (tuile_grillage === void 0) tuile_grillage = dessine_tuile_grillage();
+  if (!tuile_grillage) return null;
+  const t = new THREE.CanvasTexture(tuile_grillage);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function dessine_tuile_grillage() {
+  if (typeof document === "undefined") return null;
+  const c = document.createElement("canvas");
+  c.width = 64;
+  c.height = 64;
+  const x = c.getContext("2d");
+  if (!x) return null;
+  x.clearRect(0, 0, 64, 64);
+  x.strokeStyle = "#2f6b3a";
+  x.lineWidth = 5;
+  x.lineCap = "round";
+  for (const [a, b] of [[[-32, 32], [32, -32]], [[0, 64], [64, 0]], [[32, 96], [96, 32]], [[-32, 32], [32, 96]], [[0, 0], [64, 64]], [[32, -32], [96, 32]]]) {
+    x.beginPath();
+    x.moveTo(a[0], a[1]);
+    x.lineTo(b[0], b[1]);
+    x.stroke();
+  }
+  return c;
+}
 function peuple_abri(abri, data, visible_demande = {}) {
   const groupes = {}, visible = { lit: false, personne: false, ...visible_demande };
   const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
@@ -2741,9 +2769,16 @@ function peuple_abri(abri, data, visible_demande = {}) {
   for (const w of data.murs_propriete) {
     const l = Math.hypot(w.a[0] - w.de[0], w.a[1] - w.de[1]) || 1, ux = (w.a[0] - w.de[0]) / l, uy = (w.a[1] - w.de[1]) / l;
     if (w.type === "grillage") {
-      const matG = mat(COUL.grillage, { transparent: true, opacity: 0.35, roughness: 0.6, metalness: 0.4 }), matP = mat(COUL.grillage, { metalness: 0.5, roughness: 0.5 });
-      const nx2 = uy * 1, ny2 = -ux * 1;
-      abri.add(new THREE.Mesh(prisme([w.de, w.a, [w.a[0] + nx2, w.a[1] + ny2], [w.de[0] + nx2, w.de[1] + ny2]], plat(0), plat(w.hauteur_cm)), matG));
+      const tx = texture_grillage(), matP = mat(COUL.grillage, { metalness: 0.5, roughness: 0.5 });
+      let matG;
+      if (tx) {
+        tx.repeat.set(l / 5, w.hauteur_cm / 5);
+        matG = new THREE.MeshStandardMaterial({ map: tx, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.5, metalness: 0.3 });
+      } else matG = mat(COUL.grillage, { transparent: true, opacity: 0.35, roughness: 0.6, metalness: 0.4 });
+      const plan = new THREE.Mesh(new THREE.PlaneGeometry(l / 100, w.hauteur_cm / 100), matG);
+      plan.rotation.y = Math.atan2(uy, ux);
+      plan.position.copy(W(w.de[0] + ux * l / 2, w.de[1] + uy * l / 2, w.hauteur_cm / 2));
+      abri.add(plan);
       const nb = Math.max(1, Math.round(l / 200));
       for (let k = 0; k <= nb; k++) {
         const t = k / nb, poteau = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, (w.hauteur_cm + 14) / 100, 8), matP);
@@ -3010,6 +3045,12 @@ function createAbriViewer(container, data0) {
     }
     controls.update();
   }
+  function placer(e) {
+    if (e.position) camera.position.set(e.position[0], e.position[1], e.position[2]);
+    if (e.cible) controls.target.set(e.cible[0], e.cible[1], e.cible[2]);
+    regler({ fov: e.fov, distance: e.position ? void 0 : e.distance });
+    controls.dispatchEvent({ type: "change" });
+  }
   function surChangement(cb) {
     controls.addEventListener("change", () => cb(etat()));
   }
@@ -3035,7 +3076,7 @@ function createAbriViewer(container, data0) {
     controls.update();
     renderer.render(scene, camera);
   })();
-  return { rebuild, montrer, voir, vignette, etat, regler, surChangement };
+  return { rebuild, montrer, voir, vignette, etat, regler, placer, surChangement };
 }
 
 // site/src/abri_main.ts
@@ -3052,6 +3093,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let vue = null;
   try {
     if (boite && abri.core.modele3d) vue = createAbriViewer(boite, abri.core.modele3d);
+    window.abri_vue = vue;
   } catch (e) {
     if (boite) boite.innerHTML = '<p class="viewer-fallback">Rendu 3D indisponible (WebGL requis). Les plans ci-dessous restent enti\xE8rement valables.</p>';
     console.error(e);
@@ -3072,22 +3114,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const fov = document.getElementById("cam-fov"), dist = document.getElementById("cam-dist"), copier = document.getElementById("cam-copier");
   if (fov) fov.addEventListener("input", () => vue && vue.regler({ fov: +fov.value }));
   if (dist) dist.addEventListener("input", () => vue && vue.regler({ distance: +dist.value }));
+  const etat_el = document.getElementById("cam-etat");
+  const affiche_etat = () => {
+    if (vue && etat_el) {
+      const e = vue.etat();
+      etat_el.innerHTML = `<span>pos ${e.position.join(" ")} \xB7 ${e.fov}\xB0</span><span>cible ${e.cible.join(" ")} \xB7 ${e.distance} m</span>`;
+    }
+  };
   if (vue) vue.surChangement((e) => {
     if (dist && document.activeElement !== dist) dist.value = String(e.distance);
     if (fov) fov.value = String(e.fov);
+    affiche_etat();
   });
+  if (fov) fov.addEventListener("input", affiche_etat);
+  if (dist) dist.addEventListener("input", affiche_etat);
+  affiche_etat();
   if (copier) copier.addEventListener("click", async () => {
     if (!vue) return;
     const texte2 = JSON.stringify(vue.etat());
     try {
       await navigator.clipboard.writeText(texte2);
-      copier.textContent = "copi\xE9";
+      copier.classList.add("copie");
     } catch {
       window.prompt("Copier la vue :", texte2);
     }
-    window.setTimeout(() => {
-      copier.textContent = "copier la vue";
-    }, 1500);
+    window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
   for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte"]) {
     const c = document.getElementById("voir-" + nom);
