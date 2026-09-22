@@ -10,6 +10,8 @@ export default defineRepo({
     // gitignore (SK004) is advisory, this pre-commit gate is not
     hooks: {
         blockedPaths: ['.comfy-ts/'],
+        // a French project: commits may be French. Dash and attribution checks stay on
+        disable: ['commit-language'],
         // an ask file name ("ask-the-town-hall-…") reads as an api key to the sk- pattern
         leakAllow: [{ reason: 'ask slug, not a key', paths: ['asks/'], patterns: ['fp:98d9ad612426'] }],
     },
