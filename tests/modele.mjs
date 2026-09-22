@@ -209,12 +209,12 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   const p3 = fixture(3), p4 = actuel, c3 = buildCore(p3), c4 = buildCore(p4);
   const m4 = c4.modele, v4 = c4.variantes.find((x) => x.id === 13), v3 = c3.variantes.find((x) => x.id === 13);
   // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
-  ok(v4.cotes_interieures_cm[0] === 198 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([210, 175, 99, 140, 245]) && v4.aire_interieure_m2 === 4.39 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.9, 0.005), "abri : facade 210 (198 dedans, un lit de 190 tient), fond 140 pour garder le pan a 45 deg, emprise 4,90 m2 donc aucune formalite");
+  ok(v4.cotes_interieures_cm[0] === 198 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([210, 175, 106.1, 135, 250]) && v4.aire_interieure_m2 === 4.46 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 135, 135, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.97, 0.005), "abri : facade 210 (198 dedans, un lit de 190 tient), fond 135 pour garder le pan a 45 deg, emprise 4,97 m2 donc aucune formalite");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22,5 sur 245 de profondeur : facade 237,5 ; au haut du mur droit (175) 215 + 22,5 x 70 / 245 = 221,4 ; fond 215
+  // a la main, chute 22,5 sur 250 de profondeur : facade 237,5 ; au haut du mur droit (175) 215 + 22,5 x 75 / 250 = 221,8 ; fond 215
   ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22.5 && L.A.hauteur_fin_cm === H + 22.5, "v4 : facade de niveau a " + (H + 22.5));
-  ok(near(L.D.hauteur_fin_cm, 221.4, 0.06) && near(L.C.hauteur_debut_cm, 221.4, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,4, pan 221,4 -> 215, fond a 215");
-  ok(near(m4.pente.pourcent, 9.2, 0.06) && near(m4.portee_cm, 245), "v4 : pente 22,5 / 245 = 9,2 %, portee 2,45 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
+  ok(near(L.D.hauteur_fin_cm, 221.8, 0.06) && near(L.C.hauteur_debut_cm, 221.8, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237,5 -> 221,8, pan 221,8 -> 215, fond a 215");
+  ok(near(m4.pente.pourcent, 9, 0.06) && near(m4.portee_cm, 250), "v4 : pente 22,5 / 250 = 9 %, portee 2,5 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
   const bouts = m4.toit.gouttiere.troncons.flatMap((t) => [t.de, t.a]);

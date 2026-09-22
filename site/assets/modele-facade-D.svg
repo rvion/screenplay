@@ -5,8 +5,8 @@
 <text x="136.9" y="174.6" text-anchor="middle" fill="#2b5d8a" font-size="10" font-weight="normal">75</text>
 <polygon points="183.8,406.9 308.8,406.9 308.8,138.1 183.8,138.1" fill="#eef2f6" stroke="#2b5d8a" stroke-width="1.5"/>
 <text x="246.2" y="160.6" text-anchor="middle" fill="#2b5d8a" font-size="12" font-weight="bold">D2</text>
-<polygon points="90.0,138.1 308.8,138.1 308.8,130.1 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
-<text x="199.4" y="128.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R2 · rehausse 22.5 → 6.4</text>
+<polygon points="90.0,138.1 308.8,138.1 308.8,129.6 90.0,110.0" fill="#d9b98a" stroke="#8a5a2b" stroke-width="1.5"/>
+<text x="199.4" y="128.6" text-anchor="middle" fill="#5a3a1a" font-size="10" font-weight="bold">R2 · rehausse 22.5 → 6.8</text>
 <rect x="193.1" y="144.4" width="106.2" height="262.5" fill="#b98a55" stroke="#7a5530" stroke-width="1.2"/>
 <line x1="303.4" y1="144.4" x2="289.4" y2="144.4" stroke="#aaa" stroke-width="0.7"/>
 <line x1="303.4" y1="138.1" x2="289.4" y2="138.1" stroke="#aaa" stroke-width="0.7"/>
@@ -31,7 +31,7 @@
 <line x1="305.8" y1="453.9" x2="311.8" y2="447.9" stroke="#2b5d8a" stroke-width="1"/>
 <text x="199.4" y="458.9" text-anchor="middle" dominant-baseline="middle" fill="#2b5d8a" font-size="12" font-weight="bold" transform="rotate(0.0 199.4 458.9)">175 cm</text>
 <text x="82.0" y="114.0" text-anchor="end" fill="#2b5d8a" font-size="12" font-weight="bold">237.5</text>
-<text x="316.8" y="134.1" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="bold">221.4</text>
+<text x="316.8" y="133.6" text-anchor="start" fill="#2b5d8a" font-size="12" font-weight="bold">221.8</text>
 <text x="82.0" y="154.1" text-anchor="end" fill="#888" font-size="10" font-weight="normal">215</text>
 <text x="199.4" y="26.0" text-anchor="middle" fill="#222" font-size="15" font-weight="bold">Face D · droite</text>
 <text x="199.4" y="46.0" text-anchor="middle" fill="#888" font-size="11" font-weight="normal">vue de l'extérieur · 2 panneaux de 215 · hauteurs finies aux deux bouts</text>

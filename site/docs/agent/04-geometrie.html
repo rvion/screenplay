@@ -43,9 +43,9 @@ de propriété, infranchissables. <code>grillages = [gauche, arriere_gauche]</co
 Le <strong>passage</strong> derrière l&#39;abri est la vraie distance entre la forme et chaque mur du fond
 (<code>v.passages</code>, extrémités du mur comprises), visée : <code>passage_souhaite_cm</code>.</p>
 <h2 id="l39abri--option-13-à-cotes-imposées-modele_trapeze">L&#39;abri : option 13 à cotes imposées (<code>modele_trapeze</code>)</h2>
-<p><code>disposition_trapeze.cotes_cm</code> impose façade 210, droite 175, gauche 245 et un mur du fond de 140
+<p><code>disposition_trapeze.cotes_cm</code> impose façade 210, droite 175, gauche 250 et un mur du fond de 135
 d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mur droit au bout du fond. Contour :
-<code>(10,10) → (220,10) → (220,185) → (150,255) → (10,255)</code> : 10 cm de dalle à gauche et devant, 42 à droite.</p>
+<code>(10,10) → (220,10) → (220,185) → (145,260) → (10,260)</code> : 10 cm de dalle à gauche et devant, 42 à droite.</p>
 <div class="doc-table"><table>
 <thead>
 <tr>
@@ -64,46 +64,46 @@ d&#39;équerre sur le mur gauche ; le pan <strong>C</strong> relie le haut du mu
 <tr>
 <td>D droite</td>
 <td>175</td>
-<td>237,5 → 221,4</td>
+<td>237,5 → 221,8</td>
 <td>75 + 100 (bande en tête, <code>panneaux_depuis_la_fin</code>)</td>
 </tr>
 <tr>
 <td>C pan à 45°</td>
-<td>99</td>
-<td>221,4 → 215</td>
-<td>99</td>
+<td>106,1</td>
+<td>221,8 → 215</td>
+<td>100 + 6,1</td>
 </tr>
 <tr>
 <td>B fond</td>
-<td>140</td>
+<td>135</td>
 <td>215 → 215</td>
-<td>100 + 40</td>
+<td>100 + 35</td>
 </tr>
 <tr>
 <td>G gauche</td>
-<td>245</td>
+<td>250</td>
 <td>215 → 237,5</td>
-<td>100 + 100 + 45</td>
+<td>100 + 100 + 50</td>
 </tr>
 </tbody></table></div>
 <ul>
-<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,90 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m²),
-intérieur 4,39 m², sol libre hors bureaux et lit 1,94 m². Cotes intérieures : façade <strong>198</strong>,
-droite 166,5, pan 94, fond 131,5, gauche 233. Passage derrière : 52,6 cm au grand pan, 69,7 au
-petit pan. Matériaux 2 888 € TTC.</li>
+<li>Angles <strong>90 / 90 / 135 / 135 / 90</strong>. Murs <strong>4,97 m²</strong> ⇒ <strong>aucune formalité</strong> (seuil 5 m²),
+intérieur 4,46 m², sol libre hors bureaux et lit 1,96 m². Cotes intérieures : façade <strong>198</strong>,
+droite 166,5, pan 101,1, fond 126,5, gauche 238. Passage derrière : 52,3 cm au grand pan, 64,8 au
+petit pan. Matériaux 2 901 € TTC.</li>
 <li><strong>La façade de 198 dedans est la raison de cette forme</strong> : un lit de 190 y tient à demeure. Le fond
-passe de 100 à 140 pour que le pan reste un vrai 45° (deux profils d&#39;angle identiques).</li>
+passe de 100 à 135 pour que le pan reste un vrai 45° (deux profils d&#39;angle identiques).</li>
 <li><strong>Le lit fait 80 de large, pas 90</strong> : il s&#39;arrête avant la baie de la porte, qui reste <strong>entièrement
 dégagée</strong>. La porte est ramenée à <strong>75</strong> : les tailles de stock sont 80 et 90, donc elle passe sur
 mesure (prix à confirmer, compter 300 à 450 € au lieu de 199).</li>
-<li><strong>Toit plan vers le fond</strong> (<code>toit.sens = &quot;arriere&quot;</code>) : <code>H</code> = 215, <code>c</code> = 22,5, <code>D</code> = 245 ⇒ pente
-<strong>9,2 %</strong> (5,25°), portée 2,45 m. <strong>3 panneaux de toit</strong> (100 × 256, 100 × 256 en biais, bande de
+<li><strong>Toit plan vers le fond</strong> (<code>toit.sens = &quot;arriere&quot;</code>) : <code>H</code> = 215, <code>c</code> = 22,5, <code>D</code> = 250 ⇒ pente
+<strong>9 %</strong> (5,14°), portée 2,5 m. <strong>3 panneaux de toit</strong> (100 × 261, 100 × 261 en biais, bande de
 10 × 198 en biais).</li>
 <li><strong>Rehausse</strong> (madrier 75 × 225) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.</li>
 <li><strong>Gouttière</strong> derrière l&#39;abri, sur le pan C et le fond B ; descente au bout droit.</li>
 <li><strong>Porte</strong> pleine 75 × 205 sur D, à 87,5 cm de la façade, chambranle 5. <strong>Fenêtres</strong> 80 × 75 de
 stock, oscillo-battantes, allège 110, en façade.</li>
-<li><strong>Mobilier</strong> : bureau gauche <strong>80 de profondeur sur 233 cm</strong> (trois écrans de 27&quot; = 190 cm) et
+<li><strong>Mobilier</strong> : bureau gauche <strong>80 de profondeur sur 238 cm</strong> (trois écrans de 27&quot; = 190 cm) et
 bureau de façade 50 ; lit pliant 70 × 190 (<code>lit_pliant</code>, <code>lit_pliant_2</code>) ; un lit à demeure
 (<code>lits_muraux</code>) : <strong>v3</strong>, lit <strong>80 × 190</strong> le long de la façade, calé à droite (<code>position: &quot;fin&quot;</code>),
 <strong>tête côté porte</strong> : couché, les pieds vont vers le bureau gauche et ses écrans, et le plateau du
