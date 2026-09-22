@@ -3436,25 +3436,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte", "cloture"]) {
-    const b = document.getElementById("voir-" + nom);
+  window.requestAnimationFrame(() => window.setTimeout(rend_vignettes, 0));
+  for (const nom of NOMS) {
+    const b = bouton(nom);
     if (!b) continue;
     b.addEventListener("click", () => {
       const n = +(b.dataset.etats || 2), etat = (+(b.dataset.etat || 0) + 1) % n;
-      b.dataset.etat = String(etat);
-      b.setAttribute("aria-pressed", String(etat > 0));
-      const lib = b.querySelector("span");
-      if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
-      b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
-      if (!vue) return;
-      if (nom === "personne") {
-        vue.montrer("personne", etat === 1);
-        vue.montrer("personne_dedans", etat === 2);
-      } else if (nom === "porte") {
-        vue.montrer("porte", etat === 1);
-        vue.montrer("porte_fermee", etat === 2);
-      } else vue.montrer(nom, etat > 0);
-      rend_vignettes();
+      montre_bouton(nom, etat);
+      if (vue) applique_etats(vue, etats());
     });
   }
   window.setTimeout(() => {

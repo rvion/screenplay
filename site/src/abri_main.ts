@@ -57,20 +57,16 @@ document.addEventListener("DOMContentLoaded", () => {
     try { await navigator.clipboard.writeText(texte); copier.classList.add("copie"); } catch { window.prompt("Copier la vue :", texte); }
     window.setTimeout(() => copier.classList.remove("copie"), 1500);
   });
-  // bascules : un clic avance l'etat (0/1, ou 0/1/2 pour la personne : dehors puis dedans)
-  for (const nom of ["toit", "mobilier", "lit", "etiquettes", "personne", "porte", "cloture"] as const) {
-    const b = document.getElementById("voir-" + nom) as HTMLButtonElement | null;
+  // les vignettes attendent la premiere image : la page s'affiche d'abord
+  window.requestAnimationFrame(() => window.setTimeout(rend_vignettes, 0));
+  // boutons d'etat : un clic avance l'etat (0/1, ou 0/1/2 pour la porte et la personne)
+  for (const nom of NOMS) {
+    const b = bouton(nom);
     if (!b) continue;
     b.addEventListener("click", () => {
       const n = +(b.dataset.etats || 2), etat = (+(b.dataset.etat || 0) + 1) % n;
-      b.dataset.etat = String(etat); b.setAttribute("aria-pressed", String(etat > 0));
-      const lib = b.querySelector("span"); if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
-      b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
-      if (!vue) return;
-      if (nom === "personne") { vue.montrer("personne", etat === 1); vue.montrer("personne_dedans", etat === 2); }
-      else if (nom === "porte") { vue.montrer("porte", etat === 1); vue.montrer("porte_fermee", etat === 2); }
-      else vue.montrer(nom, etat > 0);
-      rend_vignettes();
+      montre_bouton(nom, etat);
+      if (vue) applique_etats(vue, etats());
     });
   }
   // filet de securite : CDN bloque ou WebGL absent, rien n'a ete dessine
