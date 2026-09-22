@@ -34,8 +34,8 @@ ok(!!d && d.murs.length === m.faces.length, "modele3d : un mur par face (" + d.m
 const racine = new THREE.Group();
 const groupes = peuple_abri(racine, d, { toit: true, mobilier: true, etiquettes: true });
 // points de vue : la vue principale depuis le jardin (+z), la vignette de la porte a droite (+x), l'arriere derriere (-z), le dessus tres haut
-ok(Object.keys(VUES).join() === "jardin,droite,arriere,porte,interieur,lit,lit2" && VUES.jardin.position[2] > 3 && VUES.porte.etats.murs === 2 && VUES.porte.etats.toit === 0 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "six points de vue fixes, chacun avec ses sept états d'options");
-ok(["porte", "interieur", "lit", "lit2"].every((k) => JSON.stringify([VUES[k].position, VUES[k].cible, VUES[k].fov]) === JSON.stringify([VUES.interieur.position, VUES.interieur.cible, VUES.interieur.fov])) && VUES.interieur.position[1] > 4, "les quatre vues de l'intérieur partagent la même caméra, vue de haut");
+ok(Object.keys(VUES).join() === "jardin,droite,arriere,porte,interieur,lit,lit2,lit3" && VUES.jardin.position[2] > 3 && VUES.porte.etats.murs === 2 && VUES.porte.etats.toit === 0 && VUES.arriere.position[2] < -3 && VUES.droite.position[0] < -2 && Object.values(VUES).every((v) => v.titre.length > 5 && v.etats && Object.keys(v.etats).length === 7), "huit points de vue fixes, chacun avec ses sept états d'options");
+ok(["porte", "interieur", "lit", "lit2", "lit3"].every((k) => JSON.stringify([VUES[k].position, VUES[k].cible, VUES[k].fov]) === JSON.stringify([VUES.interieur.position, VUES.interieur.cible, VUES.interieur.fov])) && VUES.interieur.position[1] > 4, "les cinq vues de l'intérieur partagent la même caméra, vue de haut");
 ok(VUES.jardin.etats.toit === 1 && VUES.jardin.etats.murs === 1 && VUES.jardin.etats.mobilier === 1 && VUES.jardin.etats.cloture === 0 && VUES.interieur.etats.toit === 0 && VUES.interieur.etats.murs === 2 && VUES.interieur.etats.personne === 2 && VUES.interieur.etats.mobilier === 1 && VUES.lit.etats.mobilier === 2 && VUES.lit.etats.personne === 2 && VUES.lit.etats.murs === 2 && VUES.arriere.etats.porte === 2, "états : jardin = départ, au bureau = assise, lit déplié = couchée, passage = porte fermée");
 ok(groupes.murs && groupes.murs.visible && groupes.coupe && groupes.coupe.value === 100 && groupes.murs.children.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry").every((o) => o.material.onBeforeCompile && !o.material.transparent), "murs : leur groupe, la coupe inactive au départ (100 m), chaque paroi porte la coupe nette (sans transparence)");
 ok(groupes.cloture.visible === true && groupes.cloture.children.some((o) => o.isMesh && o.material.transparent && o.material.opacity < 0.5), "clôture : visible et translucide au départ");
@@ -89,6 +89,19 @@ const paroi = groupes.murs.children;
     const oreiller2 = groupes.lit2.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
     ok(boite(oreiller2).min.x > (b2.min.x + b2.max.x) / 2, "lit 2 : l'oreiller est du cote de la porte");
     const mi = boite(groupes.sieges_mi);
+    // lit en facade : 180 le long du mur avant, aucun bureau devant, le bureau d'angle s'arrete au bord du lit ; sieges ranges dessous, hors du lit
+    const l3 = d.mobilier.lit3;
+    ok((l3 || nom !== "abri actuel") && groupes.lit3.visible === false && groupes.bureau_coin.visible === false && groupes.sieges_ranges3.visible === false && groupes.personne_couchee3.visible === false, "lit en façade : lit, bureau d'angle, sièges rangés et personne cachés au départ");
+    if (l3) {
+      const q3 = l3.polygone, xs3 = q3.map((z) => z[0]), ys3 = q3.map((z) => z[1]), xsi = d.sol.polygone.map((z) => z[0]), ysi = d.sol.polygone.map((z) => z[1]);
+      ok(near(Math.max(...xs3) - Math.min(...xs3), 180, 0.2) && near(Math.max(...ys3) - Math.min(...ys3), 70, 0.2) && near(Math.min(...ys3), Math.min(...ysi), 0.2) && near(Math.min(...xs3), Math.min(...xsi), 0.2), "lit en façade : 180 × 70 le long du mur avant, calé dans le coin gauche");
+      const bb = l3.bureau.map((z) => z[1]);
+      ok(near(Math.min(...bb), Math.max(...ys3), 0.2) && Math.max(...bb) > Math.max(...ys3) + 100, "lit en façade : le bureau d'angle commence au bord du lit et court jusqu'au fond");
+      const b3 = boite(groupes.lit3), bc = boite(groupes.bureau_coin), r3 = boite(groupes.sieges_ranges3), c3 = boite(groupes.personne_couchee3);
+      ok(!b3.intersectsBox(bc) && !b3.intersectsBox(r3) && b3.intersectsBox(c3) && groupes.sieges_ranges3.children.filter((o) => o.isMesh).length === groupes.sieges.children.filter((o) => o.isMesh).length && r3.max.x < bc.max.x + 0.2, "lit en façade : ni le bureau ni les sièges rangés dessous ne touchent le lit ; la personne est couchée dessus");
+      const oreiller3 = groupes.lit3.children.filter((o) => o.isMesh && o.geometry.type === "BufferGeometry").sort((p, q) => boite(q).max.y - boite(p).max.y)[0];
+      ok(boite(oreiller3).max.x < (b3.min.x + b3.max.x) / 2, "lit en façade : l'oreiller est du côté gauche, loin de la porte");
+    }
     ok(mi.min.x < boite(groupes.sieges).min.x - 0.15 && mi.min.x > r1.min.x + 0.15, "rien d'utilise : le fauteuil est a moitie rentre sous le bureau");
   }
 }

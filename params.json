@@ -178,7 +178,13 @@
     },
     "panneaux_depuis_la_fin": [
       "droite"
-    ]
+    ],
+    "lit_facade": {
+      "longueur_cm": 180,
+      "contre": "avant",
+      "bureau": "gauche",
+      "_comment": "troisieme position : plus de bureau de facade, le lit (70 x 180 : la facade fait 188 dedans) le long du mur avant, cale contre le mur gauche ; le bureau gauche s'arrete au lit et devient un bureau d'angle au fond ; les sieges sont ranges sous lui"
+    }
   },
   "formes_etudiees": [
     {

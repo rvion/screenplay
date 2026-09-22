@@ -597,6 +597,18 @@ export function variantes(p: Params, g: any) {
       v.lit_pliant = place_lit(disp.lit_pliant);
       // second lit : la meme spec, surchargee (autre mur a longer, autre bureau sous le pied)
       v.lit_pliant_2 = disp.lit_pliant_2 ? place_lit({ ...disp.lit_pliant, ...disp.lit_pliant_2 }) : null;
+      // lit en facade : plus de bureau devant ; le lit longe le mur `contre`, cale au coin du mur precedent,
+      // et le bureau `bureau` s'arrete au bord du lit (bureau d'angle au fond)
+      const lf = disp.lit_facade ? { ...disp.lit_pliant, ...disp.lit_facade } : null;
+      const k = lf ? v.noms_cotes.indexOf(lf.contre) : -1, bu = lf ? v.bureaux.find((b: any) => b.cote === lf.bureau) : null;
+      if (lf && k >= 0 && bu) {
+        const LW = +lf.largeur_cm, LL = +lf.longueur_cm, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
+        const at = (s: number, d: number): Pt => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+        const q = [at(ep, ep), at(ep + LL, ep), at(ep + LL, ep + LW), at(ep, ep + LW)];
+        const bq = [clip_half(bu.brut, q[3], q[2], true), clip_half(bu.brut, q[3], q[2], false)].sort((x, y) => poly_area(clip_convex(x, q)) - poly_area(clip_convex(y, q)))[0];
+        const pts = (z: Pt[]) => z.map(([x, y]) => [rnd(x, 1), rnd(y, 1)]);
+        v.lit_facade = { largeur_cm: LW, longueur_cm: LL, contre: lf.contre, tient: q.every(dedans_int), polygone: pts(q), bureau: { cote: bu.cote, polygone: pts(bq), aire_m2: rnd(poly_area(bq) / 1e4, 2) } };
+      }
     }
     for (const b of v.bureaux) delete b.brut;
     v.bureaux_m2 = rnd(occ / 1e4, 2);
@@ -1058,6 +1070,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
       sieges: (v.sieges || []).filter((st: any) => st.tient !== false).map((st: any) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
       lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
       lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
+      lit3: v.lit_facade && v.lit_facade.tient ? { polygone: v.lit_facade.polygone, bureau: v.lit_facade.bureau.polygone } : null,
     },
   };
 }

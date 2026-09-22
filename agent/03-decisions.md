@@ -534,3 +534,14 @@ sort de la liste d'achats et du guide, et reste une question (Q2 : le panneau de
 portée seul ?). Si le fabricant dit non, on la dessine et on la remet, en une fois. *Garde :*
 `tests/abri_dom.mjs` refuse une panne dans le guide ou les matériaux et exige la question (vue rouge
 avec la panne activée).
+
+## D46 — Cinquième état du mobilier : lit en façade, bureau d'angle
+Demande de Rémi (2026-09-22) : une variante où le bureau de façade disparaît pour laisser la place au lit,
+avec un bureau d'angle au fond. Le mur avant fait 188 cm dedans : un lit de 190 n'y tient pas, et Rémi a
+choisi un **70 × 180** pour cette position seulement (les deux autres gardent le 190). `lit_facade` place
+le lit le long du mur `contre`, calé dans le coin gauche, et coupe le bureau `bureau` au bord du lit :
+le bureau gauche devient un bureau d'angle au fond (1,93 m). Tête dans le coin gauche, loin de la porte.
+C'est un état de plus du bouton mobilier et une vignette, en 3D seulement : les plans de sol gardent le
+bureau en L. *Garde :* `tests/abri3d.mjs` mesure le lit (180 × 70, dans le coin), le bureau qui part du
+bord du lit, et vérifie que ni le bureau ni les sièges rangés ne touchent le lit (vue rouge sans
+`lit_facade`). *Écarté :* élargir la façade à 202 (plus de 5 m² de murs, donc une déclaration préalable).

@@ -914,6 +914,16 @@
       if (disp.lit_pliant) {
         v.lit_pliant = place_lit(disp.lit_pliant);
         v.lit_pliant_2 = disp.lit_pliant_2 ? place_lit({ ...disp.lit_pliant, ...disp.lit_pliant_2 }) : null;
+        const lf = disp.lit_facade ? { ...disp.lit_pliant, ...disp.lit_facade } : null;
+        const k = lf ? v.noms_cotes.indexOf(lf.contre) : -1, bu = lf ? v.bureaux.find((b) => b.cote === lf.bureau) : null;
+        if (lf && k >= 0 && bu) {
+          const LW = +lf.largeur_cm, LL = +lf.longueur_cm, a = r[k], c = r[(k + 1) % r.length], l = Math.hypot(c[0] - a[0], c[1] - a[1]), ux = (c[0] - a[0]) / l, uy = (c[1] - a[1]) / l, nx = -uy, ny = ux;
+          const at = (s, d) => [a[0] + ux * s + nx * d, a[1] + uy * s + ny * d];
+          const q = [at(ep, ep), at(ep + LL, ep), at(ep + LL, ep + LW), at(ep, ep + LW)];
+          const bq = [clip_half(bu.brut, q[3], q[2], true), clip_half(bu.brut, q[3], q[2], false)].sort((x, y) => poly_area(clip_convex(x, q)) - poly_area(clip_convex(y, q)))[0];
+          const pts = (z) => z.map(([x, y]) => [rnd2(x, 1), rnd2(y, 1)]);
+          v.lit_facade = { largeur_cm: LW, longueur_cm: LL, contre: lf.contre, tient: q.every(dedans_int), polygone: pts(q), bureau: { cote: bu.cote, polygone: pts(bq), aire_m2: rnd2(poly_area(bq) / 1e4, 2) } };
+        }
       }
       for (const b of v.bureaux) delete b.brut;
       v.bureaux_m2 = rnd2(occ / 1e4, 2);
@@ -1408,7 +1418,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         bureaux: (v.bureaux || []).map((b) => ({ cote: b.cote, polygone: b.polygone })),
         sieges: (v.sieges || []).filter((st) => st.tient !== false).map((st) => ({ type: st.type, contre: st.contre, polygone: st.polygone })),
         lit: v.lit_pliant && v.lit_pliant.tient ? { polygone: v.lit_pliant.polygone, replie: v.lit_pliant.replie || null } : null,
-        lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null
+        lit2: v.lit_pliant_2 && v.lit_pliant_2.tient ? { polygone: v.lit_pliant_2.polygone } : null,
+        lit3: v.lit_facade && v.lit_facade.tient ? { polygone: v.lit_facade.polygone, bureau: v.lit_facade.bureau.polygone } : null
       }
     };
   }
@@ -2109,17 +2120,22 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     porte: { titre: "C\xF4t\xE9 porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, personne: 1, cloture: 1 } },
     interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
     lit: { titre: "Lit d\xE9pli\xE9", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
-    lit2: { titre: "Lit d\xE9pli\xE9 2, en biais", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } }
+    lit2: { titre: "Lit d\xE9pli\xE9 2, en biais", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 3, personne: 2, etiquettes: 0 } },
+    lit3: { titre: "Lit en fa\xE7ade, bureau d'angle", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 4, personne: 2, etiquettes: 0 } }
   };
   function applique_etats(vue, e) {
     vue.montrer("toit", e.toit > 0);
     vue.montrer("etiquettes", e.etiquettes > 0);
     vue.montrer("lit", e.mobilier === 2);
     vue.montrer("lit2", e.mobilier === 3);
+    vue.montrer("lit3", e.mobilier === 4);
+    vue.montrer("mobilier", e.mobilier !== 4);
+    vue.montrer("bureau_coin", e.mobilier === 4);
     vue.montrer("sieges_mi", e.mobilier === 0);
     vue.montrer("sieges", e.mobilier === 1);
     vue.montrer("sieges_ranges", e.mobilier === 2);
     vue.montrer("sieges_ranges2", e.mobilier === 3);
+    vue.montrer("sieges_ranges3", e.mobilier === 4);
     vue.montrer("porte", e.porte === 1);
     vue.montrer("porte_fermee", e.porte === 2);
     vue.montrer("personne", e.personne === 1);
@@ -2127,6 +2143,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     vue.montrer("personne_assise", e.personne === 2 && e.mobilier === 1);
     vue.montrer("personne_couchee", e.personne === 2 && e.mobilier === 2);
     vue.montrer("personne_couchee2", e.personne === 2 && e.mobilier === 3);
+    vue.montrer("personne_couchee3", e.personne === 2 && e.mobilier === 4);
     vue.montrer("cloture", e.cloture > 0);
     vue.montrer("murs", e.murs > 0);
     vue.montrer("murs_coupes", e.murs === 2);
@@ -2190,7 +2207,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     return c;
   }
   function peuple_abri(abri, data, visible_demande = {}) {
-    const groupes = {}, visible = { lit: false, lit2: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
+    const groupes = {}, visible = { lit: false, lit2: false, lit3: false, bureau_coin: false, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, sieges_ranges3: false, personne_couchee3: false, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, personne_couchee2: false, porte_fermee: false, cloture: false, ...visible_demande };
     const mat = (couleur, extra = {}) => new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.8, side: THREE.DoubleSide, ...extra });
     const xs = data.dalle.map((z) => z[0]), ys = data.dalle.map((z) => z[1]);
     const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2 - 60;
@@ -2508,7 +2525,10 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     toit.add(ombre(tuyau));
     const mob = groupe("mobilier"), sol = data.sol.epaisseur_cm;
     for (const b of data.mobilier.bureaux) mob.add(ombre(new THREE.Mesh(prisme(b.polygone, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
-    const sieges = groupe("sieges"), sieges_mi = groupe("sieges_mi"), sieges_ranges = groupe("sieges_ranges"), sieges_ranges2 = groupe("sieges_ranges2");
+    const bureau_coin = groupe("bureau_coin");
+    if (data.mobilier.lit3) bureau_coin.add(ombre(new THREE.Mesh(prisme(data.mobilier.lit3.bureau, plat(sol + 72), plat(sol + 75)), mat(COUL.bureau))));
+    const sieges = groupe("sieges"), sieges_mi = groupe("sieges_mi"), sieges_ranges = groupe("sieges_ranges"), sieges_ranges2 = groupe("sieges_ranges2"), sieges_ranges3 = groupe("sieges_ranges3");
+    let fauteuil_range = null;
     const matPers = mat(COUL.personne, { roughness: 0.9 });
     const assise = (h_assise) => {
       const g = new THREE.Group();
@@ -2565,6 +2585,13 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const s = siege(st, sieges);
       const pousse = st.contre === "gauche" ? [-(s.largeur - 12), 0] : st.contre === "droite" ? [s.largeur - 12, 0] : [0, -(s.profondeur - 12)];
       siege(st, sieges_ranges, pousse[0], pousse[1]);
+      if (!s.tabouret) {
+        siege(st, sieges_ranges3, pousse[0], pousse[1]);
+        fauteuil_range = [s.cy + s.profondeur / 2];
+      } else if (fauteuil_range) {
+        const gauche_int = Math.min(...data.sol.polygone.map((z) => z[0]));
+        siege(st, sieges_ranges3, gauche_int + 4 + s.largeur / 2 - s.cx, fauteuil_range[0] + 4 + s.profondeur / 2 - s.cy);
+      }
       siege(st, sieges_mi, pousse[0] / 2, pousse[1] / 2);
       const bureau_av = data.mobilier.bureaux.find((b) => b.cote === "avant");
       const avant_int = bureau_av ? Math.min(...bureau_av.polygone.map((z) => z[1])) : null;
@@ -2600,8 +2627,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     }
     const fait_lit = (q, dans, qui, tete_vers = "fond") => {
       const cotes = q.map((a, i) => ({ a, b: q[(i + 1) % 4], l: Math.hypot(q[(i + 1) % 4][0] - a[0], q[(i + 1) % 4][1] - a[1]) }));
-      const k = tete_vers === "droite" ? 0 : 1;
-      const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => c1.a[k] + c1.b[k] - (c2.a[k] + c2.b[k]));
+      const k = tete_vers === "fond" ? 1 : 0, sens = tete_vers === "gauche" ? -1 : 1;
+      const courts = cotes.filter((c) => c.l < (cotes[0].l + cotes[1].l) / 2).sort((c1, c2) => sens * (c1.a[k] + c1.b[k] - (c2.a[k] + c2.b[k])));
       const pied = courts[0], tete = courts[courts.length - 1];
       const mp = [(pied.a[0] + pied.b[0]) / 2, (pied.a[1] + pied.b[1]) / 2], mt = [(tete.a[0] + tete.b[0]) / 2, (tete.a[1] + tete.b[1]) / 2];
       const L = Math.hypot(mt[0] - mp[0], mt[1] - mp[1]) || 1, ux = (mt[0] - mp[0]) / L, uy = (mt[1] - mp[1]) / L, nx = -uy, ny = ux, lw = pied.l;
@@ -2623,9 +2650,10 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       g.position.copy(W((mp[0] + mt[0]) / 2, (mp[1] + mt[1]) / 2, sol));
       qui.add(g);
     };
-    const lit = groupe("lit"), lit2 = groupe("lit2");
+    const lit = groupe("lit"), lit2 = groupe("lit2"), lit3 = groupe("lit3"), p_couchee3 = groupe("personne_couchee3");
     if (data.mobilier.lit) fait_lit(data.mobilier.lit.polygone, lit, p_couchee);
     if (data.mobilier.lit2) fait_lit(data.mobilier.lit2.polygone, lit2, p_couchee2, "droite");
+    if (data.mobilier.lit3) fait_lit(data.mobilier.lit3.polygone, lit3, p_couchee3, "gauche");
     if (groupes.cloture) cloture_pleine(groupes.cloture, visible.cloture !== false);
     return groupes;
   }
@@ -2671,7 +2699,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const abri = new THREE.Group();
     scene.add(abri);
     let groupes = {};
-    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, lit2: false, personne_couchee2: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
+    const visible = { toit: true, murs: true, murs_coupes: false, mobilier: true, sieges: true, sieges_mi: false, sieges_ranges: false, sieges_ranges2: false, sieges_ranges3: false, lit2: false, lit3: false, bureau_coin: false, personne_couchee2: false, personne_couchee3: false, lit: false, etiquettes: true, personne: false, personne_dedans: false, personne_assise: false, personne_couchee: false, porte: true, porte_fermee: false, cloture: false };
     const construit = (data) => {
       groupes = peuple_abri(abri, data, visible);
     };
