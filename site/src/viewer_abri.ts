@@ -44,7 +44,7 @@ export const VUES = {
   porte: { titre: "Côté porte", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 3, porte: 1, mobilier: 1, etiquettes: 0, personne: 1, cloture: 1 } },
   interieur: { titre: "Au bureau", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 1, personne: 2 } },
   debout: { titre: "Debout dedans, abri voilé", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 2, murs: 3, porte: 3, mobilier: 0, personne: 2, etiquettes: 0 } },
-  regarder: { titre: "Regarder, depuis le lit", position: [1.16, 1.43, -0.2], cible: [0.09, 1.12, 0.43], fov: 110, etats: { ...ETATS_DEFAUT, toit: 1, murs: 1, porte: 0, mobilier: 1, etiquettes: 0, personne: 0, cloture: 0 } },
+  dedans: { titre: "Dedans, côté porte ouvert", position: [3.7, 3.73, -1.67], cible: [-0.2, 1.09, 0.1], fov: 42, etats: { toit: 0, murs: 4, porte: 0, mobilier: 1, etiquettes: 0, personne: 2, cloture: 2 } },
   couche: { titre: "Couché, les pieds vers les écrans", ...DEDANS, etats: { ...ETATS_DEFAUT, toit: 0, murs: 2, porte: 2, mobilier: 2, personne: 2, etiquettes: 0 } },
 } as const;
 export type NomVue = keyof typeof VUES;

@@ -25,7 +25,7 @@
   bouton « murs » les laisse pleins, les **coupe net à 1 m**, les **voile** (translucides, `voile()`), **retire les faces D et C**
   (chaque pièce de mur porte la lettre de sa face) ou les cache ; le bouton « toit » a le même état voilé, et le bouton « porte » un quatrième état (fermée et
   voilée). La vue « au bureau » est en murs coupés, la vue « debout dedans » montre **tout l'abri voilé**,
-  à sa vraie hauteur, et la vue « regarder » se met à la place de quelqu'un couché, grand angle.
+  à sa vraie hauteur, et la vue « dedans » regarde par le côté de la porte ouvert (sans les faces D et C, ni toit, ni palissade), assis au bureau.
   Le lit se lit comme un **canapé** (gros coussins de dossier contre la façade) partout sauf dans la vue
   « couché », où le couchage (drap, oreiller, plaque de taille) remplace les coussins. Le bouton **mobilier** a trois états (l'usage, le lit étant à demeure) : rien d'utilisé (fauteuil à moitié
   rentré), fauteuil au bureau, **lit v1** le long de la porte (sommier, matelas, drap, oreiller lavande avec la taille du lit sur
