@@ -2913,11 +2913,10 @@ function peuple_abri(abri, data, visible_demande = {}) {
   const coupe = { value: visible.murs_coupes ? 1 : 100 };
   groupes.coupe = coupe;
   const coupable = (m) => {
-    m.transparent = true;
     m.onBeforeCompile = (sh) => {
       sh.uniforms.uCoupe = coupe;
       sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vHaut;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvHaut = (modelMatrix * vec4(transformed, 1.0)).y;");
-      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <dithering_fragment>", "#include <dithering_fragment>\nif (vHaut > uCoupe + 0.2) discard;\ngl_FragColor.a *= 1.0 - smoothstep(uCoupe, uCoupe + 0.2, vHaut);");
+      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <clipping_planes_fragment>", "#include <clipping_planes_fragment>\nif (vHaut > uCoupe) discard;");
     };
     return m;
   };
@@ -3408,8 +3407,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!b) return;
     b.dataset.etat = String(etat);
     b.setAttribute("aria-pressed", String(etat > 0));
-    const lib = b.querySelector("span");
-    if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
     b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
   };
   const etats = () => {

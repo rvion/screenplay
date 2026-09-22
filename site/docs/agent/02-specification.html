@@ -39,8 +39,7 @@ travée (<code>palissade_travee_cm</code>) et entre eux un panneau de planches d
 bombé, dans le groupe <code>cloture</code>, <strong>translucide au départ</strong> (bouton « clôture » pour la rendre pleine) ;
 les <strong>parois</strong> (murs, joints, rehausse, cadre et battant, fenêtres, étiquettes) sont dans le groupe <code>murs</code>
 et portent un fondu de coupe injecté dans leurs matériaux (<code>onBeforeCompile</code>, uniform <code>uCoupe</code>) : le
-bouton « murs » les laisse pleins, les <strong>coupe à 1 m</strong> (la matière s&#39;efface sur 20 cm puis disparaît) ou
-les cache ; les vues « intérieur » et « lit » sont en murs coupés. Le <strong>lit</strong> déplié a un sommier, un
+bouton « murs » les laisse pleins, les <strong>coupe net à 1 m</strong> ou les cache ; les vues « intérieur » et « lit » sont en murs coupés. Le <strong>lit</strong> déplié a un sommier, un
 matelas, un drap et un oreiller à la tête ;
 un grillage un pointillé vert sur le plan, et en 3D un treillis
 à mailles losange (texture de grillage dessinée sur un canvas, maille de 5 cm, vide entre les fils ; plan
@@ -283,7 +282,9 @@ rehausse bois, <strong>coupes d&#39;onglet</strong> aux bouts des murs et de la 
 nervuré dans le sens de la pente, gouttière sur chaque bord d&#39;égout, descente,
 bureaux, sièges, lit, <strong>étiquettes</strong> de panneaux sur plaque blanche à bord sombre en haut de chaque
 panneau (au-dessus des fenêtres), et une <strong>silhouette de 1,80 m</strong> pour l&#39;échelle, devant la porte ou à
-60 cm du seuil dedans, sur le plancher. <strong>Rendu</strong> : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
+60 cm du seuil dedans, sur le plancher. Les <strong>options</strong> sont une ligne de pilules au-dessus de la vue
+(libellé fixe, autant de points que d&#39;états, le point actif en bleu), en trois groupes : toit, murs |
+porte, lit, personne | mobilier, repères, clôture. <strong>Rendu</strong> : soleil chaud avec ombres douces (PCF), hémisphère ciel/sol,
 contre-jour faible, environnement de pièce (PMREM) pour les reflets des panneaux métalliques (metalness 0,55),
 tone mapping ACES ; couleurs distinctes par plan (panneaux RAL 9002, toit gris moyen, dalle béton, herbe
 sombre) ; <strong>arêtes</strong> sombres (EdgesGeometry) sur murs, rehausse et toit pour lire les angles. <strong>Bascules</strong> sous la vue : boutons carrés à icône et petit libellé

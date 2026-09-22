@@ -93,15 +93,14 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
   // plan (x vers la droite, y vers le fond, h vers le haut, en cm) -> monde (m) : la facade regarde +Z
   const W = (x: number, y: number, h: number) => new THREE.Vector3((x - cx) / 100, h / 100, -(y - cy) / 100);
   const groupe = (nom: string) => { const gr = new THREE.Group(); groupes[nom] = gr; gr.visible = visible[nom] !== false; abri.add(gr); return gr; };
-  // coupe des parois : au-dessus de uCoupe (m) la matiere s'efface sur 20 cm puis disparait ; 100 = pas de coupe
+  // coupe des parois : au-dessus de uCoupe (m) la matiere n'est pas dessinee, coupe nette ; 100 = pas de coupe
   const coupe = { value: visible.murs_coupes ? 1.0 : 100 };
   (groupes as any).coupe = coupe;
   const coupable = (m: Vec) => {
-    m.transparent = true;
     m.onBeforeCompile = (sh: any) => {
       sh.uniforms.uCoupe = coupe;
       sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vHaut;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvHaut = (modelMatrix * vec4(transformed, 1.0)).y;");
-      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <dithering_fragment>", "#include <dithering_fragment>\nif (vHaut > uCoupe + 0.2) discard;\ngl_FragColor.a *= 1.0 - smoothstep(uCoupe, uCoupe + 0.2, vHaut);");
+      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vHaut; uniform float uCoupe;").replace("#include <clipping_planes_fragment>", "#include <clipping_planes_fragment>\nif (vHaut > uCoupe) discard;");
     };
     return m;
   };

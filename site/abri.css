@@ -101,7 +101,7 @@ td > .cote:only-child .u, td > .cote:first-child .u { grid-column: 3; }
 h3 .sous-total { float: right; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e0c48f; border-radius: 3px; padding: 0 .3rem; white-space: nowrap; }
 
-.vue { position: relative; }
+.vue .scene { position: relative; }
 .vue-barre { position: absolute; top: .4rem; left: .4rem; right: .4rem; display: flex; gap: .4rem; align-items: center; font-size: .66rem; color: rgba(28, 37, 48, .8); pointer-events: none; }
 .vue-barre > * { pointer-events: auto; }
 /* chaque commande dans sa pilule de verre ; le texte de la camera reste nu et tamise */
@@ -128,16 +128,19 @@ span.a-confirmer { font-size: .68rem; color: var(--alerte); border: 1px solid #e
 .tip:hover::after { opacity: 1; }
 button.tip::after { left: auto; right: 0; }
 #viewer { width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #dfe7ee; }
-.bascules { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0 0; }
-.bascules button { position: relative; display: grid; justify-items: center; gap: .1rem; width: 50px; height: 44px; padding: .3rem 0 .2rem; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); color: var(--muted); cursor: pointer; }
-.bascules button svg { width: 16px; height: 16px; }
-.bascules button span { font-size: .56rem; line-height: 1; letter-spacing: .01em; }
+/* options de la scene : une ligne de pilules au-dessus de la vue, libelle fixe, points = valeur */
+.bascules { display: flex; flex-wrap: wrap; gap: .25rem .4rem; margin: 0 0 .35rem; }
+.bascules .groupe { display: flex; gap: .15rem; }
+.bascules .groupe + .groupe { padding-left: .4rem; border-left: 1px solid var(--line); }
+.bascules button { display: inline-flex; align-items: center; gap: .2rem; height: 21px; padding: 0 .32rem 0 .3rem; border: 1px solid var(--line); border-radius: 11px; background: var(--carte); color: var(--muted); cursor: pointer; font-size: .62rem; line-height: 1; letter-spacing: -.01em; }
+.bascules button svg { width: 11px; height: 11px; flex: none; }
+.bascules button span { white-space: nowrap; }
 .bascules button:hover { border-color: var(--accent); color: var(--accent); }
-.bascules button[aria-pressed="true"] { background: #e6eef6; border-color: var(--accent); color: var(--accent); }
-.bascules .points { position: absolute; bottom: 3px; left: 0; right: 0; display: flex; justify-content: center; gap: 3px; }
-.bascules .points b { width: 4px; height: 4px; border-radius: 50%; background: var(--line); }
+.bascules button[aria-pressed="true"] { color: var(--ink); border-color: #b9c6d3; background: #eef3f8; }
+.bascules .points { display: inline-flex; gap: 2px; margin-left: .05rem; }
+.bascules .points b { width: 4px; height: 4px; border-radius: 50%; background: #d3d8de; }
 .bascules .points b.ici { background: var(--accent); }
-.bascules button[data-etats="3"] { padding-bottom: .5rem; height: 48px; }
+.bascules button[data-etat="0"] .points b.ici { background: #9aa4ae; }
 .viewer-fallback { padding: 1rem; color: var(--muted); }
 .vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .45rem; margin-top: .6rem; }
 .vignettes button { padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--carte); cursor: pointer; overflow: hidden; text-align: left; }

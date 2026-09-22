@@ -49,7 +49,8 @@ Liste tenue à jour pendant la session : une ligne par demande, cochée quand c'
 - [x] Légende : le passage est une marge comme les autres (même couleur, une seule entrée)
 - [x] Vignette « Côté porte » avec la vue collée par Rémi
 - [x] Lit : sommier, matelas, drap, oreiller
-- [x] Bouton « murs » : pleins, coupés à 1 m avec fondu sur 20 cm, sans ; presets intérieur et lit en murs coupés
+- [x] Bouton « murs » : pleins, coupés net à 1 m, sans ; presets intérieur et lit en murs coupés
+- [x] Options en une ligne de pilules au-dessus de la vue : libellé fixe, points = valeur, trois groupes
 - [ ] ~~Fish-eye~~ abandonné (Rémi : « don't bother »)
 - [ ] Régler les vues (principale + 3 vignettes) avec les valeurs qu'il collera depuis « copier la vue »
 - [ ] Lever la consigne « stop pushing » et pousser (attend son mot)

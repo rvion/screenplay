@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const montre_bouton = (nom: string, etat: number) => {
     const b = bouton(nom); if (!b) return;
     b.dataset.etat = String(etat); b.setAttribute("aria-pressed", String(etat > 0));
-    const lib = b.querySelector("span"); if (lib && lib.dataset.noms) lib.textContent = lib.dataset.noms.split("|")[etat];
     b.querySelectorAll(".points b").forEach((pt, i) => pt.classList.toggle("ici", i === etat));
   };
   const etats = (): Etats => { const e: any = { ...ETATS_DEFAUT }; for (const n of NOMS) { const b = bouton(n); if (b) e[n] = +(b.dataset.etat || 0); } return e; };
