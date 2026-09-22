@@ -6,6 +6,7 @@ import { readFileSync, mkdirSync, existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
 import vm from "node:vm";
+import { createHash } from "node:crypto";
 
 const ROOT = process.cwd();
 const html = readFileSync(join(ROOT, "site/index.html"), "utf8");
@@ -129,6 +130,12 @@ ok(liens.every((h) => /^[a-z]+:/.test(h) || existsSync(join(ROOT, "site", h.spli
 ok(md_en_ligne("**a** `b` [c](abri-v2.md) <x>") === '<b>a</b> <code>b</code> <a href="docs/abri-v2.html">c</a> &lt;x&gt;', "markdown en ligne : gras, code, lien vers docs/, HTML échappé");
 // la page charge ses scripts et garde un repli sans WebGL ; les liens du pied existent
 ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.test(html) && /window\.print\(\)/.test(html), "index.html charge params.js et abri.js, a son conteneur 3D et un bouton Imprimer");
+// cache : chaque fichier porte le hash de son propre contenu, donc changer abri.js ne fait pas retelecharger three.js
+{
+  const attendu = (f) => createHash("sha256").update(readFileSync(join(ROOT, "site", f))).digest("hex").slice(0, 8);
+  const fichiers = ["abri.css", "params.js", "three.js", "abri.js"], lu = (f) => (html.match(new RegExp(`="${f.replace(".", "\\.")}\\?v=([0-9a-f]+)"`)) || [])[1];
+  ok(fichiers.every((f) => lu(f) === attendu(f)), "cache : ?v= de chaque fichier = hash de ce seul fichier (" + fichiers.map((f) => f + "=" + lu(f)).join(", ") + ")");
+}
 // file:// : chrome refuse un script module charge depuis file://, donc que des scripts classiques
 {
   const scripts = [...html.matchAll(/<script\b([^>]*)>/g)].map((m) => m[1]);
