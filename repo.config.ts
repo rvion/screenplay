@@ -8,8 +8,8 @@ export default defineRepo({
     // <<< shipkit gate
     name: 'screenplay-shed',
     visibility: 'public', // github rvion/screenplay is public (GitHub Pages)
-    venues: [], // e.g. ['itch', 'steam'], selects which .rv-<venue>/ contracts are REQUIRED
-    social: [], // e.g. ['x', 'discord'], the .rv-social/<channel>/ post folders (+ .rv-discord/)
+    venues: [], // e.g. ['itch', 'steam'], selects which .shipkit/<venue>/ contracts are REQUIRED
+    social: [], // e.g. ['x', 'discord'], the .shipkit/social/<channel>/ post folders (+ .shipkit/discord/)
     tasks: [],  // repo commit-gate tasks; deps double as race guards
     // .comfy-ts/ holds schema dumps naming a private model collection.
     // gitignore (SK004) is advisory, this pre-commit gate is not
