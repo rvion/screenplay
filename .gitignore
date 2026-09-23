@@ -8,18 +8,18 @@ bun.lock
 .claude/settings.local.json
 
 # >>> shipkit gitignore policy (SK004) — managed block, edit outside only
-.rv-private/
-.rv-reflections/
-.rv-social/
-.rv-journal/
-.rv-domain/
-.rv-assets/out/
-# venue folders stay ignored until the listing is live — override below the block
-.rv-itch/
-.rv-steam/
-.rv-discord/
-CLAUDE.local.md
+.shipkit/*
+!.shipkit/asks/
+!.shipkit/hooks/
+!.shipkit/identity/
+!.shipkit/assets/
+!.shipkit/comfy/
+.shipkit/assets/out/
+.shipkit/private/
+.shipkit/tmp/
+.shipkit/reviews/
 tmp/
+CLAUDE.local.md
 .*.tmp-*
 .comfy-ts/*
 !.comfy-ts/drafts/
