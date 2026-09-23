@@ -1,5 +1,18 @@
 # Changelog
 
+## Branche `toit-appui-fond-porte-seuil`
+
+- Lisse haute en lambourde 45 × 70 classe 4 sur tous les murs : le bas du toit porte enfin sur du bois au fond
+- Rehausse posée sur la lisse ; panneaux toujours de 215, toit relevé de 4,5 cm (façade 241,5, fond 219,5)
+- Hauteur sous plafond 2,10 à 2,33 m, calculée une seule fois pour la page, abri.md et le guide
+- Porte posée sur un seuil de 9 cm (deux épaisseurs de lambourde), au niveau du plancher : plus de marche dedans
+- Découpe de porte 70 × 209, 6 cm de panneau au-dessus
+- 3D : lisse sur chaque mur, seuil sous la porte ; élévations : lisse et seuil dessinés
+- Guide : pose de la lisse avant la rehausse, vis de toit dans la lisse au fond, seuil de porte, descente au coin arrière gauche le long de la limite
+- Matériaux : 3 lambourdes de 4,5 m (57 €), total 2 966 € TTC
+- Plancher gris dans la 3D, distinct du bois
+- Textes remis à jour : questions Q3 et Q4, idées I1 et I3, point fort des cinq murs, commentaires de params.json
+
 ## Branche `simplifications-coherence`
 
 - Une seule référence de panneau, 115 de large, murs et toit : 8 panneaux de mur au lieu de 9
