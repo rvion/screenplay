@@ -40,6 +40,11 @@ ok(near(m.toit.panneaux.reduce((s, p) => s + poly_area(p.polygone), 0) / 1e4, m.
 ok(m.toit.gouttiere.descente[1] === Math.max(m.toit.gouttiere.de[1], m.toit.gouttiere.a[1]), "descente au point bas de la gouttiere");
 ok(["modele-sol", "modele-toit", "modele-rehausse", "modele-facade-A", "modele-facade-D", "modele-facade-B", "modele-facade-G"].every((k) => core.svg[k] && core.svg[k].startsWith("<svg")), "7 plans du modele generes");
 ok(near(poly_area(m.interieur) / 1e4, v.aire_interieure_m2, 0.011), "plan de sol : interieur = aire interieure de l'option");
+// why we think it is actually a bug, and not just meaning spec should change: les etudes sont figees (D40) ; le seuil de porte se taille dans la lisse haute, qu'elles n'ont pas, et leur porte a un cadre bois qu'un seuil pousserait jusqu'en tete de panneau (0 cm au-dessus)
+for (const n of [1, 2, 3]) {
+  const mf = buildCore(fixture(n)).modele, pf = mf.faces.flatMap((f) => f.ouvertures).find((o) => o.type === "porte");
+  ok(!mf.lisse && pf.allege_cm === 0 && !pf.seuil_cm && pf.hauteur_cm + pf.chambranle_cm < mf.hauteur_mur_cm, `etude v${n} : sans lisse, la porte reste sur la dalle, sous la tete des panneaux (${pf.allege_cm} + ${pf.hauteur_cm} + cadre ${pf.chambranle_cm})`);
+}
 
 // sieges : chacun touche son bureau, reste dans l'interieur, ne chevauche ni bureau ni autre siege
 {

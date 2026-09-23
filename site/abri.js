@@ -278,9 +278,9 @@
       },
       ...po ? [{
         titre: "Poser la porte",
-        but: po.chambranle_cm > 0 ? "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles." : "Le dormant du bloc-porte porte le battant : il se fixe \xE0 la dalle, \xE0 la rehausse et \xE0 la t\xF4le des panneaux, jamais dans la mousse.",
+        but: po.chambranle_cm > 0 ? "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles." : seuil_porte ? "Le dormant du bloc-porte porte le battant : il se fixe au seuil et \xE0 la t\xF4le des panneaux, jamais dans la mousse." : "Le dormant du bloc-porte porte le battant : il se fixe \xE0 la dalle, \xE0 la rehausse et \xE0 la t\xF4le des panneaux, jamais dans la mousse.",
         outils: ["visseuse", "niveau", "cales"],
-        faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, viss\xE9 dans la dalle en pied et dans la rehausse en t\xEAte.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} de ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm dans le cadre, ferr\xE9e c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur.`, "Bande comprim\xE9e entre dormant et cadre, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm + seuil_porte)} cm, mur ${face_porte.cle}) d'un profil en U.`, ...seuil_porte ? [`Seuil : ${m.lisse && m.lisse.seuil.length ? `${m.lisse.seuil.length} \xE9paisseurs de lambourde \xE0 plat` : "un bois classe 4"}, ${fz(seuil_porte)} cm en tout, au fond du vide, coll\xE9es et chevill\xE9es dans la dalle, dessus au niveau du plancher fini.`] : [], `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitr\xE9"} de service, dormant compris, cal\xE9 d'aplomb, ferr\xE9 c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur : ${seuil_porte ? "viss\xE9 dans le seuil en pied, et dans la t\xF4le des panneaux par le profil en U sur les trois autres c\xF4t\xE9s" : "chevill\xE9 dans la dalle en pied, viss\xE9 dans la rehausse en t\xEAte, et dans la t\xF4le des panneaux par le profil en U"}.`, "Bande comprim\xE9e entre dormant et profil, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."],
+        faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, viss\xE9 dans la dalle en pied et dans la rehausse en t\xEAte.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} de ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm dans le cadre, ferr\xE9e c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur.`, "Bande comprim\xE9e entre dormant et cadre, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm + seuil_porte)} cm, mur ${face_porte.cle}) d'un profil en U.`, ...seuil_porte ? [`Seuil : ${m.lisse && m.lisse.seuil.length ? `${m.lisse.seuil.length} \xE9paisseurs de lambourde \xE0 plat` : "un bois classe 4"}, ${m.lisse && m.lisse.seuil.length * m.lisse.epaisseur_cm > seuil_porte + 1e-6 ? `rabot\xE9es \xE0 ${fz(seuil_porte)} cm` : `${fz(seuil_porte)} cm en tout`}, au fond du vide, coll\xE9es et chevill\xE9es dans la dalle, dessus au niveau du plancher fini.`] : [], `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitr\xE9"} de service, dormant compris, cal\xE9 d'aplomb, ferr\xE9 c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur : ${seuil_porte ? "viss\xE9 dans le seuil en pied, et dans la t\xF4le des panneaux par le profil en U sur les trois autres c\xF4t\xE9s" : "chevill\xE9 dans la dalle en pied, viss\xE9 dans la rehausse en t\xEAte, et dans la t\xF4le des panneaux par le profil en U"}.`, "Bande comprim\xE9e entre dormant et profil, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."],
         controler: ["Jeu r\xE9gulier de 3 mm autour du battant, la porte se ferme sans forcer.", "Arr\xEAt de porte \xE0 pr\xE9voir : ouverte, elle prend le vent."]
       }] : [],
       {
@@ -1369,7 +1369,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const q = v.polygone, n = q.length;
     const H = +p.murs.hauteur_cm, c = +t.chute_cm, mod = +p.panneau.largeur_utile_cm;
     const lisse_mm = d.lisse_haute_mm || null, E = lisse_mm ? +lisse_mm[1] / 10 : 0, Hl = H + E;
-    const seuil = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
+    const plancher_cm = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
+    const seuil = E > 0 && v.porte && !(v.porte.chambranle_cm > 0) ? plancher_cm : 0;
     const par_face = p.panneau.largeur_utile_par_face_cm || {}, mod_de = (F) => +(par_face[F] ?? mod);
     const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
     const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
@@ -1386,7 +1387,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       if (tete) panneaux.push({ id: `${F}1`, debut_cm: 0, largeur_cm: rnd2(tete, 1) });
       for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod2, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd2(s, 1), largeur_cm: rnd2(Math.min(mod2, L - s), 1) });
       const ouvertures = [];
-      if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: seuil, seuil_cm: seuil, hauteur_cm: Math.min(porte_h, H - seuil - LINTEAU_MIN_CM), chambranle_cm: v.porte.chambranle_cm || 0 });
+      if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: seuil, seuil_cm: seuil, hauteur_cm: seuil ? Math.min(porte_h, H - seuil - LINTEAU_MIN_CM) : porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
       for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
       return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod2, longueur_cm: rnd2(L, 1), hauteur_debut_cm: rnd2(h(a), 1), hauteur_fin_cm: rnd2(h(b), 1), hauteur_mur_cm: H, lisse_cm: E, panneaux, ouvertures };
     });
@@ -1395,7 +1396,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const barres = ranger_rehausse(pieces, section, stock);
     const stock_l = +(d.lisse_stock_cm || stock);
     const pieces_l = E > 0 ? faces.map((f, k) => ({ id: `L${k + 1}`, face: f.cle, L: f.longueur_cm, h0: E, h1: E })) : [];
-    const seuil_l = E > 0 && v.porte && seuil > 0 ? Array.from({ length: Math.round(seuil / E) }, (_, k) => ({ id: `S${k + 1}`, face: "seuil", L: v.porte.largeur_cm, h0: E, h1: E })) : [];
+    const seuil_l = E > 0 && v.porte && seuil > 0 ? Array.from({ length: Math.ceil(seuil / E - 1e-9) }, (_, k) => ({ id: `S${k + 1}`, face: "seuil", L: v.porte.largeur_cm, h0: E, h1: E })) : [];
     const barres_l = pieces_l.length ? ranger_rehausse([...pieces_l, ...seuil_l].map((x) => ({ ...x, h0: 1e3, h1: 1e3 })), 1, stock_l) : [];
     const deb = t.debord_cm || { avant: 10, arriere: 10, cotes: 0 };
     const cotes = +deb.cotes || 0;
@@ -1445,7 +1446,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     });
     return {
       // hauteur sous plafond, plancher isole deduit : une seule valeur pour la page, abri.md et le guide
-      sous_plafond_m: { haut: rnd2((Math.max(...q.map(h)) - seuil) / 100, 2), bas: rnd2((Math.min(...q.map(h)) - seuil) / 100, 2) },
+      sous_plafond_m: { haut: rnd2((Math.max(...q.map(h)) - plancher_cm) / 100, 2), bas: rnd2((Math.min(...q.map(h)) - plancher_cm) / 100, 2) },
       hauteur_mur_cm: H,
       lisse_cm: E,
       chute_cm: c,
@@ -1457,7 +1458,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       hauteurs_coins_cm: q.map((z) => rnd2(h(z), 1)),
       faces,
       rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
-      lisse: E > 0 ? { section_mm: lisse_mm, epaisseur_cm: E, longueur_stock_cm: stock_l, pieces: pieces_l, seuil: seuil_l, barres: barres_l, nb_barres: barres_l.length } : null,
+      lisse: E > 0 ? { section_mm: lisse_mm, epaisseur_cm: E, longueur_stock_cm: stock_l, pieces: pieces_l, seuil: seuil_l, seuil_cm: seuil, barres: barres_l, nb_barres: barres_l.length } : null,
       toit: {
         contour: contour.map(([a, b]) => [rnd2(a, 1), rnd2(b, 1)]),
         aire_m2: rnd2(poly_area(contour) / 1e4, 2),
@@ -1513,6 +1514,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         ouvertures: f.ouvertures
       })),
       rehausse_epaisseur_cm: +sec[0] / 10,
+      lisse_largeur_cm: m.lisse ? +m.lisse.section_mm[0] / 10 : 0,
       rehausse_pieces: m.rehausse.pieces.map((r) => ({ id: r.id, face: r.face })),
       toit: { contour: m.toit.contour, plan: m.toit.plan, epaisseur_cm: +p.panneau.epaisseur_mm / 10, panneaux: m.toit.panneaux.map((t) => ({ id: t.id, polygone: t.polygone })) },
       gouttiere: { troncons: m.toit.gouttiere.troncons, descente: m.toit.gouttiere.descente },
@@ -1886,7 +1888,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       debord_droite_cm: fz2(m.toit.debord_cm.droite),
       debord_avant_cm: fz2(m.toit.debord_cm.avant),
       debord_arriere_cm: fz2(m.toit.debord_cm.arriere),
-      gouttiere_cm: fz2(m.toit.gouttiere.longueur_cm),
+      gouttiere_cm: fr3(rnd2(m.toit.gouttiere.longueur_cm, 1)),
       pente_pourcent: fr3(m.pente.pourcent),
       portee_m: fr3(rnd2(m.portee_cm / 100, 1)),
       descente: ou_descente(m),
@@ -2040,7 +2042,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`port\xE9e ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
       `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}${lit_pose ? `, lit ${fait(cote(`${fz3(lit_pose.largeur_cm)} \xD7 ${fz3(lit_pose.longueur_cm)}`))} le long de ${face("A")}` : ""}`,
       `murs ${fait(cote(m.hauteur_mur_cm))}, fa\xEEte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
-      `sous plafond ${fait(`${cote(Math.round((Math.min(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)} \u2192 ${cote(Math.round((Math.max(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)}`)} (plancher isol\xE9 de ${cote(plancher_cm)} d\xE9duit)`,
+      `sous plafond ${fait(`${cote(m.sous_plafond_m.bas, "m")} \u2192 ${cote(m.sous_plafond_m.haut, "m")}`)} (plancher isol\xE9 de ${cote(plancher_cm)} d\xE9duit)`,
       `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`,
       `mat\xE9riaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`
     ].join(" \xB7 ") + ".");
@@ -2560,7 +2562,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         l.lineTo(L / 100, h1);
         l.lineTo(0, h1);
         l.closePath();
-        const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
+        const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.lisse_largeur_cm / 100, bevelEnabled: false }), data.lisse_largeur_cm);
         const lisse = ombre(new THREE.Mesh(geoL, matBois));
         lisse.userData.lisse = true;
         pose(lisse);

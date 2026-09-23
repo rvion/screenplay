@@ -283,7 +283,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     if (E > 0) {
       const l = new THREE.Shape(), h0 = f.hauteur_mur_cm / 100, h1 = (f.hauteur_mur_cm + E) / 100;
       l.moveTo(0, h0); l.lineTo(L / 100, h0); l.lineTo(L / 100, h1); l.lineTo(0, h1); l.closePath();
-      const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
+      const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.lisse_largeur_cm / 100, bevelEnabled: false }), data.lisse_largeur_cm);
       const lisse = ombre(new THREE.Mesh(geoL, matBois)); lisse.userData.lisse = true;
       pose(lisse);
       pose(aretes(geoL));

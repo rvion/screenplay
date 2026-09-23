@@ -86,7 +86,7 @@ export function rend_abri(a: Abri) {
     `toit mono-pente vers ${m.sens === "droite" ? "le jardin" : "le fond"}, ${fait(`pente ${cote(m.pente.pourcent, "%")}`)}, ${fait(`portée ${cote(Math.round(m.portee_cm) / 100, "m")}`)}`,
     `porte ${po.vitree === false ? "pleine" : "vitrée"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fenêtre${v.fenetres.length > 1 ? "s" : ""} en façade, bureau sur ${v.bureaux.map((b: any) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}${lit_pose ? `, lit ${fait(cote(`${fz(lit_pose.largeur_cm)} × ${fz(lit_pose.longueur_cm)}`))} le long de ${face("A")}` : ""}`,
     `murs ${fait(cote(m.hauteur_mur_cm))}, faîte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
-    `sous plafond ${fait(`${cote(Math.round((Math.min(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)} → ${cote(Math.round((Math.max(...m.hauteurs_coins_cm) - plancher_cm) * 10) / 10)}`)} (plancher isolé de ${cote(plancher_cm)} déduit)`,
+    `sous plafond ${fait(`${cote(m.sous_plafond_m.bas, "m")} → ${cote(m.sous_plafond_m.haut, "m")}`)} (plancher isolé de ${cote(plancher_cm)} déduit)`,
     `${fait(`${cote(v.aire_m2, "m²")} de murs`)}${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${fait(`${cote(v.aire_interieure_m2, "m²")} intérieur`)}`,
     `matériaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`,
   ].join(" · ") + ".");

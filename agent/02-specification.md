@@ -225,6 +225,12 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
   L'espace caché derrière l'abri se calcule sur un ou deux murs de fond (union des zones).
   `panneaux_depuis_la_fin` (liste de murs) place la bande recoupée d'un mur **en tête** : sur le
   mur de la porte, le module entier du fond reçoit tout le cadre et la bande reste pleine.
+  `disposition_trapeze.lisse_haute_mm` (largeur, hauteur) pose une **lisse haute** à plat sur la tête de chaque
+  mur (D53) : la rehausse se pose dessus, le plan du toit monte de son épaisseur, `m.lisse` donne ses pièces
+  (une par mur), le **seuil** de porte et les barres de stock ; la nomenclature compte les lambourdes. Le seuil
+  n'existe qu'avec la lisse et une porte sans cadre bois : la porte pose dessus, au niveau du plancher flottant,
+  la découpe du panneau descend jusqu'à la dalle, et `LINTEAU_MIN_CM` garde au moins 5 cm de panneau au-dessus.
+  Sans lisse (les études figées), rien ne change. La hauteur sous plafond se calcule une fois (`m.sous_plafond_m`).
   `toit.descente` (`droite`/`gauche`) place la descente au bout de la gouttière choisi ; sans lui, elle
   va au point bas. Les textes reçoivent aussi `{gauche_cm}`, les débords, la pente, la portée et la
   position de la descente (`injecteur`).

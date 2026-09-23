@@ -117,13 +117,13 @@ Débords : 5 cm devant, 5 cm au fond, rives affleurantes sur les côtés. Surfac
 
 - Gouttière 235,8 cm derrière l'abri, en 2 tronçon(s) (C 97,1 + B 138,6) : les nervures du toit mènent toute l'eau aux bouts arrière des panneaux. Descente au coin arrière gauche.
 - 5 angles : G/A 90°, A/D 90°, D/C 134,4°, C/B 135,6°, B/G 90° ; hauteur de chaque angle = hauteur finie du coin.
-- Rail de pied sur tout le périmètre (8,75 m), bavettes de rive sur les côtés D et G.
+- Cornières de pied, dedans et dehors, sur tout le périmètre (8,75 m), bavettes de rive sur les côtés D et G.
 
 ## Ouvertures
 
 | ouverture | taille | où | détail |
 |---|---|---|---|
-| porte pleine | 70 × 200 (cadre 70 × 200) | face D, de 97,5 à 167,5 cm depuis la façade | ouvre vers l'extérieur ; cadre à 10 cm du mur du fond (face intérieure) et sous le haut du mur |
+| porte pleine | 70 × 200 | face D, de 97,5 à 167,5 cm depuis la façade | ouvre vers l'extérieur ; dormant à 10 cm du mur du fond (face intérieure) ; posée sur un seuil de 9 cm, au niveau du plancher |
 | fenêtre oscillo-battante | 80 × 75 | face A, de 17,5 à 97,5 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
 | fenêtre oscillo-battante | 80 × 75 | face A, de 121,5 à 201,5 cm depuis le coin gauche | allège 115 cm, au-dessus du bureau, dans un seul panneau |
 
@@ -398,7 +398,7 @@ Recueillir toute l'eau du toit et l'emmener au jardin.
 
 ### Étape 10 · Poser la porte
 
-Le dormant du bloc-porte porte le battant : il se fixe à la dalle, à la rehausse et à la tôle des panneaux, jamais dans la mousse.
+Le dormant du bloc-porte porte le battant : il se fixe au seuil et à la tôle des panneaux, jamais dans la mousse.
 
 **Outils :** visseuse, niveau, cales
 
@@ -477,7 +477,7 @@ Une pièce étanche et chauffée sans ventilation condense.
 
 - **Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais (100 cm), fait d'un seul panneau.
 - **4,95 m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), 4,44 m² à l'intérieur, 2,77 m² de sol libre hors bureaux.
-- **Façade de niveau à 241,5 cm, toit vers le fond.** La gouttière (235.8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
+- **Façade de niveau à 241,5 cm, toit vers le fond.** La gouttière (235,8 cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.
 - **Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.
 - **Passage derrière de 54 cm.** 2,13 m² de dalle cachés derrière le mur du fond pour les outils de jardin : pas de second abri.
 - **Une seule référence de panneau.** 8 panneaux de mur et 2 de toit, tous de 115 cm de large : une seule ligne de devis, et chaque chute sert à n'importe quel mur.

@@ -2298,6 +2298,7 @@
      "h1": 4.5
     }
    ],
+   "seuil_cm": 9,
    "barres": [
     {
      "troncons": [
@@ -3346,7 +3347,7 @@
     },
     {
      "titre": "Poser la porte",
-     "but": "Le dormant du bloc-porte porte le battant : il se fixe à la dalle, à la rehausse et à la tôle des panneaux, jamais dans la mousse.",
+     "but": "Le dormant du bloc-porte porte le battant : il se fixe au seuil et à la tôle des panneaux, jamais dans la mousse.",
      "outils": [
       "visseuse",
       "niveau",
@@ -3725,6 +3726,7 @@
    }
   ],
   "rehausse_epaisseur_cm": 7,
+  "lisse_largeur_cm": 7,
   "rehausse_pieces": [
    {
     "id": "R1",

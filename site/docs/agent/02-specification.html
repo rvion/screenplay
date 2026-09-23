@@ -271,6 +271,12 @@ bords par où l&#39;eau sort (normale extérieure dans le sens de la pente : <co
 L&#39;espace caché derrière l&#39;abri se calcule sur un ou deux murs de fond (union des zones).
 <code>panneaux_depuis_la_fin</code> (liste de murs) place la bande recoupée d&#39;un mur <strong>en tête</strong> : sur le
 mur de la porte, le module entier du fond reçoit tout le cadre et la bande reste pleine.
+<code>disposition_trapeze.lisse_haute_mm</code> (largeur, hauteur) pose une <strong>lisse haute</strong> à plat sur la tête de chaque
+mur (D53) : la rehausse se pose dessus, le plan du toit monte de son épaisseur, <code>m.lisse</code> donne ses pièces
+(une par mur), le <strong>seuil</strong> de porte et les barres de stock ; la nomenclature compte les lambourdes. Le seuil
+n&#39;existe qu&#39;avec la lisse et une porte sans cadre bois : la porte pose dessus, au niveau du plancher flottant,
+la découpe du panneau descend jusqu&#39;à la dalle, et <code>LINTEAU_MIN_CM</code> garde au moins 5 cm de panneau au-dessus.
+Sans lisse (les études figées), rien ne change. La hauteur sous plafond se calcule une fois (<code>m.sous_plafond_m</code>).
 <code>toit.descente</code> (<code>droite</code>/<code>gauche</code>) place la descente au bout de la gouttière choisi ; sans lui, elle
 va au point bas. Les textes reçoivent aussi <code>{gauche_cm}</code>, les débords, la pente, la portée et la
 position de la descente (<code>injecteur</code>).</li>
