@@ -1,6 +1,11 @@
 import { defineRepo } from 'rvlib-shipkit/src/repo-config.ts'
 
 export default defineRepo({
+    // >>> shipkit gate — managed block, the hub writes it, edit outside the markers
+    when: {
+        SK009: 'off:history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook',
+    },
+    // <<< shipkit gate
     name: 'screenplay-shed',
     visibility: 'public', // github rvion/screenplay is public (GitHub Pages)
     venues: [], // e.g. ['itch', 'steam'], selects which .rv-<venue>/ contracts are REQUIRED
@@ -13,11 +18,8 @@ export default defineRepo({
         // a French project: commits may be French. Dash and attribution checks stay on
         disable: ['commit-language'],
         // an ask file name ("ask-the-town-hall-…") reads as an api key to the sk- pattern
-        leakAllow: [{ reason: 'ask slug, not a key', paths: ['asks/'], patterns: ['fp:98d9ad612426'] }],
+        leakAllow: [{ reason: 'ask slug, not a key', paths: ['.shipkit/asks/'], patterns: ['fp:98d9ad612426'] }],
     },
-    // old commits carry assistant trailers and the default branch has an assistant name; history is never rewritten.
-    // new commits stay clean: the commit-msg hook still refuses those trailers
-    ruleExempt: { SK009: 'history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook' },
     // the mandated reviewer agent type (rule SK008). Uncomment with YOUR
     // standing brief, then `shipkit check --fix SK008` writes the agent file:
     // reviewer: { name: 'my-reviewer', brief: '~/path/to/reviewer-brief.md' },
