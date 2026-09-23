@@ -7,25 +7,9 @@
    "tasks": [
       {
          "label": "starts everything",
-         "dependsOn": ["👁  TSC", "🚀  shipkit", "🌐  site"],
+         "dependsOn": ["🚀  shipkit", "🌐  site"],
          "group": { "kind": "build", "isDefault": true },
          "runOptions": { "runOn": "folderOpen", "instanceLimit": 1 },
-         "problemMatcher": []
-      },
-      {
-         "label": "👁  TSC",
-         "detail": "Get all typescript errors in problems pane",
-         "type": "process",
-         "command": "${workspaceFolder}/node_modules/.bin/tsc",
-         "args": ["--noEmit", "--incremental", "--watch", "--project", "tsconfig.json"],
-         "options": {
-            "cwd": "${workspaceFolder}",
-            "env": { "NODE_OPTIONS": "--max-old-space-size=8192" }
-         },
-         "isBackground": true,
-         "presentation": { "reveal": "never", "clear": true },
-         "group": "build",
-         "runOptions": { "instanceLimit": 1 },
          "problemMatcher": []
       },
       {
@@ -39,7 +23,28 @@
          "presentation": { "reveal": "always", "close": false },
          "group": "build",
          "runOptions": { "instanceLimit": 1 },
-         "problemMatcher": []
+         "problemMatcher": {
+            "owner": "shipkit",
+            "source": "shipkit",
+            "fileLocation": [
+               "relative",
+               "${workspaceFolder}"
+            ],
+            "pattern": {
+               "regexp": "^(.+?):(\\d+):(\\d+): (error|warning) (\\S+?): (.*)$",
+               "file": 1,
+               "line": 2,
+               "column": 3,
+               "severity": 4,
+               "code": 5,
+               "message": 6
+            },
+            "background": {
+               "activeBegin": false,
+               "beginsPattern": "^shipkit problems: begin$",
+               "endsPattern": "^shipkit problems: end\\b"
+            }
+         }
       },
       {
          "label": "🌐  site",

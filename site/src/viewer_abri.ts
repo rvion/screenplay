@@ -80,7 +80,7 @@ export const TAILLE_PERSONNE = 1.85;
 export type Masquable = "toit" | "toit_voile" | "murs_voile" | "murs_sans_DC" | "porte_voile" | `couchage${number}` | `canape${number}` | "mobilier" | "lit" | `lit${number}` | `bureaux${number}` | "sieges" | "sieges_mi" | "sieges_ranges" | `sieges_ranges${number}` | "etiquettes" | "personne" | "personne_dedans" | "personne_assise" | "personne_couchee" | `personne_couchee${number}` | "porte" | "porte_fermee" | "cloture" | "cloture_absente" | "murs" | "murs_coupes";
 
 // panneaux gris clair (RAL 9002), toit gris moyen, dalle beton, mur de propriete beige : chaque plan a sa teinte
-const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0xb98d5c, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
+const COUL = { mur: 0xdfe1dc, joint: 0x4a545e, bois: 0xc2955a, toit: 0x9aa3ab, nervure: 0x7f8992, dalle: 0xc9c5bb, propriete: 0xa89a86, sol: 0x6f7a82, bureau: 0xd9b98a, siege: 0x4b5a6a, lit: 0x8e6bb8, porte: 0x8d979f, cadre: 0xa9743f, verre: 0x9fd3e6, metal: 0xaab2b9, personne: 0x3a6ea5, grillage: 0x4f6b3f, palissade: 0x9a7248, poteau: 0x6f4f2e };
 
 // plaque blanche a bord sombre, texte gras : lisible de loin sur un panneau clair comme sur le toit
 function etiquette(txt: string): Vec | null {

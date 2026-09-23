@@ -2312,7 +2312,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
   }
   var LITS_MURAUX_MAX = 6;
   var TAILLE_PERSONNE = 1.85;
-  var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 12160348, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
+  var COUL = { mur: 14672348, joint: 4871262, bois: 12752218, toit: 10134443, nervure: 8358290, dalle: 13223355, propriete: 11049606, sol: 7305858, bureau: 14268810, siege: 4938346, lit: 9333688, porte: 9279391, cadre: 11105343, verre: 10474470, metal: 11186873, personne: 3829413, grillage: 5204799, palissade: 10121800, poteau: 7294766 };
   function etiquette(txt) {
     if (typeof document === "undefined") return null;
     const c = document.createElement("canvas");
