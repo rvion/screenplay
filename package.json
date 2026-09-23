@@ -30,7 +30,7 @@
     "esbuild": "^0.23.1",
     "jsdom": "^25.0.1",
     "marked": "^18.0.13",
-    "rvlib-shipkit": "^0.38.1",
+    "rvlib-shipkit": "^1.0.0",
     "three": "^0.160.0",
     "typescript": "^5.5.4"
   },
