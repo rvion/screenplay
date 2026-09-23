@@ -52,11 +52,13 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 
 | face | longueur | hauteur finie (début → fin) | panneaux |
 |---|---|---|---|
-| A façade | 208 | 237 → 237 | 115 + 93 |
-| D droite | 180 | 237 → 221,2 | 65 + 115 (bande en tête, `panneaux_depuis_la_fin`) |
-| C pan en biais | 100 | 221,2 → 215 | 100 (un panneau recoupé) |
-| B fond | 136,6 | 215 → 215 | 115 + 21,6 (chute) |
-| G gauche | 250 | 215 → 237 | 115 + 115 + 20 (chute) |
+| A façade | 208 | 241,5 → 241,5 | 115 + 93 |
+| D droite | 180 | 241,5 → 225,7 | 65 + 115 (bande en tête, `panneaux_depuis_la_fin`) |
+| C pan en biais | 100 | 225,7 → 219,5 | 100 (un panneau recoupé) |
+| B fond | 136,6 | 219,5 → 219,5 | 115 + 21,6 (chute) |
+| G gauche | 250 | 219,5 → 241,5 | 115 + 115 + 20 (chute) |
+
+Hauteur finie = panneau 215 + lisse 4,5 + rehausse (D53).
 
 - Angles **90 / 90 / 134,4 / 135,6 / 90** (angles droits : profils du commerce ; angles obtus : profils pliés sur mesure, commandés avec les panneaux). Murs **4,95 m²** ⇒ **aucune formalité** (seuil 5 m², comparé
   à l'aire exacte, jamais arrondie : `tests/formalites.mjs`). Intérieur 4,44 m², sol libre hors
@@ -65,24 +67,28 @@ le mur, pile au joint A1/A2 : c'est pour lui que la bande avant est passée de 1
 - **Pourquoi 208 et pas 210** : à 210 avec droite 180, gauche 250 et un pan de 100, les murs font
   5,0001 m², au-dessus du seuil ; à 208 ils font 4,95 m² (209 donnerait 4,975).
 - **Le plancher flottant prend 9 cm** (film PE, 60 mm de XPS continu, OSB 22 collé aux rainures,
-  revêtement 5 ; ni lambourde ni vis dans la dalle, D52) : la hauteur sous plafond tombe à
-  **2,06 m au plus bas et 2,28 m en façade**, et c'est cette hauteur
+  revêtement 5 ; ni lambourde ni vis dans la dalle, D52) : la hauteur sous plafond est de
+  **2,10 m au plus bas et 2,33 m en façade**, et c'est cette hauteur
   que montre le modèle 3D.
 - **La façade de 196 dedans porte le lit** : 190 de long, donc 6 cm de jeu pour le cadre.
 - **Le mur droit de 180 dégage la porte** : la baie est **entièrement libre**, même avec une porte
   de 80, parce que le lit (80 de profondeur) s'arrête avant elle.
-- **Toit plan vers le fond** : `H` = 215, `c` = 22, `D` = 250 ⇒ pente **8,8 %** (5,03°), portée 2,50 m.
+- **Lisse haute** (lambourde **45 × 70 classe 4**, à plat, D53) sur la tête de **chaque** mur, fond compris :
+  le bas du toit porte sur elle au fond, où il n'y a pas de rehausse, et elle tient la tête de tous les murs.
+  Deux épaisseurs de la même lambourde font le **seuil de porte** (9 cm, au niveau du plancher).
+- **Toit plan vers le fond** : `H` = 215 + 4,5 de lisse, `c` = 22, `D` = 250 ⇒ pente **8,8 %** (5,03°), portée 2,50 m.
   **2 panneaux de toit de 115** (115 × 261, 93 × 261 en biais).
 - **Une seule référence de panneau, 115 de large**, murs et toit (D52) : **8 panneaux de mur** au lieu de
   9 (7 de 100 et 2 de 115), et chaque chute sert à n'importe quel mur (B2 et G3 en sortent). Façade et
   toit en deux pièces, une fenêtre par panneau de façade (17,5 et 121,5). `panneau.largeur_utile_par_face_cm`
   reste possible si le fournisseur n'a pas le 115 partout.
 - **Pied des murs** : deux cornières alu 40 × 40, dedans et dehors, coupées d'onglet à chaque angle (D52).
-- **Rehausse** (madrier **70 × 220 classe 4**, la section vendue en stock ; chute 22) : R1 façade, R2 droite, R3 pan, R4 gauche ; rien sur le fond.
+- **Rehausse** (madrier **70 × 220 classe 4**, la section vendue en stock ; chute 22), posée sur la lisse : R1 façade, R2 droite, R3 pan, R4 gauche ; sur le fond, la lisse seule.
 - **Gouttière** derrière l'abri, sur le pan C et le fond B ; **descente au coin arrière gauche**
   (angle G/B, `toit.descente = "gauche"`), le point le plus reculé : l'eau part de là.
 - **Porte** : bloc de service **extérieur** PVC plein, **70 × 200 hors tout**, dormant compris (pas de cadre
-  bois), sur D, à **10 cm** de la face intérieure du pan C, ouvrant vers l'extérieur.
+  bois), sur D, à **10 cm** de la face intérieure du pan C, ouvrant vers l'extérieur, **posé sur un seuil
+  de 9 cm** au niveau du plancher (D53) : découpe du panneau 70 × 209, 6 cm de panneau au-dessus.
   **Fenêtres** 80 × 75 de stock, oscillo-battantes, allège 115, en façade.
 - **Mobilier, une seule disposition** : le bureau gauche **70 de profondeur sur 238 cm** (trois écrans
   de 27" = 190), le fauteuil qui se range dessous et se **centre sur la partie libre** du bureau quand on s'en sert, quatre pieds sous le plateau (deux au ras du lit, deux au fond), le poste de travail posé dessus (deux dalles de 27" de 62 × 37 près du mur, un MacBook Pro 16 ouvert, puis un clavier nomade au bord du plateau, aux cotes réelles), et le lit **80 × 190** le long de la façade,

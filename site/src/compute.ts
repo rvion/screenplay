@@ -1017,17 +1017,23 @@ export function ranger_rehausse(pieces: any[], section: number, stock: number) {
   return barres.map((b) => ({ ...b, L: rnd(b.L, 1), chute_cm: rnd(stock - b.L, 1) }));
 }
 
+// bande de panneau gardee au-dessus d'une porte posee sur son seuil
+const LINTEAU_MIN_CM = 5;
 export function modele_trapeze(p: Params, v: any) {
   const d = p.disposition_trapeze, t = (d && d.toit) || {};
   const q: Pt[] = v.polygone, n = q.length;
   const H = +p.murs.hauteur_cm, c = +t.chute_cm, mod = +p.panneau.largeur_utile_cm;
+  // lisse haute : un bois a plat sur la tete de chaque mur, la rehausse posee dessus ; le bas du toit porte sur elle
+  const lisse_mm = d.lisse_haute_mm || null, E = lisse_mm ? +lisse_mm[1] / 10 : 0, Hl = H + E;
+  // la porte pose sur un seuil au niveau du plancher flottant
+  const seuil = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
   // largeur utile par face (A..G, T = toit) quand elle differe de la largeur courante
   const par_face = p.panneau.largeur_utile_par_face_cm || {}, mod_de = (F: string) => +(par_face[F] ?? mod);
   const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
   const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
   // sens = arriere : haut devant, bas au fond ; sens = droite : haut contre le mur gauche, bas cote jardin
   const droite = t.sens === "droite", course = droite ? Wd : D;
-  const h = (z: Pt) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
+  const h = (z: Pt) => Hl + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
   const porte_h = v.porte && v.porte.hauteur_cm ? +v.porte.hauteur_cm : +(d.porte_hauteur_cm || p.porte.hauteur_cm);
   const faces = q.map((a, i) => {
     const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -1041,14 +1047,19 @@ export function modele_trapeze(p: Params, v: any) {
     if (tete) panneaux.push({ id: `${F}1`, debut_cm: 0, largeur_cm: rnd(tete, 1) });
     for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd(s, 1), largeur_cm: rnd(Math.min(mod, L - s), 1) });
     const ouvertures: any[] = [];
-    if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
+    if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: seuil, seuil_cm: seuil, hauteur_cm: Math.min(porte_h, H - seuil - LINTEAU_MIN_CM), chambranle_cm: v.porte.chambranle_cm || 0 });
     for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
-    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h(a), 1), hauteur_fin_cm: rnd(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
+    return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod, longueur_cm: rnd(L, 1), hauteur_debut_cm: rnd(h(a), 1), hauteur_fin_cm: rnd(h(b), 1), hauteur_mur_cm: H, lisse_cm: E, panneaux, ouvertures };
   });
   const sec = d.rehausse_section_mm || p.rehausse.section_mm, section = +sec[1] / 10, stock = +p.rehausse.longueur_stock_cm;
-  const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05)
-    .map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd(f.hauteur_debut_cm - H, 1), h1: rnd(f.hauteur_fin_cm - H, 1) }));
+  const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > Hl + 0.05)
+    .map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd(f.hauteur_debut_cm - Hl, 1), h1: rnd(f.hauteur_fin_cm - Hl, 1) }));
   const barres = ranger_rehausse(pieces, section, stock);
+  // lisse : une piece par mur, coupee d'onglet aux angles, plus les deux epaisseurs du seuil de porte (lisse a plat x 2 = plancher)
+  const stock_l = +(d.lisse_stock_cm || stock);
+  const pieces_l = E > 0 ? faces.map((f, k) => ({ id: `L${k + 1}`, face: f.cle, L: f.longueur_cm, h0: E, h1: E })) : [];
+  const seuil_l = E > 0 && v.porte && seuil > 0 ? Array.from({ length: Math.round(seuil / E) }, (_, k) => ({ id: `S${k + 1}`, face: "seuil", L: v.porte.largeur_cm, h0: E, h1: E })) : [];
+  const barres_l = pieces_l.length ? ranger_rehausse([...pieces_l, ...seuil_l].map((x) => ({ ...x, h0: 1e3, h1: 1e3 })), 1, stock_l) : [];
   // toit : contour = murs + debords (avant, fond ; cotes affleurants), panneaux dans le sens de la pente
   const deb = t.debord_cm || { avant: 10, arriere: 10, cotes: 0 };
   const cotes = +deb.cotes || 0;
@@ -1081,7 +1092,7 @@ export function modele_trapeze(p: Params, v: any) {
     const b = bandes.find((x) => x.id === pn.id);
     pn.source = b ? b.source : "neuf";
     pn.decoupes = f.ouvertures.filter((o: any) => o.debut_cm - (o.chambranle_cm || 0) < pn.debut_cm + pn.largeur_cm && o.debut_cm + o.largeur_cm + (o.chambranle_cm || 0) > pn.debut_cm)
-      .map((o: any) => `${o.type === "porte" ? "porte" : "fenêtre"} ${fz(o.largeur_cm + 2 * (o.chambranle_cm || 0))} × ${fz(o.hauteur_cm + (o.chambranle_cm || 0))}`);
+      .map((o: any) => `${o.type === "porte" ? "porte" : "fenêtre"} ${fz(o.largeur_cm + 2 * (o.chambranle_cm || 0))} × ${fz(o.hauteur_cm + (o.chambranle_cm || 0) + (o.seuil_cm || 0))}`);
   }
   // gouttiere sur la face basse ; descente au point bas (sens arriere) ou devant, cote jardin (sens droite)
   const fB = faces.findIndex((f) => f.cle === (droite ? "D" : "B"));
@@ -1092,17 +1103,20 @@ export function modele_trapeze(p: Params, v: any) {
     return (droite ? nx : ny) > 0.2;
   });
   return {
-    hauteur_mur_cm: H, chute_cm: c, profondeur_cm: rnd(D, 1), sens: droite ? "droite" : "arriere",
+    // hauteur sous plafond, plancher isole deduit : une seule valeur pour la page, abri.md et le guide
+    sous_plafond_m: { haut: rnd((Math.max(...q.map(h)) - seuil) / 100, 2), bas: rnd((Math.min(...q.map(h)) - seuil) / 100, 2) },
+    hauteur_mur_cm: H, lisse_cm: E, chute_cm: c, profondeur_cm: rnd(D, 1), sens: droite ? "droite" : "arriere",
     // portee = plus longue bande de toit entre deux murs porteurs
     portee_cm: rnd(droite ? Wd : D, 1),
     pente: { pourcent: rnd(100 * c / course, 1), degres: rnd(Math.atan2(c, course) * 180 / Math.PI, 2) },
     hauteurs_coins_cm: q.map((z) => rnd(h(z), 1)),
     faces,
     rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
+    lisse: E > 0 ? { section_mm: lisse_mm, epaisseur_cm: E, longueur_stock_cm: stock_l, pieces: pieces_l, seuil: seuil_l, barres: barres_l, nb_barres: barres_l.length } : null,
     toit: {
       contour: contour.map(([a, b]) => [rnd(a, 1), rnd(b, 1)]), aire_m2: rnd(poly_area(contour) / 1e4, 2),
       // plan du toit : hauteur du dessous du toit = haut_cm au depart de la pente, bas_cm au bout de la course
-      plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd(droite ? x0 : y0, 1), course_cm: rnd(course, 1), haut_cm: H + c, bas_cm: H },
+      plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd(droite ? x0 : y0, 1), course_cm: rnd(course, 1), haut_cm: Hl + c, bas_cm: Hl },
       panneaux: panneaux_toit, module_cm: mod_t, debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) }, gouttiere: { face: droite ? "D" : "B", de: g0.map((z) => rnd(z, 1)), a: g1.map((z) => rnd(z, 1)),
         troncons: egouts.map(({ a, b, cle }) => ({ face: cle, de: a.map((z) => rnd(z, 1)), a: b.map((z) => rnd(z, 1)), longueur_cm: rnd(Math.hypot(b[0] - a[0], b[1] - a[1]), 1) })),
         longueur_cm: rnd(egouts.reduce((s, { a, b }) => s + Math.hypot(b[0] - a[0], b[1] - a[1]), 0), 1), descente: ((): Pt => {
@@ -1133,7 +1147,7 @@ export function modele3d_abri(p: Params, g: any, v: any, m: any) {
     epaisseur_cm: +p.panneau.epaisseur_mm / 10,
     sol: { polygone: m.interieur, epaisseur_cm: pl },
     murs: m.faces.map((f: any, i: number) => ({
-      cle: f.cle, nom: f.nom, de: f.de, a: f.a, longueur_cm: f.longueur_cm, hauteur_mur_cm: f.hauteur_mur_cm,
+      cle: f.cle, nom: f.nom, de: f.de, a: f.a, longueur_cm: f.longueur_cm, hauteur_mur_cm: f.hauteur_mur_cm, lisse_cm: f.lisse_cm || 0,
       angle_debut_deg: m.angles_deg[i], angle_fin_deg: m.angles_deg[(i + 1) % m.faces.length],
       hauteur_debut_cm: f.hauteur_debut_cm, hauteur_fin_cm: f.hauteur_fin_cm,
       panneaux: f.panneaux.map((pn: any) => ({ id: pn.id, debut_cm: pn.debut_cm, largeur_cm: pn.largeur_cm })),
@@ -1467,11 +1481,16 @@ export function modele_facade_svg(m: any, f: any, sans_entete = false, largeur_c
     const recoupe = pn.largeur_cm < f.module_cm - 0.05;
     svg += text(c[0], c[1], recoupe ? `${pn.id} · ${fz(pn.largeur_cm)}` : pn.id, "middle", "#2b5d8a", 12, "bold");
   }
-  if (Math.max(h0, h1) > Hm + 0.05) {
+  const E = f.lisse_cm || 0, Hr = Hm + E;
+  if (E > 0) svg += poly([P(0, Hm), P(L, Hm), P(L, Hr), P(0, Hr)], "#c9a26b", "#8a5a2b", 1.2);
+  if (Math.max(h0, h1) > Hr + 0.05) {
     const pc = m.rehausse.pieces.find((x: any) => x.face === f.cle);
-    svg += poly([P(0, Hm), P(L, Hm), P(L, h1), P(0, h0)], "#d9b98a", "#8a5a2b", 1.5);
-    const c = P(L / 2, Hm + Math.max(h0, h1) - Hm > 16 ? Hm + 6 : Hm + 2);
-    svg += text(c[0], c[1] - 2, `${pc ? pc.id + " · " : ""}rehausse ${fz(rnd(h0 - Hm, 1))} → ${fz(rnd(h1 - Hm, 1))}`, "middle", "#5a3a1a", 10, "bold");
+    svg += poly([P(0, Hr), P(L, Hr), P(L, h1), P(0, h0)], "#d9b98a", "#8a5a2b", 1.5);
+    const c = P(L / 2, Math.max(h0, h1) - Hr > 16 ? Hr + 6 : Hr + 2);
+    svg += text(c[0], c[1] - 2, `${pc ? pc.id + " · " : ""}rehausse ${fz(rnd(h0 - Hr, 1))} → ${fz(rnd(h1 - Hr, 1))}${E > 0 ? ` · lisse ${fz(E)}` : ""}`, "middle", "#5a3a1a", 10, "bold");
+  } else if (E > 0) {
+    const c = P(L / 2, Hr + 3);
+    svg += text(c[0], c[1], `lisse ${fz(E)}`, "middle", "#5a3a1a", 10, "bold");
   }
   for (const o of f.ouvertures) {
     if (o.chambranle_cm) {
@@ -1479,12 +1498,13 @@ export function modele_facade_svg(m: any, f: any, sans_entete = false, largeur_c
       svg += `<rect x="${f1(fa[0])}" y="${f1(fb[1])}" width="${f1(fb[0] - fa[0])}" height="${f1(fa[1] - fb[1])}" fill="#b98a55" stroke="#7a5530" stroke-width="1.2"/>\n`;
       svg += cote_svg(P(o.debut_cm + o.largeur_cm + e, o.hauteur_cm + e), P(o.debut_cm + o.largeur_cm + e, f.hauteur_mur_cm), fz(rnd(f.hauteur_mur_cm - o.hauteur_cm - e, 1)), -14, "#7a5530", 9);
     }
+    if (o.seuil_cm) svg += poly([P(o.debut_cm, 0), P(o.debut_cm + o.largeur_cm, 0), P(o.debut_cm + o.largeur_cm, o.seuil_cm), P(o.debut_cm, o.seuil_cm)], "#c9a26b", "#8a5a2b", 1.2);
     const a = P(o.debut_cm, o.allege_cm), b = P(o.debut_cm + o.largeur_cm, o.allege_cm + o.hauteur_cm);
     const col = o.type === "porte" ? "#c0392b" : "#1b9aa8";
     svg += `<rect x="${f1(a[0])}" y="${f1(b[1])}" width="${f1(b[0] - a[0])}" height="${f1(a[1] - b[1])}" fill="${o.type === "porte" && o.vitree === false ? "#c9cfd4" : "#bfe3ef"}" stroke="${col}" stroke-width="2"/>\n`;
     const c = P(o.debut_cm + o.largeur_cm / 2, o.allege_cm + o.hauteur_cm / 2);
     svg += text(c[0], c[1] - 4, o.type === "porte" ? (o.vitree === false ? "porte pleine" : "porte") : o.ouvrant ? "fenêtre ouvrante" : "fenêtre fixe", "middle", col, 11, "bold");
-    svg += text(c[0], c[1] + 12, `${fz(o.largeur_cm)} × ${fz(o.hauteur_cm)}${o.allege_cm ? ` · allège ${fz(o.allege_cm)}` : ""}`, "middle", col, 10);
+    svg += text(c[0], c[1] + 12, `${fz(o.largeur_cm)} × ${fz(o.hauteur_cm)}${o.allege_cm ? ` · ${o.type === "porte" ? "seuil" : "allège"} ${fz(o.allege_cm)}` : ""}`, "middle", col, 10);
     svg += cote_svg(P(o.debut_cm, 0), P(o.debut_cm + o.largeur_cm, 0), fz(o.largeur_cm), 20, col, 10);
     if (o.chambranle_cm) {
       const t = P(o.debut_cm + o.largeur_cm / 2, o.hauteur_cm - 14);
@@ -1575,7 +1595,7 @@ export function abri_md(p: Params, core: any): string {
   for (const [f, t] of plans) md += `### ${t}\n\n![${t}](site/assets/${f}.svg)\n\n`;
   md += `## Dimensions\n\n| face | longueur ext. | longueur int. | hauteur finie (début → fin) | angle au début |\n|---|---|---|---|---|\n`;
   m.faces.forEach((f: any, i: number) => { md += `| ${f.cle} · ${f.nom} | ${fr(f.longueur_cm)} cm | ${fr(v.cotes_interieures_cm[i])} cm | ${fr(f.hauteur_debut_cm)} → ${fr(f.hauteur_fin_cm)} cm | ${fr(m.angles_deg[i])}° |\n`; });
-  md += `\nMurs ${fr(v.aire_m2)} m² · intérieur ${fr(v.aire_interieure_m2)} m² (murs de ${fz(ep)} cm retirés) · sol libre hors bureaux ${fr(v.sol_libre_m2)} m² · hauteur sous plafond ${fr(rnd((m.hauteurs_coins_cm[0] - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m devant, ${fr(rnd((Math.min(...m.hauteurs_coins_cm) - (p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0)) / 100, 2))} m au plus bas (plancher isolé déduit).\n\n`;
+  md += `\nMurs ${fr(v.aire_m2)} m² · intérieur ${fr(v.aire_interieure_m2)} m² (murs de ${fz(ep)} cm retirés) · sol libre hors bureaux ${fr(v.sol_libre_m2)} m² · hauteur sous plafond ${fr(m.sous_plafond_m.haut)} m au plus haut, ${fr(m.sous_plafond_m.bas)} m au plus bas (plancher isolé déduit).\n\n`;
   md += `## Débit\n\n### Panneaux de mur (hauteur ${fz(m.hauteur_mur_cm)} cm, pose verticale)\n\n| pièce | largeur | provenance | découpe |\n|---|---|---|---|\n`;
   for (const f of m.faces) for (const pn of f.panneaux) md += `| ${pn.id} | ${fr(pn.largeur_cm)} cm | ${pn.source === "chute" ? "chute d'un autre panneau" : pn.largeur_cm < f.module_cm - 0.05 ? "panneau recoupé" : "panneau entier"} | ${pn.decoupes.length ? pn.decoupes.join(", ") : "–"} |\n`;
   const par_l = Object.entries(m.panneaux_mur_par_largeur || { [+p.panneau.largeur_utile_cm]: m.panneaux_mur_a_commander }).sort((a: any, b: any) => +a[0] - +b[0]);
@@ -1588,6 +1608,8 @@ export function abri_md(p: Params, core: any): string {
   md += `### Rehausse bois (madrier ${m.rehausse.section_mm.join(" × ")}, stock ${fz(m.rehausse.longueur_stock_cm)} cm)\n\n| pièce | face | longueur | hauteur début → fin |\n|---|---|---|---|\n`;
   for (const r of m.rehausse.pieces) md += `| ${r.id} | ${r.face} | ${fr(r.L)} cm | ${fr(r.h0)} → ${fr(r.h1)} cm |\n`;
   md += `\n**${m.rehausse.nb_madriers} madriers** : ${m.rehausse.barres.map((b: any, k: number) => `n°${k + 1} = ${b.troncons.map((t: any) => t.pieces.map((q: any) => q.id).join(" + ")).join(" puis ")} (chute ${fr(b.chute_cm)} cm)`).join(" ; ")}. Deux pièces sur un même tronçon = une seule coupe en biais.\n\n`;
+  const Ls = m.lisse;
+  if (Ls) md += `### Lisse haute et seuil (lambourde ${Ls.section_mm.join(" × ")}, stock ${fz(Ls.longueur_stock_cm)} cm)\n\nÀ plat sur la tête de chaque mur, coupée d'onglet aux angles : ${Ls.pieces.map((x: any) => `${x.id} (${x.face}, ${fr(x.L)} cm)`).join(", ")}. La rehausse se visse dessus, et au fond le bas du toit porte sur elle.${Ls.seuil.length ? ` Seuil de porte : ${Ls.seuil.length} épaisseurs de ${fr(Ls.seuil[0].L)} cm, soit ${fz(Ls.seuil.length * Ls.epaisseur_cm)} cm, au niveau du plancher.` : ""} **${Ls.nb_barres} lambourdes**.\n\n`;
   md += droite ? `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm ${m.toit.gouttiere.troncons.length > 1 ? `en ${m.toit.gouttiere.troncons.length} tronçons (${m.toit.gouttiere.troncons.map((t: any) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}) : le long du pan en biais puis du mur droit, avec un angle,` : "le long du mur droit,"} au-dessus de la porte ; descente au coin avant droit, côté jardin (récupérateur d'eau possible). Aucune eau dans le passage arrière ni au pied du mur de propriété.\n`
     : m.toit.gouttiere.troncons.length > 1 || d.toit.descente
       ? `### Gouttière et profils\n\n- Gouttière ${fr(m.toit.gouttiere.longueur_cm)} cm derrière l'abri, en ${m.toit.gouttiere.troncons.length} tronçon(s) (${m.toit.gouttiere.troncons.map((t: any) => `${t.face} ${fr(t.longueur_cm)}`).join(" + ")}) : les nervures du toit mènent toute l'eau aux bouts arrière des panneaux. Descente ${ou_descente(m)}.\n`

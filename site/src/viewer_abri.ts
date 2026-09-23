@@ -259,7 +259,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     const forme = new THREE.Shape();
     forme.moveTo(0, 0); forme.lineTo(L / 100, 0); forme.lineTo(L / 100, f.hauteur_mur_cm / 100); forme.lineTo(0, f.hauteur_mur_cm / 100); forme.closePath();
     for (const o of f.ouvertures) {
-      const ch = o.chambranle_cm || 0, s0 = (o.debut_cm - ch) / 100, s1 = (o.debut_cm + o.largeur_cm + ch) / 100, h0 = o.allege_cm / 100, h1 = (o.allege_cm + o.hauteur_cm + (o.type === "porte" ? ch : 0)) / 100;
+      const ch = o.chambranle_cm || 0, s0 = (o.debut_cm - ch) / 100, s1 = (o.debut_cm + o.largeur_cm + ch) / 100, h0 = o.type === "porte" ? 0 : o.allege_cm / 100, h1 = (o.allege_cm + o.hauteur_cm + (o.type === "porte" ? ch : 0)) / 100;
       const trou = new THREE.Path();
       trou.moveTo(s0, h0); trou.lineTo(s0, h1); trou.lineTo(s1, h1); trou.lineTo(s1, h0); trou.closePath();
       forme.holes.push(trou);
@@ -278,9 +278,19 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
         pose(plaque, etiq);
       }
     }
-    // rehausse bois : de la tete des panneaux au dessous du toit
-    if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + 0.05) {
-      const r = new THREE.Shape(), Hm = f.hauteur_mur_cm / 100;
+    // lisse haute : un bois a plat sur la tete des panneaux, coupe d'onglet comme le mur
+    const E = f.lisse_cm || 0;
+    if (E > 0) {
+      const l = new THREE.Shape(), h0 = f.hauteur_mur_cm / 100, h1 = (f.hauteur_mur_cm + E) / 100;
+      l.moveTo(0, h0); l.lineTo(L / 100, h0); l.lineTo(L / 100, h1); l.lineTo(0, h1); l.closePath();
+      const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
+      const lisse = ombre(new THREE.Mesh(geoL, matBois)); lisse.userData.lisse = true;
+      pose(lisse);
+      pose(aretes(geoL));
+    }
+    // rehausse bois : de la lisse (ou de la tete des panneaux) au dessous du toit
+    if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + E + 0.05) {
+      const r = new THREE.Shape(), Hm = (f.hauteur_mur_cm + E) / 100;
       r.moveTo(0, Hm); r.lineTo(L / 100, Hm); r.lineTo(L / 100, f.hauteur_fin_cm / 100); r.lineTo(0, f.hauteur_debut_cm / 100); r.closePath();
       const geoR = onglet(new THREE.ExtrudeGeometry(r, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
       pose(ombre(new THREE.Mesh(geoR, matBois)));
@@ -299,6 +309,9 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
     for (const o of f.ouvertures) {
       if (o.type === "porte") {
         const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = coupable(mat(COUL.cadre));
+        // seuil bois au niveau du plancher : la porte pose dessus
+        const seuil = o.seuil_cm || 0;
+        if (seuil > 0) pose(boite(s0, s1, 0, seuil, -ep, 0, matBois));
         if (ch > 0) {
           pose(boite(s0 - ch, s0, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
           pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
@@ -318,7 +331,7 @@ export function peuple_abri(abri: Vec, data: any, visible_demande: Record<string
             const tige = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.03, 8), matM); tige.rotation.x = Math.PI / 2; tige.position.set(xg, 1.06, face * 0.035); g.add(tige);
             const serrure = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.01, 10), mat(0x2b3138)); serrure.rotation.x = Math.PI / 2; serrure.position.set(xg, 0.98, face * 0.028); g.add(serrure);
           }
-          g.position.set(s1 / 100, 0, -0.01); g.rotation.y = angle;
+          g.position.set(s1 / 100, seuil / 100, -0.01); g.rotation.y = angle;
           return g;
         };
         pose(battant(1.15), groupes.porte || groupe("porte"));

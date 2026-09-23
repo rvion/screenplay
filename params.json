@@ -11,7 +11,7 @@
     "titre": "Abri de jardin : le bureau à cinq murs",
     "dossier": {
       "atouts": [
-        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm) : les deux angles obtus se ferment par des profils pliés sur mesure, commandés avec les panneaux.",
+        "**Cinq murs, aucun angle aigu.** Deux angles proches de 135°, un seul mur en biais ({pan_cm} cm), fait d'un seul panneau.",
         "**{murs_m2} m² de murs, au seuil.** Aucune formalité en mairie (sous 5 m²), {interieur_m2} m² à l'intérieur, {sol_libre_m2} m² de sol libre hors bureaux.",
         "**Façade de niveau à {hauteur_facade_cm} cm, toit vers le fond.** La gouttière ({gouttiere_cm} cm) est derrière l'abri, invisible du jardin ; la façade ne porte que deux fenêtres.",
         "**Porte pleine sur le côté.** Les voisins de l'étage voient la façade, jamais l'intérieur. La lumière entre par les deux fenêtres de façade : écrans sur le bureau gauche, lumière de côté.",
@@ -30,19 +30,19 @@
       "questions": [
         "La pente de {pente_pourcent} % est-elle admise par le fabricant des panneaux de toit, pour {portee_m} m de portée en 60 mm ?",
         "Le panneau de toit de 60 mm porte-t-il {portee_m} m seul, ou faut-il une panne en travers à mi-profondeur ?",
-        "Quelle est la hauteur réelle du mur du fond (grand pan), que le débord arrière doit dégager ?",
-        "Où va l'eau de la descente : au jardin, ou dans un récupérateur au bout du mur droit ?"
+        "Quelle est la hauteur réelle de la palissade du grand pan, que le débord arrière doit dégager ?",
+        "Où va l'eau de la descente : au jardin par un tuyau au sol le long de la limite, ou dans un récupérateur au coin arrière gauche ?"
       ],
       "idees": [
-        "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans panne : une pièce, deux sabots et une étape de moins, contre un panneau un peu plus cher.",
+        "**Toit en 80 ou 100 mm.** Un panneau plus épais porte {portee_m} m sans doute possible : plus de question de panne, contre un panneau un peu plus cher.",
         "**Chaîne de pluie.** Au bout de la gouttière, une chaîne dans un bac ou un tonneau au coin, plutôt qu'un tuyau au sol jusqu'au jardin : rien à ramener, de l'eau pour le jardin.",
-        "**Rehausse plus basse.** Si le fabricant admet 5 %, un madrier 75 × 150 (chute 15 cm) : bois courant, façade à 230, moins de prise au vent, une pente encore au-dessus du minimum.",
+        "**Rehausse plus basse.** Si le fabricant admet une pente plus faible, un madrier moins haut : bois moins cher, façade plus basse, moins de prise au vent.",
         "**Électricité sous le bureau.** Une seule goulotte sous le plateau du bureau gauche, prises fixées dessous : rien de visible sur les murs, un seul parcours depuis le câble."
       ]
     }
   },
   "dalle_cm": {
-    "_comment": "Dalle REELLE deja coulee, relevee au metre : pentagone a pointe arriere. 5 longueurs : avant, droite, gauche, puis les deux pans arriere qui se rejoignent en pointe (arriere_gauche part du haut du cote gauche, arriere_droite arrive en haut du cote droit). La pointe est calculee par triangulation (~73 ; 398), angles avant supposes droits. Mesure de controle : 260 de large a hauteur du coin droit. murs_mitoyens = cotes longes par le mur de propriete (infranchissables) : gauche et les deux pans arriere ; l'avant et la droite donnent sur le jardin. mur_hauteur_cm / mur_epaisseur_cm : HYPOTHESES pour le dessin 3D, a mesurer. decalage_cm = position du coin avant-gauche de l'abri par rapport au coin avant-gauche de la dalle : l'abri LONGE le mur gauche (2 cm), 2 cm devant, pour garder une bande de passage le long du pan de 258 jusqu'a l'arriere de l'abri. passage_souhaite_cm = largeur de bande visee : le site en deduit la profondeur maximale de l'abri. Tout est reglable sur le site (groupe Dalle).",
+    "_comment": "Dalle REELLE deja coulee, relevee au metre : pentagone a pointe arriere. 5 longueurs : avant, droite, gauche, puis les deux pans arriere qui se rejoignent en pointe (arriere_gauche part du haut du cote gauche, arriere_droite arrive en haut du cote droit). La pointe est calculee par triangulation (~73 ; 398), angles avant supposes droits. Mesure de controle : 260 de large a hauteur du coin droit. murs_mitoyens = cotes qui sont la limite de propriete (infranchissables) : gauche et les deux pans arriere ; l'avant et la droite donnent sur le jardin. mur_hauteur_cm / mur_epaisseur_cm : HYPOTHESES pour le dessin 3D, a mesurer. passage_souhaite_cm = passage vise derriere l'abri, mesure sur la forme (v.passages).",
     "avant": 262,
     "droite": 223,
     "gauche": 324,
@@ -83,7 +83,7 @@
     }
   },
   "disposition_trapeze": {
-    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : mur droit recule jusqu'a interieur_vise_m2, porte de porte_largeur_cm (ouverture) sur le cote droit, entouree d'un chambranle de porte_chambranle_cm, le cadre a porte_marge_cm des faces interieures des murs voisins et sous le haut du mur (hauteur de passage = hauteur du mur - marge - chambranle), bureaux le long des murs nommes dans bureaux, facade = fenetres seulement ; sieges = emprise au sol posee contre le bord interieur d'un bureau (contre), sur la plus longue partie libre de ce bord (position = centre|debut|fin ou decalage en cm) ; lit_pliant = lit rabattable facon couchette de bateau : contre = mur ou il est fixe (plaque contre sa face interieure, replie a plat sur epaisseur_replie_cm, deux fixations ; rien sur la facade), emprise depliee placee automatiquement hors d'une zone d'acces devant la porte (acces_porte_cm) et hors des bureaux, sauf si sous_bureau (lit plus bas que le plateau : son pied peut glisser dessous quand le sol libre ne suffit pas ; sur le sol libre seul, 65 de large tient jusqu'a ~165 de long) (une par module de panneau, centree, jamais sur un joint ; allege au-dessus du bureau). position = gauche|centre|droite le long du cote (droite = vers le fond) ou distance en cm depuis le debut du cote.",
+    "_comment": "Amenagement de l'option 13 (trapeze, passage vise derriere) : cotes_cm impose les murs (sans elles, le mur droit recule jusqu'a interieur_vise_m2), porte de porte_largeur_cm (ouverture) sur le cote droit, entouree d'un chambranle de porte_chambranle_cm, le cadre a porte_marge_cm des faces interieures des murs voisins et sous le haut du mur (hauteur de passage = hauteur du mur - marge - chambranle), bureaux le long des murs nommes dans bureaux, facade = fenetres seulement ; sieges = emprise au sol posee contre le bord interieur d'un bureau (contre), sur la plus longue partie libre de ce bord (position = centre|debut|fin ou decalage en cm) ; lits_muraux = le lit a demeure (voir _comment_lits_muraux) ; fenetres : position = gauche|centre|droite le long du cote ou distance en cm depuis le debut du cote, une par panneau, jamais sur un joint.",
     "interieur_vise_m2": 4.8,
     "porte_cote": "droite",
     "porte_position": "droite",
@@ -107,6 +107,12 @@
       70,
       220
     ],
+    "lisse_haute_mm": [
+      70,
+      45
+    ],
+    "lisse_stock_cm": 450,
+    "_lisse_comment": "Lisse haute : une lambourde 45 x 70 classe 4 posee a plat sur la tete de CHAQUE mur (largeur, hauteur en mm), la rehausse vissee dessus. Le bas du toit porte sur elle au fond, ou il n'y a pas de rehausse. Deux epaisseurs de la meme lambourde font le seuil de la porte, au niveau du plancher flottant.",
     "bureaux": [
       {
         "cote": "gauche",
@@ -168,7 +174,7 @@
         ]
       }
     ],
-    "_comment_lits_muraux": "le lit de l'abri, pose a demeure contre le mur `contre` et cale a l'autre bout (position 'fin') ; tete = cote de l'oreiller ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges se rangent dessous, jamais sur le lit. Ici : lit 80 x 190 le long de la facade (198 dedans), tete contre le mur de la porte, pieds vers le bureau gauche et ses ecrans",
+    "_comment_lits_muraux": "le lit de l'abri, pose a demeure contre le mur `contre` et cale a l'autre bout (position 'fin') ; tete = cote de l'oreiller ; bureaux = ceux qui restent, reduits au plus grand morceau hors du lit, sauf bureaux_entiers : le plateau (72 cm) passe AU-DESSUS du pied du lit (55 cm) et reste entier ; les sieges se rangent dessous, jamais sur le lit. Ici : lit 80 x 190 le long de la facade (196 dedans), tete contre le mur de la porte, pieds vers le bureau gauche et ses ecrans",
     "porte_hauteur_cm": 200
   },
   "formes_etudiees": [
@@ -262,6 +268,12 @@
       "source": "https://www.panelsell.fr/articles-en-stock-panneaux-de-toiture-bardage/panneaux-sandwich-toiture-60-mm-lw-128",
       "note": "35,40 EUR/m2 par paquet de 10 ; 34,20 chez toleacier.fr en longueurs de stock ; jusqu'a 71 EUR/m2 au detail en negoce (Ondatherm). Teinte claire RAL 9010 disponible sur commande.",
       "incertain": true
+    },
+    "lambourde_ml": {
+      "pu": 4.2,
+      "unite": "ml",
+      "source": "https://www.depotbois.com/product-page/lambourde-pin-classe-4-70x45mm",
+      "note": "lambourde pin classe 4 70 x 45 : 18,90 EUR les 4,5 m, 12,90 EUR les 3 m ; Brico Depot la vend aussi en 2,7 et 3 m"
     },
     "madrier_ml": {
       "pu": 14.7,

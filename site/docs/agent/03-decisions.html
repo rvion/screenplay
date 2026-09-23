@@ -582,6 +582,21 @@ contre le panneau, donc sans mesure ; côté grillage, aucune vis n&#39;est à f
 parlait encore d&#39;un bureau en L et oubliait le lit, « À trancher » listait des choix déjà faits, et le texte du
 dossier disait « deux panneaux de toit entiers » et « profils standard ». <em>Gardes :</em> <code>tests/modele.mjs</code> (ventilation au
 total, profils sur mesure commandés, aucune lambourde, deux cornières, aucun PLU), vues rouges sur l&#39;ancien <code>chantier.ts</code>.</p>
+<h2 id="d53--lisse-haute-sur-chaque-mur-porte-sur-un-seuil-au-niveau-du-plancher">D53 — Lisse haute sur chaque mur, porte sur un seuil au niveau du plancher</h2>
+<p>Relecture du 2026-09-23. Deux trous de conception. (1) Le bas du toit portait sur le <strong>fond B sans aucun
+bois</strong> (la rehausse s&#39;arrête à 0 sur le pan C et n&#39;existe pas sur B) : une vis de toiture n&#39;avait rien à
+mordre dans deux tôles et de la mousse, et la tête du mur B n&#39;était tenue par rien. (2) La porte était
+chevillée dans la dalle alors que le plancher flottant monte le sol de 9 cm : une marche dedans et le
+chant du plancher à nu. <em>Retenu, le plus simple :</em> une <strong>lisse haute</strong>, lambourde 45 × 70 classe 4 posée à
+plat sur la tête de <strong>tous</strong> les murs (<code>disposition_trapeze.lisse_haute_mm</code>), la rehausse vissée dessus.
+Les panneaux gardent 215 : une seule longueur, rien ne change au débit ; tout le toit monte de 4,5 cm
+(façade 241,5, fond 219,5, 4,5 cm de plus sous le plafond). Deux épaisseurs de la même lambourde font le
+<strong>seuil</strong> de la porte, 9 cm, au niveau du plancher : la porte garde 70 × 200 et pose dessus (découpe
+70 × 209, 6 cm de panneau au-dessus, borné à 5 par <code>LINTEAU_MIN_CM</code>). 3 lambourdes de 4,5 m, 57 €.
+<em>Écarté :</em> une lisse seulement sur B et C (deux hauteurs de panneau) ; des panneaux raccourcis (deux
+longueurs à commander) ; baisser la porte à 190. <em>Garde :</em> <code>tests/modele.mjs</code> (une lisse par mur, la
+rehausse dessus, la porte au niveau du plancher et sous la tête des panneaux), vue rouge avant ;
+<code>tests/abri3d.mjs</code> mesure les lisses sous le plan bas du toit.</p>
 </main>
 </body>
 </html>

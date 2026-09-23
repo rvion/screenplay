@@ -223,8 +223,11 @@ ok(bt.min.y >= (pl.bas_cm - 5) / 100 && bt.min.y <= pl.bas_cm / 100 + 1e-6, "toi
   ok(pl.sens === "droite" ? hautG > hautD + 0.15 : hautAv > hautFd + 0.15, `toit : penche vers ${pl.sens === "droite" ? "la droite (gauche " + (hautG * 100).toFixed(0) + " cm, droite " + (hautD * 100).toFixed(0) + " cm)" : "le fond"}`);
 }
 // rehausse : autant de pieces que le debit, chacune entre la tete du mur et le dessous du toit
-const rehausses = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && boite(o).min.y > 2);
-ok(rehausses.length === m.rehausse.pieces.length && rehausses.every((o) => near(boite(o).min.y, m.hauteur_mur_cm / 100, 1e-6) && boite(o).max.y <= pl.haut_cm / 100 + 1e-6), rehausses.length + " pièces de rehausse, de la tête des murs au dessous du toit");
+const rehausses = paroi.filter((o) => o.isMesh && o.geometry.type === "ExtrudeGeometry" && boite(o).min.y > 2 && !o.userData.lisse);
+ok(rehausses.length === m.rehausse.pieces.length && rehausses.every((o) => near(boite(o).min.y, (m.hauteur_mur_cm + (m.lisse_cm || 0)) / 100, 1e-6) && boite(o).max.y <= pl.haut_cm / 100 + 1e-6), rehausses.length + " pièces de rehausse, de la lisse (ou de la tête des murs) au dessous du toit");
+// lisse haute : une par mur, de la tete des panneaux au plan bas du toit (le fond porte le toit sur elle)
+const lisses = paroi.filter((o) => o.isMesh && o.userData.lisse);
+ok(lisses.length === (m.lisse ? m.faces.length : 0) && lisses.every((o) => near(boite(o).min.y, m.hauteur_mur_cm / 100, 1e-6) && near(boite(o).max.y, pl.bas_cm / 100, 1e-6)), lisses.length + " lisse(s) haute(s), sous le plan bas du toit");
 ok(d.rehausse_pieces.length === m.rehausse.pieces.length && d.rehausse_pieces.every((r) => /^R\d$/.test(r.id) && d.murs.some((w) => w.cle === r.face)), "modele3d : une étiquette R1..R" + d.rehausse_pieces.length + " par pièce de rehausse, chacune sur sa face");
 // gouttiere : un troncon par bord d'egout, sous le bord du toit ; descente jusqu'au sol
 const gouttieres = groupes.toit.children.filter((o) => o.isMesh && o.geometry.type === "BoxGeometry" && o.geometry.parameters.depth === 0.11);
@@ -236,8 +239,8 @@ ok(tuyau && near(boite(tuyau).min.y, 0, 0.001) && boite(tuyau).max.y > 1.9, "des
   const fp = d.murs[v.porte.cote], battant = groupes.porte.children.find((o) => o.isGroup && o.children.length >= 1 && o.children[0].geometry.type === "BoxGeometry");
   const bb = boite(battant), xmur = monde(fp.de[0], fp.de[1], 0)[0];
   ok(!!battant && bb.max.x > xmur + 0.3 && bb.min.x > xmur - 0.1, "porte : battant entrouvert vers l'extérieur du mur " + fp.cle);
-  const bf = boite(groupes.porte_fermee);
-  ok(bf.max.x < xmur + 0.08 && bf.min.x > xmur - d.epaisseur_cm / 100 - 0.08 && near(bf.max.y, v.porte.hauteur_cm / 100, 1e-6), "porte fermée : le battant reste dans l'épaisseur du mur " + fp.cle + " (poignées comprises)");
+  const bf = boite(groupes.porte_fermee), po_m = m.faces[v.porte.cote].ouvertures.find((o) => o.type === "porte");
+  ok(bf.max.x < xmur + 0.08 && bf.min.x > xmur - d.epaisseur_cm / 100 - 0.08 && near(bf.max.y, (po_m.allege_cm + po_m.hauteur_cm) / 100, 1e-6), "porte fermée : le battant reste dans l'épaisseur du mur " + fp.cle + " (poignées comprises)");
   // silhouette : la taille declaree par le viewer (TAILLE_PERSONNE), pieds au sol, hors des murs, devant la porte
   const bp = boite(groupes.personne), sp = monde(fp.de[0] + (fp.a[0] - fp.de[0]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, fp.de[1] + (fp.a[1] - fp.de[1]) * (v.porte.debut_cm + v.porte.largeur_cm / 2) / fp.longueur_cm, 0);
   ok(near(bp.max.y, TAILLE_PERSONNE, 1e-6) && near(bp.min.y, 0, 1e-6) && bp.min.x > tout.max.x - 1e-6 && Math.abs((bp.min.z + bp.max.z) / 2 - sp[2] - 0.3) < 0.05 && !boite(battant).intersectsBox(bp), "personne : " + TAILLE_PERSONNE + " m, pieds au sol, dehors, 30 cm devant la porte du mur " + fp.cle + ", hors du battant");

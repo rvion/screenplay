@@ -252,9 +252,9 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   // facade elargie de 15 pour qu'un lit de 190 tienne le long du mur avant (203 dedans) : le reste est celui de l'etude v3
   ok(v4.cotes_interieures_cm[0] === 196 && JSON.stringify(m4.faces.map((f) => f.longueur_cm)) === JSON.stringify([208, 180, 100, 136.6, 250]) && v4.aire_interieure_m2 === 4.44 && JSON.stringify(m4.angles_deg) === JSON.stringify([90, 90, 134.4, 135.6, 90]) && m4.formalites.formalite === "aucune" && near(m4.formalites.emprise_au_sol_m2, 4.95, 0.006) && m4.faces[2].panneaux.length === 1 && m4.faces[2].panneaux[0].largeur_cm === 100, "abri : facade 208 (196 dedans, un lit de 190 tient), droite 180, gauche 250, pan de 100 (UN panneau entier, 44,4 deg), fond 136,6 pour le fermer, emprise 4,95 m2 donc aucune formalite");
   const L = Object.fromEntries(m4.faces.map((f) => [f.cle, f]));
-  // a la main, chute 22 (madrier 70 x 220, classe 4 en stock) sur 250 : facade 237 ; au haut du mur droit (180) 215 + 22 x 70 / 250 = 221,2 ; fond 215
-  ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === H + 22 && L.A.hauteur_fin_cm === H + 22 && JSON.stringify(m4.rehausse.section_mm) === "[70,220]", "v4 : madrier 70 x 220, facade de niveau a " + (H + 22));
-  ok(near(L.D.hauteur_fin_cm, 221.2, 0.06) && near(L.C.hauteur_debut_cm, 221.2, 0.06) && L.C.hauteur_fin_cm === H && L.B.hauteur_debut_cm === H && L.B.hauteur_fin_cm === H, "v4 : mur droit 237 -> 221,2, pan 221,2 -> 215, fond a 215");
+  // a la main, panneaux 215 + lisse 4,5 = 219,5 au fond ; chute 22 (madrier 70 x 220, classe 4 en stock) sur 250 : facade 241,5 ; au haut du mur droit (180) 219,5 + 22 x 70 / 250 = 225,7
+  ok(m4.sens === "arriere" && L.A.hauteur_debut_cm === 241.5 && L.A.hauteur_fin_cm === 241.5 && JSON.stringify(m4.rehausse.section_mm) === "[70,220]", "abri : madrier 70 x 220 sur la lisse, facade de niveau a 241,5");
+  ok(near(L.D.hauteur_fin_cm, 225.7, 0.06) && near(L.C.hauteur_debut_cm, 225.7, 0.06) && L.C.hauteur_fin_cm === 219.5 && L.B.hauteur_debut_cm === 219.5 && L.B.hauteur_fin_cm === 219.5, "abri : mur droit 241,5 -> 225,7, pan 225,7 -> 219,5, fond a 219,5");
   ok(near(m4.pente.pourcent, 8.8, 0.06) && near(m4.portee_cm, 250), "v4 : pente 22 / 250 = 8,8 %, portee 2,50 m (" + m4.pente.pourcent + " %, " + m4.portee_cm + ")");
   // l'eau suit les nervures : elle ne sort que par les bouts arriere des panneaux, donc par B et par C
   ok(m4.toit.gouttiere.troncons.map((t) => t.face).sort().join("") === "BC", "v4 : gouttiere derriere, sur le fond B et le pan C");
@@ -262,6 +262,13 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   ok(m4.toit.gouttiere.descente[0] === Math.min(...bouts.map((z) => z[0])), "v4 : descente au bout gauche de la gouttiere, coin G/B (" + m4.toit.gouttiere.descente + ")");
   ok(m4.toit.panneaux.length === 2 && near(m4.toit.panneaux[0].largeur_cm, 115) && near(m4.toit.panneaux[1].largeur_cm, 93) && m4.toit.panneaux.filter((t) => t.biais).length === 1, "v4 : 2 panneaux de toit (115 et 93), une coupe en biais");
   ok(!m4.rehausse.pieces.some((r) => r.face === "B") && m4.rehausse.pieces.map((r) => r.face).sort().join("") === "ACDG", "v4 : rehausse sur A, D, C, G (rien sur le fond)");
+  // why we think it is actually a bug, and not just meaning spec should change: le bas du toit porte sur le fond B, qui n'a aucun bois ; une vis de toiture n'a rien a mordre dans deux toles de 0,5 mm et de la mousse, et la tete du mur B n'est tenue par rien
+  const Eh = p4.disposition_trapeze.lisse_haute_mm ? p4.disposition_trapeze.lisse_haute_mm[1] / 10 : 0;
+  ok(Eh > 0 && m4.lisse && m4.faces.every((f) => m4.lisse.pieces.some((l) => l.face === f.cle)) && m4.rehausse.pieces.every((r) => near(r.h0, L[r.face].hauteur_debut_cm - H - Eh, 0.11)), "abri : une lisse haute en bois sur chaque mur, fond compris, la rehausse posée dessus");
+  ok(near(L.B.hauteur_debut_cm, H + Eh) && near(L.A.hauteur_debut_cm, H + Eh + 22), "abri : la lisse relève tout le toit de son épaisseur (fond " + L.B.hauteur_debut_cm + ", façade " + L.A.hauteur_debut_cm + ")");
+  // why we think it is actually a bug, and not just meaning spec should change: le plancher flottant monte le sol de 9 cm ; une porte posee sur la dalle laisse une marche dedans et le chant du plancher a nu
+  const po4 = L.D.ouvertures.find((o) => o.type === "porte"), sol = +p4.amenagement.plancher.epaisseur_cm;
+  ok(po4 && po4.allege_cm === sol && po4.allege_cm + po4.hauteur_cm <= L.D.hauteur_mur_cm, "porte : posée sur un seuil au niveau du plancher (" + (po4 && po4.allege_cm) + " cm), sous la tête des panneaux");
   const page4 = abri_md(p4, c4);
   ok(!/\{\w+\}/.test(page4) && page4.includes("## Pourquoi cette forme"), "abri.md : tous les {champs} remplaces, les raisons en fin de page");
   ok(page4.includes("derrière l'abri, en 2 tronçon(s)") && page4.includes("au coin arrière gauche"), "abri.md : gouttiere derriere en 2 troncons, descente au coin arriere gauche");
@@ -275,7 +282,10 @@ ok(["## Débit", "## Ouvertures", "## Aménagement", "## Matériaux à acheter",
   const aer = L.find((l) => /entrées d'air/.test(l.poste));
   ok(aer && !aer.optionnel && aer.groupe === "Ventilation", "ventilation : les entrees d'air sont au total, pas dans l'equipement optionnel");
   ok(L.some((l) => /sur mesure/.test(l.poste)) && !L.some((l) => /Pince à plier/.test(l.poste)), "angles obtus : profils plies sur mesure commandes, rien a plier sur place");
-  ok(!L.some((l) => /ambourde/.test(l.poste)) && !G.etapes.some((e) => e.faire.some((x) => /ambourde/.test(x))), "plancher flottant : aucune lambourde, ni aux materiaux ni au guide");
+  // la lambourde de la lisse haute est permise : seul le plancher doit rester sans lambourde
+  const plancher_sans = (lignes, etapes) => !lignes.some((l) => l.groupe === "Plancher isolé" && /ambourde/.test(l.poste)) && !etapes.some((e) => /plancher/i.test(e.titre) && e.faire.some((x) => /ambourde/.test(x)));
+  ok(plancher_sans(L, G.etapes) && L.some((l) => l.groupe === "Bois" && /Lambourde/.test(l.poste)), "plancher flottant : aucune lambourde au plancher (celle de la lisse haute est au bois)");
+  ok(!plancher_sans([{ groupe: "Plancher isolé", poste: "Lambourdes 45 × 70" }], []) && !plancher_sans([], [{ titre: "Plancher isolé", faire: ["poser les lambourdes"] }]), "garde du plancher : une lambourde au plancher est refusee (echantillons)");
   const pied = L.find((l) => /Cornières alu/.test(l.poste)), perim = ca.modele.faces.reduce((s, f) => s + f.longueur_cm, 0) / 100;
   ok(pied && near(pied.qte, 2 * (perim - ca.variantes.find((x) => x.id === 13).porte.largeur_cm / 100), 0.02), "pied des murs : deux cornieres sur le perimetre moins la porte");
 }

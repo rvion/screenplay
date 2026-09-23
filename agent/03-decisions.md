@@ -630,3 +630,19 @@ contre le panneau, donc sans mesure ; côté grillage, aucune vis n'est à faire
 parlait encore d'un bureau en L et oubliait le lit, « À trancher » listait des choix déjà faits, et le texte du
 dossier disait « deux panneaux de toit entiers » et « profils standard ». *Gardes :* `tests/modele.mjs` (ventilation au
 total, profils sur mesure commandés, aucune lambourde, deux cornières, aucun PLU), vues rouges sur l'ancien `chantier.ts`.
+
+## D53 — Lisse haute sur chaque mur, porte sur un seuil au niveau du plancher
+Relecture du 2026-09-23. Deux trous de conception. (1) Le bas du toit portait sur le **fond B sans aucun
+bois** (la rehausse s'arrête à 0 sur le pan C et n'existe pas sur B) : une vis de toiture n'avait rien à
+mordre dans deux tôles et de la mousse, et la tête du mur B n'était tenue par rien. (2) La porte était
+chevillée dans la dalle alors que le plancher flottant monte le sol de 9 cm : une marche dedans et le
+chant du plancher à nu. *Retenu, le plus simple :* une **lisse haute**, lambourde 45 × 70 classe 4 posée à
+plat sur la tête de **tous** les murs (`disposition_trapeze.lisse_haute_mm`), la rehausse vissée dessus.
+Les panneaux gardent 215 : une seule longueur, rien ne change au débit ; tout le toit monte de 4,5 cm
+(façade 241,5, fond 219,5, 4,5 cm de plus sous le plafond). Deux épaisseurs de la même lambourde font le
+**seuil** de la porte, 9 cm, au niveau du plancher : la porte garde 70 × 200 et pose dessus (découpe
+70 × 209, 6 cm de panneau au-dessus, borné à 5 par `LINTEAU_MIN_CM`). 3 lambourdes de 4,5 m, 57 €.
+*Écarté :* une lisse seulement sur B et C (deux hauteurs de panneau) ; des panneaux raccourcis (deux
+longueurs à commander) ; baisser la porte à 190. *Garde :* `tests/modele.mjs` (une lisse par mur, la
+rehausse dessus, la porte au niveau du plancher et sous la tête des panneaux), vue rouge avant ;
+`tests/abri3d.mjs` mesure les lisses sous le plan bas du toit.

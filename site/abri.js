@@ -96,7 +96,8 @@
     };
     for (const [l, n] of refs) pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(+l)} \xD7 ${fz(H * 100)} cm (${ou(+l)})`, n * (+l / 100) * H, `${n} panneau(x) entier(s) de ${fz(+l)} \xE0 commander (les bandes recoup\xE9es sortent des chutes)`);
     pose("Panneaux", "panneau_toit_m2", `Panneaux sandwich de toiture ${ep} mm, nervur\xE9s, teinte claire`, toit_m2, `${n_toit} panneaux coup\xE9s \xE0 longueur : ${m.toit.panneaux.map((x) => `${x.id} ${fz(x.longueur_cm)} cm`).join(", ")}`);
-    pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" \xD7 ")} classe 4 (rehausse, lisse haute)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pi\xE8ce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
+    if (m.lisse) pose("Bois", "lambourde_ml", `Lambourde ${m.lisse.section_mm.join(" \xD7 ")} classe 4 (lisse haute \xE0 plat sur chaque mur, seuil de porte)`, m.lisse.nb_barres * m.lisse.longueur_stock_cm / 100, `${m.lisse.nb_barres} pi\xE8ce(s) de ${fz(m.lisse.longueur_stock_cm)} cm : une lisse par mur (${fr(rnd(perim, 2))} m)${m.lisse.seuil.length ? `, plus ${m.lisse.seuil.length} \xE9paisseurs de seuil` : ""}`);
+    pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" \xD7 ")} classe 4 (rehausse)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pi\xE8ce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
     if (panne) pose("Bois", "panne_ml", "Panne interm\xE9diaire 75 \xD7 150 classe 4, en travers \xE0 mi-profondeur", panne, `port\xE9e du toit ${fz(m.portee_cm / 100)} m : une panne de la longueur de la fa\xE7ade la ram\xE8ne \xE0 ${fz(m.portee_cm / 200)} m`);
     if (po && po.chambranle_cm > 0) pose("Bois", "chevron_cadre_ml", `Bois du cadre de porte, section ${fz(po.chambranle_cm * 10)} \xD7 ${ep} mm`, (2 * (po.hauteur_cm + po.chambranle_cm) + po.largeur_cm) / 100, "deux montants + une traverse haute");
     pose("Profils et bavettes", "corniere_pied_ml", "Corni\xE8res alu 40 \xD7 40 (pied des murs, dedans et dehors)", 2 * (perim - (po ? (po.largeur_cm + 2 * po.chambranle_cm) / 100 : 0)), "deux corni\xE8res sur le p\xE9rim\xE8tre des murs moins la porte : le panneau se pose entre elles");
@@ -110,7 +111,7 @@
     pose("Fixations", "vis_mur_100", "Vis autoperceuses de panneaux de mur (pied et t\xEAte)", haut(n_murs * 2 * 3 * 1.1) / 100, `${n_murs} panneaux \xD7 2 extr\xE9mit\xE9s \xD7 3 vis, +10 %`);
     pose("Fixations", "cheville_beton_u", "Chevilles ou goujons pour fixer les corni\xE8res de pied dans la dalle", 2 * (haut(perim / 0.5) + 2), "une tous les 50 cm, sur chacune des deux corni\xE8res");
     pose("\xC9tanch\xE9it\xE9", "bande_arase_ml", "Bande d'arase sous le pied des murs", perim, "p\xE9rim\xE8tre des murs");
-    pose("\xC9tanch\xE9it\xE9", "butyle_ml", "Bande butyle (joints de panneaux, t\xEAte de mur sous la rehausse)", joints_murs * H + perim + (n_toit - 1) * m.portee_cm / 100, `${joints_murs} joints de mur \xD7 ${fz(H)} m + p\xE9rim\xE8tre + recouvrements de toit`);
+    pose("\xC9tanch\xE9it\xE9", "butyle_ml", `Bande butyle (joints de panneaux, t\xEAte de mur sous la ${m.lisse ? "lisse" : "rehausse"})`, joints_murs * H + perim + (n_toit - 1) * m.portee_cm / 100, `${joints_murs} joints de mur \xD7 ${fz(H)} m + p\xE9rim\xE8tre + recouvrements de toit`);
     pose("\xC9tanch\xE9it\xE9", "mastic_cartouche", "Mastic polyur\xE9thane ou MS polym\xE8re, cartouches", haut((perim * 2 + ouv_perim) / 8), "une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures");
     pose("\xC9tanch\xE9it\xE9", "bande_comprimee_ml", "Bande comprim\xE9e au pourtour des ouvertures", ouv_perim, "tour de la porte et des fen\xEAtres");
     pose("\xC9tanch\xE9it\xE9", "mousse_pu_u", "Mousse polyur\xE9thane expansive, bombes", 2, "calfeutrement des ouvertures et des angles");
@@ -166,6 +167,7 @@
     const liste2 = (f) => f.panneaux.map((x) => `${x.id} (${fz(x.largeur_cm)})`).join(", ");
     const diag = (a, b) => fz(Math.hypot(b[0] - a[0], b[1] - a[1]));
     const q = v.polygone, speciaux = [...new Set(m.angles_deg.filter((g) => Math.abs(g - 90) >= 0.5).map((g) => fr(g) + "\xB0"))];
+    const seuil_porte = po ? +((m.faces[po.cote].ouvertures.find((o) => o.type === "porte") || {}).seuil_cm || 0) : 0;
     const face_porte = po ? m.faces[po.cote] : null, passage = v.passages.find((x) => x.cote === "arriere_droite");
     const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
     const avantTout = [
@@ -210,6 +212,7 @@
           `Bandes de mur : ${m.faces.map((f) => bande(f)).filter(Boolean).map((x) => `${x.id} ${fz(x.largeur_cm)} cm`).join(", ") || "aucune"}. Couper dans la longueur, face laqu\xE9e vers le bas, et garder les chutes : elles fournissent les autres bandes.`,
           `Fen\xEAtres : ${fen.map((f) => `${fz(f.largeur_cm)} \xD7 ${fz(f.hauteur_cm)} cm, bas \xE0 ${fz(f.allege_cm)} cm`).join(" ; ")}, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper \xE0 la scie sauteuse.`,
           `Toit : ${m.toit.panneaux.filter((x) => x.biais).map((x) => x.id).join(", ") || "aucun panneau"} \xE0 couper en biais d'apr\xE8s le plan de toiture.`,
+          ...m.lisse ? [`Lisse haute : ${m.lisse.pieces.map((x) => `${x.id} (mur ${x.face}, ${fr(x.L)} cm)`).join(", ")}, coup\xE9es d'onglet \xE0 la moiti\xE9 de chaque angle${m.lisse.seuil.length ? ` ; seuil : ${m.lisse.seuil.length} pi\xE8ces de ${fr(m.lisse.seuil[0].L)} cm` : ""}.`] : [],
           `Rehausse : ${m.rehausse.pieces.map((r) => `${r.id} (mur ${r.face}, ${fr(r.L)} cm, ${fr(r.h0)} \u2192 ${fr(r.h1)} cm)`).join(", ")}, tir\xE9es de ${m.rehausse.nb_madriers} madrier(s) selon le plan de d\xE9bit.`
         ],
         controler: ["Retirer le film de protection des panneaux au fur et \xE0 mesure : apr\xE8s quelques semaines au soleil il ne part plus.", "\xC9bavurer chaque coupe et passer une retouche de peinture sur la t\xF4le mise \xE0 nu."]
@@ -218,7 +221,7 @@
         titre: `Monter le mur gauche \xE0 plat, puis le lever`,
         but: `\xC0 ${fz(gauche)} cm du ${limite} aucune visseuse ne passe : ce mur se fait au sol.`,
         outils: ["visseuse", "serre-joints", "2 personnes", "\xE9tais"],
-        faire: [`Assembler ${F.G ? liste2(F.G) : ""} \xE0 plat, butyle dans chaque joint, et visser dessus leur pi\xE8ce de rehausse.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm c\xF4t\xE9 fa\xE7ade, la seule extr\xE9mit\xE9 qu'on atteindra ensuite.` : "", "Lever le mur \xE0 deux, le poser contre la corni\xE8re ext\xE9rieure, le tenir par deux \xE9tais viss\xE9s dans la rehausse.", "Poser la corni\xE8re int\xE9rieure contre le pied, la cheviller et la visser dans la t\xF4le : dehors, la corni\xE8re d\xE9j\xE0 pos\xE9e tient le pied, aucune vis n'est \xE0 faire c\xF4t\xE9 grillage."].filter(Boolean),
+        faire: [`Assembler ${F.G ? liste2(F.G) : ""} \xE0 plat, butyle dans chaque joint, et visser dessus ${m.lisse ? "leur lisse puis leur pi\xE8ce de rehausse" : "leur pi\xE8ce de rehausse"}.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm c\xF4t\xE9 fa\xE7ade, la seule extr\xE9mit\xE9 qu'on atteindra ensuite.` : "", "Lever le mur \xE0 deux, le poser contre la corni\xE8re ext\xE9rieure, le tenir par deux \xE9tais viss\xE9s dans la rehausse.", "Poser la corni\xE8re int\xE9rieure contre le pied, la cheviller et la visser dans la t\xF4le : dehors, la corni\xE8re d\xE9j\xE0 pos\xE9e tient le pied, aucune vis n'est \xE0 faire c\xF4t\xE9 grillage."].filter(Boolean),
         controler: ["Aplomb dans les deux sens avant de l\xE2cher les \xE9tais.", `Vide de ${fz(gauche)} cm r\xE9gulier sur toute la longueur.`]
       },
       {
@@ -228,7 +231,7 @@
         faire: [
           ...m.faces.filter((f) => f.cle !== "G").reverse().map((f) => `Mur ${f.cle} (${f.cle === "A" ? "fa\xE7ade" : f.nom}, ${fr(f.longueur_cm)} cm) : ${liste2(f)}${f === face_porte ? ", en laissant le vide du cadre de porte" : ""}.`),
           "Butyle dans chaque embo\xEEtement, panneau serr\xE9 contre le pr\xE9c\xE9dent, pied pris entre les deux corni\xE8res et viss\xE9 dans chacune.",
-          "\xC9tayer chaque mur tant que la rehausse n'est pas pos\xE9e : avant elle, rien ne tient les t\xEAtes."
+          `\xC9tayer chaque mur tant que la ${m.lisse ? "lisse" : "rehausse"} n'est pas pos\xE9e : avant elle, rien ne tient les t\xEAtes.`
         ],
         controler: ["Aplomb de chaque panneau avant de visser le suivant : l'erreur se cumule.", `T\xEAtes de murs toutes \xE0 ${fz(m.hauteur_mur_cm)} cm, \xE0 3 mm pr\xE8s, au niveau laser.`]
       },
@@ -240,10 +243,10 @@
         controler: ["Aucun jour entre profil et panneau : c'est l\xE0 que l'air et l'eau entrent.", ...speciaux.length ? ["Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer."] : []]
       },
       {
-        titre: "Poser la rehausse bois",
-        but: "Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.",
+        titre: m.lisse ? "Poser la lisse haute et la rehausse" : "Poser la rehausse bois",
+        but: m.lisse ? "La lisse tient la t\xEAte de chaque mur, fond compris, et porte le bas du toit ; la rehausse pos\xE9e dessus donne la pente." : "Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.",
         outils: ["visseuse", "serre-joints"],
-        faire: [`Poser ${m.rehausse.pieces.map((r) => `${r.id} sur ${r.face}`).join(", ")}, sur un cordon de butyle en t\xEAte de panneaux.`, "Visser la rehausse dans la t\xF4le des deux faces de chaque panneau, tous les 40 cm.", "Assembler les pi\xE8ces entre elles aux angles par deux longues vis en biais."],
+        faire: m.lisse ? [`Poser la lisse \xE0 plat sur chaque mur (${m.lisse.pieces.map((x) => x.id).join(", ")}), sur un cordon de butyle en t\xEAte de panneaux, et la visser dans la t\xF4le des deux faces tous les 40 cm.`, "Lier les lisses entre elles \xE0 chaque angle par deux longues vis en biais.", `Poser ${m.rehausse.pieces.map((r) => `${r.id} sur ${r.face}`).join(", ")} sur la lisse, viss\xE9es dedans par-dessus tous les 40 cm.`] : [`Poser ${m.rehausse.pieces.map((r) => `${r.id} sur ${r.face}`).join(", ")}, sur un cordon de butyle en t\xEAte de panneaux.`, "Visser la rehausse dans la t\xF4le des deux faces de chaque panneau, tous les 40 cm.", "Assembler les pi\xE8ces entre elles aux angles par deux longues vis en biais."],
         controler: [`Hauteurs finies des coins : ${m.hauteurs_coins_cm.map((h) => fr(h)).join(" \xB7 ")} cm (dans l'ordre des coins, \xE0 partir du coin avant gauche).`, "Dessus de la rehausse dans un m\xEAme plan : poser une r\xE8gle d'un mur \xE0 l'autre."]
       },
       ...t.panne_intermediaire ? [{
@@ -260,7 +263,7 @@
         faire: [
           `Poser ${m.toit.panneaux.map((x) => `${x.id} (${fz(x.largeur_cm)} \xD7 ${fz(x.longueur_cm)} cm)`).join(", ")}, en commen\xE7ant du c\xF4t\xE9 oppos\xE9 aux vents dominants.`,
           "Closoirs mousse sous les nervures, en haut et en bas, avant de visser.",
-          `Visser dans la rehausse${t.panne_intermediaire ? " et dans la panne" : ""} par le sommet des nervures, vis longues \xE0 rondelle, quatre par panneau et par appui. Serrer jusqu'\xE0 \xE9craser la rondelle, pas plus.`,
+          `Visser dans la rehausse${m.lisse ? " (au fond : dans la lisse)" : ""}${t.panne_intermediaire ? " et dans la panne" : ""} par le sommet des nervures, vis longues \xE0 rondelle, quatre par panneau et par appui. Serrer jusqu'\xE0 \xE9craser la rondelle, pas plus.`,
           "Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.",
           "Bandes de rive sur les bords parall\xE8les \xE0 la pente, bavette de t\xEAte sur le bord haut."
         ],
@@ -270,14 +273,14 @@
         titre: "Goutti\xE8re et descente",
         but: "Recueillir toute l'eau du toit et l'emmener au jardin.",
         outils: ["visseuse", "niveau", "scie \xE0 m\xE9taux"],
-        faire: [`${fr(G.longueur_cm)} cm de goutti\xE8re en ${G.troncons.length} tron\xE7on(s) : ${G.troncons.map((x) => `${x.face} ${fr(x.longueur_cm)} cm`).join(" + ")}.`, "Crochets tous les 50 cm, pente de 5 mm par m\xE8tre vers la descente.", t.descente === "droite" && m.sens !== "droite" ? "Descente au bout droit de la goutti\xE8re, puis un tuyau au sol le long du mur droit jusqu'au jardin : rien ne doit s'\xE9couler au pied du mur de propri\xE9t\xE9." : "Descente au point bas, \xE9vacu\xE9e loin de la dalle."],
+        faire: [`${fr(G.longueur_cm)} cm de goutti\xE8re en ${G.troncons.length} tron\xE7on(s) : ${G.troncons.map((x) => `${x.face} ${fr(x.longueur_cm)} cm`).join(" + ")}.`, "Crochets tous les 50 cm, pente de 5 mm par m\xE8tre vers la descente.", t.descente === "droite" && m.sens !== "droite" ? "Descente au bout droit de la goutti\xE8re, puis un tuyau au sol le long du mur droit jusqu'au jardin : rien ne doit s'\xE9couler au pied du mur de propri\xE9t\xE9." : t.descente === "gauche" && m.sens !== "droite" ? "Descente au bout gauche de la goutti\xE8re, au coin arri\xE8re gauche, puis un tuyau au sol le long de la limite jusqu'au jardin." : "Descente au point bas, \xE9vacu\xE9e loin de la dalle."],
         controler: ["Verser un seau d'eau en haut du toit : tout doit arriver \xE0 la descente."]
       },
       ...po ? [{
         titre: "Poser la porte",
         but: po.chambranle_cm > 0 ? "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles." : "Le dormant du bloc-porte porte le battant : il se fixe \xE0 la dalle, \xE0 la rehausse et \xE0 la t\xF4le des panneaux, jamais dans la mousse.",
         outils: ["visseuse", "niveau", "cales"],
-        faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, viss\xE9 dans la dalle en pied et dans la rehausse en t\xEAte.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} de ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm dans le cadre, ferr\xE9e c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur.`, "Bande comprim\xE9e entre dormant et cadre, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm, mur ${face_porte.cle}) d'un profil en U.`, `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitr\xE9"} de service, dormant compris, cal\xE9 d'aplomb, ferr\xE9 c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur : chevill\xE9 dans la dalle en pied, viss\xE9 dans la rehausse en t\xEAte, et dans la t\xF4le des panneaux par le profil en U.`, "Bande comprim\xE9e entre dormant et profil, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."],
+        faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, viss\xE9 dans la dalle en pied et dans la rehausse en t\xEAte.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} de ${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm)} cm dans le cadre, ferr\xE9e c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur.`, "Bande comprim\xE9e entre dormant et cadre, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} \xD7 ${fz(po.hauteur_cm + seuil_porte)} cm, mur ${face_porte.cle}) d'un profil en U.`, ...seuil_porte ? [`Seuil : ${m.lisse && m.lisse.seuil.length ? `${m.lisse.seuil.length} \xE9paisseurs de lambourde \xE0 plat` : "un bois classe 4"}, ${fz(seuil_porte)} cm en tout, au fond du vide, coll\xE9es et chevill\xE9es dans la dalle, dessus au niveau du plancher fini.`] : [], `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitr\xE9"} de service, dormant compris, cal\xE9 d'aplomb, ferr\xE9 c\xF4t\xE9 fond, ouvrant vers l'ext\xE9rieur : ${seuil_porte ? "viss\xE9 dans le seuil en pied, et dans la t\xF4le des panneaux par le profil en U sur les trois autres c\xF4t\xE9s" : "chevill\xE9 dans la dalle en pied, viss\xE9 dans la rehausse en t\xEAte, et dans la t\xF4le des panneaux par le profil en U"}.`, "Bande comprim\xE9e entre dormant et profil, mastic \xE0 l'ext\xE9rieur, seuil sur cordon de mastic."],
         controler: ["Jeu r\xE9gulier de 3 mm autour du battant, la porte se ferme sans forcer.", "Arr\xEAt de porte \xE0 pr\xE9voir : ouverte, elle prend le vent."]
       }] : [],
       {
@@ -299,7 +302,7 @@
         but: "La dalle est froide : le plancher fait le confort des pieds.",
         outils: ["scie", "visseuse"],
         faire: ["Film poly\xE9thyl\xE8ne sur la dalle, remont\xE9 de 10 cm le long des murs, l\xE9s recouverts de 20 cm.", "Isolant XPS de 60 mm pos\xE9 \xE0 joints serr\xE9s sur tout le sol, sans vis ni colle : c'est un plancher flottant.", "Dalles OSB de 22 mm pos\xE9es dessus, joints d\xE9cal\xE9s, colle dans chaque rainure, 8 mm de jeu contre les murs ; rev\xEAtement de sol ensuite."],
-        controler: ["Avant le film : la dalle est plane \xE0 5 mm pr\xE8s sous une r\xE8gle de 2 m, sinon ragr\xE9er les creux.", `Hauteur sous plafond apr\xE8s plancher : ${fr(rnd((Math.max(...m.hauteurs_coins_cm) - +p.amenagement.plancher.epaisseur_cm) / 100, 2))} m au plus haut, ${fr(rnd((Math.min(...m.hauteurs_coins_cm) - +p.amenagement.plancher.epaisseur_cm) / 100, 2))} m au plus bas.`]
+        controler: ["Avant le film : la dalle est plane \xE0 5 mm pr\xE8s sous une r\xE8gle de 2 m, sinon ragr\xE9er les creux.", `Hauteur sous plafond apr\xE8s plancher : ${fr(m.sous_plafond_m.haut)} m au plus haut, ${fr(m.sous_plafond_m.bas)} m au plus bas.`]
       }] : [],
       {
         titre: "Ventilation, \xE9lectricit\xE9, am\xE9nagement",
@@ -1360,15 +1363,18 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     }
     return barres.map((b) => ({ ...b, L: rnd2(b.L, 1), chute_cm: rnd2(stock - b.L, 1) }));
   }
+  var LINTEAU_MIN_CM = 5;
   function modele_trapeze(p, v) {
     const d = p.disposition_trapeze, t = d && d.toit || {};
     const q = v.polygone, n = q.length;
     const H = +p.murs.hauteur_cm, c = +t.chute_cm, mod = +p.panneau.largeur_utile_cm;
+    const lisse_mm = d.lisse_haute_mm || null, E = lisse_mm ? +lisse_mm[1] / 10 : 0, Hl = H + E;
+    const seuil = p.amenagement && p.amenagement.plancher && p.amenagement.plancher.actif ? +p.amenagement.plancher.epaisseur_cm : 0;
     const par_face = p.panneau.largeur_utile_par_face_cm || {}, mod_de = (F) => +(par_face[F] ?? mod);
     const y0 = Math.min(...q.map((z) => z[1])), D = Math.max(...q.map((z) => z[1])) - y0;
     const x0 = Math.min(...q.map((z) => z[0])), Wd = Math.max(...q.map((z) => z[0])) - x0;
     const droite = t.sens === "droite", course = droite ? Wd : D;
-    const h = (z) => H + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
+    const h = (z) => Hl + c * (1 - (droite ? (z[0] - x0) / Wd : (z[1] - y0) / D));
     const porte_h = v.porte && v.porte.hauteur_cm ? +v.porte.hauteur_cm : +(d.porte_hauteur_cm || p.porte.hauteur_cm);
     const faces = q.map((a, i) => {
       const b = q[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -1380,13 +1386,17 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       if (tete) panneaux.push({ id: `${F}1`, debut_cm: 0, largeur_cm: rnd2(tete, 1) });
       for (let s = tete, k = tete ? 2 : 1; s < L - 0.05; s += mod2, k++) panneaux.push({ id: `${F}${k}`, debut_cm: rnd2(s, 1), largeur_cm: rnd2(Math.min(mod2, L - s), 1) });
       const ouvertures = [];
-      if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: 0, hauteur_cm: porte_h, chambranle_cm: v.porte.chambranle_cm || 0 });
+      if (v.porte && v.porte.cote === i) ouvertures.push({ type: "porte", vitree: v.porte.vitree !== false, debut_cm: v.porte.debut_cm, largeur_cm: v.porte.largeur_cm, allege_cm: seuil, seuil_cm: seuil, hauteur_cm: Math.min(porte_h, H - seuil - LINTEAU_MIN_CM), chambranle_cm: v.porte.chambranle_cm || 0 });
       for (const f of v.fenetres || []) if (f.cote === i) ouvertures.push({ type: "fenetre", debut_cm: f.debut_cm, largeur_cm: f.largeur_cm, allege_cm: f.allege_cm, hauteur_cm: f.hauteur_cm, ouvrant: f.ouvrant });
-      return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod2, longueur_cm: rnd2(L, 1), hauteur_debut_cm: rnd2(h(a), 1), hauteur_fin_cm: rnd2(h(b), 1), hauteur_mur_cm: H, panneaux, ouvertures };
+      return { cle: F, nom: v.noms_cotes[i], de: a, a: b, module_cm: mod2, longueur_cm: rnd2(L, 1), hauteur_debut_cm: rnd2(h(a), 1), hauteur_fin_cm: rnd2(h(b), 1), hauteur_mur_cm: H, lisse_cm: E, panneaux, ouvertures };
     });
     const sec = d.rehausse_section_mm || p.rehausse.section_mm, section = +sec[1] / 10, stock = +p.rehausse.longueur_stock_cm;
-    const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > H + 0.05).map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd2(f.hauteur_debut_cm - H, 1), h1: rnd2(f.hauteur_fin_cm - H, 1) }));
+    const pieces = faces.filter((f) => Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > Hl + 0.05).map((f, k) => ({ id: `R${k + 1}`, face: f.cle, L: f.longueur_cm, h0: rnd2(f.hauteur_debut_cm - Hl, 1), h1: rnd2(f.hauteur_fin_cm - Hl, 1) }));
     const barres = ranger_rehausse(pieces, section, stock);
+    const stock_l = +(d.lisse_stock_cm || stock);
+    const pieces_l = E > 0 ? faces.map((f, k) => ({ id: `L${k + 1}`, face: f.cle, L: f.longueur_cm, h0: E, h1: E })) : [];
+    const seuil_l = E > 0 && v.porte && seuil > 0 ? Array.from({ length: Math.round(seuil / E) }, (_, k) => ({ id: `S${k + 1}`, face: "seuil", L: v.porte.largeur_cm, h0: E, h1: E })) : [];
+    const barres_l = pieces_l.length ? ranger_rehausse([...pieces_l, ...seuil_l].map((x) => ({ ...x, h0: 1e3, h1: 1e3 })), 1, stock_l) : [];
     const deb = t.debord_cm || { avant: 10, arriere: 10, cotes: 0 };
     const cotes = +deb.cotes || 0;
     const decal = faces.map((f) => -(f.cle === "A" ? +deb.avant : f.cle === "B" || f.cle === "C" ? +deb.arriere : f.cle === "D" ? +(deb.droite ?? cotes) : +(deb.gauche ?? cotes)));
@@ -1424,7 +1434,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     for (const f of faces) for (const pn of f.panneaux) {
       const b = bandes.find((x) => x.id === pn.id);
       pn.source = b ? b.source : "neuf";
-      pn.decoupes = f.ouvertures.filter((o) => o.debut_cm - (o.chambranle_cm || 0) < pn.debut_cm + pn.largeur_cm && o.debut_cm + o.largeur_cm + (o.chambranle_cm || 0) > pn.debut_cm).map((o) => `${o.type === "porte" ? "porte" : "fen\xEAtre"} ${fz2(o.largeur_cm + 2 * (o.chambranle_cm || 0))} \xD7 ${fz2(o.hauteur_cm + (o.chambranle_cm || 0))}`);
+      pn.decoupes = f.ouvertures.filter((o) => o.debut_cm - (o.chambranle_cm || 0) < pn.debut_cm + pn.largeur_cm && o.debut_cm + o.largeur_cm + (o.chambranle_cm || 0) > pn.debut_cm).map((o) => `${o.type === "porte" ? "porte" : "fen\xEAtre"} ${fz2(o.largeur_cm + 2 * (o.chambranle_cm || 0))} \xD7 ${fz2(o.hauteur_cm + (o.chambranle_cm || 0) + (o.seuil_cm || 0))}`);
     }
     const fB = faces.findIndex((f) => f.cle === (droite ? "D" : "B"));
     const g0 = contour[fB], g1 = contour[(fB + 1) % n];
@@ -1434,7 +1444,10 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       return (droite ? nx : ny) > 0.2;
     });
     return {
+      // hauteur sous plafond, plancher isole deduit : une seule valeur pour la page, abri.md et le guide
+      sous_plafond_m: { haut: rnd2((Math.max(...q.map(h)) - seuil) / 100, 2), bas: rnd2((Math.min(...q.map(h)) - seuil) / 100, 2) },
       hauteur_mur_cm: H,
+      lisse_cm: E,
       chute_cm: c,
       profondeur_cm: rnd2(D, 1),
       sens: droite ? "droite" : "arriere",
@@ -1444,11 +1457,12 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       hauteurs_coins_cm: q.map((z) => rnd2(h(z), 1)),
       faces,
       rehausse: { section_mm: sec, longueur_stock_cm: stock, pieces, barres, nb_madriers: barres.length },
+      lisse: E > 0 ? { section_mm: lisse_mm, epaisseur_cm: E, longueur_stock_cm: stock_l, pieces: pieces_l, seuil: seuil_l, barres: barres_l, nb_barres: barres_l.length } : null,
       toit: {
         contour: contour.map(([a, b]) => [rnd2(a, 1), rnd2(b, 1)]),
         aire_m2: rnd2(poly_area(contour) / 1e4, 2),
         // plan du toit : hauteur du dessous du toit = haut_cm au depart de la pente, bas_cm au bout de la course
-        plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd2(droite ? x0 : y0, 1), course_cm: rnd2(course, 1), haut_cm: H + c, bas_cm: H },
+        plan: { sens: droite ? "droite" : "arriere", origine_cm: rnd2(droite ? x0 : y0, 1), course_cm: rnd2(course, 1), haut_cm: Hl + c, bas_cm: Hl },
         panneaux: panneaux_toit,
         module_cm: mod_t,
         debord_cm: { avant: +deb.avant, arriere: +deb.arriere, droite: +(deb.droite ?? cotes), gauche: +(deb.gauche ?? cotes) },
@@ -1490,6 +1504,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         a: f.a,
         longueur_cm: f.longueur_cm,
         hauteur_mur_cm: f.hauteur_mur_cm,
+        lisse_cm: f.lisse_cm || 0,
         angle_debut_deg: m.angles_deg[i],
         angle_fin_deg: m.angles_deg[(i + 1) % m.faces.length],
         hauteur_debut_cm: f.hauteur_debut_cm,
@@ -1810,11 +1825,16 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       const recoupe = pn.largeur_cm < f.module_cm - 0.05;
       svg += text(c[0], c[1], recoupe ? `${pn.id} \xB7 ${fz2(pn.largeur_cm)}` : pn.id, "middle", "#2b5d8a", 12, "bold");
     }
-    if (Math.max(h0, h1) > Hm + 0.05) {
+    const E = f.lisse_cm || 0, Hr = Hm + E;
+    if (E > 0) svg += poly([P(0, Hm), P(L, Hm), P(L, Hr), P(0, Hr)], "#c9a26b", "#8a5a2b", 1.2);
+    if (Math.max(h0, h1) > Hr + 0.05) {
       const pc = m.rehausse.pieces.find((x) => x.face === f.cle);
-      svg += poly([P(0, Hm), P(L, Hm), P(L, h1), P(0, h0)], "#d9b98a", "#8a5a2b", 1.5);
-      const c = P(L / 2, Hm + Math.max(h0, h1) - Hm > 16 ? Hm + 6 : Hm + 2);
-      svg += text(c[0], c[1] - 2, `${pc ? pc.id + " \xB7 " : ""}rehausse ${fz2(rnd2(h0 - Hm, 1))} \u2192 ${fz2(rnd2(h1 - Hm, 1))}`, "middle", "#5a3a1a", 10, "bold");
+      svg += poly([P(0, Hr), P(L, Hr), P(L, h1), P(0, h0)], "#d9b98a", "#8a5a2b", 1.5);
+      const c = P(L / 2, Math.max(h0, h1) - Hr > 16 ? Hr + 6 : Hr + 2);
+      svg += text(c[0], c[1] - 2, `${pc ? pc.id + " \xB7 " : ""}rehausse ${fz2(rnd2(h0 - Hr, 1))} \u2192 ${fz2(rnd2(h1 - Hr, 1))}${E > 0 ? ` \xB7 lisse ${fz2(E)}` : ""}`, "middle", "#5a3a1a", 10, "bold");
+    } else if (E > 0) {
+      const c = P(L / 2, Hr + 3);
+      svg += text(c[0], c[1], `lisse ${fz2(E)}`, "middle", "#5a3a1a", 10, "bold");
     }
     for (const o of f.ouvertures) {
       if (o.chambranle_cm) {
@@ -1823,13 +1843,14 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
 `;
         svg += cote_svg(P(o.debut_cm + o.largeur_cm + e, o.hauteur_cm + e), P(o.debut_cm + o.largeur_cm + e, f.hauteur_mur_cm), fz2(rnd2(f.hauteur_mur_cm - o.hauteur_cm - e, 1)), -14, "#7a5530", 9);
       }
+      if (o.seuil_cm) svg += poly([P(o.debut_cm, 0), P(o.debut_cm + o.largeur_cm, 0), P(o.debut_cm + o.largeur_cm, o.seuil_cm), P(o.debut_cm, o.seuil_cm)], "#c9a26b", "#8a5a2b", 1.2);
       const a = P(o.debut_cm, o.allege_cm), b = P(o.debut_cm + o.largeur_cm, o.allege_cm + o.hauteur_cm);
       const col = o.type === "porte" ? "#c0392b" : "#1b9aa8";
       svg += `<rect x="${f1(a[0])}" y="${f1(b[1])}" width="${f1(b[0] - a[0])}" height="${f1(a[1] - b[1])}" fill="${o.type === "porte" && o.vitree === false ? "#c9cfd4" : "#bfe3ef"}" stroke="${col}" stroke-width="2"/>
 `;
       const c = P(o.debut_cm + o.largeur_cm / 2, o.allege_cm + o.hauteur_cm / 2);
       svg += text(c[0], c[1] - 4, o.type === "porte" ? o.vitree === false ? "porte pleine" : "porte" : o.ouvrant ? "fen\xEAtre ouvrante" : "fen\xEAtre fixe", "middle", col, 11, "bold");
-      svg += text(c[0], c[1] + 12, `${fz2(o.largeur_cm)} \xD7 ${fz2(o.hauteur_cm)}${o.allege_cm ? ` \xB7 all\xE8ge ${fz2(o.allege_cm)}` : ""}`, "middle", col, 10);
+      svg += text(c[0], c[1] + 12, `${fz2(o.largeur_cm)} \xD7 ${fz2(o.hauteur_cm)}${o.allege_cm ? ` \xB7 ${o.type === "porte" ? "seuil" : "all\xE8ge"} ${fz2(o.allege_cm)}` : ""}`, "middle", col, 10);
       svg += cote_svg(P(o.debut_cm, 0), P(o.debut_cm + o.largeur_cm, 0), fz2(o.largeur_cm), 20, col, 10);
       if (o.chambranle_cm) {
         const t = P(o.debut_cm + o.largeur_cm / 2, o.hauteur_cm - 14);
@@ -2510,7 +2531,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       forme.lineTo(0, f.hauteur_mur_cm / 100);
       forme.closePath();
       for (const o of f.ouvertures) {
-        const ch = o.chambranle_cm || 0, s0 = (o.debut_cm - ch) / 100, s1 = (o.debut_cm + o.largeur_cm + ch) / 100, h0 = o.allege_cm / 100, h1 = (o.allege_cm + o.hauteur_cm + (o.type === "porte" ? ch : 0)) / 100;
+        const ch = o.chambranle_cm || 0, s0 = (o.debut_cm - ch) / 100, s1 = (o.debut_cm + o.largeur_cm + ch) / 100, h0 = o.type === "porte" ? 0 : o.allege_cm / 100, h1 = (o.allege_cm + o.hauteur_cm + (o.type === "porte" ? ch : 0)) / 100;
         const trou = new THREE.Path();
         trou.moveTo(s0, h0);
         trou.lineTo(s0, h1);
@@ -2531,8 +2552,22 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
           pose(plaque, etiq);
         }
       }
-      if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + 0.05) {
-        const r = new THREE.Shape(), Hm = f.hauteur_mur_cm / 100;
+      const E = f.lisse_cm || 0;
+      if (E > 0) {
+        const l = new THREE.Shape(), h0 = f.hauteur_mur_cm / 100, h1 = (f.hauteur_mur_cm + E) / 100;
+        l.moveTo(0, h0);
+        l.lineTo(L / 100, h0);
+        l.lineTo(L / 100, h1);
+        l.lineTo(0, h1);
+        l.closePath();
+        const geoL = onglet(new THREE.ExtrudeGeometry(l, { depth: data.rehausse_epaisseur_cm / 100, bevelEnabled: false }), data.rehausse_epaisseur_cm);
+        const lisse = ombre(new THREE.Mesh(geoL, matBois));
+        lisse.userData.lisse = true;
+        pose(lisse);
+        pose(aretes(geoL));
+      }
+      if (Math.max(f.hauteur_debut_cm, f.hauteur_fin_cm) > f.hauteur_mur_cm + E + 0.05) {
+        const r = new THREE.Shape(), Hm = (f.hauteur_mur_cm + E) / 100;
         r.moveTo(0, Hm);
         r.lineTo(L / 100, Hm);
         r.lineTo(L / 100, f.hauteur_fin_cm / 100);
@@ -2554,6 +2589,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       for (const o of f.ouvertures) {
         if (o.type === "porte") {
           const ch = o.chambranle_cm || 0, s0 = o.debut_cm, s1 = o.debut_cm + o.largeur_cm, matCadre = coupable(mat(COUL.cadre));
+          const seuil = o.seuil_cm || 0;
+          if (seuil > 0) pose(boite(s0, s1, 0, seuil, -ep, 0, matBois));
           if (ch > 0) {
             pose(boite(s0 - ch, s0, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
             pose(boite(s1, s1 + ch, 0, o.hauteur_cm + ch, -ep, 0, matCadre));
@@ -2582,7 +2619,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
               serrure.position.set(xg, 0.98, face2 * 0.028);
               g.add(serrure);
             }
-            g.position.set(s1 / 100, 0, -0.01);
+            g.position.set(s1 / 100, seuil / 100, -0.01);
             g.rotation.y = angle;
             return g;
           };

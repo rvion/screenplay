@@ -52,7 +52,8 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   for (const [l, n] of refs) pose("Panneaux", "panneau_mur_m2", `Panneaux sandwich de mur ${ep} mm, ${fz(+l)} × ${fz(H * 100)} cm (${ou(+l)})`, n * (+l / 100) * H, `${n} panneau(x) entier(s) de ${fz(+l)} à commander (les bandes recoupées sortent des chutes)`);
   pose("Panneaux", "panneau_toit_m2", `Panneaux sandwich de toiture ${ep} mm, nervurés, teinte claire`, toit_m2, `${n_toit} panneaux coupés à longueur : ${m.toit.panneaux.map((x: any) => `${x.id} ${fz(x.longueur_cm)} cm`).join(", ")}`);
   // --- bois
-  pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 (rehausse, lisse haute)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pièce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
+  if (m.lisse) pose("Bois", "lambourde_ml", `Lambourde ${m.lisse.section_mm.join(" × ")} classe 4 (lisse haute à plat sur chaque mur, seuil de porte)`, m.lisse.nb_barres * m.lisse.longueur_stock_cm / 100, `${m.lisse.nb_barres} pièce(s) de ${fz(m.lisse.longueur_stock_cm)} cm : une lisse par mur (${fr(rnd(perim, 2))} m)${m.lisse.seuil.length ? `, plus ${m.lisse.seuil.length} épaisseurs de seuil` : ""}`);
+  pose("Bois", "madrier_ml", `Madrier ${m.rehausse.section_mm.join(" × ")} classe 4 (rehausse)`, m.rehausse.nb_madriers * m.rehausse.longueur_stock_cm / 100, `${m.rehausse.nb_madriers} pièce(s) de ${fz(m.rehausse.longueur_stock_cm)} cm`);
   if (panne) pose("Bois", "panne_ml", "Panne intermédiaire 75 × 150 classe 4, en travers à mi-profondeur", panne, `portée du toit ${fz(m.portee_cm / 100)} m : une panne de la longueur de la façade la ramène à ${fz(m.portee_cm / 200)} m`);
   // un bloc de service exterieur a son dormant : pas de cadre bois (chambranle 0)
   if (po && po.chambranle_cm > 0) pose("Bois", "chevron_cadre_ml", `Bois du cadre de porte, section ${fz(po.chambranle_cm * 10)} × ${ep} mm`, (2 * (po.hauteur_cm + po.chambranle_cm) + po.largeur_cm) / 100, "deux montants + une traverse haute");
@@ -71,7 +72,7 @@ export function nomenclature_abri(p: P, v: any, m: any) {
   pose("Fixations", "cheville_beton_u", "Chevilles ou goujons pour fixer les cornières de pied dans la dalle", 2 * (haut(perim / 0.5) + 2), "une tous les 50 cm, sur chacune des deux cornières");
   // --- etancheite
   pose("Étanchéité", "bande_arase_ml", "Bande d'arase sous le pied des murs", perim, "périmètre des murs");
-  pose("Étanchéité", "butyle_ml", "Bande butyle (joints de panneaux, tête de mur sous la rehausse)", joints_murs * H + perim + (n_toit - 1) * m.portee_cm / 100, `${joints_murs} joints de mur × ${fz(H)} m + périmètre + recouvrements de toit`);
+  pose("Étanchéité", "butyle_ml", `Bande butyle (joints de panneaux, tête de mur sous la ${m.lisse ? "lisse" : "rehausse"})`, joints_murs * H + perim + (n_toit - 1) * m.portee_cm / 100, `${joints_murs} joints de mur × ${fz(H)} m + périmètre + recouvrements de toit`);
   pose("Étanchéité", "mastic_cartouche", "Mastic polyuréthane ou MS polymère, cartouches", haut((perim * 2 + ouv_perim) / 8), "une cartouche pour 8 m de cordon : pied de mur dedans et dehors, tour des ouvertures");
   pose("Étanchéité", "bande_comprimee_ml", "Bande comprimée au pourtour des ouvertures", ouv_perim, "tour de la porte et des fenêtres");
   pose("Étanchéité", "mousse_pu_u", "Mousse polyuréthane expansive, bombes", 2, "calfeutrement des ouvertures et des angles");
@@ -129,6 +130,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
   const liste = (f: any) => f.panneaux.map((x: any) => `${x.id} (${fz(x.largeur_cm)})`).join(", ");
   const diag = (a: number[], b: number[]) => fz(Math.hypot(b[0] - a[0], b[1] - a[1]));
   const q = v.polygone, speciaux = [...new Set(m.angles_deg.filter((g: number) => Math.abs(g - 90) >= 0.5).map((g: number) => fr(g) + "°"))];
+  const seuil_porte = po ? +((m.faces[po.cote].ouvertures.find((o: any) => o.type === "porte") || {}).seuil_cm || 0) : 0;
   const face_porte = po ? m.faces[po.cote] : null, passage = v.passages.find((x: any) => x.cote === "arriere_droite");
   const vers = m.sens === "droite" ? "la droite (jardin)" : "le fond";
 
@@ -171,6 +173,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
         `Bandes de mur : ${m.faces.map((f: any) => bande(f)).filter(Boolean).map((x: any) => `${x.id} ${fz(x.largeur_cm)} cm`).join(", ") || "aucune"}. Couper dans la longueur, face laquée vers le bas, et garder les chutes : elles fournissent les autres bandes.`,
         `Fenêtres : ${fen.map((f: any) => `${fz(f.largeur_cm)} × ${fz(f.hauteur_cm)} cm, bas à ${fz(f.allege_cm)} cm`).join(" ; ")}, une par panneau, jamais sur un joint. Percer les quatre angles, puis couper à la scie sauteuse.`,
         `Toit : ${m.toit.panneaux.filter((x: any) => x.biais).map((x: any) => x.id).join(", ") || "aucun panneau"} à couper en biais d'après le plan de toiture.`,
+        ...(m.lisse ? [`Lisse haute : ${m.lisse.pieces.map((x: any) => `${x.id} (mur ${x.face}, ${fr(x.L)} cm)`).join(", ")}, coupées d'onglet à la moitié de chaque angle${m.lisse.seuil.length ? ` ; seuil : ${m.lisse.seuil.length} pièces de ${fr(m.lisse.seuil[0].L)} cm` : ""}.`] : []),
         `Rehausse : ${m.rehausse.pieces.map((r: any) => `${r.id} (mur ${r.face}, ${fr(r.L)} cm, ${fr(r.h0)} → ${fr(r.h1)} cm)`).join(", ")}, tirées de ${m.rehausse.nb_madriers} madrier(s) selon le plan de débit.`,
       ],
       controler: ["Retirer le film de protection des panneaux au fur et à mesure : après quelques semaines au soleil il ne part plus.", "Ébavurer chaque coupe et passer une retouche de peinture sur la tôle mise à nu."],
@@ -178,7 +181,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     {
       titre: `Monter le mur gauche à plat, puis le lever`, but: `À ${fz(gauche)} cm du ${limite} aucune visseuse ne passe : ce mur se fait au sol.`,
       outils: ["visseuse", "serre-joints", "2 personnes", "étais"],
-      faire: [`Assembler ${F.G ? liste(F.G) : ""} à plat, butyle dans chaque joint, et visser dessus leur pièce de rehausse.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm côté façade, la seule extrémité qu'on atteindra ensuite.` : "", "Lever le mur à deux, le poser contre la cornière extérieure, le tenir par deux étais vissés dans la rehausse.", "Poser la cornière intérieure contre le pied, la cheviller et la visser dans la tôle : dehors, la cornière déjà posée tient le pied, aucune vis n'est à faire côté grillage."].filter(Boolean),
+      faire: [`Assembler ${F.G ? liste(F.G) : ""} à plat, butyle dans chaque joint, et visser dessus ${m.lisse ? "leur lisse puis leur pièce de rehausse" : "leur pièce de rehausse"}.`, F.G && bande(F.G) ? `Placer la bande de ${fz(bande(F.G).largeur_cm)} cm côté façade, la seule extrémité qu'on atteindra ensuite.` : "", "Lever le mur à deux, le poser contre la cornière extérieure, le tenir par deux étais vissés dans la rehausse.", "Poser la cornière intérieure contre le pied, la cheviller et la visser dans la tôle : dehors, la cornière déjà posée tient le pied, aucune vis n'est à faire côté grillage."].filter(Boolean),
       controler: ["Aplomb dans les deux sens avant de lâcher les étais.", `Vide de ${fz(gauche)} cm régulier sur toute la longueur.`],
     },
     {
@@ -187,7 +190,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       faire: [
         ...m.faces.filter((f: any) => f.cle !== "G").reverse().map((f: any) => `Mur ${f.cle} (${f.cle === "A" ? "façade" : f.nom}, ${fr(f.longueur_cm)} cm) : ${liste(f)}${f === face_porte ? ", en laissant le vide du cadre de porte" : ""}.`),
         "Butyle dans chaque emboîtement, panneau serré contre le précédent, pied pris entre les deux cornières et vissé dans chacune.",
-        "Étayer chaque mur tant que la rehausse n'est pas posée : avant elle, rien ne tient les têtes.",
+        `Étayer chaque mur tant que la ${m.lisse ? "lisse" : "rehausse"} n'est pas posée : avant elle, rien ne tient les têtes.`,
       ],
       controler: ["Aplomb de chaque panneau avant de visser le suivant : l'erreur se cumule.", `Têtes de murs toutes à ${fz(m.hauteur_mur_cm)} cm, à 3 mm près, au niveau laser.`],
     },
@@ -198,9 +201,9 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       controler: ["Aucun jour entre profil et panneau : c'est là que l'air et l'eau entrent.", ...(speciaux.length ? ["Chaque profil sur mesure porte sur ses deux ailes sur toute la hauteur, sans forcer."] : [])],
     },
     {
-      titre: "Poser la rehausse bois", but: "Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.",
+      titre: m.lisse ? "Poser la lisse haute et la rehausse" : "Poser la rehausse bois", but: m.lisse ? "La lisse tient la tête de chaque mur, fond compris, et porte le bas du toit ; la rehausse posée dessus donne la pente." : "Elle donne la pente au toit et sert de lisse haute : c'est elle qui tient les murs entre eux.",
       outils: ["visseuse", "serre-joints"],
-      faire: [`Poser ${m.rehausse.pieces.map((r: any) => `${r.id} sur ${r.face}`).join(", ")}, sur un cordon de butyle en tête de panneaux.`, "Visser la rehausse dans la tôle des deux faces de chaque panneau, tous les 40 cm.", "Assembler les pièces entre elles aux angles par deux longues vis en biais."],
+      faire: m.lisse ? [`Poser la lisse à plat sur chaque mur (${m.lisse.pieces.map((x: any) => x.id).join(", ")}), sur un cordon de butyle en tête de panneaux, et la visser dans la tôle des deux faces tous les 40 cm.`, "Lier les lisses entre elles à chaque angle par deux longues vis en biais.", `Poser ${m.rehausse.pieces.map((r: any) => `${r.id} sur ${r.face}`).join(", ")} sur la lisse, vissées dedans par-dessus tous les 40 cm.`] : [`Poser ${m.rehausse.pieces.map((r: any) => `${r.id} sur ${r.face}`).join(", ")}, sur un cordon de butyle en tête de panneaux.`, "Visser la rehausse dans la tôle des deux faces de chaque panneau, tous les 40 cm.", "Assembler les pièces entre elles aux angles par deux longues vis en biais."],
       controler: [`Hauteurs finies des coins : ${m.hauteurs_coins_cm.map((h: number) => fr(h)).join(" · ")} cm (dans l'ordre des coins, à partir du coin avant gauche).`, "Dessus de la rehausse dans un même plan : poser une règle d'un mur à l'autre."],
     },
     ...(t.panne_intermediaire ? [{
@@ -215,7 +218,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       faire: [
         `Poser ${m.toit.panneaux.map((x: any) => `${x.id} (${fz(x.largeur_cm)} × ${fz(x.longueur_cm)} cm)`).join(", ")}, en commençant du côté opposé aux vents dominants.`,
         "Closoirs mousse sous les nervures, en haut et en bas, avant de visser.",
-        `Visser dans la rehausse${t.panne_intermediaire ? " et dans la panne" : ""} par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.`,
+        `Visser dans la rehausse${m.lisse ? " (au fond : dans la lisse)" : ""}${t.panne_intermediaire ? " et dans la panne" : ""} par le sommet des nervures, vis longues à rondelle, quatre par panneau et par appui. Serrer jusqu'à écraser la rondelle, pas plus.`,
         "Recouvrements entre panneaux : butyle, puis vis de couture tous les 40 cm.",
         "Bandes de rive sur les bords parallèles à la pente, bavette de tête sur le bord haut.",
       ],
@@ -224,13 +227,13 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
     {
       titre: "Gouttière et descente", but: "Recueillir toute l'eau du toit et l'emmener au jardin.",
       outils: ["visseuse", "niveau", "scie à métaux"],
-      faire: [`${fr(G.longueur_cm)} cm de gouttière en ${G.troncons.length} tronçon(s) : ${G.troncons.map((x: any) => `${x.face} ${fr(x.longueur_cm)} cm`).join(" + ")}.`, "Crochets tous les 50 cm, pente de 5 mm par mètre vers la descente.", t.descente === "droite" && m.sens !== "droite" ? "Descente au bout droit de la gouttière, puis un tuyau au sol le long du mur droit jusqu'au jardin : rien ne doit s'écouler au pied du mur de propriété." : "Descente au point bas, évacuée loin de la dalle."],
+      faire: [`${fr(G.longueur_cm)} cm de gouttière en ${G.troncons.length} tronçon(s) : ${G.troncons.map((x: any) => `${x.face} ${fr(x.longueur_cm)} cm`).join(" + ")}.`, "Crochets tous les 50 cm, pente de 5 mm par mètre vers la descente.", t.descente === "droite" && m.sens !== "droite" ? "Descente au bout droit de la gouttière, puis un tuyau au sol le long du mur droit jusqu'au jardin : rien ne doit s'écouler au pied du mur de propriété." : t.descente === "gauche" && m.sens !== "droite" ? "Descente au bout gauche de la gouttière, au coin arrière gauche, puis un tuyau au sol le long de la limite jusqu'au jardin." : "Descente au point bas, évacuée loin de la dalle."],
       controler: ["Verser un seau d'eau en haut du toit : tout doit arriver à la descente."],
     },
     ...(po ? [{
       titre: "Poser la porte", but: po.chambranle_cm > 0 ? "Le cadre bois reprend la porte : le panneau seul ne porte pas de paumelles." : "Le dormant du bloc-porte porte le battant : il se fixe à la dalle, à la rehausse et à la tôle des panneaux, jamais dans la mousse.",
       outils: ["visseuse", "niveau", "cales"],
-      faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, vissé dans la dalle en pied et dans la rehausse en tête.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitrée"} de ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.`, "Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm, mur ${face_porte.cle}) d'un profil en U.`, `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitré"} de service, dormant compris, calé d'aplomb, ferré côté fond, ouvrant vers l'extérieur : chevillé dans la dalle en pied, vissé dans la rehausse en tête, et dans la tôle des panneaux par le profil en U.`, "Bande comprimée entre dormant et profil, mastic à l'extérieur, seuil sur cordon de mastic."],
+      faire: po.chambranle_cm > 0 ? [`Monter le cadre bois de ${fz(po.largeur_cm + 2 * po.chambranle_cm)} × ${fz(po.hauteur_cm + po.chambranle_cm)} cm dans le vide du mur ${face_porte.cle}, vissé dans la dalle en pied et dans la rehausse en tête.`, `Poser la porte ${po.vitree === false ? "pleine" : "vitrée"} de ${fz(po.largeur_cm)} × ${fz(po.hauteur_cm)} cm dans le cadre, ferrée côté fond, ouvrant vers l'extérieur.`, "Bande comprimée entre dormant et cadre, mastic à l'extérieur, seuil sur cordon de mastic."] : [`Habiller la tranche des panneaux autour du vide (${fz(po.largeur_cm)} × ${fz(po.hauteur_cm + seuil_porte)} cm, mur ${face_porte.cle}) d'un profil en U.`, ...(seuil_porte ? [`Seuil : ${m.lisse && m.lisse.seuil.length ? `${m.lisse.seuil.length} épaisseurs de lambourde à plat` : "un bois classe 4"}, ${fz(seuil_porte)} cm en tout, au fond du vide, collées et chevillées dans la dalle, dessus au niveau du plancher fini.`] : []), `Poser le bloc-porte ${po.vitree === false ? "plein" : "vitré"} de service, dormant compris, calé d'aplomb, ferré côté fond, ouvrant vers l'extérieur : ${seuil_porte ? "vissé dans le seuil en pied, et dans la tôle des panneaux par le profil en U sur les trois autres côtés" : "chevillé dans la dalle en pied, vissé dans la rehausse en tête, et dans la tôle des panneaux par le profil en U"}.`, "Bande comprimée entre dormant et profil, mastic à l'extérieur, seuil sur cordon de mastic."],
       controler: ["Jeu régulier de 3 mm autour du battant, la porte se ferme sans forcer.", "Arrêt de porte à prévoir : ouverte, elle prend le vent."],
     } as EtapeGuide] : []),
     {
@@ -249,7 +252,7 @@ export function guide_montage(p: P, v: any, m: any): { avant: string[]; outillag
       titre: "Plancher isolé", but: "La dalle est froide : le plancher fait le confort des pieds.",
       outils: ["scie", "visseuse"],
       faire: ["Film polyéthylène sur la dalle, remonté de 10 cm le long des murs, lés recouverts de 20 cm.", "Isolant XPS de 60 mm posé à joints serrés sur tout le sol, sans vis ni colle : c'est un plancher flottant.", "Dalles OSB de 22 mm posées dessus, joints décalés, colle dans chaque rainure, 8 mm de jeu contre les murs ; revêtement de sol ensuite."],
-      controler: ["Avant le film : la dalle est plane à 5 mm près sous une règle de 2 m, sinon ragréer les creux.", `Hauteur sous plafond après plancher : ${fr(rnd((Math.max(...m.hauteurs_coins_cm) - +p.amenagement.plancher.epaisseur_cm) / 100, 2))} m au plus haut, ${fr(rnd((Math.min(...m.hauteurs_coins_cm) - +p.amenagement.plancher.epaisseur_cm) / 100, 2))} m au plus bas.`],
+      controler: ["Avant le film : la dalle est plane à 5 mm près sous une règle de 2 m, sinon ragréer les creux.", `Hauteur sous plafond après plancher : ${fr(m.sous_plafond_m.haut)} m au plus haut, ${fr(m.sous_plafond_m.bas)} m au plus bas.`],
     } as EtapeGuide] : []),
     {
       titre: "Ventilation, électricité, aménagement", but: "Une pièce étanche et chauffée sans ventilation condense.",

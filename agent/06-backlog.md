@@ -17,7 +17,7 @@ vit dans `03-decisions.md`, l'historique dans git.
       que le fabricant n'a pas dit si le 60 mm porte 2,50 m seul. Si oui, rien à faire ; sinon la dessiner.
 - [ ] **Palissade du grand pan** : mesurer sa hauteur (`mur_hauteur_cm`, 180 supposé) ; le grillage
       fait 1 m (`grillage_hauteur_cm`). Si elle dépasse la gouttière, vérifier le débord arrière.
-- [ ] **Hauteur des murs** réelle souhaitée (215 au point bas, 237 en façade).
+- [ ] **Hauteur des murs** réelle souhaitée (panneaux de 215 ; finie 219,5 au point bas, 241,5 en façade, lisse comprise).
 - [ ] **Porte de service 70 × 200** : relever le prix du 70 en magasin (199 € noté, celui du 80) et prendre une serrure multipoint.
 - [ ] **Exposition** : vérifier l'orientation réelle des fenêtres de façade (soleil d'été).
 - [ ] **Largeur utile de panneau** : 115 partout (D52) ; le faire confirmer au devis. Si le fournisseur
