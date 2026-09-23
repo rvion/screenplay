@@ -1,5 +1,13 @@
 # Changelog
 
+## Branche `revue-lisse-seuil`
+
+- Le seuil de porte n'existe qu'avec la lisse haute : les études figées gardent leur porte sur la dalle
+- Tableau des ouvertures : plus de « cadre » pour une porte sans cadre, le seuil de 9 cm est nommé
+- Guide : l'étape de la porte ne se contredit plus (dormant fixé au seuil et à la tôle)
+- Seuil en épaisseurs arrondies au-dessus, rabotées si besoin
+- Cornières de pied au lieu de « rail de pied », longueur de gouttière avec une virgule
+
 ## Branche `toit-appui-fond-porte-seuil`
 
 - Lisse haute en lambourde 45 × 70 classe 4 sur tous les murs : le bas du toit porte enfin sur du bois au fond
