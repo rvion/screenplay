@@ -9,5 +9,4 @@ export default globalProcess({
     description: 'local preview of site/, documents under /docs/',
     cmd: ['npm', 'run', 'site'],
     url: 'http://localhost:5885',
-    app: true,
 })
