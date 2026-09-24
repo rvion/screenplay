@@ -1,6 +1,7 @@
 import { defineRepo } from 'rvlib-shipkit/src/repo-config.ts'
 
 export default defineRepo({
+    identity: { colorLight: '#915930', colorDark: '#d6a785' },
     // >>> shipkit gate — managed block, the hub writes it, edit outside the markers
     when: {
         SK009: 'off:history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook',
@@ -23,6 +24,6 @@ export default defineRepo({
     // the mandated reviewer agent type (rule SK008). Uncomment with YOUR
     // standing brief, then `shipkit check --fix SK008` writes the agent file:
     // reviewer: { name: 'my-reviewer', brief: '~/path/to/reviewer-brief.md' },
-    // health checks need no config. Drop a <name>.check.ts file anywhere,
+    // health checks need no config. Drop a <name>.check.shipkit.ts file anywhere,
     // `shipkit check` auto-discovers and runs it (wire output, exit code)
 })
