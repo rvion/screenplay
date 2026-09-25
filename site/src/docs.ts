@@ -75,6 +75,7 @@ function gabarit(titre: string, racine_site: string, racine_docs: string, barre:
 <meta name="robots" content="noindex">
 <title>${echappe(titre)}</title>
 <link rel="stylesheet" href="${racine_site}docs.css">
+<link rel="icon" type="image/png" href="${racine_site}favicon.png">
 </head>
 <body class="doc">
 <nav class="doc-bar"><a href="${racine_docs}index.html">Tous les documents</a><a href="${racine_site}index.html">Le site interactif</a>${barre}</nav>
