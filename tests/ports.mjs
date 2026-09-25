@@ -27,12 +27,13 @@ const scripts = Object.entries(pkg.scripts).map(([k, v]) => `${k}: ${v}`).join("
 ok(ports_banals(scripts).length === 0, "package.json : aucun script sur un port banal" + (ports_banals(scripts).length ? " (" + ports_banals(scripts).join() + ")" : ""));
 ok(ports_banals(taches).length === 0, ".vscode/tasks.json : aucune tache sur un port banal" + (ports_banals(taches).length ? " (" + ports_banals(taches).join() + ")" : ""));
 
-// le port du site vit a un seul endroit : le script "site" ; la tache l'appelle sans le recopier
+// le port du site vit a un seul endroit : le script "site" ; le processus global (site.shipkit.ts) l'appelle sans le recopier
 const port = (/http\.server\b.*?(\d{4,5})\s*$/.exec(pkg.scripts.site || "") || [])[1];
 ok(!!port, 'package.json : script "site" avec son port (' + port + ")");
-const bloc = taches.slice(taches.indexOf('"🌐  site"'));
-ok(/"command":\s*"npm"/.test(bloc) && /"args":\s*\["run",\s*"site"\]/.test(bloc), 'tasks.json : la tache du site lance "npm run site", sans port en dur');
-ok(sans_commentaires(bloc).includes(`localhost:${port}`), "tasks.json : l'adresse affichee est celle du script (" + port + ")");
+const processus = readFileSync(join(ROOT, "site.shipkit.ts"), "utf8");
+ok(ports_banals(processus).length === 0, "site.shipkit.ts : aucun processus sur un port banal" + (ports_banals(processus).length ? " (" + ports_banals(processus).join() + ")" : ""));
+ok(/cmd:\s*\[\s*'npm',\s*'run',\s*'site'\s*\]/.test(sans_commentaires(processus)), 'site.shipkit.ts : le processus du site lance "npm run site", sans port en dur');
+ok(sans_commentaires(processus).includes(`localhost:${port}`), "site.shipkit.ts : l'adresse affichee est celle du script (" + port + ")");
 for (const f of ["README.md", "agent/index.md", "agent/05-pipeline.md", ".claude/skills/verify/SKILL.md"]) {
   const txt = readFileSync(join(ROOT, f), "utf8");
   ok(!/localhost:(8000|8080|3000|5173)\b/.test(txt) && txt.includes(String(port)), `${f} : donne le bon port (${port})`);
