@@ -3,8 +3,8 @@ import { defineRepo } from 'rvlib-shipkit/src/repo-config.ts'
 export default defineRepo({
     identity: { colorLight: '#915930', colorDark: '#d6a785' },
     // >>> shipkit gate — managed block, the hub writes it, edit outside the markers
-    when: {
-        SK009: 'off:history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook',
+    off: {
+        SK009: 'history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook',
     },
     // <<< shipkit gate
     name: 'screenplay-shed',
