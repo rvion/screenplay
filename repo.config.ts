@@ -4,7 +4,7 @@ export default defineRepo({
     identity: { colorLight: '#915930', colorDark: '#d6a785' },
     // >>> shipkit gate — managed block, the hub writes it, edit outside the markers
     off: {
-        SK009: 'history is kept as is: old commits carry assistant trailers, new ones are refused by the commit-msg hook',
+        'commit-language': 'a French project: commits may be French. Dash and attribution checks stay on',
     },
     // <<< shipkit gate
     name: 'screenplay-shed',
@@ -16,8 +16,6 @@ export default defineRepo({
     // gitignore (SK004) is advisory, this pre-commit gate is not
     hooks: {
         blockedPaths: ['.comfy-ts/'],
-        // a French project: commits may be French. Dash and attribution checks stay on
-        disable: ['commit-language'],
         // an ask file name ("ask-the-town-hall-…") reads as an api key to the sk- pattern
         leakAllow: [{ reason: 'ask slug, not a key', paths: ['.shipkit/asks/'], patterns: ['fp:98d9ad612426'] }],
     },
