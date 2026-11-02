@@ -57,11 +57,11 @@ Toute la spécification vit dans ce dossier — la mettre à jour AVANT de chang
 
 | surface | doc |
 |---|---|
-| TRAVAIL EN COURS de la session précédente : lire EN PREMIER, agir, puis vider | `agent/handoff.md` |
-| pourquoi ce projet, définition de « terminé » | `agent/00-vision.md` |
-| besoins, hypothèses à valider, non-objectifs | `agent/01-besoins.md` |
-| `compute.ts`, livrables, sections du site, contraintes techniques | `agent/02-specification.md` |
-| pourquoi une chose est comme elle est (ADR) | `agent/03-decisions.md` |
-| `dalle_cm`, cotes de l'abri, hauteurs, rehausse, toiture | `agent/04-geometrie.md` |
-| arborescence, `npm run build/emit`, fichiers générés, Pages | `agent/05-pipeline.md` |
-| questions ouvertes, améliorations, dette | `agent/06-backlog.md` |
+| TRAVAIL EN COURS de la session précédente : lire EN PREMIER, agir, puis vider | → agent/handoff.md |
+| pourquoi ce projet, définition de « terminé » | → agent/00-vision.md |
+| besoins, hypothèses à valider, non-objectifs | → agent/01-besoins.md |
+| `compute.ts`, livrables, sections du site, contraintes techniques | → agent/02-specification.md |
+| pourquoi une chose est comme elle est (ADR) | → agent/03-decisions.md |
+| `dalle_cm`, cotes de l'abri, hauteurs, rehausse, toiture | → agent/04-geometrie.md |
+| arborescence, `npm run build/emit`, fichiers générés, Pages | → agent/05-pipeline.md |
+| questions ouvertes, améliorations, dette | → agent/06-backlog.md |
