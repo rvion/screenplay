@@ -1,6 +1,7 @@
 import { defineRepo } from 'rvlib-shipkit/src/repo-config.ts'
 
 export default defineRepo({
+    speaksAs: 'rvion',
     identity: { colorLight: '#915930', colorDark: '#d6a785' },
     // >>> shipkit gate — managed block, the hub writes it, edit outside the markers
     off: {
