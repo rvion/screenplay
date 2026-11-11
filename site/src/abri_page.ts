@@ -50,6 +50,8 @@ export function formes_etudiees(p: Params) {
 }
 
 const el = (id: string) => document.getElementById(id);
+// un segment « · … € » d'un texte de chiffres : cache avec les autres prix (body.sans-prix)
+const montants = (t: string) => t.replace(/( · )?[^·]*(€|\bEUR\b)[^·]*/g, (x) => `<span class="prix">${x}</span>`);
 const texte = (id: string, s: string) => { const e = el(id); if (e) e.textContent = s; };
 const html = (id: string, s: string) => { const e = el(id); if (e) e.innerHTML = s; };
 // pliables : colonnes ou une cellule peut passer a la ligne (entre deux cotes, entre deux panneaux, dans un texte) ; les autres ne se replient jamais
@@ -88,8 +90,7 @@ export function rend_abri(a: Abri) {
     `murs ${fait(cote(m.hauteur_mur_cm))}, faîte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
     `sous plafond ${fait(`${cote(m.sous_plafond_m.bas, "m")} → ${cote(m.sous_plafond_m.haut, "m")}`)} (plancher isolé de ${cote(plancher_cm)} déduit)`,
     `${fait(`${cote(v.aire_m2, "m²")} de murs`)}${sans_formalite ? " (sans formalité)" : " (déclaration préalable)"}, ${fait(`${cote(v.aire_interieure_m2, "m²")} intérieur`)}`,
-    `matériaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`,
-  ].join(" · ") + ".");
+  ].join(" · ") + `<span class="prix"> · matériaux ${fait(`${eur(B.materiaux_eur)} TTC`)}</span>.`);
   // le dessin du resume et sa legende
   const RS = core.planches || {};
   const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w: any) => w.type));
@@ -145,7 +146,7 @@ export function rend_abri(a: Abri) {
   table("debit-rehausse", ["pièce", "mur", "longueur", "hauteur début → fin"], m.rehausse.pieces.map((r: any) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} → ${cote(r.h1)}`]), [3]);
 
   // materiaux : par groupe, quantites calculees, prix TTC, ni main-d'oeuvre ni forfait
-  html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap fixe"><table class="bom"><thead><tr><th>matériau</th><th class="num">qté</th><th class="num">p.u.</th><th class="num">montant</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix à confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? ` · <span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
+  html("materiaux", B.groupes.map((gr: any) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total prix">${eur(gr.total_eur)}</span></h3><div class="table-wrap fixe"><table class="bom"><thead><tr><th>matériau</th><th class="num">qté</th><th class="num prix">p.u.</th><th class="num prix">montant</th></tr></thead><tbody>${B.lignes.filter((l: any) => l.groupe === gr.nom).map((l: any) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer prix">prix à confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? `<span class="prix"> · <span class="note-prix">${echappe(l.note)}</span></span>` : ""}${l.source ? ` <a class="source prix" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr(l.qte)} ${l.unite}</td><td class="num prix">${eur(l.pu_eur)}</td><td class="num prix">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
   const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
   if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
     liste: liste_materiaux, mode: mode_materiaux, panneaux: materiaux, memoire: `${MEMOIRE}-materiaux`, ancre: el("materiaux-section") || undefined,
@@ -154,7 +155,7 @@ export function rend_abri(a: Abri) {
       return { cle: gr.nom, titre: gr.nom, badge: eur(gr.total_eur), etat: lignes.every((l: any) => l.optionnel) ? "optionnel" : incertain ? "a-confirmer" : "", panneau: materiaux.querySelector(`article[data-cle="${gr.nom}"]`) as HTMLElement };
     }),
   });
-  html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}) · équipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` · hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
+  html("materiaux-total", `<span class="prix"><b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} à ${eur(B.total_haut_eur)}) · équipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` · hors total : ${B.hors_materiaux.map((h: any) => `${h.poste.replace(/ \(.*/, "")} ≈ ${eur(h.montant_eur)}`).join(", ")}` : ""}.</span>`);
 
   rend_guide(m.guide);
 
@@ -191,7 +192,7 @@ export function rend_abri(a: Abri) {
 
   // formes etudiees : une carte par forme de params.formes_etudiees
   const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
-  html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` · <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
+  html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${montants(echappe(x.chiffres))}${x.href ? ` · <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
   if (liste_formes && mode_formes && corps_formes) maitre_detail({
     liste: liste_formes, mode: mode_formes, panneaux: corps_formes, memoire: `${MEMOIRE}-formes`, ancre: el("alternatives-liste") || undefined,
     entrees: () => formes.map((x, i): Entree => ({ cle: `f${i}`, titre: x.nom, icone: x.svg, panneau: corps_formes.querySelector(`article[data-cle="f${i}"]`) as HTMLElement })),
@@ -204,8 +205,30 @@ export function mode_document(actif: boolean) {
   document.body.classList.toggle("document", actif);
   const lien = el("lien-document") as HTMLAnchorElement | null;
   if (!lien) return;
-  lien.setAttribute("href", window.location.pathname + (actif ? "" : "?doc=1"));
+  lien.setAttribute("href", adresse({ doc: !actif }));
   lien.textContent = actif ? "Vue interactive" : "Document complet";
+}
+
+// options d'impression : sans prix (?prix=0, une demande de devis) et sans alternatives (?alternatives=0).
+// body.sans-prix cache tout ce qui porte la classe prix ; l'adresse les garde, le document complet et l'impression aussi
+export interface Options { prix: boolean; alternatives: boolean }
+export const options_de = (q: URLSearchParams): Options => ({ prix: q.get("prix") !== "0", alternatives: q.get("alternatives") !== "0" });
+function adresse(o: { doc?: boolean; prix?: boolean; alternatives?: boolean }) {
+  const q = new URLSearchParams();
+  if (o.doc ?? document.body.classList.contains("document")) q.set("doc", "1");
+  if (!(o.prix ?? !document.body.classList.contains("sans-prix"))) q.set("prix", "0");
+  if (!(o.alternatives ?? !document.body.classList.contains("sans-alternatives"))) q.set("alternatives", "0");
+  const s = q.toString();
+  return window.location.pathname + (s ? `?${s}` : "") + window.location.hash;
+}
+export function mode_options(o: Options) {
+  document.body.classList.toggle("sans-prix", !o.prix);
+  document.body.classList.toggle("sans-alternatives", !o.alternatives);
+  const prix = el("opt-prix") as HTMLInputElement | null, alt = el("opt-alternatives") as HTMLInputElement | null;
+  if (prix) prix.checked = o.prix;
+  if (alt) alt.checked = o.alternatives;
+  window.history.replaceState(null, "", adresse({}));
+  mode_document(document.body.classList.contains("document"));
 }
 
 // guide de montage : liste des etapes a gauche, l'etape choisie a droite (composant maitre_detail).

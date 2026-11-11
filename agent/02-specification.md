@@ -87,6 +87,10 @@ de toiture sont exclus tant qu'aucun poteau ne les porte, R*420-1), `surface_pla
     « agrandir » cachés, tableaux sans défilement, page neuve avant les élévations, le guide et les
     alternatives. Aucun bouton ne mène à
     la page markdown : `docs/abri.html` reste atteignable par « Tous les documents » dans le menu.
+    À leur gauche, deux cases (D54) : **prix** (décochée : `?prix=0`, `body.sans-prix` cache tout ce qui
+    porte la classe `prix` : montants, sous-totaux, total, notes de prix, sources, le fait « matériaux » du
+    résumé ; c'est la demande de devis) et **alternatives** (décochée : `?alternatives=0`, la section et son
+    entrée du menu partent). L'adresse les garde, le document complet et l'impression aussi.
     Sections : **Résumé** (un paragraphe de faits séparés par des points médians, les faits clés surlignés
     en `span.fait` : murs, panneaux, toit, pente, portée, porte, fenêtres, bureaux, hauteurs, surfaces,
     matériaux ; un petit dessin nu, `resume_svg` : l'abri sur

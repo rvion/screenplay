@@ -1,6 +1,6 @@
 // Point d'entree de la page d'accueil : calcule l'abri depuis window.SHED_PARAMS,
 // remplit la page, puis branche la scene 3D (qui echoue proprement sans WebGL).
-import { calcule_abri, rend_abri, mode_document } from "site/src/abri_page.ts";
+import { calcule_abri, rend_abri, mode_document, mode_options, options_de } from "site/src/abri_page.ts";
 import { createAbriViewer, applique_etats, VUES, ETATS_DEFAUT, type AbriViewer, type NomVue, type Etats } from "site/src/viewer_abri.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -11,6 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
   rend_abri(abri);
   mode_document(url.has("doc"));
+  // ?prix=0 et ?alternatives=0 : les deux cases en haut a droite, gardees dans l'adresse
+  mode_options(options_de(url));
+  const case_prix = document.getElementById("opt-prix") as HTMLInputElement | null, case_alt = document.getElementById("opt-alternatives") as HTMLInputElement | null;
+  const lis_options = () => mode_options({ prix: !case_prix || case_prix.checked, alternatives: !case_alt || case_alt.checked });
+  case_prix?.addEventListener("change", lis_options);
+  case_alt?.addEventListener("change", lis_options);
   // imprimer = le document complet, quel que soit le mode a l'ecran ; la page retrouve le sien apres
   let mode_avant = false;
   window.addEventListener("beforeprint", () => { mode_avant = document.body.classList.contains("document"); mode_document(true); });

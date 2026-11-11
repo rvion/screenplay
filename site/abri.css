@@ -244,6 +244,13 @@ body.document .details .planbox svg { height: auto; max-height: 60vh; }
   body.document #plans-details, body.document #alternatives-corps { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* options (abri_main.ts, ?prix=0 et ?alternatives=0) : a l'ecran, dans le document complet et a l'impression ;
+   tests/abri_dom.mjs lit ces regles et verifie qu'aucun montant ne reste visible */
+body.sans-prix .prix, body.sans-prix #materiaux-liste .badge { display: none; }
+body.sans-alternatives #alternatives, body.sans-alternatives #sommaire a[href="#alternatives"] { display: none; }
+.actions label.option { font-size: .82rem; display: flex; gap: .25rem; align-items: center; color: var(--muted); cursor: pointer; user-select: none; }
+.actions label.option input { margin: 0; accent-color: var(--accent); }
+
 @media print {
   /* la page fait ~800 px de large : les regles « tablette » ci-dessus s'appliquent, et c'est la mise en page voulue
      sur papier (une colonne, un plan sous l'autre) ; ici seulement ce qui est propre au papier */

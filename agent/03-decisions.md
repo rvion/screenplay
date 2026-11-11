@@ -646,3 +646,15 @@ Les panneaux gardent 215 : une seule longueur, rien ne change au débit ; tout l
 longueurs à commander) ; baisser la porte à 190. *Garde :* `tests/modele.mjs` (une lisse par mur, la
 rehausse dessus, la porte au niveau du plancher et sous la tête des panneaux), vue rouge avant ;
 `tests/abri3d.mjs` mesure les lisses sous le plan bas du toit.
+
+## D54 — Imprimer sans les prix, et sans les alternatives
+Demande de Rémi (2026-11-11) : imprimer le dossier pour demander un devis, sans prix déjà remplis, et
+pouvoir retirer la dernière section (les formes étudiées), qui n'aide pas les gens. Deux cases en haut à
+droite, **prix** et **alternatives**, cochées par défaut. *Mécanisme :* une classe CSS par option sur
+`body` (`sans-prix`, `sans-alternatives`), comme le mode document (D38) : la page ne se recalcule pas, et
+chaque montant porte la classe `prix` à sa source (`abri_page.ts`). Les deux options vivent dans l'adresse
+(`?prix=0&alternatives=0`) : un lien se partage, et le bouton « Document complet » les garde. *Garde :*
+`tests/abri_dom.mjs` lit les règles `body.sans-prix … { display: none }` de `abri.css`, retire ces nœuds
+et refuse tout « € », « EUR » ou « TTC » qui reste (vue rouge avant : le résumé, les matériaux, les
+chiffres des formes). *Vérifié :* le PDF de Chrome headless en `?prix=0&alternatives=0` n'a plus aucun €
+(92 dans le PDF normal), ni Everbox, et garde les quantités.

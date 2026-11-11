@@ -15,7 +15,7 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="stylesheet" href="abri.css?v=f1256548" />
+  <link rel="stylesheet" href="abri.css?v=0988f7d6" />
 </head>
 <body>
   <header class="barre">
@@ -24,6 +24,8 @@
       <p id="sous-titre"></p>
     </div>
     <div class="actions">
+      <label class="option" title="Décocher pour une demande de devis : plus aucun prix, à l'écran comme à l'impression"><input type="checkbox" id="opt-prix" checked> prix</label>
+      <label class="option" title="Décocher pour retirer la section des formes étudiées"><input type="checkbox" id="opt-alternatives" checked> alternatives</label>
       <a href="?doc=1" id="lien-document">Document complet</a>
       <button type="button" onclick="window.print()">Imprimer</button>
     </div>
@@ -129,7 +131,7 @@
 
     <section id="materiaux-section">
       <h2>Matériaux à acheter <span class="mode" id="materiaux-mode"></span></h2>
-      <p class="note">Prix TTC relevés en ligne, quantités calculées. Sans main-d'œuvre ni livraison.</p>
+      <p class="note"><span class="prix">Prix TTC relevés en ligne. </span>Quantités calculées. Sans main-d'œuvre ni livraison.</p>
       <div class="maitre">
         <div class="cote-liste"><ol class="liste" id="materiaux-liste"></ol></div>
         <div class="details" id="materiaux"></div>
@@ -180,7 +182,7 @@
   </div>
 
   <script src="params.js?v=9e608415"></script>
-  <script src="three.js?v=be24743c"></script>
-  <script src="abri.js?v=d493a8c8"></script>
+  <script src="three.js?v=a85a5d2a"></script>
+  <script src="abri.js?v=6063cb30"></script>
 </body>
 </html>

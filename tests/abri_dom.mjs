@@ -17,7 +17,7 @@ globalThis.window = dom.window; globalThis.document = dom.window.document;
 mkdirSync(join(ROOT, "build"), { recursive: true });
 const out = join(ROOT, "build/abri_dom_entry.mjs");
 await esbuild.build({ entryPoints: ["tests/abri_dom_entry.ts"], bundle: true, format: "esm", platform: "node", outfile: out, logLevel: "warning" });
-const { run, md_en_ligne, mode_document } = await import(pathToFileURL(out).href);
+const { run, md_en_ligne, mode_document, mode_options } = await import(pathToFileURL(out).href);
 
 let fails = 0;
 const ok = (cond, label) => { console.log((cond ? "✓ " : "✗ ") + label); if (!cond) fails++; };
@@ -145,6 +145,23 @@ ok(/src="params\.js/.test(html) && /src="abri\.js/.test(html) && /id="viewer"/.t
     "file:// : scripts classiques dans l'ordre params.js, three.js, abri.js, aucun module ni importmap (" + srcs.join(", ") + ")");
 }
 ok(html.includes('href="docs/index.html"') && !html.includes('href="docs/abri.html"') && existsSync(join(ROOT, "site/docs/index.html")), "liens : l'index des documents dans le menu, plus de lien vers la page markdown en haut a droite");
+// sans prix (?prix=0) : une demande de devis, aucun montant visible ; sans alternatives (?alternatives=0) : la section des formes etudiees part
+{
+  const css = readFileSync(join(ROOT, "site/abri.css"), "utf8");
+  // ce que abri.css cache sous body.<classe> : la garde retire ces noeuds et lit ce qui reste
+  const caches = (classe) => [...css.matchAll(/([^{}]+)\{\s*display: none;?\s*\}/g)].map((r) => r[1].replace(/\/\*[\s\S]*?\*\//g, "").split(",").map((x) => x.trim())).filter((sel) => sel.every((x) => x.startsWith("body." + classe + " "))).flat().map((x) => x.slice(("body." + classe + " ").length));
+  const visible = (classe) => { const copie = $("main").cloneNode(true); for (const sel of caches(classe)) copie.querySelectorAll(sel).forEach((x) => x.remove()); return copie.textContent; };
+  const MONTANT = /€|\bEUR\b|\d\s?TTC/;
+  ok(MONTANT.test(visible("sans-prix-absent")) && caches("sans-prix").length > 0 && !MONTANT.test(visible("sans-prix")), "sans prix : la page a des montants, et plus aucun une fois cache ce que body.sans-prix cache (" + (visible("sans-prix").match(new RegExp(".{0,40}(" + MONTANT.source + ").{0,20}")) || ["aucun"])[0] + ")");
+  ok(/Quantités calculées/.test(visible("sans-prix")) && $$("#materiaux tbody tr").length > 10, "sans prix : les matériaux et leurs quantités restent");
+  ok(caches("sans-alternatives").some((x) => $(x) === $("#alternatives")) && caches("sans-alternatives").some((x) => $(x) && $(x).getAttribute("href") === "#alternatives"), "sans alternatives : la section et son entrée du menu cachées");
+  mode_options({ prix: false, alternatives: false });
+  ok(document.body.classList.contains("sans-prix") && document.body.classList.contains("sans-alternatives") && !$("#opt-prix").checked && !$("#opt-alternatives").checked && /prix=0/.test(window.location.search) && /alternatives=0/.test(window.location.search), "options : body.sans-prix et body.sans-alternatives, cases décochées, gardées dans l'adresse");
+  mode_document(false);
+  ok(/doc=1/.test($("#lien-document").getAttribute("href")) && /prix=0/.test($("#lien-document").getAttribute("href")) && /alternatives=0/.test($("#lien-document").getAttribute("href")), "options : le document complet les garde (" + $("#lien-document").getAttribute("href") + ")");
+  mode_options({ prix: true, alternatives: true });
+  ok(!document.body.classList.contains("sans-prix") && !document.body.classList.contains("sans-alternatives") && $("#opt-prix").checked && window.location.search === "", "options : rétablies, l'adresse redevient nue");
+}
 // document complet (?doc=1) : le meme rendu, tout deroule sans menu ni listes, c'est aussi ce que l'impression montre
 {
   const css = readFileSync(join(ROOT, "site/abri.css"), "utf8");

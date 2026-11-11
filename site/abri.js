@@ -2005,6 +2005,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     }).filter(Boolean);
   }
   var el = (id) => document.getElementById(id);
+  var montants = (t) => t.replace(/( · )?[^·]*(€|\bEUR\b)[^·]*/g, (x) => `<span class="prix">${x}</span>`);
   var texte = (id, s) => {
     const e = el(id);
     if (e) e.textContent = s;
@@ -2043,9 +2044,8 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       `porte ${po.vitree === false ? "pleine" : "vitr\xE9e"} sur le mur ${face(m.faces[po.cote].cle)}, ${NOMBRES[v.fenetres.length]} fen\xEAtre${v.fenetres.length > 1 ? "s" : ""} en fa\xE7ade, bureau sur ${v.bureaux.map((b) => face(b.cote === "avant" ? "A" : b.cote === "gauche" ? "G" : "D")).join(" et ")}${lit_pose ? `, lit ${fait(cote(`${fz3(lit_pose.largeur_cm)} \xD7 ${fz3(lit_pose.longueur_cm)}`))} le long de ${face("A")}` : ""}`,
       `murs ${fait(cote(m.hauteur_mur_cm))}, fa\xEEte ${fait(cote(Math.max(...m.hauteurs_coins_cm)))}`,
       `sous plafond ${fait(`${cote(m.sous_plafond_m.bas, "m")} \u2192 ${cote(m.sous_plafond_m.haut, "m")}`)} (plancher isol\xE9 de ${cote(plancher_cm)} d\xE9duit)`,
-      `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`,
-      `mat\xE9riaux ${fait(`${eur(B.materiaux_eur)} TTC`)}`
-    ].join(" \xB7 ") + ".");
+      `${fait(`${cote(v.aire_m2, "m\xB2")} de murs`)}${sans_formalite ? " (sans formalit\xE9)" : " (d\xE9claration pr\xE9alable)"}, ${fait(`${cote(v.aire_interieure_m2, "m\xB2")} int\xE9rieur`)}`
+    ].join(" \xB7 ") + `<span class="prix"> \xB7 mat\xE9riaux ${fait(`${eur(B.materiaux_eur)} TTC`)}</span>.`);
     const RS = core.planches || {};
     const d3 = core.geometrie.dalle, types = new Set((d3.murs || []).map((w) => w.type));
     const legende = [
@@ -2117,7 +2117,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
       [3]
     );
     table("debit-rehausse", ["pi\xE8ce", "mur", "longueur", "hauteur d\xE9but \u2192 fin"], m.rehausse.pieces.map((r) => [face(r.id), face(r.face), cote(r.L), `${cote(r.h0)} \u2192 ${cote(r.h1)}`]), [3]);
-    html("materiaux", B.groupes.map((gr) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total">${eur(gr.total_eur)}</span></h3><div class="table-wrap fixe"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">qt\xE9</th><th class="num">p.u.</th><th class="num">montant</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer">prix \xE0 confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? ` \xB7 <span class="note-prix">${echappe(l.note)}</span>` : ""}${l.source ? ` <a class="source" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num">${eur(l.pu_eur)}</td><td class="num">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
+    html("materiaux", B.groupes.map((gr) => `<article data-cle="${gr.nom}"><h3>${gr.nom}<span class="sous-total prix">${eur(gr.total_eur)}</span></h3><div class="table-wrap fixe"><table class="bom"><thead><tr><th>mat\xE9riau</th><th class="num">qt\xE9</th><th class="num prix">p.u.</th><th class="num prix">montant</th></tr></thead><tbody>${B.lignes.filter((l) => l.groupe === gr.nom).map((l) => `<tr><td class="pliable"><div class="poste">${l.poste}${l.a_confirmer ? ' <span class="a-confirmer prix">prix \xE0 confirmer</span>' : ""}</div><div class="regle">${l.regle}${l.note ? `<span class="prix"> \xB7 <span class="note-prix">${echappe(l.note)}</span></span>` : ""}${l.source ? ` <a class="source prix" href="${l.source}" target="_blank" rel="noopener">source</a>` : ""}</div></td><td class="num">${fr2(l.qte)} ${l.unite}</td><td class="num prix">${eur(l.pu_eur)}</td><td class="num prix">${eur(l.montant_eur)}</td></tr>`).join("")}</tbody></table></div></article>`).join(""));
     const materiaux = el("materiaux"), liste_materiaux = el("materiaux-liste"), mode_materiaux = el("materiaux-mode");
     if (materiaux && liste_materiaux && mode_materiaux) maitre_detail({
       liste: liste_materiaux,
@@ -2130,7 +2130,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
         return { cle: gr.nom, titre: gr.nom, badge: eur(gr.total_eur), etat: lignes.every((l) => l.optionnel) ? "optionnel" : incertain ? "a-confirmer" : "", panneau: materiaux.querySelector(`article[data-cle="${gr.nom}"]`) };
       })
     });
-    html("materiaux-total", `<b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.`);
+    html("materiaux-total", `<span class="prix"><b>Total : ${eur(B.materiaux_eur)} TTC</b> (${eur(B.total_bas_eur)} \xE0 ${eur(B.total_haut_eur)}) \xB7 \xE9quipement optionnel ${eur(B.options_eur)}${B.hors_materiaux.length ? ` \xB7 hors total : ${B.hors_materiaux.map((h) => `${h.poste.replace(/ \(.*/, "")} \u2248 ${eur(h.montant_eur)}`).join(", ")}` : ""}.</span>`);
     rend_guide(m.guide);
     table("ouvertures-table", ["ouverture", "taille", "o\xF9", "d\xE9tail"], [
       [`porte ${po.vitree === false ? "pleine" : "vitr\xE9e"}`, `${cote(`${fz3(po.largeur_cm)} \xD7 ${fz3(po.hauteur_cm)}`)} (cadre ${cote(`${fz3(po.largeur_cm + 2 * po.chambranle_cm)} \xD7 ${fz3(po.hauteur_cm + po.chambranle_cm)}`)})`, `face ${face(m.faces[po.cote].cle)}, de ${cote(po.debut_cm)} \xE0 ${cote(Math.round((po.debut_cm + po.largeur_cm) * 10) / 10)} depuis la fa\xE7ade`, "ouvre vers l'ext\xE9rieur, ferr\xE9e c\xF4t\xE9 fond"],
@@ -2163,7 +2163,7 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const numerotee = (marque, titre, lettre2, items) => items.length ? `<div class="pourquoi-bloc"><h3><span class="marque">${marque}</span>${titre}</h3><ol class="questions">${items.map((s, i) => `<li><span class="question">${lettre2}${i + 1}</span> ${accroche(s)}</li>`).join("")}</ol></div>` : "";
     html("questions-corps", D ? numerotee("\u2753", "Questions", "Q", D.questions) + numerotee("\u{1F4A1}", "Id\xE9es \xE0 explorer", "I", D.idees) : "");
     const formes = formes_etudiees(a.p), liste_formes = el("alternatives-liste"), mode_formes = el("alternatives-mode"), corps_formes = el("alternatives-corps");
-    html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${echappe(x.chiffres)}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
+    html("alternatives-corps", formes.map((x, i) => `<article data-cle="f${i}"><h3>${echappe(x.nom)}</h3><p class="note">${montants(echappe(x.chiffres))}${x.href ? ` \xB7 <a href="${x.href}">${x.commerce ? "site du fabricant" : "document"}</a>` : ""}</p><div class="planbox">${x.svg}</div></article>`).join(""));
     if (liste_formes && mode_formes && corps_formes) maitre_detail({
       liste: liste_formes,
       mode: mode_formes,
@@ -2177,8 +2177,26 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     document.body.classList.toggle("document", actif);
     const lien = el("lien-document");
     if (!lien) return;
-    lien.setAttribute("href", window.location.pathname + (actif ? "" : "?doc=1"));
+    lien.setAttribute("href", adresse({ doc: !actif }));
     lien.textContent = actif ? "Vue interactive" : "Document complet";
+  }
+  var options_de = (q) => ({ prix: q.get("prix") !== "0", alternatives: q.get("alternatives") !== "0" });
+  function adresse(o) {
+    const q = new URLSearchParams();
+    if (o.doc ?? document.body.classList.contains("document")) q.set("doc", "1");
+    if (!(o.prix ?? !document.body.classList.contains("sans-prix"))) q.set("prix", "0");
+    if (!(o.alternatives ?? !document.body.classList.contains("sans-alternatives"))) q.set("alternatives", "0");
+    const s = q.toString();
+    return window.location.pathname + (s ? `?${s}` : "") + window.location.hash;
+  }
+  function mode_options(o) {
+    document.body.classList.toggle("sans-prix", !o.prix);
+    document.body.classList.toggle("sans-alternatives", !o.alternatives);
+    const prix = el("opt-prix"), alt = el("opt-alternatives");
+    if (prix) prix.checked = o.prix;
+    if (alt) alt.checked = o.alternatives;
+    window.history.replaceState(null, "", adresse({}));
+    mode_document(document.body.classList.contains("document"));
   }
   function rend_guide(Gd) {
     const cle_cases = `${MEMOIRE}-cases`;
@@ -3079,6 +3097,11 @@ ${nu ? "" : `<rect width="${w}" height="${h}" fill="#fbfbf8"/>
     const abri = calcule_abri(JSON.parse(JSON.stringify(params)));
     rend_abri(abri);
     mode_document(url.has("doc"));
+    mode_options(options_de(url));
+    const case_prix = document.getElementById("opt-prix"), case_alt = document.getElementById("opt-alternatives");
+    const lis_options = () => mode_options({ prix: !case_prix || case_prix.checked, alternatives: !case_alt || case_alt.checked });
+    case_prix?.addEventListener("change", lis_options);
+    case_alt?.addEventListener("change", lis_options);
     let mode_avant = false;
     window.addEventListener("beforeprint", () => {
       mode_avant = document.body.classList.contains("document");
