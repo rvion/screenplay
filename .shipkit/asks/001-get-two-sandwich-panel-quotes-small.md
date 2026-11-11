@@ -1,5 +1,6 @@
 ---
 status: open
+pinged: 2026-11-11
 kind: action
 created: 2026-09-22
 blocks: materials budget (panels are half the total), roof purlin yes/no
