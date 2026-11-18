@@ -9,6 +9,7 @@ export default defineRepo({
     },
     // <<< shipkit gate
     name: 'screenplay-shed',
+    id: 'screenplay',
     visibility: 'public', // github rvion/screenplay is public (GitHub Pages)
     venues: [], // e.g. ['itch', 'steam'], selects which .shipkit/<venue>/ contracts are REQUIRED
     tasks: [],  // repo commit-gate tasks; deps double as race guards
