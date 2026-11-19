@@ -18,6 +18,7 @@ bun.lock
 !.shipkit/releases/
 .shipkit/social/drafts/**/*-trailer.mp4
 .shipkit/assets/out/
+.shipkit/voice/takes/
 .shipkit/private/
 .shipkit/tmp/
 .shipkit/reviews/
