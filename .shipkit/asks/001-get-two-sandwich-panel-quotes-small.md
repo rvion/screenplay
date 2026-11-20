@@ -4,6 +4,7 @@ pinged: 2026-11-11
 kind: action
 created: 2026-09-22
 blocks: materials budget (panels are half the total), roof purlin yes/no
+thread: ask:001-get-two-sandwich-panel-quotes-small
 ---
 
 # Get two sandwich panel quotes: small quantity, cut to length, with the span table
